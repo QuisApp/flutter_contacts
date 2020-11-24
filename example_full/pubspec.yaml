@@ -1,0 +1,25 @@
+name: flutter_contacts_example
+description: Demonstrates how to use the flutter_contacts plugin.
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  after_layout: ^1.0.7+2
+  flutter_contacts:
+    path: ../
+  flutter_form_builder: ^3.8.3
+  image_picker: ^0.6.7+14
+  permission_handler: ^5.0.0+hotfix.3
+  pretty_json: ^1.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  json_serializable: ^3.5.0
+
+flutter:
+  uses-material-design: true
