@@ -35,43 +35,55 @@ For a minimalistic example, take a look at `example/`. You can write a full-fled
 
 ```dart
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-/// Get all contacts (IDs and names only)
-List<Contact> contacts = await FlutterContacts.getContacts();
+if (await Permission.contacts.request().isGranted) {
+    /// Get all contacts (IDs and names only)
+    List<Contact> contacts = await FlutterContacts.getContacts();
 
-/// Get all fields (phones, emails, photo, job, etc) for a given contact
-Contact contact = await FlutterContacts.getContact(contacts.first.id);
+    /// Get all fields (phones, emails, photo, job, etc) for a given contact
+    Contact contact = await FlutterContacts.getContact(contacts.first.id);
 
-/// Create contact
-Contact newContact = Contact.create()
-    ..name = Name(first: 'John', last: 'Doe')
-    ..phones = [Phone('555-123-4567', label: PhoneLabel.mobile)];
-await FlutterContacts.newContact(newContact);
+    /// Listen to contacts database changes
+    FlutterContacts.onChange(() => print('Contact DB changed'));
 
-/// Update contact
-contact.emails.add(Email('john.doe@example.com'));
-await FlutterContacts.updateContact(contact);
+    /// Create contact
+    Contact newContact = Contact.create()
+        ..name = Name(first: 'John', last: 'Doe')
+        ..phones = [Phone('555-123-4567'), Phone('555-999-9999', label: PhoneLabel.work)];
+    await FlutterContacts.newContact(newContact);
 
-/// Delete contact
-await FlutterContacts.deleteContact(contact.id);
+    /// Update contact
+    newContact.emails = [Email('john.doe@example.com'))];
+    await FlutterContacts.updateContact(newContact);
 
-/// Listen to contacts database changes
-FlutterContacts.onChange(() => print('Contact DB changed'));
+    /// Delete contact
+    await FlutterContacts.deleteContact(newContact.id);
+}
 ```
 
 ## Installation
 
 1. Add `json_serializable: ^3.5.0` (or higher) to the `dev_dependencies` in `pubspec.yaml`.
 1. Add `permission_handler: ^5.0.0+hotfix.3` (or higher) to the `dependencies` in `pubspec.yaml`: this is the package that allows you to request for contact permissions.
-1. Add the following `<uses-permissions>` tags to `AndroidManifest.xml` (for Android):
-
-```xml
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" ...>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
-    <application ...>
-    ...
-```
+1. Add the following key/value pair to your app's `Info.plist` (for iOS):
+    ```xml
+    <plist version="1.0">
+    <dict>
+        ...
+        <key>NSContactsUsageDescription</key>
+        <string>Access contact list</string>
+    </dict>
+    </plist>
+    ```
+1. Add the following `<uses-permissions>` tags to your app's `AndroidManifest.xml` (for Android):
+    ```xml
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android" ...>
+        <uses-permission android:name="android.permission.READ_CONTACTS"/>
+        <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+        <application ...>
+        ...
+    ```
 
 ## Development notes
 

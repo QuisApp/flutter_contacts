@@ -27,5 +27,5 @@ flutter:
       android:
         package: co.quis.flutter_contacts
         pluginClass: FlutterContactsPlugin
-      iOS:
+      ios:
         pluginClass: FlutterContactsPlugin
