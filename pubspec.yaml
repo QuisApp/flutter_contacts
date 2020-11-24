@@ -1,6 +1,6 @@
 name: flutter_contacts
 description: Full-fledged flutter plugin to read, write and observe native contacts.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/QuisApp/flutter_contacts
 
 environment:

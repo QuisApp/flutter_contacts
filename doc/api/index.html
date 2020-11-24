@@ -98,47 +98,65 @@
 <img src="https://user-images.githubusercontent.com/1289004/100083652-93d3b380-2dfe-11eb-8738-6197c675ba14.PNG" alt="screenshot5" width="200">
 <h2 id="usage">Usage</h2>
 <pre class="language-dart"><code class="language-dart">import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-/// Get all contacts (IDs and names only)
-List&lt;Contact&gt; contacts = await FlutterContacts.getContacts();
+if (await Permission.contacts.request().isGranted) {
+    /// Get all contacts (IDs and names only)
+    List&lt;Contact&gt; contacts = await FlutterContacts.getContacts();
 
-/// Get all fields (phones, emails, photo, job, etc) for a given contact
-Contact contact = await FlutterContacts.getContact(contacts.first.id);
+    /// Get all fields (phones, emails, photo, job, etc) for a given contact
+    Contact contact = await FlutterContacts.getContact(contacts.first.id);
 
-/// Create contact
-Contact newContact = Contact.create()
-    ..name = Name(first: 'John', last: 'Doe')
-    ..phones = [Phone('555-123-4567', label: PhoneLabel.mobile)];
-await FlutterContacts.newContact(newContact);
+    /// Listen to contacts database changes
+    FlutterContacts.onChange(() =&gt; print('Contact DB changed'));
 
-/// Update contact
-contact.emails.add(Email('john.doe@example.com'));
-await FlutterContacts.updateContact(contact);
+    /// Create contact
+    Contact newContact = Contact.create()
+        ..name = Name(first: 'John', last: 'Doe')
+        ..phones = [Phone('555-123-4567'), Phone('555-999-9999', label: PhoneLabel.work)];
+    await FlutterContacts.newContact(newContact);
 
-/// Delete contact
-await FlutterContacts.deleteContact(contact.id);
+    /// Update contact
+    newContact.emails = [Email('john.doe@example.com'))];
+    await FlutterContacts.updateContact(newContact);
 
-/// Listen to contacts database changes
-FlutterContacts.onChange(() =&gt; print('Contact DB changed'));
+    /// Delete contact
+    await FlutterContacts.deleteContact(newContact.id);
+}
 </code></pre>
 <h2 id="installation">Installation</h2>
 <ol>
 <li>Add <code>json_serializable: ^3.5.0</code> (or higher) to the <code>dev_dependencies</code> in <code>pubspec.yaml</code>.</li>
 <li>Add <code>permission_handler: ^5.0.0+hotfix.3</code> (or higher) to the <code>dependencies</code> in <code>pubspec.yaml</code>: this is the package that allows you to request for contact permissions.</li>
-<li>Add the following <code>&lt;uses-permissions&gt;</code> tags to <code>AndroidManifest.xml</code> (for Android):</li>
+<li>Add the following key/value pair to your app's <code>Info.plist</code> (for iOS):
+<pre class="language-xml"><code class="language-xml"> &lt;plist version="1.0"&gt;
+ &lt;dict&gt;
+     ...
+     &lt;key&gt;NSContactsUsageDescription&lt;/key&gt;
+     &lt;string&gt;Access contact list&lt;/string&gt;
+ &lt;/dict&gt;
+ &lt;/plist&gt;
+</code></pre>
+</li>
+<li>Add the following <code>&lt;uses-permissions&gt;</code> tags to your app's <code>AndroidManifest.xml</code> (for Android):
+<pre class="language-xml"><code class="language-xml"> &lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" ...&gt;
+     &lt;uses-permission android:name="android.permission.READ_CONTACTS"/&gt;
+     &lt;uses-permission android:name="android.permission.WRITE_CONTACTS"/&gt;
+     &lt;application ...&gt;
+     ...
+</code></pre>
+</li>
 </ol>
-<pre class="language-xml"><code class="language-xml">&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" ...&gt;
-    &lt;uses-permission android:name="android.permission.READ_CONTACTS"/&gt;
-    &lt;uses-permission android:name="android.permission.WRITE_CONTACTS"/&gt;
-    &lt;application ...&gt;
-    ...
-</code></pre>
 <h2 id="development-notes">Development notes</h2>
-<h3 id="run-build_runner-to-generate-gdart-files">Run <code>build_runner</code> to generate <code>g.dart</code> files</h3>
-<pre class="language-sh"><code class="language-sh">flutter pub run build_runner build
-</code></pre>
-<h3 id="format-files">Format files</h3>
-<pre class="language-sh"><code class="language-sh">./scripts/format.sh
+<p>##</p>
+<pre class="language-sh"><code class="language-sh"># Run `build_runner` to generate `g.dart` files
+flutter pub run build_runner build
+
+# Format files
+./scripts/format.sh
+
+# Generate dart doc
+dartdoc
 </code></pre>
       </section>
       
@@ -230,7 +248,7 @@ FlutterContacts.onChange(() =&gt; print('Contact DB changed'));
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.1
+      0.0.2
   </span>
 
 </footer>
