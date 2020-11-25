@@ -1,6 +1,6 @@
 # flutter_contacts
 
-Fluter plugin to read, create, update, delete and observe native contacts.
+Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS.
 
 For a minimalistic example, take a look at `example/`. You can write a full-fledged contacts app with it – see `example_full/` to see how.
 
@@ -31,6 +31,8 @@ For a minimalistic example, take a look at `example/`. You can write a full-fled
 <img src="https://user-images.githubusercontent.com/1289004/100083635-8fa79600-2dfe-11eb-98cb-856ebd2d6777.PNG" alt="screenshot4" width="200"/>
 <img src="https://user-images.githubusercontent.com/1289004/100083652-93d3b380-2dfe-11eb-8738-6197c675ba14.PNG" alt="screenshot5" width="200"/>
 
+(identities and photos from https://www.fakenamegenerator.com/ and https://thispersondoesnotexist.com/)
+
 ## Usage
 
 ```dart
@@ -54,11 +56,11 @@ if (await Permission.contacts.request().isGranted) {
     await FlutterContacts.newContact(newContact);
 
     /// Update contact
-    newContact.emails = [Email('john.doe@example.com'))];
-    await FlutterContacts.updateContact(newContact);
+    contact.emails.add(Email('john.doe@example.com'));
+    await FlutterContacts.updateContact(contact);
 
     /// Delete contact
-    await FlutterContacts.deleteContact(newContact.id);
+    await FlutterContacts.deleteContact(contact.id);
 }
 ```
 
@@ -84,17 +86,3 @@ if (await Permission.contacts.request().isGranted) {
         <application ...>
         ...
     ```
-
-## Development notes
-
-### Run `build_runner` to generate `g.dart` files
-
-```sh
-flutter pub run build_runner build
-```
-
-### Format files
-
-```sh
-./scripts/format.sh
-```

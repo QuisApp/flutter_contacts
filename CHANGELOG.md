@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Fix README typos.
+
 ## 0.0.2
 
 * Fix support for iOS.

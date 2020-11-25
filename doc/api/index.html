@@ -67,7 +67,7 @@
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
       <section class="desc markdown">
         <h1 id="flutter_contacts">flutter_contacts</h1>
-<p>Fluter plugin to read, create, update, delete and observe native contacts.</p>
+<p>Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS.</p>
 <p>For a minimalistic example, take a look at <code>example/</code>. You can write a full-fledged contacts app with it – see <code>example_full/</code> to see how.</p>
 <h2 id="features">Features</h2>
 <ul>
@@ -96,6 +96,7 @@
 <img src="https://user-images.githubusercontent.com/1289004/100083630-8dddd280-2dfe-11eb-91ff-80058a476ed3.PNG" alt="screenshot3" width="200">
 <img src="https://user-images.githubusercontent.com/1289004/100083635-8fa79600-2dfe-11eb-98cb-856ebd2d6777.PNG" alt="screenshot4" width="200">
 <img src="https://user-images.githubusercontent.com/1289004/100083652-93d3b380-2dfe-11eb-8738-6197c675ba14.PNG" alt="screenshot5" width="200">
+<p>(identities and photos from <a href="https://www.fakenamegenerator.com/">https://www.fakenamegenerator.com/</a> and <a href="https://thispersondoesnotexist.com/">https://thispersondoesnotexist.com/</a>)</p>
 <h2 id="usage">Usage</h2>
 <pre class="language-dart"><code class="language-dart">import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -117,11 +118,11 @@ if (await Permission.contacts.request().isGranted) {
     await FlutterContacts.newContact(newContact);
 
     /// Update contact
-    newContact.emails = [Email('john.doe@example.com'))];
-    await FlutterContacts.updateContact(newContact);
+    contact.emails.add(Email('john.doe@example.com'));
+    await FlutterContacts.updateContact(contact);
 
     /// Delete contact
-    await FlutterContacts.deleteContact(newContact.id);
+    await FlutterContacts.deleteContact(contact.id);
 }
 </code></pre>
 <h2 id="installation">Installation</h2>
@@ -148,15 +149,11 @@ if (await Permission.contacts.request().isGranted) {
 </li>
 </ol>
 <h2 id="development-notes">Development notes</h2>
-<p>##</p>
-<pre class="language-sh"><code class="language-sh"># Run `build_runner` to generate `g.dart` files
-flutter pub run build_runner build
-
-# Format files
-./scripts/format.sh
-
-# Generate dart doc
-dartdoc
+<h3 id="generate-gdart-files">Generate <code>g.dart</code> files</h3>
+<pre class="language-sh"><code class="language-sh">flutter pub run build_runner build
+</code></pre>
+<h3 id="format-files">Format files</h3>
+<pre class="language-sh"><code class="language-sh">./scripts/format.sh
 </code></pre>
       </section>
       
@@ -248,7 +245,7 @@ dartdoc
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.2
+      0.0.3
   </span>
 
 </footer>
