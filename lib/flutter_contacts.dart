@@ -65,9 +65,14 @@ class FlutterContacts {
   ///              CREATING CONTACTS              ///
   ///////////////////////////////////////////////////
 
-  /// Creates new contact and return its ID (or raw contact ID on Android)
-  static Future<String> newContact(Contact contact) async =>
-      await _channel.invokeMethod('new', contact.toJson(includePhoto: true));
+  /// Creates new contact and return it
+  ///
+  /// Note that the output contact will be different from the input; for example
+  /// the input won't have an ID, but the output will. If you intend to perform
+  /// operations on the contact after creation, you should perform them on the
+  /// output rather than on the input.
+  static Future<Contact> newContact(Contact contact) async => Contact.fromJson(
+      await _channel.invokeMethod('new', contact.toJson(includePhoto: true)));
 
   ///////////////////////////////////////////////////
   ///              UPDATING CONTACTS              ///

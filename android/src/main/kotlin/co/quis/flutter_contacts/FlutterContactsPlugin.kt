@@ -61,22 +61,45 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     val withDetails = args[1] as Boolean
                     val withPhotos = args[2] as Boolean
                     val useHighResolutionPhotos = args[3] as Boolean
-                    val contacts = FlutterContacts.get(resolver!!, id, withDetails, withPhotos, useHighResolutionPhotos)
+                    val contacts: List<Map<String, Any?>> =
+                        FlutterContacts.get(
+                            resolver!!,
+                            id, withDetails, withPhotos, useHighResolutionPhotos
+                        )
                     GlobalScope.launch(Dispatchers.Main) { result.success(contacts) }
                 }
-            // Create a new contact and return its raw ID (different from contact ID, 
-            // unknown at time of creation)
+            // Create a new contact and return it
             "new" ->
                 GlobalScope.launch(Dispatchers.IO) {
-                    val rawId = FlutterContacts.new(resolver!!, call.arguments as Map<String, Any>)
-                    GlobalScope.launch(Dispatchers.Main) { result.success(rawId) }
+                    val newContact: Map<String, Any?>? =
+                        FlutterContacts.new(
+                            resolver!!,
+                            call.arguments as Map<String, Any>
+                        )
+                    GlobalScope.launch(Dispatchers.Main) {
+                        if (newContact != null) {
+                            result.success(newContact)
+                        } else {
+                            result.error("", "failed to create contact", "")
+                        }
+                    }
                 }
             // Update an existing contact
             "update" ->
                 GlobalScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<*>
-                    val errorMessage: String? = FlutterContacts.update(resolver!!, args[0] as Map<String, Any>, args[1] as Boolean)
-                    GlobalScope.launch(Dispatchers.Main) { if (errorMessage == null) result.success(null) else result.error("", errorMessage, "") }
+                    val errorMessage: String? =
+                        FlutterContacts.update(
+                            resolver!!, args[0] as Map<String, Any>,
+                            args[1] as Boolean
+                        )
+                    GlobalScope.launch(Dispatchers.Main) {
+                        if (errorMessage == null) {
+                            result.success(null)
+                        } else {
+                            result.error("", errorMessage, "")
+                        }
+                    }
                 }
             // Delete contacts with given IDs
             "delete" ->

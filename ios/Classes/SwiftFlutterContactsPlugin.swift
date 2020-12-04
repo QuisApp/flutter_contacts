@@ -71,7 +71,7 @@ public enum FlutterContacts {
     }
 
     // Create new contact
-    static func new(_ args: [String: Any?]) throws -> String {
+    static func new(_ args: [String: Any?]) throws -> [String: Any?] {
         let contact = CNMutableContact()
 
         addFieldsToContact(args, contact)
@@ -79,7 +79,7 @@ public enum FlutterContacts {
         let saveRequest = CNSaveRequest()
         saveRequest.add(contact, toContainerWithIdentifier: nil)
         try CNContactStore().execute(saveRequest)
-        return contact.identifier
+        return Contact(fromContact: contact).toMap()
     }
 
     // Update existing contact
@@ -226,8 +226,8 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
         case "new":
             DispatchQueue.global(qos: .userInteractive).async {
                 do {
-                    let id = try FlutterContacts.new(call.arguments as! [String: Any?])
-                    result(id)
+                    let contact = try FlutterContacts.new(call.arguments as! [String: Any?])
+                    result(contact)
                 } catch {
                     result(FlutterError(
                         code: "unknown error",

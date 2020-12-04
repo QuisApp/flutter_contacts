@@ -37,7 +37,14 @@ import co.quis.flutter_contacts.properties.Website as PWebsite
 
 class FlutterContacts {
     companion object {
-        fun get(resolver: ContentResolver, id: String?, withDetails: Boolean, withPhotos: Boolean, useHighResolutionPhotos: Boolean): List<Map<String, Any?>> {
+        fun get(
+            resolver: ContentResolver,
+            id: String?,
+            withDetails: Boolean,
+            withPhotos: Boolean,
+            useHighResolutionPhotos: Boolean,
+            idIsRawContactId: Boolean = false
+        ): List<Map<String, Any?>> {
             if (id == null && !withDetails && !withPhotos) {
                 return getQuick(resolver)
             }
@@ -112,7 +119,11 @@ class FlutterContacts {
             var selectionArgs = arrayOf<String>()
 
             if (id != null) {
-                selection += " AND ${Data.CONTACT_ID} = ?"
+                if (idIsRawContactId) {
+                    selection += " AND ${Data.RAW_CONTACT_ID} = ?"
+                } else {
+                    selection += " AND ${Data.CONTACT_ID} = ?"
+                }
                 selectionArgs = arrayOf(id)
             }
 
@@ -153,8 +164,10 @@ class FlutterContacts {
 
                     // Fetch high-resolution photo if requested
                     if (withPhotos && useHighResolutionPhotos) {
-                        val contactUri: Uri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id.toLong())
-                        val displayPhotoUri: Uri = Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO)
+                        val contactUri: Uri =
+                            ContentUris.withAppendedId(Contacts.CONTENT_URI, id.toLong())
+                        val displayPhotoUri: Uri =
+                            Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO)
                         try {
                             var fis: InputStream = resolver.openInputStream(displayPhotoUri)
                             contact.photo = fis.readBytes()
@@ -176,7 +189,8 @@ class FlutterContacts {
                 if (withPhotos && mimetype == Photo.CONTENT_ITEM_TYPE) {
                     // Don't override high-resolution photo if there is one
                     if (!useHighResolutionPhotos || contact.photo == null) {
-                        contact.photo = cursor.getBlob(cursor.getColumnIndex(Photo.PHOTO))
+                        contact.photo =
+                            cursor.getBlob(cursor.getColumnIndex(Photo.PHOTO))
                     }
                 }
 
@@ -192,7 +206,8 @@ class FlutterContacts {
                     for (account in contact.accounts) {
                         if (account.rawId == rawId) {
                             accountSeen = true
-                            account.mimetypes = (account.mimetypes + mimetype).toSortedSet().toList()
+                            account.mimetypes =
+                                (account.mimetypes + mimetype).toSortedSet().toList()
                         }
                     }
                     if (!accountSeen) {
@@ -225,7 +240,8 @@ class FlutterContacts {
                             contact.name.nickname = getString(Nickname.NAME)
                         Phone.CONTENT_ITEM_TYPE -> {
                             val label: String = getPhoneLabel(cursor)
-                            val customLabel: String = if (label == "custom") getPhoneCustomLabel(cursor) else ""
+                            val customLabel: String =
+                                if (label == "custom") getPhoneCustomLabel(cursor) else ""
                             val phone = PPhone(
                                 getString(Phone.NUMBER),
                                 label,
@@ -236,7 +252,8 @@ class FlutterContacts {
                         }
                         Email.CONTENT_ITEM_TYPE -> {
                             val label: String = getEmailLabel(cursor)
-                            val customLabel: String = if (label == "custom") getEmailCustomLabel(cursor) else ""
+                            val customLabel: String =
+                                if (label == "custom") getEmailCustomLabel(cursor) else ""
                             val email = PEmail(
                                 getString(Email.ADDRESS),
                                 label,
@@ -247,7 +264,8 @@ class FlutterContacts {
                         }
                         StructuredPostal.CONTENT_ITEM_TYPE -> {
                             val label: String = getAddressLabel(cursor)
-                            val customLabel: String = if (label == "custom") getAddressCustomLabel(cursor) else ""
+                            val customLabel: String =
+                                if (label == "custom") getAddressCustomLabel(cursor) else ""
                             val address = PAddress(
                                 getString(StructuredPostal.FORMATTED_ADDRESS),
                                 label,
@@ -279,7 +297,8 @@ class FlutterContacts {
                         }
                         Website.CONTENT_ITEM_TYPE -> {
                             val label: String = getWebsiteLabel(cursor)
-                            val customLabel: String = if (label == "custom") getWebsiteCustomLabel(cursor) else ""
+                            val customLabel: String =
+                                if (label == "custom") getWebsiteCustomLabel(cursor) else ""
                             val website = PWebsite(
                                 getString(Website.URL),
                                 label,
@@ -289,7 +308,8 @@ class FlutterContacts {
                         }
                         Im.CONTENT_ITEM_TYPE -> {
                             val label: String = getSocialMediaLabel(cursor)
-                            val customLabel: String = if (label == "custom") getSocialMediaCustomLabel(cursor) else ""
+                            val customLabel: String =
+                                if (label == "custom") getSocialMediaCustomLabel(cursor) else ""
                             val socialMedia = PSocialMedia(
                                 getString(Im.DATA),
                                 label,
@@ -299,7 +319,8 @@ class FlutterContacts {
                         }
                         Event.CONTENT_ITEM_TYPE -> {
                             val label: String = getEventLabel(cursor)
-                            val customLabel: String = if (label == "custom") getEventCustomLabel(cursor) else ""
+                            val customLabel: String =
+                                if (label == "custom") getEventCustomLabel(cursor) else ""
                             val event = PEvent(
                                 getString(Event.START_DATE),
                                 label,
@@ -326,7 +347,10 @@ class FlutterContacts {
             return contacts.map { it.toMap() }
         }
 
-        fun new(resolver: ContentResolver, contactMap: Map<String, Any?>): String {
+        fun new(
+            resolver: ContentResolver,
+            contactMap: Map<String, Any?>
+        ): Map<String, Any?>? {
             val ops = mutableListOf<ContentProviderOperation>()
 
             val contact = Contact.fromMap(contactMap)
@@ -359,17 +383,35 @@ class FlutterContacts {
             buildOpsForContact(contact, ops)
 
             // Save
-            val addContactResults = resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+            val addContactResults =
+                resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
             val rawId: Long = ContentUris.parseId(addContactResults[0].uri)
 
             // Add avatar if provided (needs to be after saving the contact so we know
             // its raw contact ID)
-            if (contact.photo != null) buildOpsForPhoto(resolver, contact.photo!!, ops, rawId)
+            if (contact.photo != null) {
+                buildOpsForPhoto(resolver, contact.photo!!, ops, rawId)
+            }
 
-            return rawId.toString()
+            // Load contacts with that raw ID, which will give us the full contact as it
+            // was saved
+            val newContacts: List<Map<String, Any?>> = get(
+                resolver,
+                rawId.toString(), /*with_details=*/ true, /*with_photos=*/true,
+                /*useHighResolutionPhotos=*/true, /*idIsRawContactId=*/true
+            )
+
+            if (newContacts.isEmpty()) {
+                return null
+            }
+            return newContacts[0]
         }
 
-        fun update(resolver: ContentResolver, contactMap: Map<String, Any?>, deletePhoto: Boolean): String? {
+        fun update(
+            resolver: ContentResolver,
+            contactMap: Map<String, Any?>,
+            deletePhoto: Boolean
+        ): String? {
             val ops = mutableListOf<ContentProviderOperation>()
 
             val contact = Contact.fromMap(contactMap)
@@ -418,7 +460,9 @@ class FlutterContacts {
                 )
             }
             buildOpsForContact(contact, ops, rawContactId)
-            if (contact.photo != null) buildOpsForPhoto(resolver, contact.photo!!, ops, rawContactId.toLong())
+            if (contact.photo != null) {
+                buildOpsForPhoto(resolver, contact.photo!!, ops, rawContactId.toLong())
+            }
 
             // Save
             resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
@@ -687,7 +731,11 @@ class FlutterContacts {
             }
         }
 
-        private fun buildOpsForContact(contact: Contact, ops: MutableList<ContentProviderOperation>, rawContactId: String? = null) {
+        private fun buildOpsForContact(
+            contact: Contact,
+            ops: MutableList<ContentProviderOperation>,
+            rawContactId: String? = null
+        ) {
             fun emptyToNull(s: String): String? = if (s.isEmpty()) "" else s
             fun newInsert(): ContentProviderOperation.Builder =
                 if (rawContactId != null)
@@ -746,7 +794,8 @@ class FlutterContacts {
                 )
             }
             for (address in contact.addresses) {
-                val labelPair: AddressLabelPair = getAddressLabelInv(address.label, address.customLabel)
+                val labelPair: AddressLabelPair =
+                    getAddressLabelInv(address.label, address.customLabel)
                 ops.add(
                     newInsert()
                         .withValue(Data.MIMETYPE, StructuredPostal.CONTENT_ITEM_TYPE)
@@ -779,7 +828,8 @@ class FlutterContacts {
                 )
             }
             for (website in contact.websites) {
-                val labelPair: WebsiteLabelPair = getWebsiteLabelInv(website.label, website.customLabel)
+                val labelPair: WebsiteLabelPair =
+                    getWebsiteLabelInv(website.label, website.customLabel)
                 ops.add(
                     newInsert()
                         .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
@@ -790,7 +840,8 @@ class FlutterContacts {
                 )
             }
             for (socialMedia in contact.socialMedias) {
-                val labelPair: SocialMediaLabelPair = getSocialMediaLabelInv(socialMedia.label, socialMedia.customLabel)
+                val labelPair: SocialMediaLabelPair =
+                    getSocialMediaLabelInv(socialMedia.label, socialMedia.customLabel)
                 ops.add(
                     newInsert()
                         .withValue(Data.MIMETYPE, Im.CONTENT_ITEM_TYPE)
@@ -801,7 +852,8 @@ class FlutterContacts {
                 )
             }
             for (event in contact.events) {
-                val labelPair: EventLabelPair = getEventLabelInv(event.label, event.customLabel)
+                val labelPair: EventLabelPair =
+                    getEventLabelInv(event.label, event.customLabel)
                 ops.add(
                     newInsert()
                         .withValue(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
@@ -824,7 +876,12 @@ class FlutterContacts {
             }
         }
 
-        private fun buildOpsForPhoto(resolver: ContentResolver, photo: ByteArray, ops: MutableList<ContentProviderOperation>, rawContactId: Long) {
+        private fun buildOpsForPhoto(
+            resolver: ContentResolver,
+            photo: ByteArray,
+            ops: MutableList<ContentProviderOperation>,
+            rawContactId: Long
+        ) {
             val photoUri: Uri = Uri.withAppendedPath(
                 ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
                 RawContacts.DisplayPhoto.CONTENT_DIRECTORY

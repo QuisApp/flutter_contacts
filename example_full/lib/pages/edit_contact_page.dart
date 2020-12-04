@@ -61,17 +61,18 @@ class _EditContactPageState extends State<EditContactPage>
           IconButton(
             icon: Icon(Icons.save),
             onPressed: () async {
-              String idOrName;
+              String name;
               if (_isEdit) {
                 await FlutterContacts.updateContact(_contact,
                     deletePhoto: _deletePhoto);
-                idOrName = _contact.displayName;
+                name = _contact.displayName;
               } else {
-                idOrName = await FlutterContacts.newContact(_contact);
+                _contact = await FlutterContacts.newContact(_contact);
+                name = _contact.displayName;
               }
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                      '${_isEdit ? 'Updated' : 'Saved'} contact $idOrName')));
+                  content:
+                      Text('${_isEdit ? 'Updated' : 'Saved'} contact $name')));
               if (_onUpdate != null) _onUpdate();
               Navigator.of(context).pop();
             },

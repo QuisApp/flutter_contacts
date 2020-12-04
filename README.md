@@ -53,14 +53,14 @@ if (await Permission.contacts.request().isGranted) {
     Contact newContact = Contact.create()
         ..name = Name(first: 'John', last: 'Doe')
         ..phones = [Phone('555-123-4567'), Phone('555-999-9999', label: PhoneLabel.work)];
-    await FlutterContacts.newContact(newContact);
+    newContact = await FlutterContacts.newContact(newContact);
 
     /// Update contact
-    contact.emails.add(Email('john.doe@example.com'));
-    await FlutterContacts.updateContact(contact);
+    newContact.emails.add(Email('john.doe@example.com'));
+    await FlutterContacts.updateContact(newContact);
 
     /// Delete contact
-    await FlutterContacts.deleteContact(contact.id);
+    await FlutterContacts.deleteContact(newContact.id);
 }
 ```
 
