@@ -91,7 +91,7 @@
       <div><h1><span class="kind-method">newContact</span> method </h1></div>
 
     <section class="multi-line-signature">
-      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
             <span class="name ">newContact</span>
 (<wbr><ol class="parameter-list"><li><span class="parameter" id="newContact-param-contact"><span class="type-annotation"><a href="../../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span></li>
 </ol>)
@@ -101,14 +101,23 @@
       <p>////////////////////////////////////////////////
 CREATING CONTACTS              ///
 ////////////////////////////////////////////////
-Creates new contact and return its ID (or raw contact ID on Android)</p>
+Creates new contact and return it</p>
+<p>Note that the output contact will be different from the input; for example
+the input won't have an ID, but the output will. If you intend to perform
+operations on the contact after creation, you should perform them on the
+output rather than on the input.</p>
     </section>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">&#47;&#47;&#47; Creates new contact and return its ID (or raw contact ID on Android)
-static Future&lt;String&gt; newContact(Contact contact) async =&gt;
-    await _channel.invokeMethod(&#39;new&#39;, contact.toJson(includePhoto: true));</code></pre>
+      <pre class="language-dart"><code class="language-dart">&#47;&#47;&#47; Creates new contact and return it
+&#47;&#47;&#47;
+&#47;&#47;&#47; Note that the output contact will be different from the input; for example
+&#47;&#47;&#47; the input won&#39;t have an ID, but the output will. If you intend to perform
+&#47;&#47;&#47; operations on the contact after creation, you should perform them on the
+&#47;&#47;&#47; output rather than on the input.
+static Future&lt;Contact&gt; newContact(Contact contact) async =&gt; Contact.fromJson(
+    await _channel.invokeMethod(&#39;new&#39;, contact.toJson(includePhoto: true)));</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -121,7 +130,7 @@ static Future&lt;String&gt; newContact(Contact contact) async =&gt;
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.3
+      0.0.4
   </span>
 
 </footer>

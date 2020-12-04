@@ -91,12 +91,8 @@
 </ul>
 </li>
 </ul>
-<h2 id="screenshots">Screenshots</h2><img src="https://user-images.githubusercontent.com/1289004/100083621-8b7b7880-2dfe-11eb-9055-335e5a29e4b2.PNG" alt="screenshot1" width="200">
-<img src="https://user-images.githubusercontent.com/1289004/100083640-9209f000-2dfe-11eb-8fd7-433ebd5ad777.PNG" alt="screenshot2" width="200">
-<img src="https://user-images.githubusercontent.com/1289004/100083630-8dddd280-2dfe-11eb-91ff-80058a476ed3.PNG" alt="screenshot3" width="200">
-<img src="https://user-images.githubusercontent.com/1289004/100083635-8fa79600-2dfe-11eb-98cb-856ebd2d6777.PNG" alt="screenshot4" width="200">
-<img src="https://user-images.githubusercontent.com/1289004/100083652-93d3b380-2dfe-11eb-8738-6197c675ba14.PNG" alt="screenshot5" width="200">
-<p>(identities and photos from <a href="https://www.fakenamegenerator.com/">https://www.fakenamegenerator.com/</a> and <a href="https://thispersondoesnotexist.com/">https://thispersondoesnotexist.com/</a>)</p>
+<h2 id="demo">Demo</h2>
+<p><img src="https://user-images.githubusercontent.com/1289004/101141809-ab165c00-35c9-11eb-90ff-b10318b13f16.gif" alt="demo"></p>
 <h2 id="usage">Usage</h2>
 <pre class="language-dart"><code class="language-dart">import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -115,20 +111,20 @@ if (await Permission.contacts.request().isGranted) {
     Contact newContact = Contact.create()
         ..name = Name(first: 'John', last: 'Doe')
         ..phones = [Phone('555-123-4567'), Phone('555-999-9999', label: PhoneLabel.work)];
-    await FlutterContacts.newContact(newContact);
+    newContact = await FlutterContacts.newContact(newContact);
 
     /// Update contact
-    contact.emails.add(Email('john.doe@example.com'));
-    await FlutterContacts.updateContact(contact);
+    newContact.emails.add(Email('john.doe@example.com'));
+    await FlutterContacts.updateContact(newContact);
 
     /// Delete contact
-    await FlutterContacts.deleteContact(contact.id);
+    await FlutterContacts.deleteContact(newContact.id);
 }
 </code></pre>
 <h2 id="installation">Installation</h2>
 <ol>
 <li>Add <code>json_serializable: ^3.5.0</code> (or higher) to the <code>dev_dependencies</code> in <code>pubspec.yaml</code>.</li>
-<li>Add <code>permission_handler: ^5.0.0+hotfix.3</code> (or higher) to the <code>dependencies</code> in <code>pubspec.yaml</code>: this is the package that allows you to request for contact permissions.</li>
+<li>Add <code>permission_handler: ^5.0.0+hotfix.3</code> (or higher) to the <code>dependencies</code> in <code>pubspec.yaml</code>: this is the package that allows you to request contact permissions.</li>
 <li>Add the following key/value pair to your app's <code>Info.plist</code> (for iOS):
 <pre class="language-xml"><code class="language-xml"> &lt;plist version="1.0"&gt;
  &lt;dict&gt;
@@ -148,13 +144,6 @@ if (await Permission.contacts.request().isGranted) {
 </code></pre>
 </li>
 </ol>
-<h2 id="development-notes">Development notes</h2>
-<h3 id="generate-gdart-files">Generate <code>g.dart</code> files</h3>
-<pre class="language-sh"><code class="language-sh">flutter pub run build_runner build
-</code></pre>
-<h3 id="format-files">Format files</h3>
-<pre class="language-sh"><code class="language-sh">./scripts/format.sh
-</code></pre>
       </section>
       
       <section class="summary">
@@ -245,7 +234,7 @@ if (await Permission.contacts.request().isGranted) {
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.3
+      0.0.4
   </span>
 
 </footer>
