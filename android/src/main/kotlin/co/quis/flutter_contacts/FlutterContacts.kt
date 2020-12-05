@@ -169,8 +169,8 @@ class FlutterContacts {
                         val displayPhotoUri: Uri =
                             Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO)
                         try {
-                            var fis: InputStream = resolver.openInputStream(displayPhotoUri)
-                            contact.photo = fis.readBytes()
+                            var fis: InputStream? = resolver.openInputStream(displayPhotoUri)
+                            contact.photo = fis?.readBytes()
                         } catch (e: FileNotFoundException) {
                             // This happens when no high-resolution photo exists, and is
                             // a common situation
@@ -385,7 +385,7 @@ class FlutterContacts {
             // Save
             val addContactResults =
                 resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
-            val rawId: Long = ContentUris.parseId(addContactResults[0].uri)
+            val rawId: Long = ContentUris.parseId(addContactResults[0].uri!!)
 
             // Add avatar if provided (needs to be after saving the contact so we know
             // its raw contact ID)
@@ -886,11 +886,13 @@ class FlutterContacts {
                 ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
                 RawContacts.DisplayPhoto.CONTENT_DIRECTORY
             )
-            var fd: AssetFileDescriptor = resolver.openAssetFileDescriptor(photoUri, "rw")
-            val os: OutputStream = fd.createOutputStream()
-            os.write(photo)
-            os.close()
-            fd.close()
+            var fd: AssetFileDescriptor? = resolver.openAssetFileDescriptor(photoUri, "rw")
+            if (fd != null) {
+                val os: OutputStream = fd.createOutputStream()
+                os.write(photo)
+                os.close()
+                fd.close()
+            }
         }
     }
 }

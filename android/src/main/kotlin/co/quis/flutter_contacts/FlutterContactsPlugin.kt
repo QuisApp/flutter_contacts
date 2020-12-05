@@ -118,12 +118,14 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         if (events != null) {
             this._eventObserver = ContactChangeObserver(android.os.Handler(), events)
-            resolver?.registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, this._eventObserver)
+            resolver?.registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, this._eventObserver!!)
         }
     }
 
     override fun onCancel(arguments: Any?) {
-        resolver?.unregisterContentObserver(this._eventObserver)
+        if (this._eventObserver != null) {
+            resolver?.unregisterContentObserver(this._eventObserver!!)
+        }
         this._eventObserver = null
     }
 }
