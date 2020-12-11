@@ -44,8 +44,14 @@ class FlutterContacts {
 
   /// Fetches all fields for all contacts
   static Future<List<Contact>> getFullContacts(
-          {bool withPhotos = false, bool sorted = true}) async =>
-      await _get(withDetails: true, withPhotos: withPhotos, sorted: sorted);
+          {bool withPhotos = false,
+          bool sorted = true,
+          useHighResolutionPhotos = false}) async =>
+      await _get(
+          withDetails: true,
+          withPhotos: withPhotos,
+          sorted: sorted,
+          useHighResolutionPhotos: useHighResolutionPhotos);
 
   static Future<List<Contact>> _get(
       {String id,
