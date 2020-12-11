@@ -49,8 +49,8 @@ public enum FlutterContacts {
             }
         }
         if withPhotos {
-            if useHighResolutionPhotos { keys.append(CNContactThumbnailImageDataKey) }
-            else { keys.append(CNContactImageDataKey) }
+            if useHighResolutionPhotos { keys.append(CNContactImageDataKey) }
+            else { keys.append(CNContactThumbnailImageDataKey) }
         }
 
         let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
