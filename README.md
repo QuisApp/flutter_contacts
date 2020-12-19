@@ -1,5 +1,10 @@
 # flutter_contacts
 
+[![pub](https://img.shields.io/pub/v/flutter_contacts?label=version&style=flat-square)](https://pub.dev/packages/flutter_contacts)
+[![pub points](https://badges.bar/flutter_contacts/pub%20points)](https://pub.dev/packages/flutter_contacts/score)
+[![popularity](https://badges.bar/flutter_contacts/popularity)](https://pub.dev/packages/flutter_contacts/score)
+[![likes](https://badges.bar/flutter_contacts/likes)](https://pub.dev/packages/flutter_contacts/score)
+
 Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS.
 
 For a minimalistic example, take a look at `example/`. You can write a full-fledged contacts app with it – see `example_full/` to see how.

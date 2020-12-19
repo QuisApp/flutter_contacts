@@ -1,3 +1,10 @@
+## 0.0.5
+
+* Improved README and dartdoc.
+* Added option to `getFullContacts()` with high-res photos.
+* Fixed bug on iOS where low-res photos were fetched instead of high-res and vice-versa.
+* Better Kotlin null safety.
+
 ## 0.0.4
 
 * `newContact()` now returns the full contact instead of ID / raw ID.
