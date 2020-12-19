@@ -11,34 +11,6 @@ class Phone {
 
   /// The label or type of phone it is. If `custom`, the free-form label can be
   /// found in [customLabel].
-  ///
-  /// +-------------+---------+-----+
-  /// | Label       | Android | iOS |
-  /// +-------------+---------+-----+
-  /// | assistant   | ✅      | ❌   |
-  /// | callback    | ✅      | ❌   |
-  /// | car         | ✅      | ❌   |
-  /// | companyMain | ✅      | ❌   |
-  /// | faxHome     | ✅      | ✅   |
-  /// | faxOther    | ✅      | ✅   |
-  /// | faxWork     | ✅      | ✅   |
-  /// | home        | ✅      | ✅   |
-  /// | iPhone      | ❌      | ✅   |
-  /// | isdn        | ✅      | ❌   |
-  /// | main        | ✅      | ✅   |
-  /// | mms         | ✅      | ❌   |
-  /// | mobile      | ✅      | ✅   |
-  /// | pager       | ✅      | ✅   |
-  /// | radio       | ✅      | ❌   |
-  /// | school      | ❌      | ✅   |
-  /// | telex       | ✅      | ❌   |
-  /// | ttyTtd      | ✅      | ❌   |
-  /// | work        | ✅      | ✅   |
-  /// | workMobile  | ✅      | ❌   |
-  /// | workPager   | ✅      | ❌   |
-  /// | other       | ✅      | ✅   |
-  /// | custom      | ✅      | ✅   |
-  /// +-------------+---------+-----+
   @JsonKey(defaultValue: PhoneLabel.mobile)
   PhoneLabel label;
 
@@ -61,6 +33,32 @@ class Phone {
 }
 
 /// Phone labels
+///
+/// | Label       | Android | iOS |
+/// |-------------|:-------:|:---:|
+/// | assistant   | ✔       | ⨯   |
+/// | callback    | ✔       | ⨯   |
+/// | car         | ✔       | ⨯   |
+/// | companyMain | ✔       | ⨯   |
+/// | faxHome     | ✔       | ✔   |
+/// | faxOther    | ✔       | ✔   |
+/// | faxWork     | ✔       | ✔   |
+/// | home        | ✔       | ✔   |
+/// | iPhone      | ⨯       | ✔   |
+/// | isdn        | ✔       | ⨯   |
+/// | main        | ✔       | ✔   |
+/// | mms         | ✔       | ⨯   |
+/// | mobile      | ✔       | ✔   |
+/// | pager       | ✔       | ✔   |
+/// | radio       | ✔       | ⨯   |
+/// | school      | ⨯       | ✔   |
+/// | telex       | ✔       | ⨯   |
+/// | ttyTtd      | ✔       | ⨯   |
+/// | work        | ✔       | ✔   |
+/// | workMobile  | ✔       | ⨯   |
+/// | workPager   | ✔       | ⨯   |
+/// | other       | ✔       | ✔   |
+/// | custom      | ✔       | ✔   |
 enum PhoneLabel {
   assistant,
   callback,

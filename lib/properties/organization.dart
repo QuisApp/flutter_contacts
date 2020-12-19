@@ -6,17 +6,15 @@ part 'organization.g.dart';
 ///
 /// Android allows multiple jobs while iOS supports only one.
 ///
-/// +--------------------+---------+-----+
-/// | field              | android | iOS |
-/// +--------------------+---------+-----+
-/// | company            | ✅      | ✅   |
-/// | title              | ✅      | ✅   |
-/// | department         | ✅      | ✅   |
-/// | jobDescription     | ✅      | ❌   |
-/// | symbol             | ✅      | ❌   |
-/// | phoneticName       | ✅      | ✅   |
-/// | officeLocation     | ✅      | ❌   |
-/// +--------------------+---------+-----+
+/// | Field              | Android | iOS |
+/// |--------------------|:-------:|:---:|
+/// | company            | ✔       | ✔   |
+/// | title              | ✔       | ✔   |
+/// | department         | ✔       | ✔   |
+/// | jobDescription     | ✔       | ⨯   |
+/// | symbol             | ✔       | ⨯   |
+/// | phoneticName       | ✔       | ✔   |
+/// | officeLocation     | ✔       | ⨯   |
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class Organization {
   /// Company name

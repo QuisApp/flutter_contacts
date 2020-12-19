@@ -30,19 +30,17 @@ part 'name.g.dart';
 /// simplify, we only consider nickname as just another name field, and
 /// disregard nickname labels.
 ///
-/// +--------------------+---------+-----+
-/// | field              | android | iOS |
-/// +--------------------+---------+-----+
-/// | first              | ✅      | ✅   |
-/// | last               | ✅      | ✅   |
-/// | middle             | ✅      | ✅   |
-/// | prefix             | ✅      | ✅   |
-/// | suffix             | ✅      | ✅   |
-/// | nickname           | ✅      | ✅   |
-/// | firstPhonetic      | ✅      | ✅   |
-/// | lastPhonetic       | ✅      | ✅   |
-/// | middlePhonetic     | ✅      | ✅   |
-/// +--------------------+---------+-----+
+/// | Field              | Android | iOS |
+/// |--------------------|:-------:|:---:|
+/// | first              | ✔       | ✔   |
+/// | last               | ✔       | ✔   |
+/// | middle             | ✔       | ✔   |
+/// | prefix             | ✔       | ✔   |
+/// | suffix             | ✔       | ✔   |
+/// | nickname           | ✔       | ✔   |
+/// | firstPhonetic      | ✔       | ✔   |
+/// | lastPhonetic       | ✔       | ✔   |
+/// | middlePhonetic     | ✔       | ✔   |
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class Name {
   /// First name / given name

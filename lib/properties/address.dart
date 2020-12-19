@@ -12,20 +12,18 @@ part 'address.g.dart';
 /// formatted address, which we recommend to use instead. That said, other
 /// fields are included for compatibility.
 ///
-/// +--------------+---------+-----+
-/// | field        | android | iOS |
-/// +--------------+---------+-----+
-/// | street       | ✅      | ✅   |
-/// | pobox        | ✅      | ❌   |
-/// | neighborhood | ✅      | ❌   |
-/// | city         | ✅      | ✅   |
-/// | state        | ✅      | ✅   |
-/// | postalCode   | ✅      | ✅   |
-/// | country      | ✅      | ✅   |
-/// | isoCountry   | ❌      | ✅   |
-/// | subAdminArea | ❌      | ✅   |
-/// | subLocality  | ❌      | ✅   |
-/// +--------------+---------+-----+
+/// | Field           | Android | iOS |
+/// |-----------------|:-------:|:---:|
+/// | street          | ✔       | ⨯   |
+/// | pobox           | ✔       | ⨯   |
+/// | neighborhood    | ✔       | ⨯   |
+/// | city            | ✔       | ✔   |
+/// | state           | ✔       | ✔   |
+/// | postalCode      | ✔       | ✔   |
+/// | country         | ✔       | ✔   |
+/// | isoCountry      | ⨯       | ✔   |
+/// | subAdminArea    | ⨯       | ✔   |
+/// | subLocality     | ⨯       | ✔   |
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class Address {
   /// Free-form formatted address.
@@ -40,16 +38,6 @@ class Address {
 
   /// The label or type of address it is. If `custom`, the free-form label can
   /// be found in [customLabel].
-  ///
-  /// +----------+---------+-----+
-  /// | Label    | Android | iOS |
-  /// +----------+---------+-----+
-  /// | home     | ✅      | ✅   |
-  /// | school   | ❌      | ✅   |
-  /// | work     | ✅      | ✅   |
-  /// | other    | ✅      | ✅   |
-  /// | custom   | ✅      | ✅   |
-  /// +----------+---------+-----+
   @JsonKey(defaultValue: AddressLabel.home)
   AddressLabel label;
 
@@ -125,6 +113,14 @@ class Address {
 }
 
 /// Address labels
+///
+/// | Label    | Android | iOS |
+/// |----------|:-------:|:---:|
+/// | home     | ✔       | ✔   |
+/// | school   | ⨯       | ✔   |
+/// | work     | ✔       | ✔   |
+/// | other    | ✔       | ✔   |
+/// | custom   | ✔       | ✔   |
 enum AddressLabel {
   home,
   school,

@@ -21,50 +21,6 @@ class SocialMedia {
 
   /// The label or type of SocialMedia it is. If `custom`, the free-form label
   /// can be found in [customLabel].
-  ///
-  /// +--------------+---------+-----+
-  /// | Label        | Android | iOS |
-  /// +--------------+---------+-----+
-  /// | aim          | ✅      | ✅   |
-  /// | baiduTieba   | ❌      | ❌   |
-  /// | discord      | ❌      | ❌   |
-  /// | facebook     | ❌      | ✅   |
-  /// | flickr       | ❌      | ✅   |
-  /// | gaduGadu     | ❌      | ✅   |
-  /// | gameCenter   | ❌      | ✅   |
-  /// | googleTalk   | ✅      | ✅   |
-  /// | icq          | ✅      | ✅   |
-  /// | instagram    | ❌      | ❌   |
-  /// | jabber       | ✅      | ✅   |
-  /// | line         | ❌      | ❌   |
-  /// | linkedIn     | ❌      | ✅   |
-  /// | medium       | ❌      | ❌   |
-  /// | messenger    | ❌      | ❌   |
-  /// | msn          | ✅      | ✅   |
-  /// | myspace      | ❌      | ✅   |
-  /// | netmeeting   | ✅      | ❌   |
-  /// | pinterest    | ❌      | ❌   |
-  /// | qqchat       | ✅      | ✅   |
-  /// | qzone        | ❌      | ❌   |
-  /// | reddit       | ❌      | ❌   |
-  /// | sinaWeibo    | ❌      | ✅   |
-  /// | skype        | ✅      | ✅   |
-  /// | snapchat     | ❌      | ❌   |
-  /// | telegram     | ❌      | ❌   |
-  /// | tencentWeibo | ❌      | ✅   |
-  /// | tikTok       | ❌      | ❌   |
-  /// | tumblr       | ❌      | ❌   |
-  /// | twitter      | ❌      | ✅   |
-  /// | viber        | ❌      | ❌   |
-  /// | wechat       | ❌      | ❌   |
-  /// | whatsapp     | ❌      | ❌   |
-  /// | yahoo        | ✅      | ✅   |
-  /// | yelp         | ✅      | ✅   |
-  /// | youtube      | ❌      | ❌   |
-  /// | zoom         | ❌      | ❌   |
-  /// | other        | ❌      | ❌   |
-  /// | custom       | ✅      | ✅   |
-  /// +--------------+---------+-----+
   @JsonKey(defaultValue: SocialMediaLabel.other)
   SocialMediaLabel label;
 
@@ -82,6 +38,48 @@ class SocialMedia {
 }
 
 /// Social media labels
+///
+/// | Label        | Android | iOS |
+/// |--------------|:-------:|:---:|
+/// | aim          | ✔       | ✔   |
+/// | baiduTieba   | ⨯       | ⨯   |
+/// | discord      | ⨯       | ⨯   |
+/// | facebook     | ⨯       | ✔   |
+/// | flickr       | ⨯       | ✔   |
+/// | gaduGadu     | ⨯       | ✔   |
+/// | gameCenter   | ⨯       | ✔   |
+/// | googleTalk   | ✔       | ✔   |
+/// | icq          | ✔       | ✔   |
+/// | instagram    | ⨯       | ⨯   |
+/// | jabber       | ✔       | ✔   |
+/// | line         | ⨯       | ⨯   |
+/// | linkedIn     | ⨯       | ✔   |
+/// | medium       | ⨯       | ⨯   |
+/// | messenger    | ⨯       | ⨯   |
+/// | msn          | ✔       | ✔   |
+/// | myspace      | ⨯       | ✔   |
+/// | netmeeting   | ✔       | ⨯   |
+/// | pinterest    | ⨯       | ⨯   |
+/// | qqchat       | ✔       | ✔   |
+/// | qzone        | ⨯       | ⨯   |
+/// | reddit       | ⨯       | ⨯   |
+/// | sinaWeibo    | ⨯       | ✔   |
+/// | skype        | ✔       | ✔   |
+/// | snapchat     | ⨯       | ⨯   |
+/// | telegram     | ⨯       | ⨯   |
+/// | tencentWeibo | ⨯       | ✔   |
+/// | tikTok       | ⨯       | ⨯   |
+/// | tumblr       | ⨯       | ⨯   |
+/// | twitter      | ⨯       | ✔   |
+/// | viber        | ⨯       | ⨯   |
+/// | wechat       | ⨯       | ⨯   |
+/// | whatsapp     | ⨯       | ⨯   |
+/// | yahoo        | ✔       | ✔   |
+/// | yelp         | ✔       | ✔   |
+/// | youtube      | ⨯       | ⨯   |
+/// | zoom         | ⨯       | ⨯   |
+/// | other        | ⨯       | ⨯   |
+/// | custom       | ✔       | ✔   |
 enum SocialMediaLabel {
   aim,
   baiduTieba,

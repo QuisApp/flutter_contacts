@@ -51,17 +51,18 @@
     
     <h5>note library</h5>
     <ol>
-      <li class="section-title"><a href="../properties_note/properties_note-library.html#classes">Classes</a></li>
-      <li><a href="../properties_note/Note-class.html">Note</a></li>
-    
-    
-    
-    
-    
-    
-    
-    
-    </ol>
+  <li class="section-title"><a href="../properties_note/properties_note-library.html#classes">Classes</a></li>
+  <li><a href="../properties_note/Note-class.html">Note</a></li>
+
+
+
+
+
+
+
+
+</ol>
+
   </div>
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
@@ -70,6 +71,9 @@
     <section class="desc markdown">
       <p>A note, i.e. a free-form string about the contact.</p>
 <p>Android allows multiple notes per contact, while iOS supports only one.</p>
+<p>On iOS13+ notes are no longer supported, as you need to request entitlement
+from Apple to use it in your app. See:
+<a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes">https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes</a></p>
     </section>
     
     <section>
@@ -192,30 +196,30 @@
 
   <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
     <ol>
-    
-      <li class="section-title"><a href="../properties_note/Note-class.html#constructors">Constructors</a></li>
-      <li><a href="../properties_note/Note/Note.html">Note</a></li>
-      <li><a href="../properties_note/Note/Note.fromJson.html">fromJson</a></li>
-    
-      <li class="section-title">
-        <a href="../properties_note/Note-class.html#instance-properties">Properties</a>
-      </li>
-      <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
-      <li><a href="../properties_note/Note/note.html">note</a></li>
-      <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-    
-      <li class="section-title"><a href="../properties_note/Note-class.html#instance-methods">Methods</a></li>
-      <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-      <li><a href="../properties_note/Note/toJson.html">toJson</a></li>
-      <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
-    
-      <li class="section-title inherited"><a href="../properties_note/Note-class.html#operators">Operators</a></li>
-      <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
-    
-    
-    
-    
-    </ol>
+
+
+    <li class="section-title"><a href="../properties_note/Note-class.html#constructors">Constructors</a></li>
+    <li><a href="../properties_note/Note/Note.html">Note</a></li>
+    <li><a href="../properties_note/Note/Note.fromJson.html">fromJson</a></li>
+
+    <li class="section-title"> <a href="../properties_note/Note-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../properties_note/Note/note.html">note</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../properties_note/Note-class.html#instance-methods">Methods</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../properties_note/Note/toJson.html">toJson</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title"><a href="../properties_note/Note-class.html#operators">Operators</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+</ol>
+
   </div><!--/.sidebar-offcanvas-->
 
 </main>
@@ -223,7 +227,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.4
+      0.0.5
   </span>
 
 </footer>

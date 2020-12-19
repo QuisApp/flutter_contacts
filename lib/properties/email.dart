@@ -11,18 +11,6 @@ class Email {
 
   /// The label or type of email it is. If `custom`, the free-form label can be
   /// found in [customLabel].
-  ///
-  /// +----------+---------+-----+
-  /// | Label    | Android | iOS |
-  /// +----------+---------+-----+
-  /// | home     | ✅      | ✅   |
-  /// | iCloud   | ❌      | ✅   |
-  /// | mobile   | ✅      | ❌   |
-  /// | school   | ❌      | ✅   |
-  /// | work     | ✅      | ✅   |
-  /// | other    | ✅      | ✅   |
-  /// | custom   | ✅      | ✅   |
-  /// +----------+---------+-----+
   @JsonKey(defaultValue: EmailLabel.home)
   EmailLabel label;
 
@@ -46,6 +34,16 @@ class Email {
 }
 
 /// Email labels
+///
+/// | Label    | Android | iOS |
+/// |----------|:-------:|:---:|
+/// | home     | ✔       | ✔   |
+/// | iCloud   | ⨯       | ✔   |
+/// | mobile   | ✔       | ⨯   |
+/// | school   | ⨯       | ✔   |
+/// | work     | ✔       | ✔   |
+/// | other    | ✔       | ✔   |
+/// | custom   | ✔       | ✔   |
 enum EmailLabel {
   home,
   iCloud,

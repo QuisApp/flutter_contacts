@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="generator" content="made with love by dartdoc 0.37.0">
+  <meta name="generator" content="made with love by dartdoc 0.38.0">
   <meta name="description" content="flutter_contacts API docs, for the Dart programming language.">
   <title>flutter_contacts - Dart API docs</title>
 
@@ -71,11 +71,11 @@
 <p>For a minimalistic example, take a look at <code>example/</code>. You can write a full-fledged contacts app with it – see <code>example_full/</code> to see how.</p>
 <h2 id="features">Features</h2>
 <ul>
-<li>List all contacts</li>
-<li>Create new contact</li>
-<li>Update existing contact</li>
-<li>Delete contacts</li>
-<li>Observe contact database changes</li>
+<li><strong>Fetch</strong> all contacts</li>
+<li><strong>Create</strong> new contact</li>
+<li><strong>Update</strong> existing contact</li>
+<li><strong>Delete</strong> contacts</li>
+<li><strong>Observe</strong> contact database changes</li>
 <li>Fetch all details for a given contact, including:
 <ul>
 <li>Photo (low / high resolution)</li>
@@ -90,6 +90,14 @@
 <li>Labels (such as "main" or "work" for phones)</li>
 </ul>
 </li>
+</ul>
+<p>★ Exclusive <code>flutter_contacts</code> features:</p>
+<ul>
+<li><strong>Maximum compability</strong> with native contacts: fetching a contact and saving it back
+doesn't alter it</li>
+<li>Contacts correctly <strong>sorted</strong>, ignoring case and diacritics</li>
+<li>No <em>"zombie contacts"</em> on Android (fake or duplicate contacts that wouldn't appear in
+your default contact app)</li>
 </ul>
 <h2 id="demo">Demo</h2>
 <p><img src="https://user-images.githubusercontent.com/1289004/101141809-ab165c00-35c9-11eb-90ff-b10318b13f16.gif" alt="demo"></p>
@@ -121,6 +129,159 @@ if (await Permission.contacts.request().isGranted) {
     await FlutterContacts.deleteContact(newContact.id);
 }
 </code></pre>
+<h2 id="data-model">Data model</h2>
+<h3 id="essential-data-model-enough-for-most-use-cases">Essential data model (enough for most use cases)</h3>
+<pre class="language-dart"><code class="language-dart">class Contact {
+    String id;
+    String displayName;
+    Uint8List photo;
+    Name name;
+    List&lt;Phone&gt; phones;
+    List&lt;Email&gt; emails;
+    List&lt;Address&gt; addresses;
+}
+
+class Name {
+    String first;
+    String last;
+}
+
+class Phone {
+    String number;
+}
+
+class Email {
+    String address;
+}
+
+class Address {
+    String address;
+}
+</code></pre>
+<h3 id="complete-data-model-for-power-users">Complete data model (for power users)</h3>
+<pre class="language-dart"><code class="language-dart">class Contact {
+    // Always fetched
+    String id;
+    String displayName;
+
+    // Fetched when calling:
+    //   - getContact()
+    //   - getContacts(withPhotos: true)
+    //   - getFullContacts(withPhotos: true)
+    // Photo is low-resolution, unless calling:
+    //   - getContact()
+    //   - getContacts(withPhotos: true, useHighResolutionPhotos: true)
+    //   - getFullContacts(withPhotos: true, useHighResolutionPhotos: true)
+    Uint8List photo;
+
+    // Fetched when calling:
+    //   - getContact()
+    //   - getFullContacts()
+    Name name;
+    List&lt;Phone&gt; phones;
+    List&lt;Email&gt; emails;
+    List&lt;Address&gt; addresses;
+    List&lt;Organization&gt; organizations;
+    List&lt;Website&gt; websites;
+    List&lt;SocialMedia&gt; socialMedias;
+    List&lt;Event&gt; events;
+    List&lt;Note&gt; notes;
+    List&lt;Account&gt; accounts;
+}
+
+class Name {
+    String first;
+    String last;
+    String middle;
+    String prefix;             // e.g. "Dr" in American names
+    String suffix;             // e.g. "Jr" in American names
+    String nickname;
+    String firstPhonetic;
+    String lastPhonetic;
+    String middlePhonetic;
+}
+
+class Phone {
+    String number;
+    PhoneLabel label;         // https://cutt.ly/4hXHFq2, default PhoneLabel.mobile
+    String customLabel;       // if label == PhoneLabel.custom
+    bool isPrimary;           // phone number called by default (android only)
+}
+
+class Email {
+    String address;
+    EmailLabel label;         // https://cutt.ly/zhXHGba, default EmailLabel.home
+    String customLabel;       // if label == EmailLabel.custom
+    bool isPrimary;           // email address used by default (android only)
+}
+
+class Address {
+    String address;           // formatted address (always available)
+    AddressLabel label;       // https://cutt.ly/ShXHFm6, default AddressLabel.home
+    String customLabel;       // if label == AddressLabel.custom
+    String street;            // street name and house number
+    String pobox;             // android only
+    String neighborhood;      // android only
+    String city;
+    String state;             // US state; also region/department/county on android
+    String postalCode;
+    String country;
+    String isoCountry;        // ISO 3166-1 alpha-2 standard (iOS only)
+    String subAdminArea       // region/county (iOS only)
+    String subLocality;       // anything else (iOS only)
+}
+
+class Organization {
+    String company;           // company name
+    String title;             // job title
+    String department;        // department
+    String jobDescription;    // job description (android only)
+    String symbol;            // ticker symbol (android only)
+    String phoneticName;
+    String officeLocation;    // android only
+}
+
+class Website {
+    String url;
+    WebsiteLabel label;       // https://cutt.ly/JhXH5CF, default WebsiteLabel.homepage
+    String customLabel;       // if label == WebsiteLabel.custom
+}
+
+class SocialMedia {
+    String userName;          // handle/username/login
+    SocialMediaLabel label;   // https://cutt.ly/9hXJwFH, default SocialMediaLabel.other
+    String customLabel;       // if label == SocialMediaLabel.custom
+}
+
+class Event {
+    DateTime date;
+    EventLabel label;         // https://cutt.ly/vhXJtAW, default EventLabel.birthday
+    String customLabel;       // if label == EventLabel.customLabel
+    bool noYear;              // iOS only
+}
+
+class Note {
+    String note;              // not available on iOS13+, see https://cutt.ly/HhXJoMR
+}
+
+class Account {               // for debug purposes (android only)
+    String rawId;             // raw contact ID
+    String type;              // e.g. com.google or com.facebook.messenger
+    String name;              // e.g. john.doe@gmail.com
+    List&lt;String&gt; mimetypes;   // list of android mimetypes
+}
+</code></pre>
+<h3 id="default-values">Default values</h3>
+<p>Apart from <code>photo</code>, nothing can be <code>null</code>. String values default to <code>''</code>, boolean values
+to <code>false</code>, lists to <code>[]</code>, <code>DateTime</code> to Jan 1 1970, and enums as indicated above.</p>
+<h3 id="androidios-availability">Android/iOS availability</h3>
+<p>Some fields are only available on iOS, others only on Android. Concretely it means that
+if, for example, you save a contact with <code>contact.events[0].noYear = true</code> on Android,
+you will lose that information when fetching it again.</p>
+<p>Regarding labels, some are present in both (e.g. <code>PhoneLabel.mobile</code>), others only on
+one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to save a contact with
+<code>contact.phones[0].label = PhoneLabel.iPhone</code> on Android, it will instead get saved with
+<code>label = PhoneLabel.custom</code> and <code>customLabel = 'iPhone'</code>.</p>
 <h2 id="installation">Installation</h2>
 <ol>
 <li>Add <code>json_serializable: ^3.5.0</code> (or higher) to the <code>dev_dependencies</code> in <code>pubspec.yaml</code>.</li>
@@ -234,7 +395,7 @@ if (await Permission.contacts.request().isGranted) {
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.4
+      0.0.5
   </span>
 
 </footer>

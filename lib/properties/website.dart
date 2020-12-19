@@ -13,20 +13,6 @@ class Website {
 
   /// The label or type of URL it is. If `custom`, the free-form label can be
   /// found in [customLabel].
-  ///
-  /// +----------+---------+-----+
-  /// | Label    | Android | iOS |
-  /// +----------+---------+-----+
-  /// | blog     | ✅      | ❌   |
-  /// | ftp      | ✅      | ❌   |
-  /// | home     | ✅      | ✅   |
-  /// | homepage | ✅      | ✅   |
-  /// | profile  | ✅      | ❌   |
-  /// | school   | ❌      | ✅   |
-  /// | work     | ✅      | ✅   |
-  /// | other    | ✅      | ✅   |
-  /// | custom   | ✅      | ✅   |
-  /// +----------+---------+-----+
   @JsonKey(defaultValue: WebsiteLabel.homepage)
   WebsiteLabel label;
 
@@ -43,6 +29,18 @@ class Website {
 }
 
 /// Website labels
+///
+/// | Label    | Android | iOS |
+/// |----------|:-------:|:---:|
+/// | blog     | ✔       | ⨯   |
+/// | ftp      | ✔       | ⨯   |
+/// | home     | ✔       | ✔   |
+/// | homepage | ✔       | ✔   |
+/// | profile  | ✔       | ⨯   |
+/// | school   | ⨯       | ✔   |
+/// | work     | ✔       | ✔   |
+/// | other    | ✔       | ✔   |
+/// | custom   | ✔       | ✔   |
 enum WebsiteLabel {
   blog,
   ftp,

@@ -52,7 +52,7 @@ class Contact {
   /// JsonSerializer doesn't support Uint8List:
   /// https://github.com/google/json_serializable.dart/issues/572
   ///
-  /// Because of that we cannot set [disallowUnrecognizedKeys] to true on the
+  /// Because of that we cannot set `disallowUnrecognizedKeys` to true on the
   /// class.
   @JsonKey(ignore: true)
   Uint8List photo;

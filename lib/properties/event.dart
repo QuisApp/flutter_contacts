@@ -13,22 +13,12 @@ class Event {
   /// On iOS, this is stored in either `contact.birthday` (for birthday) or
   /// `contact.dates` (for other dates such as anniversary) as date components
   /// so parsing always succeeds. Additionally, dates can have no year
-  /// associated with them. In such cases we set the year to 1900 and [noYear]
-  /// to true.
+  /// associated with them. In such cases [noYear] will be true.
   @JsonKey(required: true, fromJson: _parseDate)
   DateTime date;
 
   /// The label or type of event it is. If `custom`, the free-form label can
   /// be found in [customLabel].
-  ///
-  /// +-------------+---------+-----+
-  /// | Label       | Android | iOS |
-  /// +-------------+---------+-----+
-  /// | anniversary | ✅      | ✅   |
-  /// | birthday    | ✅      | ✅   |
-  /// | other       | ✅      | ✅   |
-  /// | custom      | ✅      | ✅   |
-  /// +-------------+---------+-----+
   @JsonKey(defaultValue: EventLabel.birthday)
   EventLabel label;
 
@@ -54,6 +44,13 @@ class Event {
 }
 
 /// Event labels
+///
+/// | Label       | Android | iOS |
+/// |-------------|:-------:|:---:|
+/// | anniversary | ✔       | ✔   |
+/// | birthday    | ✔       | ✔   |
+/// | other       | ✔       | ✔   |
+/// | custom      | ✔       | ✔   |
 enum EventLabel {
   anniversary,
   birthday,

@@ -46,7 +46,7 @@ class FlutterContacts {
   static Future<List<Contact>> getFullContacts(
           {bool withPhotos = false,
           bool sorted = true,
-          useHighResolutionPhotos = false}) async =>
+          bool useHighResolutionPhotos = false}) async =>
       await _get(
           withDetails: true,
           withPhotos: withPhotos,
@@ -96,11 +96,11 @@ class FlutterContacts {
   ///              DELETING CONTACTS              ///
   ///////////////////////////////////////////////////
 
-  /// Deletes contact with given ID (given by [contact.id])
+  /// Deletes contact with given ID (given by `contact.id`)
   static Future deleteContact(String contactId) async =>
       await _channel.invokeMethod('delete', [contactId]);
 
-  /// Deletes contacts with given IDs (given by [contact.id])
+  /// Deletes contacts with given IDs (given by `contact.id`)
   static Future deleteContacts(List<String> contactIds) async =>
       await _channel.invokeMethod('delete', contactIds);
 

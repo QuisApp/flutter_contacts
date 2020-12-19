@@ -6,11 +6,11 @@ For a minimalistic example, take a look at `example/`. You can write a full-fled
 
 ## Features
 
-* List all contacts
-* Create new contact
-* Update existing contact
-* Delete contacts
-* Observe contact database changes
+* **Fetch** all contacts
+* **Create** new contact
+* **Update** existing contact
+* **Delete** contacts
+* **Observe** contact database changes
 * Fetch all details for a given contact, including:
     * Photo (low / high resolution)
     * Phones
@@ -22,6 +22,13 @@ For a minimalistic example, take a look at `example/`. You can write a full-fled
     * Instant messaging / social profiles
     * Notes
     * Labels (such as "main" or "work" for phones)
+
+★ Exclusive `flutter_contacts` features:
+* **Maximum compability** with native contacts: fetching a contact and saving it back
+  doesn't alter it
+* Contacts correctly **sorted**, ignoring case and diacritics
+* No *"zombie contacts"* on Android (fake or duplicate contacts that wouldn't appear in
+  your default contact app)
 
 ## Demo
 
@@ -57,6 +64,171 @@ if (await Permission.contacts.request().isGranted) {
     await FlutterContacts.deleteContact(newContact.id);
 }
 ```
+
+## Data model
+
+### Essential data model (enough for most use cases)
+
+```dart
+class Contact {
+    String id;
+    String displayName;
+    Uint8List photo;
+    Name name;
+    List<Phone> phones;
+    List<Email> emails;
+    List<Address> addresses;
+}
+
+class Name {
+    String first;
+    String last;
+}
+
+class Phone {
+    String number;
+}
+
+class Email {
+    String address;
+}
+
+class Address {
+    String address;
+}
+```
+
+### Complete data model (for power users)
+
+```dart
+class Contact {
+    // Always fetched
+    String id;
+    String displayName;
+
+    // Fetched when calling:
+    //   - getContact()
+    //   - getContacts(withPhotos: true)
+    //   - getFullContacts(withPhotos: true)
+    // Photo is low-resolution, unless calling:
+    //   - getContact()
+    //   - getContacts(withPhotos: true, useHighResolutionPhotos: true)
+    //   - getFullContacts(withPhotos: true, useHighResolutionPhotos: true)
+    Uint8List photo;
+
+    // Fetched when calling:
+    //   - getContact()
+    //   - getFullContacts()
+    Name name;
+    List<Phone> phones;
+    List<Email> emails;
+    List<Address> addresses;
+    List<Organization> organizations;
+    List<Website> websites;
+    List<SocialMedia> socialMedias;
+    List<Event> events;
+    List<Note> notes;
+    List<Account> accounts;
+}
+
+class Name {
+    String first;
+    String last;
+    String middle;
+    String prefix;             // e.g. "Dr" in American names
+    String suffix;             // e.g. "Jr" in American names
+    String nickname;
+    String firstPhonetic;
+    String lastPhonetic;
+    String middlePhonetic;
+}
+
+class Phone {
+    String number;
+    PhoneLabel label;         // https://cutt.ly/4hXHFq2, default PhoneLabel.mobile
+    String customLabel;       // if label == PhoneLabel.custom
+    bool isPrimary;           // phone number called by default (android only)
+}
+
+class Email {
+    String address;
+    EmailLabel label;         // https://cutt.ly/zhXHGba, default EmailLabel.home
+    String customLabel;       // if label == EmailLabel.custom
+    bool isPrimary;           // email address used by default (android only)
+}
+
+class Address {
+    String address;           // formatted address (always available)
+    AddressLabel label;       // https://cutt.ly/ShXHFm6, default AddressLabel.home
+    String customLabel;       // if label == AddressLabel.custom
+    String street;            // street name and house number
+    String pobox;             // android only
+    String neighborhood;      // android only
+    String city;
+    String state;             // US state; also region/department/county on android
+    String postalCode;
+    String country;
+    String isoCountry;        // ISO 3166-1 alpha-2 standard (iOS only)
+    String subAdminArea       // region/county (iOS only)
+    String subLocality;       // anything else (iOS only)
+}
+
+class Organization {
+    String company;           // company name
+    String title;             // job title
+    String department;        // department
+    String jobDescription;    // job description (android only)
+    String symbol;            // ticker symbol (android only)
+    String phoneticName;
+    String officeLocation;    // android only
+}
+
+class Website {
+    String url;
+    WebsiteLabel label;       // https://cutt.ly/JhXH5CF, default WebsiteLabel.homepage
+    String customLabel;       // if label == WebsiteLabel.custom
+}
+
+class SocialMedia {
+    String userName;          // handle/username/login
+    SocialMediaLabel label;   // https://cutt.ly/9hXJwFH, default SocialMediaLabel.other
+    String customLabel;       // if label == SocialMediaLabel.custom
+}
+
+class Event {
+    DateTime date;
+    EventLabel label;         // https://cutt.ly/vhXJtAW, default EventLabel.birthday
+    String customLabel;       // if label == EventLabel.customLabel
+    bool noYear;              // iOS only
+}
+
+class Note {
+    String note;              // not available on iOS13+, see https://cutt.ly/HhXJoMR
+}
+
+class Account {               // for debug purposes (android only)
+    String rawId;             // raw contact ID
+    String type;              // e.g. com.google or com.facebook.messenger
+    String name;              // e.g. john.doe@gmail.com
+    List<String> mimetypes;   // list of android mimetypes
+}
+```
+
+### Default values
+
+Apart from `photo`, nothing can be `null`. String values default to `''`, boolean values
+to `false`, lists to `[]`, `DateTime` to Jan 1 1970, and enums as indicated above.
+
+### Android/iOS availability
+
+Some fields are only available on iOS, others only on Android. Concretely it means that
+if, for example, you save a contact with `contact.events[0].noYear = true` on Android,
+you will lose that information when fetching it again.
+
+Regarding labels, some are present in both (e.g. `PhoneLabel.mobile`), others only on
+one platform (e.g. `PhoneLabel.iPhone`). If you try, for example, to save a contact with
+`contact.phones[0].label = PhoneLabel.iPhone` on Android, it will instead get saved with
+`label = PhoneLabel.custom` and `customLabel = 'iPhone'`.
 
 ## Installation
 
