@@ -93,7 +93,8 @@
       <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
             <span class="name ">getContact</span>
 (<wbr><ol class="parameter-list"><li><span class="parameter" id="getContact-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span>, </span></li>
-<li><span class="parameter" id="getContact-param-useHighResolutionPhotos">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useHighResolutionPhotos</span>: <span class="default-value">true</span>}</span></li>
+<li><span class="parameter" id="getContact-param-useHighResolutionPhotos">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useHighResolutionPhotos</span>: <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="getContact-param-deduplicateEmailsAndPhones"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateEmailsAndPhones</span>: <span class="default-value">true</span>}</span></li>
 </ol>)
       
     </section>
@@ -103,13 +104,17 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">static Future&lt;Contact&gt; getContact(String id,
-    {bool useHighResolutionPhotos = true}) async {
+      <pre class="language-dart"><code class="language-dart">static Future&lt;Contact&gt; getContact(
+  String id, {
+  bool useHighResolutionPhotos = true,
+  bool deduplicateEmailsAndPhones = true,
+}) async {
   final contacts = await _get(
       id: id,
       withDetails: true,
       withPhotos: true,
-      useHighResolutionPhotos: useHighResolutionPhotos);
+      useHighResolutionPhotos: useHighResolutionPhotos,
+      deduplicateEmailsAndPhones: deduplicateEmailsAndPhones);
   if (contacts.isEmpty) return null;
   return contacts.first;
 }</code></pre>
@@ -125,7 +130,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.5
+      0.0.6
   </span>
 
 </footer>

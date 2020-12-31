@@ -1,3 +1,8 @@
+## 0.0.6
+
+* Added normalized phone numbers (android only)
+* Deduplicate phone numbers and emails by default
+
 ## 0.0.5
 
 * Improved README and dartdoc.

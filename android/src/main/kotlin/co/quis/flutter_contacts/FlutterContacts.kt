@@ -244,6 +244,7 @@ class FlutterContacts {
                                 if (label == "custom") getPhoneCustomLabel(cursor) else ""
                             val phone = PPhone(
                                 getString(Phone.NUMBER),
+                                getString(Phone.NORMALIZED_NUMBER),
                                 label,
                                 customLabel,
                                 getInt(Phone.IS_PRIMARY) == 1

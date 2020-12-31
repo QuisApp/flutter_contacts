@@ -31,39 +31,51 @@ class FlutterContacts {
       await _get(withPhotos: withPhotos, sorted: sorted);
 
   /// Fetches all fields for given contact
-  static Future<Contact> getContact(String id,
-      {bool useHighResolutionPhotos = true}) async {
+  static Future<Contact> getContact(
+    String id, {
+    bool useHighResolutionPhotos = true,
+    bool deduplicateEmailsAndPhones = true,
+  }) async {
     final contacts = await _get(
         id: id,
         withDetails: true,
         withPhotos: true,
-        useHighResolutionPhotos: useHighResolutionPhotos);
+        useHighResolutionPhotos: useHighResolutionPhotos,
+        deduplicateEmailsAndPhones: deduplicateEmailsAndPhones);
     if (contacts.isEmpty) return null;
     return contacts.first;
   }
 
   /// Fetches all fields for all contacts
-  static Future<List<Contact>> getFullContacts(
-          {bool withPhotos = false,
-          bool sorted = true,
-          bool useHighResolutionPhotos = false}) async =>
+  static Future<List<Contact>> getFullContacts({
+    bool withPhotos = false,
+    bool sorted = true,
+    bool useHighResolutionPhotos = false,
+    bool deduplicateEmailsAndPhones = true,
+  }) async =>
       await _get(
           withDetails: true,
           withPhotos: withPhotos,
           sorted: sorted,
-          useHighResolutionPhotos: useHighResolutionPhotos);
+          useHighResolutionPhotos: useHighResolutionPhotos,
+          deduplicateEmailsAndPhones: deduplicateEmailsAndPhones);
 
   static Future<List<Contact>> _get(
       {String id,
       bool withDetails = false,
       bool withPhotos = false,
       bool useHighResolutionPhotos = false,
-      bool sorted = true}) async {
+      bool sorted = true,
+      bool deduplicateEmailsAndPhones = true}) async {
     List untypedContacts = await _channel.invokeMethod(
         'get', [id, withDetails, withPhotos, useHighResolutionPhotos]);
     List<Contact> contacts =
         untypedContacts.map((x) => Contact.fromJson(x)).toList();
     if (sorted) contacts.sort(compareDisplayNames);
+    if (deduplicateEmailsAndPhones)
+      contacts.forEach((c) => c
+        ..deduplicateEmails()
+        ..deduplicatePhones());
     return contacts;
   }
 

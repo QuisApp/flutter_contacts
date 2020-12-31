@@ -3,11 +3,26 @@ import 'package:json_annotation/json_annotation.dart';
 part 'phone.g.dart';
 
 /// A phone number
+///
+/// | Field              | Android | iOS |
+/// |--------------------|:-------:|:---:|
+/// | number             | ✔       | ✔   |
+/// | normalizedNumber   | ✔       | ⨯   |
+/// | label              | ✔       | ✔   |
+/// | customLabel        | ✔       | ✔   |
+/// | isPrimary          | ✔       | ⨯   |
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class Phone {
   /// Phone number.
   @JsonKey(required: true)
   String number;
+
+  /// Normalized phone number (android only).
+  ///
+  /// Android sometimes computes a normalized number, e.g. +12345678900 for
+  /// +1 (234) 567-8900
+  @JsonKey(defaultValue: "")
+  String normalizedNumber;
 
   /// The label or type of phone it is. If `custom`, the free-form label can be
   /// found in [customLabel].

@@ -9,6 +9,10 @@ Flutter plugin to read, create, update, delete and observe native contacts on An
 
 For a minimalistic example, take a look at `example/`. You can write a full-fledged contacts app with it – see `example_full/` to see how.
 
+## Demo
+
+![demo](https://user-images.githubusercontent.com/1289004/101141809-ab165c00-35c9-11eb-90ff-b10318b13f16.gif)
+
 ## Features
 
 * **Fetch** all contacts
@@ -34,10 +38,7 @@ For a minimalistic example, take a look at `example/`. You can write a full-fled
 * Contacts correctly **sorted**, ignoring case and diacritics
 * No *"zombie contacts"* on Android (fake or duplicate contacts that wouldn't appear in
   your default contact app)
-
-## Demo
-
-![demo](https://user-images.githubusercontent.com/1289004/101141809-ab165c00-35c9-11eb-90ff-b10318b13f16.gif)
+* Phone numbers and emails **deduplicated** by default
 
 ## Usage
 
@@ -150,6 +151,7 @@ class Name {
 
 class Phone {
     String number;
+    String normalizedNumber;  // e.g. +12345678900 for +1 (234) 567-8900 (android only)
     PhoneLabel label;         // https://cutt.ly/4hXHFq2, default PhoneLabel.mobile
     String customLabel;       // if label == PhoneLabel.custom
     bool isPrimary;           // phone number called by default (android only)

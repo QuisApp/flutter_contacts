@@ -94,7 +94,8 @@
             <span class="name ">getFullContacts</span>
 (<wbr><ol class="parameter-list"><li><span class="parameter" id="getFullContacts-param-withPhotos">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhotos</span>: <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="getFullContacts-param-sorted"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">sorted</span>: <span class="default-value">true</span>, </span></li>
-<li><span class="parameter" id="getFullContacts-param-useHighResolutionPhotos"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useHighResolutionPhotos</span>: <span class="default-value">false</span>}</span></li>
+<li><span class="parameter" id="getFullContacts-param-useHighResolutionPhotos"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useHighResolutionPhotos</span>: <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getFullContacts-param-deduplicateEmailsAndPhones"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateEmailsAndPhones</span>: <span class="default-value">true</span>}</span></li>
 </ol>)
       
     </section>
@@ -104,15 +105,18 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">static Future&lt;List&lt;Contact&gt;&gt; getFullContacts(
-        {bool withPhotos = false,
-        bool sorted = true,
-        bool useHighResolutionPhotos = false}) async =&gt;
+      <pre class="language-dart"><code class="language-dart">static Future&lt;List&lt;Contact&gt;&gt; getFullContacts({
+  bool withPhotos = false,
+  bool sorted = true,
+  bool useHighResolutionPhotos = false,
+  bool deduplicateEmailsAndPhones = true,
+}) async =&gt;
     await _get(
         withDetails: true,
         withPhotos: withPhotos,
         sorted: sorted,
-        useHighResolutionPhotos: useHighResolutionPhotos);</code></pre>
+        useHighResolutionPhotos: useHighResolutionPhotos,
+        deduplicateEmailsAndPhones: deduplicateEmailsAndPhones);</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -125,7 +129,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.5
+      0.0.6
   </span>
 
 </footer>

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the notes property from the Contact class, for the Dart programming language.">
-  <title>notes property - Contact class - contact library - Dart API</title>
+  <meta name="description" content="API docs for the deduplicatePhones method from the Contact class, for the Dart programming language.">
+  <title>deduplicatePhones method - Contact class - contact library - Dart API</title>
 
   
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
@@ -27,9 +27,9 @@
     <li><a href="../../index.html">flutter_contacts</a></li>
     <li><a href="../../contact/contact-library.html">contact</a></li>
     <li><a href="../../contact/Contact-class.html">Contact</a></li>
-    <li class="self-crumb">notes property</li>
+    <li class="self-crumb">deduplicatePhones method</li>
   </ol>
-  <div class="self-name">notes</div>
+  <div class="self-name">deduplicatePhones</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -48,7 +48,7 @@
       <li><a href="../../index.html">flutter_contacts</a></li>
       <li><a href="../../contact/contact-library.html">contact</a></li>
       <li><a href="../../contact/Contact-class.html">Contact</a></li>
-      <li class="self-crumb">notes property</li>
+      <li class="self-crumb">deduplicatePhones method</li>
     </ol>
     
     <h5>Contact class</h5>
@@ -96,23 +96,35 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-property">notes</span> property </h1></div>
+      <div><h1><span class="kind-method">deduplicatePhones</span> method </h1></div>
 
-        <section class="multi-line-signature">
-          <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_note/Note-class.html">Note</a></span>&gt;</span></span>
-          <span class="name ">notes</span>
-          <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
-        </section>
-        <section class="desc markdown">
-          <p>Notes (iOS supports only one, Android allows multiple notes)</p>
-        </section>
-                <section class="summary source-code" id="source">
-          <h2><span>Implementation</span></h2>
-          <pre class="language-dart"><code class="language-dart">@JsonKey(defaultValue: [])
-List&lt;Note&gt; notes;
-
-</code></pre>
-        </section>
+    <section class="multi-line-signature">
+      <span class="returntype">void</span>
+            <span class="name ">deduplicatePhones</span>
+(<wbr>)
+      
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">void deduplicatePhones() {
+  var normalizedPhonesSeen = Set&lt;String&gt;();
+  var phonesSeen = Set&lt;String&gt;();
+  var uniquePhones = &lt;Phone&gt;[];
+  for (var phone in phones) {
+    &#47;&#47; Don&#39;t add phone if we&#39;ve already seen that number (raw or normalized)
+    if (phonesSeen.contains(phone.number) ||
+        (phone.normalizedNumber.isNotEmpty &amp;&amp;
+            normalizedPhonesSeen.contains(phone.normalizedNumber))) {
+      continue;
+    }
+    normalizedPhonesSeen.add(phone.normalizedNumber);
+    phonesSeen.add(phone.number);
+    uniquePhones.add(phone);
+  }
+  phones = uniquePhones;
+}</code></pre>
+    </section>
 
   </div> <!-- /.main-content -->
 

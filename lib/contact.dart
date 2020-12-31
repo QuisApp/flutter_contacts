@@ -134,4 +134,34 @@ class Contact {
     if (includePhoto) json['photo'] = photo;
     return json;
   }
+
+  void deduplicatePhones() {
+    var normalizedPhonesSeen = Set<String>();
+    var phonesSeen = Set<String>();
+    var uniquePhones = <Phone>[];
+    for (var phone in phones) {
+      // Don't add phone if we've already seen that number (raw or normalized)
+      if (phonesSeen.contains(phone.number) ||
+          (phone.normalizedNumber.isNotEmpty &&
+              normalizedPhonesSeen.contains(phone.normalizedNumber))) {
+        continue;
+      }
+      normalizedPhonesSeen.add(phone.normalizedNumber);
+      phonesSeen.add(phone.number);
+      uniquePhones.add(phone);
+    }
+    phones = uniquePhones;
+  }
+
+  void deduplicateEmails() {
+    var emailsSeen = Set<String>();
+    var uniqueEmails = <Email>[];
+    for (var email in emails) {
+      if (!emailsSeen.contains(email.address)) {
+        emailsSeen.add(email.address);
+        uniqueEmails.add(email);
+      }
+    }
+    emails = uniqueEmails;
+  }
 }

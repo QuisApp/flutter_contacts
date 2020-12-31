@@ -3,6 +3,13 @@ import 'package:json_annotation/json_annotation.dart';
 part 'email.g.dart';
 
 /// An email address
+///
+/// | Field              | Android | iOS |
+/// |--------------------|:-------:|:---:|
+/// | address            | ✔       | ✔   |
+/// | label              | ✔       | ✔   |
+/// | customLabel        | ✔       | ✔   |
+/// | isPrimary          | ✔       | ⨯   |
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class Email {
   /// Email address.

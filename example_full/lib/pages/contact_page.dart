@@ -109,6 +109,7 @@ class _ContactPageState extends State<ContactPage>
               (x) => [
                     Divider(),
                     Text('Number: ${x.number}'),
+                    Text('Normalized number: ${x.normalizedNumber}'),
                     Text('Label: ${x.label}'),
                     Text('Custom label: ${x.customLabel}'),
                     Text('Primary: ${x.isPrimary}')

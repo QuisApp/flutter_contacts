@@ -7,20 +7,27 @@ part of 'phone.dart';
 // **************************************************************************
 
 Phone _$PhoneFromJson(Map<String, dynamic> json) {
-  $checkKeys(json,
-      allowedKeys: const ['number', 'label', 'customLabel', 'isPrimary'],
-      requiredKeys: const ['number']);
+  $checkKeys(json, allowedKeys: const [
+    'number',
+    'normalizedNumber',
+    'label',
+    'customLabel',
+    'isPrimary'
+  ], requiredKeys: const [
+    'number'
+  ]);
   return Phone(
     json['number'] as String,
     label: _$enumDecodeNullable(_$PhoneLabelEnumMap, json['label']) ??
         PhoneLabel.mobile,
     customLabel: json['customLabel'] as String ?? '',
     isPrimary: json['isPrimary'] as bool ?? false,
-  );
+  )..normalizedNumber = json['normalizedNumber'] as String ?? '';
 }
 
 Map<String, dynamic> _$PhoneToJson(Phone instance) => <String, dynamic>{
       'number': instance.number,
+      'normalizedNumber': instance.normalizedNumber,
       'label': _$PhoneLabelEnumMap[instance.label],
       'customLabel': instance.customLabel,
       'isPrimary': instance.isPrimary,

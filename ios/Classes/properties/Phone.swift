@@ -3,6 +3,7 @@ import Contacts
 @available(iOS 9.0, *)
 struct Phone {
     var number: String
+    var normalizedNumber: String
     // one of: assistant, callback, car, companyMain, faxHome, faxOther, faxWork, home,
     // iPhone, isdn, main, mms, mobile, pager, radio, school, telex, ttyTtd, work,
     // workMobile, workPager, other, custom
@@ -12,6 +13,7 @@ struct Phone {
 
     init(fromMap m: [String: Any]) {
         number = m["number"] as! String
+        normalizedNumber = m["normalizedNumber"] as! String
         label = m["label"] as! String
         customLabel = m["customLabel"] as! String
         isPrimary = m["isPrimary"] as! Bool
@@ -19,6 +21,7 @@ struct Phone {
 
     init(fromPhone p: CNLabeledValue<CNPhoneNumber>) {
         number = p.value.stringValue
+        normalizedNumber = ""
         switch p.label {
         case CNLabelPhoneNumberHomeFax:
             label = "faxHome"
@@ -52,6 +55,7 @@ struct Phone {
 
     func toMap() -> [String: Any] { [
         "number": number,
+        "normalizedNumber": normalizedNumber,
         "label": label,
         "customLabel": customLabel,
         "isPrimary": isPrimary,
