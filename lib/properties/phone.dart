@@ -40,6 +40,7 @@ class Phone {
 
   Phone(this.number,
       {this.label = PhoneLabel.mobile,
+      this.normalizedNumber = "",
       this.customLabel = "",
       this.isPrimary = false});
 
