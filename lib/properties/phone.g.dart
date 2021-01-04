@@ -20,9 +20,10 @@ Phone _$PhoneFromJson(Map<String, dynamic> json) {
     json['number'] as String,
     label: _$enumDecodeNullable(_$PhoneLabelEnumMap, json['label']) ??
         PhoneLabel.mobile,
+    normalizedNumber: json['normalizedNumber'] as String ?? '',
     customLabel: json['customLabel'] as String ?? '',
     isPrimary: json['isPrimary'] as bool ?? false,
-  )..normalizedNumber = json['normalizedNumber'] as String ?? '';
+  );
 }
 
 Map<String, dynamic> _$PhoneToJson(Phone instance) => <String, dynamic>{

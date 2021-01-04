@@ -1,3 +1,7 @@
+## 0.0.7
+
+* Bug fix with normalized phone number
+
 ## 0.0.6
 
 * Added normalized phone numbers (android only)
