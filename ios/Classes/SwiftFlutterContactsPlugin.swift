@@ -174,6 +174,7 @@ public enum FlutterContacts {
         contact.socialProfiles = []
         contact.instantMessageAddresses = []
         contact.dates = []
+        contact.birthday = nil
     }
 
     private static func addFieldsToContact(_ args: [String: Any?], _ contact: CNMutableContact) {
