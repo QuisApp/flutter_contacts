@@ -1,3 +1,7 @@
+## 0.1.2
+
+* Properly delete events on iOS (https://github.com/QuisApp/flutter_contacts/issues/2)
+
 ## 0.1.1
 
 * Fix date serialization on Android (https://github.com/QuisApp/flutter_contacts/issues/2)
