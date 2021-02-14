@@ -94,7 +94,16 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">factory Event.fromJson(Map&lt;String, dynamic&gt; json) =&gt; _$EventFromJson(json);</code></pre>
+      <pre class="language-dart"><code class="language-dart">factory Event.fromJson(Map&lt;String, dynamic&gt; json) {
+  var event = _$EventFromJson(json);
+  if (Platform.isAndroid) {
+    final parsedEvent =
+        FlutterContacts.config.androidEventDateParser(json[&#39;date&#39;]);
+    event.date = parsedEvent.date;
+    event.noYear = parsedEvent.noYear;
+  }
+  return event;
+}</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -107,7 +116,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.0
+      0.1.1
   </span>
 
 </footer>

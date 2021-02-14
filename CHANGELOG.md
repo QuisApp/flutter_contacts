@@ -1,3 +1,7 @@
+## 0.1.1
+
+* Fix date serialization on Android (https://github.com/QuisApp/flutter_contacts/issues/2)
+
 ## 0.1.0
 
 * Support for vCard parsing and exporting
