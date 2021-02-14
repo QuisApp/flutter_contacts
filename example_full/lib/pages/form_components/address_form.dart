@@ -64,7 +64,7 @@ class _AddressFormState extends State<AddressForm> {
       _addressController.text,
       label: _label,
       customLabel:
-          _label == AddressLabel.custom ? _customLabelController.text : "",
+          _label == AddressLabel.custom ? _customLabelController.text : '',
       street: _streetController.text,
       pobox: _poboxController.text,
       neighborhood: _neighborhoodController.text,

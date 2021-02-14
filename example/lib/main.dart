@@ -44,7 +44,7 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
             onTap: () async {
               final fullContact =
                   await FlutterContacts.getContact(_contacts[i].id);
-              Navigator.of(context).push(
+              await Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => ContactPage(fullContact)));
             }));
   }

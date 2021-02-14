@@ -39,7 +39,7 @@ class _WebsiteFormState extends State<WebsiteForm> {
       _urlController.text,
       label: _label,
       customLabel:
-          _label == WebsiteLabel.custom ? _customLabelController.text : "",
+          _label == WebsiteLabel.custom ? _customLabelController.text : '',
     );
     widget.onUpdate(website);
   }

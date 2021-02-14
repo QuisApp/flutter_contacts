@@ -21,7 +21,7 @@ class Phone {
   ///
   /// Android sometimes computes a normalized number, e.g. +12345678900 for
   /// +1 (234) 567-8900
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String normalizedNumber;
 
   /// The label or type of phone it is. If `custom`, the free-form label can be
@@ -30,7 +30,7 @@ class Phone {
   PhoneLabel label;
 
   /// If [customLabel] is [PhoneLabel.custom], free-form user-chosen label.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String customLabel;
 
   /// Android has a notion of primary phone, so that "call X" means call X's
@@ -39,9 +39,9 @@ class Phone {
   bool isPrimary;
 
   Phone(this.number,
-      {this.label = PhoneLabel.mobile,
-      this.normalizedNumber = "",
-      this.customLabel = "",
+      {this.normalizedNumber = '',
+      this.label = PhoneLabel.mobile,
+      this.customLabel = '',
       this.isPrimary = false});
 
   factory Phone.fromJson(Map<String, dynamic> json) => _$PhoneFromJson(json);

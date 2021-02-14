@@ -38,7 +38,7 @@ class _PhoneFormState extends State<PhoneForm> {
     final phone = Phone(_numberController.text,
         label: _label,
         customLabel:
-            _label == PhoneLabel.custom ? _customLabelController.text : "");
+            _label == PhoneLabel.custom ? _customLabelController.text : '');
     widget.onUpdate(phone);
   }
 

@@ -43,7 +43,7 @@ class _EventFormState extends State<EventForm> {
           DateTime.fromMillisecondsSinceEpoch(0),
       label: _label,
       customLabel:
-          _label == EventLabel.custom ? _customLabelController.text : "",
+          _label == EventLabel.custom ? _customLabelController.text : '',
       noYear: _noYear,
     );
     widget.onUpdate(event);

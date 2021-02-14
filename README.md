@@ -5,7 +5,7 @@
 [![popularity](https://badges.bar/flutter_contacts/popularity)](https://pub.dev/packages/flutter_contacts/score)
 [![likes](https://badges.bar/flutter_contacts/likes)](https://pub.dev/packages/flutter_contacts/score)
 
-Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS.
+Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support
 
 For a minimalistic example, take a look at `example/`. You can write a full-fledged contacts app with it – see `example_full/` to see how.
 
@@ -20,6 +20,7 @@ For a minimalistic example, take a look at `example/`. You can write a full-fled
 * **Update** existing contact
 * **Delete** contacts
 * **Observe** contact database changes
+* **Export** to and **parse** from vCard format
 * Fetch all details for a given contact, including:
     * Photo (low / high resolution)
     * Phones
@@ -31,14 +32,6 @@ For a minimalistic example, take a look at `example/`. You can write a full-fled
     * Instant messaging / social profiles
     * Notes
     * Labels (such as "main" or "work" for phones)
-
-★ Exclusive `flutter_contacts` features:
-* **Maximum compability** with native contacts: fetching a contact and saving it back
-  doesn't alter it
-* Contacts correctly **sorted**, ignoring case and diacritics
-* No *"zombie contacts"* on Android (fake or duplicate contacts that wouldn't appear in
-  your default contact app)
-* Phone numbers and emails **deduplicated** by default
 
 ## Usage
 
@@ -65,6 +58,18 @@ if (await Permission.contacts.request().isGranted) {
     /// Update contact
     newContact.emails.add(Email('john.doe@example.com'));
     await FlutterContacts.updateContact(newContact);
+
+    /// Export to vCard
+    String vCard = newContact.toVCard();
+
+    /// Import from vCard
+    Contact importedContact = Contact.fromVCard(
+        'BEGIN:VCARD\n'
+        'VERSION:3.0\n'
+        'N:;Joe;;;\n'
+        'TEL;TYPE=HOME:123456\n'
+        'END:VCARD');
+)
 
     /// Delete contact
     await FlutterContacts.deleteContact(newContact.id);

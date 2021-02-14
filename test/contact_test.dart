@@ -24,13 +24,13 @@ void main() {
   });
 
   test('add phone numbers', () async {
-    Contact newContact = Contact.create()
+    final newContact = Contact.create()
       ..name = Name(first: 'John', last: 'Doe')
       ..phones = [
         Phone('555-123-4567'),
         Phone('555-999-9999', label: PhoneLabel.work)
       ];
-    Contact returnedContact = await FlutterContacts.newContact(newContact);
+    final returnedContact = await FlutterContacts.newContact(newContact);
     expect(returnedContact.displayName, 'John Doe');
     expect(returnedContact.phones.length, 2);
   });

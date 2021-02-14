@@ -59,7 +59,9 @@
           <li><a href="properties_note/properties_note-library.html">note</a></li>
           <li><a href="properties_organization/properties_organization-library.html">organization</a></li>
           <li><a href="properties_phone/properties_phone-library.html">phone</a></li>
-          <li><a href="properties_socialMedia/properties_socialMedia-library.html">socialMedia</a></li>
+          <li><a href="properties_social_media/properties_social_media-library.html">social_media</a></li>
+          <li><a href="vcard_exporter/vcard_exporter-library.html">vcard_exporter</a></li>
+          <li><a href="vcard_parser/vcard_parser-library.html">vcard_parser</a></li>
           <li><a href="properties_website/properties_website-library.html">website</a></li>
     </ol>
   </div>
@@ -71,7 +73,7 @@
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/pub%20points" alt="pub points"></a>
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/popularity" alt="popularity"></a>
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/likes" alt="likes"></a></p>
-<p>Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS.</p>
+<p>Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support</p>
 <p>For a minimalistic example, take a look at <code>example/</code>. You can write a full-fledged contacts app with it – see <code>example_full/</code> to see how.</p>
 <h2 id="demo">Demo</h2>
 <p><img src="https://user-images.githubusercontent.com/1289004/101141809-ab165c00-35c9-11eb-90ff-b10318b13f16.gif" alt="demo"></p>
@@ -82,6 +84,7 @@
 <li><strong>Update</strong> existing contact</li>
 <li><strong>Delete</strong> contacts</li>
 <li><strong>Observe</strong> contact database changes</li>
+<li><strong>Export</strong> to and <strong>parse</strong> from vCard format</li>
 <li>Fetch all details for a given contact, including:
 <ul>
 <li>Photo (low / high resolution)</li>
@@ -96,15 +99,6 @@
 <li>Labels (such as "main" or "work" for phones)</li>
 </ul>
 </li>
-</ul>
-<p>★ Exclusive <code>flutter_contacts</code> features:</p>
-<ul>
-<li><strong>Maximum compability</strong> with native contacts: fetching a contact and saving it back
-doesn't alter it</li>
-<li>Contacts correctly <strong>sorted</strong>, ignoring case and diacritics</li>
-<li>No <em>"zombie contacts"</em> on Android (fake or duplicate contacts that wouldn't appear in
-your default contact app)</li>
-<li>Phone numbers and emails <strong>deduplicated</strong> by default</li>
 </ul>
 <h2 id="usage">Usage</h2>
 <pre class="language-dart"><code class="language-dart">import 'package:flutter_contacts/flutter_contacts.dart';
@@ -129,6 +123,18 @@ if (await Permission.contacts.request().isGranted) {
     /// Update contact
     newContact.emails.add(Email('john.doe@example.com'));
     await FlutterContacts.updateContact(newContact);
+
+    /// Export to vCard
+    String vCard = newContact.toVCard();
+
+    /// Import from vCard
+    Contact importedContact = Contact.fromVCard(
+        'BEGIN:VCARD\n'
+        'VERSION:3.0\n'
+        'N:;Joe;;;\n'
+        'TEL;TYPE=HOME:123456\n'
+        'END:VCARD');
+)
 
     /// Delete contact
     await FlutterContacts.deleteContact(newContact.id);
@@ -376,8 +382,20 @@ one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to 
           <dd>
              
           </dd>
-          <dt id="socialMedia">
-            <span class="name"><a href="properties_socialMedia/properties_socialMedia-library.html">socialMedia</a></span>           
+          <dt id="social_media">
+            <span class="name"><a href="properties_social_media/properties_social_media-library.html">social_media</a></span>           
+          </dt>
+          <dd>
+             
+          </dd>
+          <dt id="vcard_exporter">
+            <span class="name"><a href="vcard_exporter/vcard_exporter-library.html">vcard_exporter</a></span>           
+          </dt>
+          <dd>
+             
+          </dd>
+          <dt id="vcard_parser">
+            <span class="name"><a href="vcard_parser/vcard_parser-library.html">vcard_parser</a></span>           
           </dt>
           <dd>
              
@@ -401,7 +419,7 @@ one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to 
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.0.7
+      0.1.0
   </span>
 
 </footer>

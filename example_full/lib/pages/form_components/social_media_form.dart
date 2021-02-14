@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/properties/socialMedia.dart';
+import 'package:flutter_contacts/properties/social_media.dart';
 
 class SocialMediaForm extends StatefulWidget {
   final SocialMedia socialMedia;
@@ -40,7 +40,7 @@ class _SocialMediaFormState extends State<SocialMediaForm> {
       _userNameController.text,
       label: _label,
       customLabel:
-          _label == SocialMediaLabel.custom ? _customLabelController.text : "",
+          _label == SocialMediaLabel.custom ? _customLabelController.text : '',
     );
     widget.onUpdate(socialMedia);
   }

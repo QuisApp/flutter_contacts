@@ -44,55 +44,55 @@ part 'name.g.dart';
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class Name {
   /// First name / given name
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String first;
 
   /// Last name / surname / family name
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String last;
 
   /// Middle name (US). Could mean additional names in other countries
   /// (e.g. France)
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String middle;
 
   /// Prefix (US) or title, e.g. Dr, Mr, Sir, etc
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String prefix;
 
   /// Suffix (US), e.g Jr or III
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String suffix;
 
   /// Nickname, e.g. maiden name, short name, initials, or any other name.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String nickname;
 
   /// Phonetic version of the first name (usually for Chinese/Japanese/Korean
   /// names)
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String firstPhonetic;
 
   /// Phonetic version of the last name (usually for Chinese/Japanese/Korean
   /// names)
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String lastPhonetic;
 
   /// Phonetic version of the middle name (usually for Chinese/Japanese/Korean
   /// names)
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String middlePhonetic;
 
   Name(
-      {this.first = "",
-      this.last = "",
-      this.middle = "",
-      this.prefix = "",
-      this.suffix = "",
-      this.nickname = "",
-      this.firstPhonetic = "",
-      this.lastPhonetic = "",
-      this.middlePhonetic = ""});
+      {this.first = '',
+      this.last = '',
+      this.middle = '',
+      this.prefix = '',
+      this.suffix = '',
+      this.nickname = '',
+      this.firstPhonetic = '',
+      this.lastPhonetic = '',
+      this.middlePhonetic = ''});
 
   factory Name.fromJson(Map<String, dynamic> json) => _$NameFromJson(json);
   Map<String, dynamic> toJson() => _$NameToJson(this);

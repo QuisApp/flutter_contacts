@@ -39,7 +39,7 @@ class _EmailFormState extends State<EmailForm> {
       _addressController.text,
       label: _label,
       customLabel:
-          _label == EmailLabel.custom ? _customLabelController.text : "",
+          _label == EmailLabel.custom ? _customLabelController.text : '',
     );
     widget.onUpdate(email);
   }

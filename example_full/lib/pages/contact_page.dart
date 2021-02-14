@@ -50,9 +50,6 @@ class _ContactPageState extends State<ContactPage>
             ],
             onSelected: (contactId) async {
               await FlutterContacts.deleteContact(contactId);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content:
-                      Text('Deleted contact ${_contact?.displayName ?? ''}')));
               Navigator.of(context).pop();
             },
           ),
@@ -73,8 +70,9 @@ class _ContactPageState extends State<ContactPage>
   }
 
   Widget _body(Contact contact) {
-    if (_contact?.name == null)
+    if (_contact?.name == null) {
       return Center(child: CircularProgressIndicator());
+    }
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

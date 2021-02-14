@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'socialMedia.g.dart';
+part 'social_media.g.dart';
 
 /// A social media or instant messaging account.
 ///
@@ -26,11 +26,11 @@ class SocialMedia {
 
   /// If [customLabel] is [SocialMediaLabel.custom], free-form user-chosen
   /// label.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String customLabel;
 
   SocialMedia(this.userName,
-      {this.label = SocialMediaLabel.other, this.customLabel = ""});
+      {this.label = SocialMediaLabel.other, this.customLabel = ''});
 
   factory SocialMedia.fromJson(Map<String, dynamic> json) =>
       _$SocialMediaFromJson(json);

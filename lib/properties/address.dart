@@ -42,26 +42,26 @@ class Address {
   AddressLabel label;
 
   /// If [label] is [AddressLabel.custom], free-form user-chosen label.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String customLabel;
 
   /// Street name. At least on Android this also includes house number and
   /// room/apartment/flat/floor number.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String street;
 
   /// P.O. box. This is (according to Android's doc) usually but not always
   /// mutually exclusive with street. Android only.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String pobox;
 
   /// According to Android's doc, this can help disambiguate a street address in
   /// cases the same city has several streets with the same name. Android only.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String neighborhood;
 
   /// City/town.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String city;
 
   /// State (in the US).
@@ -69,43 +69,43 @@ class Address {
   /// On Android (which calls it "region") this also represent the province
   /// (Canada), county (Ireland), Land (Germany), department (France), etc. On
   /// iOS those are defined in [subAdminArea] instead.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String state;
 
   /// Zip code (US), postcode (UK), etc.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String postalCode;
 
   /// Country as a free-form text (e.g. "France").
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String country;
 
   /// Country in the ISO 3166-1 alpha-2 standard (e.g. "fr"). iOS only.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String isoCountry;
 
   /// Subadministrative area, such as region or county. iOS only. On Android
   /// those are folded into [state] (which Android calls "region").
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String subAdminArea;
 
   /// Any additional information associated with the location. iOS only.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String subLocality;
 
   Address(this.address,
       {this.label = AddressLabel.home,
-      this.customLabel = "",
-      this.street = "",
-      this.pobox = "",
-      this.neighborhood = "",
-      this.city = "",
-      this.state = "",
-      this.postalCode = "",
-      this.country = "",
-      this.isoCountry = "",
-      this.subAdminArea = "",
-      this.subLocality = ""});
+      this.customLabel = '',
+      this.street = '',
+      this.pobox = '',
+      this.neighborhood = '',
+      this.city = '',
+      this.state = '',
+      this.postalCode = '',
+      this.country = '',
+      this.isoCountry = '',
+      this.subAdminArea = '',
+      this.subLocality = ''});
 
   factory Address.fromJson(Map<String, dynamic> json) =>
       _$AddressFromJson(json);

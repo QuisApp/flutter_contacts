@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'socialMedia.dart';
+part of 'social_media.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

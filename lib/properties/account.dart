@@ -39,10 +39,11 @@ class Account {
   /// They can also be type-specific, for example Skype provides types
   /// `vnd.android.cursor.item/com.skype4life.phone` and
   /// `vnd.android.cursor.item/com.skype4life.name`.
-  @JsonKey(defaultValue: const [])
+  @JsonKey(defaultValue: [])
   List<String> mimetypes;
 
-  Account(this.rawId, this.type, this.name, [this.mimetypes = const []]);
+  Account(this.rawId, this.type, this.name, [List<String> mimetypes])
+      : mimetypes = mimetypes ?? <String>[];
 
   factory Account.fromJson(Map<String, dynamic> json) =>
       _$AccountFromJson(json);

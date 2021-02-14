@@ -12,8 +12,10 @@ export 'properties/name.dart';
 export 'properties/note.dart';
 export 'properties/organization.dart';
 export 'properties/phone.dart';
-export 'properties/socialMedia.dart';
+export 'properties/social_media.dart';
 export 'properties/website.dart';
+export 'vcard_exporter.dart';
+export 'vcard_parser.dart';
 
 class FlutterContacts {
   static const MethodChannel _channel =
@@ -67,15 +69,21 @@ class FlutterContacts {
       bool useHighResolutionPhotos = false,
       bool sorted = true,
       bool deduplicateEmailsAndPhones = true}) async {
+    // removing the types makes it crash at runtime
+    // ignore: omit_local_variable_types
     List untypedContacts = await _channel.invokeMethod(
         'get', [id, withDetails, withPhotos, useHighResolutionPhotos]);
+    // ignore: omit_local_variable_types
     List<Contact> contacts =
         untypedContacts.map((x) => Contact.fromJson(x)).toList();
     if (sorted) contacts.sort(compareDisplayNames);
-    if (deduplicateEmailsAndPhones)
+    if (deduplicateEmailsAndPhones) {
       contacts.forEach((c) => c
         ..deduplicateEmails()
-        ..deduplicatePhones());
+        ..deduplicatePhones()
+        // it seems that birthdays are also often duplicated
+        ..deduplicateEvents());
+    }
     return contacts;
   }
 
@@ -141,8 +149,8 @@ class FlutterContacts {
   ///               SORTING CONTACTS              ///
   ///////////////////////////////////////////////////
 
-  static RegExp _alpha = RegExp(r'\p{Letter}', unicode: true);
-  static RegExp _numeric = RegExp(r'\p{Number}', unicode: true);
+  static final RegExp _alpha = RegExp(r'\p{Letter}', unicode: true);
+  static final RegExp _numeric = RegExp(r'\p{Number}', unicode: true);
 
   /// Sort display names in the "natural" way, ignoring case and diacritics.
   ///

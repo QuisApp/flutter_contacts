@@ -22,7 +22,7 @@ class Email {
   EmailLabel label;
 
   /// If [customLabel] is [EmailLabel.custom], free-form user-chosen label.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String customLabel;
 
   /// Android has a notion of primary email, so that "send an email to X" means
@@ -33,7 +33,7 @@ class Email {
 
   Email(this.address,
       {this.label = EmailLabel.home,
-      this.customLabel = "",
+      this.customLabel = '',
       this.isPrimary = false});
 
   factory Email.fromJson(Map<String, dynamic> json) => _$EmailFromJson(json);

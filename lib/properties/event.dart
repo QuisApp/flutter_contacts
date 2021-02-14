@@ -23,20 +23,20 @@ class Event {
   EventLabel label;
 
   /// If [customLabel] is [EventLabel.custom], free-form user-chosen label.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String customLabel;
 
   /// Whether the date has no year associated to it. iOS only.
   @JsonKey(defaultValue: false)
   bool noYear;
 
-  static _parseDate(String dateStr) => dateStr == null
+  static DateTime _parseDate(String dateStr) => dateStr == null
       ? null
       : DateTime.tryParse(dateStr) ?? DateTime.fromMillisecondsSinceEpoch(0);
 
   Event(this.date,
       {this.label = EventLabel.birthday,
-      this.customLabel = "",
+      this.customLabel = '',
       this.noYear = false});
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);

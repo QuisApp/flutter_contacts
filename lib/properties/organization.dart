@@ -18,41 +18,41 @@ part 'organization.g.dart';
 @JsonSerializable(disallowUnrecognizedKeys: true)
 class Organization {
   /// Company name
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String company;
 
   /// Position / job title
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String title;
 
   /// Department at the company
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String department;
 
   /// Job description
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String jobDescription;
 
   /// Ticker or stock symbol
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String symbol;
 
   /// Phonetic name of the company name
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String phoneticName;
 
   /// Office location as a free-form address
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String officeLocation;
 
   Organization({
-    this.company = "",
-    this.title = "",
-    this.department = "",
-    this.jobDescription = "",
-    this.symbol = "",
-    this.phoneticName = "",
-    this.officeLocation = "",
+    this.company = '',
+    this.title = '',
+    this.department = '',
+    this.jobDescription = '',
+    this.symbol = '',
+    this.phoneticName = '',
+    this.officeLocation = '',
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) =>

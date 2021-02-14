@@ -1,3 +1,13 @@
+## 0.1.0
+
+* Support for vCard parsing and exporting
+* Add `pedantic` static analyzer
+* Make default values non-const so they can be mutated
+* Add tests
+* Update dependencies
+* Deduplicate events
+* Rename `socialMedia.dart` -> `social_media.dart`
+
 ## 0.0.7
 
 * Bug fix with normalized phone number

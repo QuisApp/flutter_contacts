@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter_contacts/vcard_exporter.dart';
+import 'package:flutter_contacts/vcard_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'properties/account.dart';
@@ -11,7 +13,7 @@ import 'properties/name.dart';
 import 'properties/note.dart';
 import 'properties/organization.dart';
 import 'properties/phone.dart';
-import 'properties/socialMedia.dart';
+import 'properties/social_media.dart';
 import 'properties/website.dart';
 
 part 'contact.g.dart';
@@ -107,33 +109,61 @@ class Contact {
     this.displayName, {
     this.photo,
     Name name,
-    this.phones = const [],
-    this.emails = const [],
-    this.addresses = const [],
-    this.organizations = const [],
-    this.websites = const [],
-    this.socialMedias = const [],
-    this.events = const [],
-    this.notes = const [],
-    this.accounts = const [],
-  }) : this.name = name ?? Name();
+    List<Phone> phones,
+    List<Email> emails,
+    List<Address> addresses,
+    List<Organization> organizations,
+    List<Website> websites,
+    List<SocialMedia> socialMedias,
+    List<Event> events,
+    List<Note> notes,
+    List<Account> accounts,
+  })  : name = name ?? Name(),
+        phones = phones ?? <Phone>[],
+        emails = emails ?? <Email>[],
+        addresses = addresses ?? <Address>[],
+        organizations = organizations ?? <Organization>[],
+        websites = websites ?? <Website>[],
+        socialMedias = socialMedias ?? <SocialMedia>[],
+        events = events ?? <Event>[],
+        notes = notes ?? <Note>[],
+        accounts = accounts ?? <Account>[];
+
+  /// Parse contact from vCard content
+  factory Contact.fromVCard(String vCard) {
+    Contact c;
+    VCardParser().parse(vCard, c);
+    return c;
+  }
 
   /// Returns normalized display name, which ignores case, space and diacritics.
   String get normalizedName =>
       removeDiacritics(displayName.trim().toLowerCase());
 
   factory Contact.fromJson(Map json) {
-    Contact contact = _$ContactFromJson(json);
+    var contact = _$ContactFromJson(json);
     // photo requires special handling since it's ignored by json serialization
     contact.photo = json['photo'] as Uint8List;
     return contact;
   }
-  Map<String, dynamic> toJson({bool includePhoto = false}) {
-    Map<String, dynamic> json = _$ContactToJson(this);
+
+  Map<String, dynamic> toJson({
+    bool includePhoto = false,
+    bool includeNormalizedNumber = true,
+  }) {
+    var json = _$ContactToJson(this);
     // photo requires special handling since it's ignored by json serialization
     if (includePhoto) json['photo'] = photo;
+    if (!includeNormalizedNumber) {
+      for (var i = 0; i < json['phones'].length; ++i) {
+        json['phones'][i]['normalizedNumber'] = '';
+      }
+    }
     return json;
   }
+
+  /// Export contact to vCard
+  String toVCard() => VCardExporter().toVCard(this);
 
   void deduplicatePhones() {
     var normalizedPhonesSeen = Set<String>();
@@ -163,5 +193,21 @@ class Contact {
       }
     }
     emails = uniqueEmails;
+  }
+
+  void deduplicateEvents() {
+    var eventsSeen = Set<int>();
+    var uniqueEvents = <Event>[];
+    for (var event in events) {
+      final hash = event.date.hashCode ^
+          event.label.hashCode ^
+          event.customLabel.hashCode ^
+          event.noYear.hashCode;
+      if (!eventsSeen.contains(hash)) {
+        eventsSeen.add(hash);
+        uniqueEvents.add(event);
+      }
+    }
+    events = uniqueEvents;
   }
 }

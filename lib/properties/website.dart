@@ -17,11 +17,11 @@ class Website {
   WebsiteLabel label;
 
   /// If [customLabel] is [WebsiteLabel.custom], free-form user-chosen label.
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: '')
   String customLabel;
 
   Website(this.url,
-      {this.label = WebsiteLabel.homepage, this.customLabel = ""});
+      {this.label = WebsiteLabel.homepage, this.customLabel = ''});
 
   factory Website.fromJson(Map<String, dynamic> json) =>
       _$WebsiteFromJson(json);
