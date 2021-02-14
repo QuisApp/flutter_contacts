@@ -140,7 +140,8 @@ class _EditContactPageState extends State<EditContactPage>
     String fieldName,
     List<dynamic> fields,
     /* void | Future<void> */ Function() addField,
-    Widget Function(int, dynamic) formWidget, {
+    Widget Function(int, dynamic) formWidget,
+    void Function() clearAllFields, {
     bool createAsync = false,
   }) {
     var forms = <Widget>[
@@ -165,6 +166,15 @@ class _EditContactPageState extends State<EditContactPage>
           onPressed: onPressed,
         ),
       );
+    }
+    if (clearAllFields != null) {
+      forms.add(ElevatedButton(
+        child: Text('Delete all'),
+        onPressed: () {
+          clearAllFields();
+          setState(() {});
+        },
+      ));
     }
 
     return Card(
@@ -191,6 +201,7 @@ class _EditContactPageState extends State<EditContactPage>
           onUpdate: (name) => _contact.name = name,
           key: UniqueKey(),
         ),
+        null,
       );
 
   Card _phoneCard() => _fieldCard(
@@ -203,6 +214,7 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.phones.removeAt(i)),
           key: UniqueKey(),
         ),
+        () => _contact.phones = [],
       );
 
   Card _emailCard() => _fieldCard(
@@ -215,6 +227,7 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.emails.removeAt(i)),
           key: UniqueKey(),
         ),
+        () => _contact.emails = [],
       );
 
   Card _addressCard() => _fieldCard(
@@ -227,6 +240,7 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.addresses.removeAt(i)),
           key: UniqueKey(),
         ),
+        () => _contact.addresses = [],
       );
 
   Card _organizationCard() => _fieldCard(
@@ -240,6 +254,7 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.organizations.removeAt(i)),
           key: UniqueKey(),
         ),
+        () => _contact.organizations = [],
       );
 
   Card _websiteCard() => _fieldCard(
@@ -252,6 +267,7 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.websites.removeAt(i)),
           key: UniqueKey(),
         ),
+        () => _contact.websites = [],
       );
 
   Card _socialMediaCard() => _fieldCard(
@@ -264,6 +280,7 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.socialMedias.removeAt(i)),
           key: UniqueKey(),
         ),
+        () => _contact.socialMedias = [],
       );
 
   Future<DateTime> _selectDate(BuildContext context) async => showDatePicker(
@@ -285,6 +302,7 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.events.removeAt(i)),
           key: UniqueKey(),
         ),
+        () => _contact.events = [],
         createAsync: true,
       );
 
@@ -298,5 +316,6 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.notes.removeAt(i)),
           key: UniqueKey(),
         ),
+        () => _contact.notes = [],
       );
 }
