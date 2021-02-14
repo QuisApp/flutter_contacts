@@ -1,7 +1,6 @@
-/// Flutter plugin to interact with native contact list
 import 'package:flutter/services.dart';
-
-import 'contact.dart';
+import 'package:flutter_contacts/contact.dart';
+import 'package:flutter_contacts/flutter_contacts_config.dart';
 
 export 'contact.dart';
 export 'properties/account.dart';
@@ -22,6 +21,12 @@ class FlutterContacts {
       MethodChannel('github.com/QuisApp/flutter_contacts');
   static const EventChannel _eventChannel =
       EventChannel('github.com/QuisApp/flutter_contacts/events');
+
+  ///////////////////////////////////////////////////
+  ///                   CONFIG                    ///
+  ///////////////////////////////////////////////////
+
+  static var config = FlutterContactsConfig();
 
   ///////////////////////////////////////////////////
   ///              FETCHING CONTACTS              ///

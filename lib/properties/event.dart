@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'event.g.dart';
@@ -26,7 +29,7 @@ class Event {
   @JsonKey(defaultValue: '')
   String customLabel;
 
-  /// Whether the date has no year associated to it. iOS only.
+  /// Whether the date has no year associated to it.
   @JsonKey(defaultValue: false)
   bool noYear;
 
@@ -39,8 +42,25 @@ class Event {
       this.customLabel = '',
       this.noYear = false});
 
-  factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
-  Map<String, dynamic> toJson() => _$EventToJson(this);
+  factory Event.fromJson(Map<String, dynamic> json) {
+    var event = _$EventFromJson(json);
+    if (Platform.isAndroid) {
+      final parsedEvent =
+          FlutterContacts.config.androidEventDateParser(json['date']);
+      event.date = parsedEvent.date;
+      event.noYear = parsedEvent.noYear;
+    }
+    return event;
+  }
+
+  Map<String, dynamic> toJson() {
+    var json = _$EventToJson(this);
+    if (Platform.isAndroid) {
+      json['date'] =
+          FlutterContacts.config.androidEventDateFormatter(date, noYear);
+    }
+    return json;
+  }
 }
 
 /// Event labels
