@@ -33,12 +33,10 @@ class FlutterContactsConfig {
   /// with no year.
   Event Function(String) androidEventDateParser = (date) {
     if (_dateRegexp.hasMatch(date)) {
-      print('parsing ${date} - regexp date');
       return Event(DateTime(int.parse(date.substring(0, 4)),
           int.parse(date.substring(5, 7)), int.parse(date.substring(8, 10))));
     }
     if (_noYearDateRegexp.hasMatch(date)) {
-      print('parsing ${date} - regexp date no year');
       return Event(
           DateTime(1970, int.parse(date.substring(2, 4)),
               int.parse(date.substring(5, 7))),

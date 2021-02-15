@@ -1,3 +1,7 @@
+## 0.1.3
+
+* Remove extra print statements
+
 ## 0.1.2
 
 * Properly delete events on iOS (https://github.com/QuisApp/flutter_contacts/issues/2)

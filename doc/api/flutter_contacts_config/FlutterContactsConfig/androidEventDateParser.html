@@ -96,12 +96,10 @@ with no year.</p>
           <h2><span>Implementation</span></h2>
           <pre class="language-dart"><code class="language-dart">Event Function(String) androidEventDateParser = (date) {
   if (_dateRegexp.hasMatch(date)) {
-    print(&#39;parsing ${date} - regexp date&#39;);
     return Event(DateTime(int.parse(date.substring(0, 4)),
         int.parse(date.substring(5, 7)), int.parse(date.substring(8, 10))));
   }
   if (_noYearDateRegexp.hasMatch(date)) {
-    print(&#39;parsing ${date} - regexp date no year&#39;);
     return Event(
         DateTime(1970, int.parse(date.substring(2, 4)),
             int.parse(date.substring(5, 7))),
@@ -124,7 +122,7 @@ with no year.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.2
+      0.1.3
   </span>
 
 </footer>
