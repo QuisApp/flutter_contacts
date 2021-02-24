@@ -57,7 +57,6 @@
 
     <li class="section-title"><a href="../../contact/Contact-class.html#constructors">Constructors</a></li>
     <li><a href="../../contact/Contact/Contact.html">Contact</a></li>
-    <li><a href="../../contact/Contact/Contact.create.html">create</a></li>
     <li><a href="../../contact/Contact/Contact.fromJson.html">fromJson</a></li>
     <li><a href="../../contact/Contact/Contact.fromVCard.html">fromVCard</a></li>
 
@@ -68,29 +67,34 @@
     <li><a href="../../contact/Contact/displayName.html">displayName</a></li>
     <li><a href="../../contact/Contact/emails.html">emails</a></li>
     <li><a href="../../contact/Contact/events.html">events</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../contact/Contact/hashCode.html">hashCode</a></li>
     <li><a href="../../contact/Contact/id.html">id</a></li>
     <li><a href="../../contact/Contact/name.html">name</a></li>
-    <li><a href="../../contact/Contact/normalizedName.html">normalizedName</a></li>
     <li><a href="../../contact/Contact/notes.html">notes</a></li>
     <li><a href="../../contact/Contact/organizations.html">organizations</a></li>
     <li><a href="../../contact/Contact/phones.html">phones</a></li>
     <li><a href="../../contact/Contact/photo.html">photo</a></li>
+    <li><a href="../../contact/Contact/photoFetched.html">photoFetched</a></li>
+    <li><a href="../../contact/Contact/photoOrThumbnail.html">photoOrThumbnail</a></li>
+    <li><a href="../../contact/Contact/propertiesFetched.html">propertiesFetched</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
     <li><a href="../../contact/Contact/socialMedias.html">socialMedias</a></li>
+    <li><a href="../../contact/Contact/thumbnail.html">thumbnail</a></li>
+    <li><a href="../../contact/Contact/thumbnailFetched.html">thumbnailFetched</a></li>
     <li><a href="../../contact/Contact/websites.html">websites</a></li>
 
     <li class="section-title"><a href="../../contact/Contact-class.html#instance-methods">Methods</a></li>
-    <li><a href="../../contact/Contact/deduplicateEmails.html">deduplicateEmails</a></li>
-    <li><a href="../../contact/Contact/deduplicateEvents.html">deduplicateEvents</a></li>
-    <li><a href="../../contact/Contact/deduplicatePhones.html">deduplicatePhones</a></li>
+    <li><a href="../../contact/Contact/deduplicateProperties.html">deduplicateProperties</a></li>
+    <li><a href="../../contact/Contact/delete.html">delete</a></li>
+    <li><a href="../../contact/Contact/insert.html">insert</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../contact/Contact/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../contact/Contact/toString.html">toString</a></li>
     <li><a href="../../contact/Contact/toVCard.html">toVCard</a></li>
+    <li><a href="../../contact/Contact/update.html">update</a></li>
 
     <li class="section-title"><a href="../../contact/Contact-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../../contact/Contact/operator_equals.html">operator ==</a></li>
 
 
 
@@ -103,19 +107,47 @@
 
     <section class="multi-line-signature">
       
-      <span class="name ">Contact.fromJson</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="fromJson-param-json"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span> <span class="parameter-name">json</span></span></li>
+      <span class="name ">Contact.fromJson</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="fromJson-param-json"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">json</span></span></li>
 </ol>)
     </section>
 
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">factory Contact.fromJson(Map json) {
-  var contact = _$ContactFromJson(json);
-  &#47;&#47; photo requires special handling since it&#39;s ignored by json serialization
-  contact.photo = json[&#39;photo&#39;] as Uint8List;
-  return contact;
-}</code></pre>
+      <pre class="language-dart"><code class="language-dart">factory Contact.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Contact(
+      id: json[&#39;id&#39;] as String,
+      displayName: json[&#39;displayName&#39;] as String,
+      thumbnail: json[&#39;thumbnail&#39;] as Uint8List,
+      photo: json[&#39;photo&#39;] as Uint8List,
+      name: Name.fromJson(Map&lt;String, dynamic&gt;.from(json[&#39;name&#39;] ?? {})),
+      phones: ((json[&#39;phones&#39;] as List) ?? [])
+          .map((x) =&gt; Phone.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+      emails: ((json[&#39;emails&#39;] as List) ?? [])
+          .map((x) =&gt; Email.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+      addresses: ((json[&#39;addresses&#39;] as List) ?? [])
+          .map((x) =&gt; Address.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+      organizations: ((json[&#39;organizations&#39;] as List) ?? [])
+          .map((x) =&gt; Organization.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+      websites: ((json[&#39;websites&#39;] as List) ?? [])
+          .map((x) =&gt; Website.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+      socialMedias: ((json[&#39;socialMedias&#39;] as List) ?? [])
+          .map((x) =&gt; SocialMedia.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+      events: ((json[&#39;events&#39;] as List) ?? [])
+          .map((x) =&gt; Event.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+      notes: ((json[&#39;notes&#39;] as List) ?? [])
+          .map((x) =&gt; Note.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+      accounts: ((json[&#39;accounts&#39;] as List) ?? [])
+          .map((x) =&gt; Account.fromJson(Map&lt;String, dynamic&gt;.from(x)))
+          .toList(),
+    );</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -128,7 +160,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

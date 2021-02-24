@@ -5,43 +5,32 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const MethodChannel('github.com/QuisApp/flutter_contacts')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
-    if (methodCall.method == 'new') {
-      final c = methodCall.arguments as Map;
-      c['displayName'] = '${c['name']['first']} ${c['name']['last']}';
-      c['id'] = '12345';
-      return c;
-    }
-    return null;
-  });
-
   test('new contact should have no null values except for photo', () {
-    final contact = Contact.create();
-    final json = contact.toJson(includePhoto: true);
+    final contact = Contact();
+    final json = contact.toJson();
     final nulls = nullValues(json);
-    expect(nulls, ['/photo']);
+    expect(nulls, ['/thumbnail', '/photo']);
   });
 
   test('add phone numbers', () async {
-    final newContact = Contact.create()
+    const MethodChannel('github.com/QuisApp/flutter_contacts')
+        .setMockMethodCallHandler((MethodCall methodCall) async {
+      if (methodCall.method == 'insert') {
+        final c = methodCall.arguments[0];
+        c['displayName'] = '${c['name']['first']} ${c['name']['last']}';
+        c['id'] = '12345';
+        return c;
+      }
+    });
+    final newContact = Contact()
       ..name = Name(first: 'John', last: 'Doe')
       ..phones = [
         Phone('555-123-4567'),
         Phone('555-999-9999', label: PhoneLabel.work)
       ];
-    final returnedContact = await FlutterContacts.newContact(newContact);
+    final returnedContact = await newContact.insert();
     expect(returnedContact.displayName, 'John Doe');
     expect(returnedContact.phones.length, 2);
-  });
-
-  test('normalized names', () {
-    var c = Contact.create();
-    expect((c..displayName = 'Édouard').normalizedName, 'edouard');
-    expect((c..displayName = '  john  ').normalizedName, 'john');
-    expect((c..displayName = 'Zażółć gęślą jaźń').normalizedName,
-        'zazolc gesla jazn');
-    expect((c..displayName = '🍾🏝🐶').normalizedName, '🍾🏝🐶');
   });
 }
 

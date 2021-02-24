@@ -1,0 +1,18 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//QR-Code-Generator.com//EN
+N:Smith;John;;;
+FN:John Smith
+ORG:FlutterContacts;
+TITLE:Software Engineer
+EMAIL;TYPE=PREF,INTERNET:johnsmith@example.com
+TEL;TYPE=CELL,voice:555-123-4567
+TEL;TYPE=WORK,voice:555-999-9999
+TEL;TYPE=WORK,fax:555-888-8888
+ADR;TYPE=WORK;type=pref:;; ;;;;
+URL:www.example.com
+
+NOTE:Some notes line 1 Some notes line 2
+
+REV:2008-04-24T19:52:43Z
+END:VCARD

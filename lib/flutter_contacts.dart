@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/contact.dart';
-import 'package:flutter_contacts/flutter_contacts_config.dart';
 
 export 'contact.dart';
 export 'properties/account.dart';
@@ -13,161 +17,225 @@ export 'properties/organization.dart';
 export 'properties/phone.dart';
 export 'properties/social_media.dart';
 export 'properties/website.dart';
-export 'vcard_exporter.dart';
-export 'vcard_parser.dart';
 
 class FlutterContacts {
-  static const MethodChannel _channel =
-      MethodChannel('github.com/QuisApp/flutter_contacts');
-  static const EventChannel _eventChannel =
+  static const _channel = MethodChannel('github.com/QuisApp/flutter_contacts');
+  static const _eventChannel =
       EventChannel('github.com/QuisApp/flutter_contacts/events');
+  static StreamSubscription _eventSubscription;
+  static final _eventSubscribers = <void Function()>[];
+  static final _alpha = RegExp(r'\p{Letter}', unicode: true);
+  static final _numeric = RegExp(r'\p{Number}', unicode: true);
 
-  ///////////////////////////////////////////////////
-  ///                   CONFIG                    ///
-  ///////////////////////////////////////////////////
-
+  /// Plugin configuration.
   static var config = FlutterContactsConfig();
 
-  ///////////////////////////////////////////////////
-  ///              FETCHING CONTACTS              ///
-  ///////////////////////////////////////////////////
+  /// Fetches all contacts.
+  ///
+  /// By default only ID and display name are fetched. If [withProperties] is
+  /// true, properties (phones, emails, addresses, websites, etc) are also
+  /// fetched.
+  ///
+  /// If [withThumbnail] is true, the low-resolution thumbnail is also
+  /// fetched. If [withPhoto] is true, the high-resolution photo is also
+  /// fetched.
+  ///
+  /// If [sorted] is true, the contacts are returned sorted by their
+  /// normalized display names (ignoring case and diacritics).
+  ///
+  /// If [deduplicateProperties] is true, the properties will be de-duplicated,
+  /// mainly to avoid the case (common on Android) where multiple equivalent
+  /// phones are returned.
+  static Future<List<Contact>> getContacts({
+    bool withProperties = false,
+    bool withThumbnail = false,
+    bool withPhoto = false,
+    bool sorted = true,
+    bool deduplicateProperties = true,
+  }) async =>
+      _select(
+        withProperties: withProperties,
+        withThumbnail: withThumbnail,
+        withPhoto: withPhoto,
+        sorted: sorted,
+        deduplicateProperties: deduplicateProperties,
+      );
 
-  /// Fetches all contacts (IDs, display names, and optionally low-res photos)
-  static Future<List<Contact>> getContacts(
-          {bool withPhotos = false, bool sorted = true}) async =>
-      await _get(withPhotos: withPhotos, sorted: sorted);
-
-  /// Fetches all fields for given contact
+  /// Fetches one contact.
+  ///
+  /// By default everything available is fetched. If [withProperties] is
+  /// false, properties (phones, emails, addresses, websites, etc) won't be
+  /// fetched.
+  ///
+  /// If [withThumbnail] is false, the low-resolution thumbnail won't be
+  /// fetched. If [withPhoto] is false, the high-resolution photo won't be
+  /// fetched.
+  ///
+  /// If [deduplicateProperties] is true, the properties will be de-duplicated,
+  /// mainly to avoid the case (common on Android) where multiple equivalent
+  /// phones are returned.
   static Future<Contact> getContact(
     String id, {
-    bool useHighResolutionPhotos = true,
-    bool deduplicateEmailsAndPhones = true,
+    bool withProperties = true,
+    bool withThumbnail = true,
+    bool withPhoto = true,
+    bool deduplicateProperties = true,
   }) async {
-    final contacts = await _get(
-        id: id,
-        withDetails: true,
-        withPhotos: true,
-        useHighResolutionPhotos: useHighResolutionPhotos,
-        deduplicateEmailsAndPhones: deduplicateEmailsAndPhones);
-    if (contacts.isEmpty) return null;
+    final contacts = await _select(
+      id: id,
+      withProperties: withProperties,
+      withThumbnail: withThumbnail,
+      withPhoto: withPhoto,
+      sorted: false,
+      deduplicateProperties: deduplicateProperties,
+    );
+    if (contacts.length != 1) return null;
     return contacts.first;
   }
 
-  /// Fetches all fields for all contacts
-  static Future<List<Contact>> getFullContacts({
-    bool withPhotos = false,
-    bool sorted = true,
-    bool useHighResolutionPhotos = false,
-    bool deduplicateEmailsAndPhones = true,
-  }) async =>
-      await _get(
-          withDetails: true,
-          withPhotos: withPhotos,
-          sorted: sorted,
-          useHighResolutionPhotos: useHighResolutionPhotos,
-          deduplicateEmailsAndPhones: deduplicateEmailsAndPhones);
-
-  static Future<List<Contact>> _get(
-      {String id,
-      bool withDetails = false,
-      bool withPhotos = false,
-      bool useHighResolutionPhotos = false,
-      bool sorted = true,
-      bool deduplicateEmailsAndPhones = true}) async {
-    // removing the types makes it crash at runtime
-    // ignore: omit_local_variable_types
-    List untypedContacts = await _channel.invokeMethod(
-        'get', [id, withDetails, withPhotos, useHighResolutionPhotos]);
-    // ignore: omit_local_variable_types
-    List<Contact> contacts =
-        untypedContacts.map((x) => Contact.fromJson(x)).toList();
-    if (sorted) contacts.sort(compareDisplayNames);
-    if (deduplicateEmailsAndPhones) {
-      contacts.forEach((c) => c
-        ..deduplicateEmails()
-        ..deduplicatePhones()
-        // it seems that birthdays are also often duplicated
-        ..deduplicateEvents());
-    }
-    return contacts;
-  }
-
-  ///////////////////////////////////////////////////
-  ///              CREATING CONTACTS              ///
-  ///////////////////////////////////////////////////
-
-  /// Creates new contact and return it
+  /// Inserts a new [contact] in the database and returns it.
   ///
   /// Note that the output contact will be different from the input; for example
-  /// the input won't have an ID, but the output will. If you intend to perform
+  /// the input can't have an ID, but the output will. If you intend to perform
   /// operations on the contact after creation, you should perform them on the
   /// output rather than on the input.
-  static Future<Contact> newContact(Contact contact) async => Contact.fromJson(
-      await _channel.invokeMethod('new', contact.toJson(includePhoto: true)));
+  static Future<Contact> insertContact(Contact contact) async {
+    // This avoids the accidental case where we want to update a contact but
+    // insert it instead, which would result in two identical contacts.
+    if (contact.id.isNotEmpty) {
+      throw Exception('Cannot insert contact that already has an ID');
+    }
+    final json = await _channel.invokeMethod('insert', [
+      contact.toJson(),
+      config.includeNotesOnIos13AndAbove,
+    ]);
+    return Contact.fromJson(Map<String, dynamic>.from(json));
+  }
 
-  ///////////////////////////////////////////////////
-  ///              UPDATING CONTACTS              ///
-  ///////////////////////////////////////////////////
-
-  /// Updates existing contact
+  /// Updates existing contact and returns it.
   ///
-  /// To delete the photo, explicitly set [deletePhoto] to true
-  static Future updateContact(Contact contact,
-          {bool deletePhoto = false}) async =>
-      await _channel.invokeMethod(
-          'update', [contact.toJson(includePhoto: true), deletePhoto]);
+  /// Note that output contact may be different from the input. If you intend to
+  /// perform operations on the contact after update, you should perform them on
+  /// the output rather than on the input.
+  static Future<Contact> updateContact(Contact contact) async {
+    // This avoids the accidental case where we want to insert a contact but
+    // update it instead, which won't work.
+    if (contact.id.isEmpty) {
+      throw Exception('Cannot update contact without ID');
+    }
+    // In addition, on Android we need a raw contact ID.
+    if (Platform.isAndroid &&
+        !contact.accounts.any((x) => x.rawId.isNotEmpty)) {
+      throw Exception('Cannot update contact without raw ID on Android');
+    }
+    // This avoids the accidental case where we try to update a contact before
+    // fetching all their properties or photos, which would erase the existing
+    // properties or photos.
+    if (!contact.propertiesFetched || !contact.photoFetched) {
+      throw Exception(
+          'Cannot update contact without fetching properties and photos');
+    }
+    final json = await _channel.invokeMethod('update', [
+      contact.toJson(),
+      config.includeNotesOnIos13AndAbove,
+    ]);
+    return Contact.fromJson(Map<String, dynamic>.from(json));
+  }
 
-  ///////////////////////////////////////////////////
-  ///              DELETING CONTACTS              ///
-  ///////////////////////////////////////////////////
+  /// Deletes contacts from the database.
+  static Future<void> deleteContacts(List<Contact> contacts) async {
+    final ids = contacts.map((c) => c.id).toList();
+    if (ids.any((x) => x.isEmpty)) {
+      throw Exception('Cannot delete contacts without IDs');
+    }
+    await _channel.invokeMethod('delete', ids);
+  }
 
-  /// Deletes contact with given ID (given by `contact.id`)
-  static Future deleteContact(String contactId) async =>
-      await _channel.invokeMethod('delete', [contactId]);
+  /// Deletes one contact from the database.
+  static Future<void> deleteContact(Contact contact) async =>
+      deleteContacts([contact]);
 
-  /// Deletes contacts with given IDs (given by `contact.id`)
-  static Future deleteContacts(List<String> contactIds) async =>
-      await _channel.invokeMethod('delete', contactIds);
-
-  ///////////////////////////////////////////////////
-  ///           LISTENING TO DB CHANGES           ///
-  ///////////////////////////////////////////////////
-
-  /// Listens to contact database changes and executes callback function.
+  /// Listens to contact database changes.
   ///
   /// Because of limitations both on iOS and on Android (see
   /// https://www.grokkingandroid.com/use-contentobserver-to-listen-to-changes/)
   /// it's not possible to tell which kind of change happened and on which
-  /// contacts. It only notifies something changed in the contacts database.
-  ///
-  /// [listener] must be a parameterless function.
-  ///
-  /// The return value is a function (returning [Future<void>]) that cancels the
-  /// subscription.
-  static Future<void> Function() onChange(Function listener) {
-    var subscription =
-        _eventChannel.receiveBroadcastStream().listen((event) => listener());
-    return () => subscription.cancel();
+  /// contacts. It only notifies that something changed in the contacts
+  /// database.
+  static void addListener(void Function() listener) {
+    if (_eventSubscription != null) {
+      _eventSubscription.cancel();
+    }
+    _eventSubscribers.add(listener);
+    final runAllListeners = (event) => _eventSubscribers.forEach((f) => f());
+    _eventSubscription =
+        _eventChannel.receiveBroadcastStream().listen(runAllListeners);
   }
 
-  ///////////////////////////////////////////////////
-  ///               SORTING CONTACTS              ///
-  ///////////////////////////////////////////////////
-
-  static final RegExp _alpha = RegExp(r'\p{Letter}', unicode: true);
-  static final RegExp _numeric = RegExp(r'\p{Number}', unicode: true);
-
-  /// Sort display names in the "natural" way, ignoring case and diacritics.
+  /// Removes a listener to contact database changes.
   ///
-  /// By default they're sorted lexicographically, which means `E` comes before
-  /// `e`, which itself comes before `É`. The usual, more natural sorting,
-  /// ignores case and diacritics. For example `Édouard Manet` should come
-  /// before `Elon Musk`.
+  /// Because of limitations both on iOS and on Android (see
+  /// https://www.grokkingandroid.com/use-contentobserver-to-listen-to-changes/)
+  /// it's not possible to tell which kind of change happened and on which
+  /// contacts. It only notifies that something changed in the contacts
+  /// database.
+  static void removeListener(void Function() listener) {
+    if (_eventSubscription != null) {
+      _eventSubscription.cancel();
+    }
+    _eventSubscribers.remove(listener);
+    if (_eventSubscribers.isEmpty) {
+      _eventSubscription = null;
+    } else {
+      final runAllListeners = (event) => _eventSubscribers.forEach((f) => f());
+      _eventSubscription =
+          _eventChannel.receiveBroadcastStream().listen(runAllListeners);
+    }
+  }
+
+  static Future<List<Contact>> _select({
+    String id,
+    bool withProperties = false,
+    bool withThumbnail = false,
+    bool withPhoto = false,
+    bool sorted = true,
+    bool deduplicateProperties = true,
+  }) async {
+    // removing the types makes it crash at runtime
+    // ignore: omit_local_variable_types
+    List untypedContacts = await _channel.invokeMethod('select', [
+      id,
+      withProperties,
+      withThumbnail,
+      withPhoto,
+      config.includeNotesOnIos13AndAbove,
+    ]);
+    // ignore: omit_local_variable_types
+    List<Contact> contacts = untypedContacts
+        .map((x) => Contact.fromJson(Map<String, dynamic>.from(x)))
+        .toList();
+    if (sorted) {
+      contacts.sort(_compareDisplayNames);
+    }
+    if (deduplicateProperties) {
+      contacts.forEach((c) => c.deduplicateProperties());
+    }
+    contacts.forEach((c) => c
+      ..propertiesFetched = withProperties
+      ..thumbnailFetched = withThumbnail
+      ..photoFetched = withPhoto);
+    return contacts;
+  }
+
+  /// Sorts display names in a "natural" way, ignoring case and diacritics.
   ///
-  /// In addition, numbers come after letters.
-  static int compareDisplayNames(Contact a, Contact b) {
-    var x = a.normalizedName;
-    var y = b.normalizedName;
+  /// By default they would be sorted lexicographically, which means `E` comes
+  /// before `e`, which itself comes before `É`. The usual, more natural
+  /// sorting, ignores case and diacritics. For example `Édouard Manet` should
+  /// come before `Elon Musk`. In addition, numbers come after letters.
+  static int _compareDisplayNames(Contact a, Contact b) {
+    var x = _normalizeName(a.displayName);
+    var y = _normalizeName(b.displayName);
     if (x.isEmpty && y.isNotEmpty) return 1;
     if (x.isEmpty && y.isEmpty) return 0;
     if (x.isNotEmpty && y.isEmpty) return -1;
@@ -179,4 +247,8 @@ class FlutterContacts {
     }
     return x.compareTo(y);
   }
+
+  /// Returns normalized display name, which ignores case, space and diacritics.
+  static String _normalizeName(String name) =>
+      removeDiacritics(name.trim().toLowerCase());
 }

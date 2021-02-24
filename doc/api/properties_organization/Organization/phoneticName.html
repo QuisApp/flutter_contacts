@@ -63,7 +63,7 @@
     </li>
     <li><a href="../../properties_organization/Organization/company.html">company</a></li>
     <li><a href="../../properties_organization/Organization/department.html">department</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../properties_organization/Organization/hashCode.html">hashCode</a></li>
     <li><a href="../../properties_organization/Organization/jobDescription.html">jobDescription</a></li>
     <li><a href="../../properties_organization/Organization/officeLocation.html">officeLocation</a></li>
     <li><a href="../../properties_organization/Organization/phoneticName.html">phoneticName</a></li>
@@ -74,10 +74,11 @@
     <li class="section-title"><a href="../../properties_organization/Organization-class.html#instance-methods">Methods</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../properties_organization/Organization/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../properties_organization/Organization/toString.html">toString</a></li>
+    <li><a href="../../properties_organization/Organization/toVCard.html">toVCard</a></li>
 
     <li class="section-title"><a href="../../properties_organization/Organization-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../../properties_organization/Organization/operator_equals.html">operator ==</a></li>
 
 
 
@@ -91,15 +92,14 @@
         <section class="multi-line-signature">
           <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
           <span class="name ">phoneticName</span>
-          <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: &#39;&#39;), read / write</div>
+          <div class="features">read / write</div>
         </section>
         <section class="desc markdown">
-          <p>Phonetic name of the company name</p>
+          <p>Phonetic company name (Android and iOS10+ only).</p>
         </section>
                 <section class="summary source-code" id="source">
           <h2><span>Implementation</span></h2>
-          <pre class="language-dart"><code class="language-dart">@JsonKey(defaultValue: &#39;&#39;)
-String phoneticName;
+          <pre class="language-dart"><code class="language-dart">String phoneticName;
 
 </code></pre>
         </section>
@@ -114,7 +114,7 @@ String phoneticName;
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

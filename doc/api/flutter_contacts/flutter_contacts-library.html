@@ -52,18 +52,17 @@
           <li class="section-title">Libraries</li>
           <li><a href="../properties_account/properties_account-library.html">account</a></li>
           <li><a href="../properties_address/properties_address-library.html">address</a></li>
+          <li><a href="../config/config-library.html">config</a></li>
           <li><a href="../contact/contact-library.html">contact</a></li>
           <li><a href="../properties_email/properties_email-library.html">email</a></li>
           <li><a href="../properties_event/properties_event-library.html">event</a></li>
           <li><a href="../flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
-          <li><a href="../flutter_contacts_config/flutter_contacts_config-library.html">flutter_contacts_config</a></li>
           <li><a href="../properties_name/properties_name-library.html">name</a></li>
           <li><a href="../properties_note/properties_note-library.html">note</a></li>
           <li><a href="../properties_organization/properties_organization-library.html">organization</a></li>
           <li><a href="../properties_phone/properties_phone-library.html">phone</a></li>
           <li><a href="../properties_social_media/properties_social_media-library.html">social_media</a></li>
-          <li><a href="../vcard_exporter/vcard_exporter-library.html">vcard_exporter</a></li>
-          <li><a href="../vcard_parser/vcard_parser-library.html">vcard_parser</a></li>
+          <li><a href="../vcard/vcard-library.html">vcard</a></li>
           <li><a href="../properties_website/properties_website-library.html">website</a></li>
     </ol>
   </div>
@@ -80,13 +79,13 @@
           <span class="name "><a href="../properties_account/Account-class.html">Account</a></span>         
         </dt>
         <dd>
-          Account is only available on Android and represent raw contacts. <a href="../properties_account/Account-class.html">[...]</a>
+          Raw Android account. <a href="../properties_account/Account-class.html">[...]</a>
         </dd>
         <dt id="Address">
           <span class="name "><a href="../properties_address/Address-class.html">Address</a></span>         
         </dt>
         <dd>
-          A postal address. <a href="../properties_address/Address-class.html">[...]</a>
+          Labeled postal address. <a href="../properties_address/Address-class.html">[...]</a>
         </dd>
         <dt id="Contact">
           <span class="name "><a href="../contact/Contact-class.html">Contact</a></span>         
@@ -98,13 +97,13 @@
           <span class="name "><a href="../properties_email/Email-class.html">Email</a></span>         
         </dt>
         <dd>
-          An email address <a href="../properties_email/Email-class.html">[...]</a>
+          Labeled email. 
         </dd>
         <dt id="Event">
           <span class="name "><a href="../properties_event/Event-class.html">Event</a></span>         
         </dt>
         <dd>
-          An event, e.g. a birthday or anniversary 
+          Labeled event / birthday. <a href="../properties_event/Event-class.html">[...]</a>
         </dd>
         <dt id="FlutterContacts">
           <span class="name "><a href="../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></span>         
@@ -116,55 +115,37 @@
           <span class="name "><a href="../properties_name/Name-class.html">Name</a></span>         
         </dt>
         <dd>
-          A structured name. <a href="../properties_name/Name-class.html">[...]</a>
+          Structured name. <a href="../properties_name/Name-class.html">[...]</a>
         </dd>
         <dt id="Note">
           <span class="name "><a href="../properties_note/Note-class.html">Note</a></span>         
         </dt>
         <dd>
-          A note, i.e. a free-form string about the contact. <a href="../properties_note/Note-class.html">[...]</a>
+          Note, i.e. a free-form string about the contact. <a href="../properties_note/Note-class.html">[...]</a>
         </dd>
         <dt id="Organization">
           <span class="name "><a href="../properties_organization/Organization-class.html">Organization</a></span>         
         </dt>
         <dd>
-          An organization or job. <a href="../properties_organization/Organization-class.html">[...]</a>
-        </dd>
-        <dt id="Param">
-          <span class="name "><a href="../vcard_parser/Param-class.html">Param</a></span>         
-        </dt>
-        <dd>
-           
+          Organization / job. 
         </dd>
         <dt id="Phone">
           <span class="name "><a href="../properties_phone/Phone-class.html">Phone</a></span>         
         </dt>
         <dd>
-          A phone number <a href="../properties_phone/Phone-class.html">[...]</a>
+          Labeled phone. 
         </dd>
         <dt id="SocialMedia">
           <span class="name "><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></span>         
         </dt>
         <dd>
-          A social media or instant messaging account. <a href="../properties_social_media/SocialMedia-class.html">[...]</a>
-        </dd>
-        <dt id="VCardExporter">
-          <span class="name "><a href="../vcard_exporter/VCardExporter-class.html">VCardExporter</a></span>         
-        </dt>
-        <dd>
-           
-        </dd>
-        <dt id="VCardParser">
-          <span class="name "><a href="../vcard_parser/VCardParser-class.html">VCardParser</a></span>         
-        </dt>
-        <dd>
-           
+          Social media / instant messaging profile. <a href="../properties_social_media/SocialMedia-class.html">[...]</a>
         </dd>
         <dt id="Website">
           <span class="name "><a href="../properties_website/Website-class.html">Website</a></span>         
         </dt>
         <dd>
-          A website or URL. <a href="../properties_website/Website-class.html">[...]</a>
+          Labeled website. 
         </dd>
       </dl>
     </section>
@@ -172,6 +153,20 @@
 
 
 
+    <section class="summary offset-anchor" id="properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+        <dt id="lowerCaseStringToSocialMediaLabel" class="property">
+          <span class="name"><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></span>
+          <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel</a></span>&gt;</span></span>         
+        </dt>
+        <dd>
+           
+                  <div class="features">final</div>
+</dd>
+      </dl>
+    </section>
 
 
     <section class="summary offset-anchor" id="enums">
@@ -182,43 +177,37 @@
           <span class="name "><a href="../properties_address/AddressLabel-class.html">AddressLabel</a></span>         
         </dt>
         <dd>
-          Address labels <a href="../properties_address/AddressLabel-class.html">[...]</a>
+          Address labels. <a href="../properties_address/AddressLabel-class.html">[...]</a>
         </dd>
         <dt id="EmailLabel">
           <span class="name "><a href="../properties_email/EmailLabel-class.html">EmailLabel</a></span>         
         </dt>
         <dd>
-          Email labels <a href="../properties_email/EmailLabel-class.html">[...]</a>
+          Email labels. <a href="../properties_email/EmailLabel-class.html">[...]</a>
         </dd>
         <dt id="EventLabel">
           <span class="name "><a href="../properties_event/EventLabel-class.html">EventLabel</a></span>         
         </dt>
         <dd>
-          Event labels <a href="../properties_event/EventLabel-class.html">[...]</a>
+          Event labels. <a href="../properties_event/EventLabel-class.html">[...]</a>
         </dd>
         <dt id="PhoneLabel">
           <span class="name "><a href="../properties_phone/PhoneLabel-class.html">PhoneLabel</a></span>         
         </dt>
         <dd>
-          Phone labels <a href="../properties_phone/PhoneLabel-class.html">[...]</a>
+          Phone labels. <a href="../properties_phone/PhoneLabel-class.html">[...]</a>
         </dd>
         <dt id="SocialMediaLabel">
           <span class="name "><a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel</a></span>         
         </dt>
         <dd>
-          Social media labels <a href="../properties_social_media/SocialMediaLabel-class.html">[...]</a>
-        </dd>
-        <dt id="Version">
-          <span class="name "><a href="../vcard_parser/Version-class.html">Version</a></span>         
-        </dt>
-        <dd>
-           
+          Social media labels. <a href="../properties_social_media/SocialMediaLabel-class.html">[...]</a>
         </dd>
         <dt id="WebsiteLabel">
           <span class="name "><a href="../properties_website/WebsiteLabel-class.html">WebsiteLabel</a></span>         
         </dt>
         <dd>
-          Website labels <a href="../properties_website/WebsiteLabel-class.html">[...]</a>
+          Website labels. <a href="../properties_website/WebsiteLabel-class.html">[...]</a>
         </dd>
       </dl>
     </section>
@@ -240,16 +229,15 @@
   <li><a href="../properties_name/Name-class.html">Name</a></li>
   <li><a href="../properties_note/Note-class.html">Note</a></li>
   <li><a href="../properties_organization/Organization-class.html">Organization</a></li>
-  <li><a href="../vcard_parser/Param-class.html">Param</a></li>
   <li><a href="../properties_phone/Phone-class.html">Phone</a></li>
   <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
-  <li><a href="../vcard_exporter/VCardExporter-class.html">VCardExporter</a></li>
-  <li><a href="../vcard_parser/VCardParser-class.html">VCardParser</a></li>
   <li><a href="../properties_website/Website-class.html">Website</a></li>
 
 
 
 
+  <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#properties">Properties</a></li>
+  <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
 
 
   <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#enums">Enums</a></li>
@@ -258,7 +246,6 @@
   <li><a href="../properties_event/EventLabel-class.html">EventLabel</a></li>
   <li><a href="../properties_phone/PhoneLabel-class.html">PhoneLabel</a></li>
   <li><a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel</a></li>
-  <li><a href="../vcard_parser/Version-class.html">Version</a></li>
   <li><a href="../properties_website/WebsiteLabel-class.html">WebsiteLabel</a></li>
 
 
@@ -271,7 +258,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

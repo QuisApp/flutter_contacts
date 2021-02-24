@@ -61,16 +61,15 @@
   <li><a href="../properties_name/Name-class.html">Name</a></li>
   <li><a href="../properties_note/Note-class.html">Note</a></li>
   <li><a href="../properties_organization/Organization-class.html">Organization</a></li>
-  <li><a href="../vcard_parser/Param-class.html">Param</a></li>
   <li><a href="../properties_phone/Phone-class.html">Phone</a></li>
   <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
-  <li><a href="../vcard_exporter/VCardExporter-class.html">VCardExporter</a></li>
-  <li><a href="../vcard_parser/VCardParser-class.html">VCardParser</a></li>
   <li><a href="../properties_website/Website-class.html">Website</a></li>
 
 
 
 
+  <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#properties">Properties</a></li>
+  <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
 
 
   <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#enums">Enums</a></li>
@@ -79,7 +78,6 @@
   <li><a href="../properties_event/EventLabel-class.html">EventLabel</a></li>
   <li><a href="../properties_phone/PhoneLabel-class.html">PhoneLabel</a></li>
   <li><a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel</a></li>
-  <li><a href="../vcard_parser/Version-class.html">Version</a></li>
   <li><a href="../properties_website/WebsiteLabel-class.html">WebsiteLabel</a></li>
 
 
@@ -173,12 +171,10 @@
       <dl class="properties">
         <dt id="config" class="property">
           <span class="name"><a href="../flutter_contacts/FlutterContacts/config.html">config</a></span>
-          <span class="signature">&#8596; <a href="../flutter_contacts_config/FlutterContactsConfig-class.html">FlutterContactsConfig</a></span>         
+          <span class="signature">&#8596; <a href="../config/FlutterContactsConfig-class.html">FlutterContactsConfig</a></span>         
         </dt>
         <dd>
-          /////////////////////////////////////////////
-CONFIG                    ///
-///////////////////////////////////////////// 
+          Plugin configuration. 
                   <div class="features">read / write</div>
 </dd>
       </dl>
@@ -187,100 +183,76 @@ CONFIG                    ///
     <section class="summary offset-anchor" id="static-methods">
       <h2>Static Methods</h2>
       <dl class="callables">
-        <dt id="compareDisplayNames" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/compareDisplayNames.html">compareDisplayNames</a></span><span class="signature">(<wbr><span class="parameter" id="compareDisplayNames-param-a"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">a</span>, </span><span class="parameter" id="compareDisplayNames-param-b"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">b</span></span>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+        <dt id="addListener" class="callable">
+          <span class="name"><a href="../flutter_contacts/FlutterContacts/addListener.html">addListener</a></span><span class="signature">(<wbr><span class="parameter" id="addListener-param-listener"><span class="type-annotation">void</span> <span class="parameter-name">listener</span>()</span>)
+            <span class="returntype parameter">&#8594; void</span>
           </span>
                   </dt>
         <dd>
-          Sort display names in the "natural" way, ignoring case and diacritics. <a href="../flutter_contacts/FlutterContacts/compareDisplayNames.html">[...]</a>
+          Listens to contact database changes. <a href="../flutter_contacts/FlutterContacts/addListener.html">[...]</a>
                   
 </dd>
         <dt id="deleteContact" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/deleteContact.html">deleteContact</a></span><span class="signature">(<wbr><span class="parameter" id="deleteContact-param-contactId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">contactId</span></span>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a></span>
+          <span class="name"><a href="../flutter_contacts/FlutterContacts/deleteContact.html">deleteContact</a></span><span class="signature">(<wbr><span class="parameter" id="deleteContact-param-contact"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span>)
+            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
           </span>
                   </dt>
         <dd>
-          ////////////////////////////////////////////////
-DELETING CONTACTS              ///
-////////////////////////////////////////////////
-Deletes contact with given ID (given by <code>contact.id</code>) 
+          Deletes one contact from the database. 
                   
 </dd>
         <dt id="deleteContacts" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/deleteContacts.html">deleteContacts</a></span><span class="signature">(<wbr><span class="parameter" id="deleteContacts-param-contactIds"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">contactIds</span></span>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a></span>
+          <span class="name"><a href="../flutter_contacts/FlutterContacts/deleteContacts.html">deleteContacts</a></span><span class="signature">(<wbr><span class="parameter" id="deleteContacts-param-contacts"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span> <span class="parameter-name">contacts</span></span>)
+            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
           </span>
                   </dt>
         <dd>
-          Deletes contacts with given IDs (given by <code>contact.id</code>) 
+          Deletes contacts from the database. 
                   
 </dd>
         <dt id="getContact" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/getContact.html">getContact</a></span><span class="signature">(<wbr><span class="parameter" id="getContact-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span>, </span><span class="parameter" id="getContact-param-useHighResolutionPhotos">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useHighResolutionPhotos</span>: <span class="default-value">true</span>, </span><span class="parameter" id="getContact-param-deduplicateEmailsAndPhones"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateEmailsAndPhones</span>: <span class="default-value">true</span>}</span>)
+          <span class="name"><a href="../flutter_contacts/FlutterContacts/getContact.html">getContact</a></span><span class="signature">(<wbr><span class="parameter" id="getContact-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span>, </span><span class="parameter" id="getContact-param-withProperties">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withProperties</span>: <span class="default-value">true</span>, </span><span class="parameter" id="getContact-param-withThumbnail"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withThumbnail</span>: <span class="default-value">true</span>, </span><span class="parameter" id="getContact-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">true</span>, </span><span class="parameter" id="getContact-param-deduplicateProperties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateProperties</span>: <span class="default-value">true</span>}</span>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
           </span>
                   </dt>
         <dd>
-          Fetches all fields for given contact 
+          Fetches one contact. <a href="../flutter_contacts/FlutterContacts/getContact.html">[...]</a>
                   
 </dd>
         <dt id="getContacts" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></span><span class="signature">(<wbr><span class="parameter" id="getContacts-param-withPhotos">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhotos</span>: <span class="default-value">false</span>, </span><span class="parameter" id="getContacts-param-sorted"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">sorted</span>: <span class="default-value">true</span>}</span>)
+          <span class="name"><a href="../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></span><span class="signature">(<wbr><span class="parameter" id="getContacts-param-withProperties">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withProperties</span>: <span class="default-value">false</span>, </span><span class="parameter" id="getContacts-param-withThumbnail"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withThumbnail</span>: <span class="default-value">false</span>, </span><span class="parameter" id="getContacts-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">false</span>, </span><span class="parameter" id="getContacts-param-sorted"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">sorted</span>: <span class="default-value">true</span>, </span><span class="parameter" id="getContacts-param-deduplicateProperties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateProperties</span>: <span class="default-value">true</span>}</span>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>&gt;</span></span>
           </span>
                   </dt>
         <dd>
-          ////////////////////////////////////////////////
-FETCHING CONTACTS              ///
-////////////////////////////////////////////////
-Fetches all contacts (IDs, display names, and optionally low-res photos) 
+          Fetches all contacts. <a href="../flutter_contacts/FlutterContacts/getContacts.html">[...]</a>
                   
 </dd>
-        <dt id="getFullContacts" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/getFullContacts.html">getFullContacts</a></span><span class="signature">(<wbr><span class="parameter" id="getFullContacts-param-withPhotos">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhotos</span>: <span class="default-value">false</span>, </span><span class="parameter" id="getFullContacts-param-sorted"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">sorted</span>: <span class="default-value">true</span>, </span><span class="parameter" id="getFullContacts-param-useHighResolutionPhotos"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useHighResolutionPhotos</span>: <span class="default-value">false</span>, </span><span class="parameter" id="getFullContacts-param-deduplicateEmailsAndPhones"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateEmailsAndPhones</span>: <span class="default-value">true</span>}</span>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>&gt;</span></span>
-          </span>
-                  </dt>
-        <dd>
-          Fetches all fields for all contacts 
-                  
-</dd>
-        <dt id="newContact" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/newContact.html">newContact</a></span><span class="signature">(<wbr><span class="parameter" id="newContact-param-contact"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span>)
+        <dt id="insertContact" class="callable">
+          <span class="name"><a href="../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></span><span class="signature">(<wbr><span class="parameter" id="insertContact-param-contact"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
           </span>
                   </dt>
         <dd>
-          ////////////////////////////////////////////////
-CREATING CONTACTS              ///
-////////////////////////////////////////////////
-Creates new contact and return it <a href="../flutter_contacts/FlutterContacts/newContact.html">[...]</a>
+          Inserts a new <code>contact</code> in the database and returns it. <a href="../flutter_contacts/FlutterContacts/insertContact.html">[...]</a>
                   
 </dd>
-        <dt id="onChange" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/onChange.html">onChange</a></span><span class="signature">(<wbr><span class="parameter" id="onChange-param-listener"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Function-class.html">Function</a></span> <span class="parameter-name">listener</span></span>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span> Function<span class="signature">()</span></span>
+        <dt id="removeListener" class="callable">
+          <span class="name"><a href="../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></span><span class="signature">(<wbr><span class="parameter" id="removeListener-param-listener"><span class="type-annotation">void</span> <span class="parameter-name">listener</span>()</span>)
+            <span class="returntype parameter">&#8594; void</span>
           </span>
                   </dt>
         <dd>
-          ////////////////////////////////////////////////
-LISTENING TO DB CHANGES           ///
-////////////////////////////////////////////////
-Listens to contact database changes and executes callback function. <a href="../flutter_contacts/FlutterContacts/onChange.html">[...]</a>
+          Removes a listener to contact database changes. <a href="../flutter_contacts/FlutterContacts/removeListener.html">[...]</a>
                   
 </dd>
         <dt id="updateContact" class="callable">
-          <span class="name"><a href="../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></span><span class="signature">(<wbr><span class="parameter" id="updateContact-param-contact"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span>, </span><span class="parameter" id="updateContact-param-deletePhoto">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deletePhoto</span>: <span class="default-value">false</span>}</span>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a></span>
+          <span class="name"><a href="../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></span><span class="signature">(<wbr><span class="parameter" id="updateContact-param-contact"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span>)
+            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
           </span>
                   </dt>
         <dd>
-          ////////////////////////////////////////////////
-UPDATING CONTACTS              ///
-////////////////////////////////////////////////
-Updates existing contact <a href="../flutter_contacts/FlutterContacts/updateContact.html">[...]</a>
+          Updates existing contact and returns it. <a href="../flutter_contacts/FlutterContacts/updateContact.html">[...]</a>
                   
 </dd>
       </dl>
@@ -312,14 +284,13 @@ Updates existing contact <a href="../flutter_contacts/FlutterContacts/updateCont
     <li><a href="../flutter_contacts/FlutterContacts/config.html">config</a></li>
 
     <li class="section-title"><a href="../flutter_contacts/FlutterContacts-class.html#static-methods">Static methods</a></li>
-    <li><a href="../flutter_contacts/FlutterContacts/compareDisplayNames.html">compareDisplayNames</a></li>
+    <li><a href="../flutter_contacts/FlutterContacts/addListener.html">addListener</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/deleteContact.html">deleteContact</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/deleteContacts.html">deleteContacts</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/getContact.html">getContact</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></li>
-    <li><a href="../flutter_contacts/FlutterContacts/getFullContacts.html">getFullContacts</a></li>
-    <li><a href="../flutter_contacts/FlutterContacts/newContact.html">newContact</a></li>
-    <li><a href="../flutter_contacts/FlutterContacts/onChange.html">onChange</a></li>
+    <li><a href="../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></li>
+    <li><a href="../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></li>
 
 </ol>
@@ -331,7 +302,7 @@ Updates existing contact <a href="../flutter_contacts/FlutterContacts/updateCont
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

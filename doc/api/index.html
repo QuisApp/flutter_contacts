@@ -51,18 +51,17 @@
           <li class="section-title">Libraries</li>
           <li><a href="properties_account/properties_account-library.html">account</a></li>
           <li><a href="properties_address/properties_address-library.html">address</a></li>
+          <li><a href="config/config-library.html">config</a></li>
           <li><a href="contact/contact-library.html">contact</a></li>
           <li><a href="properties_email/properties_email-library.html">email</a></li>
           <li><a href="properties_event/properties_event-library.html">event</a></li>
           <li><a href="flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
-          <li><a href="flutter_contacts_config/flutter_contacts_config-library.html">flutter_contacts_config</a></li>
           <li><a href="properties_name/properties_name-library.html">name</a></li>
           <li><a href="properties_note/properties_note-library.html">note</a></li>
           <li><a href="properties_organization/properties_organization-library.html">organization</a></li>
           <li><a href="properties_phone/properties_phone-library.html">phone</a></li>
           <li><a href="properties_social_media/properties_social_media-library.html">social_media</a></li>
-          <li><a href="vcard_exporter/vcard_exporter-library.html">vcard_exporter</a></li>
-          <li><a href="vcard_parser/vcard_parser-library.html">vcard_parser</a></li>
+          <li><a href="vcard/vcard-library.html">vcard</a></li>
           <li><a href="properties_website/properties_website-library.html">website</a></li>
     </ol>
   </div>
@@ -101,6 +100,25 @@
 </ul>
 </li>
 </ul>
+<h2 id="warning-breaking-changes-in-version-020">Warning: breaking changes in version 0.2.0</h2>
+<p>Version 0.2.0 introduces breaking changes compared to version 0.1.3:</p>
+<ul>
+<li>The data model now has <code>photo</code> (high-resolution) and <code>thumbnail</code> (low-resolution) as
+separate fields instead of just one field; you can use the getter <code>photoOrThumbnail</code>
+where you previously used <code>photo</code>.</li>
+<li><code>Event.date</code> has been replaced with components <code>Event.year</code> (which can be null on both
+Android and iOS), <code>Event.month</code> and <code>Event.day</code>.</li>
+<li><code>getFullContact()</code> has been renamed <code>getContact()</code>.</li>
+<li><code>updateContact()</code>, <code>insertContact()</code> and <code>deleteContacts()</code> still exist but we
+recommend using the convenience methods <code>contact.update()</code>, <code>contact.insert()</code> and
+<code>contact.delete()</code> instead.</li>
+<li><code>updateContact()</code> now fails unless the contact has been fetched completely.</li>
+<li>What used to be called "details" is now called "properties" (phones, emails, etc), for
+example in <code>getContacts(withProperties: true)</code>.</li>
+<li><code>Contact.create()</code> is now simply <code>Contact()</code></li>
+<li><code>final deleteListener = FlutterContacts.onChange(() =&gt; print('...')); deleteListener();</code>
+is now <code>final listener = () =&gt; print('...'); FlutterContacts.addListener(listener); FlutterContacts.removeListener(listener);</code>.</li>
+</ul>
 <h2 id="usage">Usage</h2>
 <pre class="language-dart"><code class="language-dart">import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -113,17 +131,17 @@ if (await Permission.contacts.request().isGranted) {
     Contact contact = await FlutterContacts.getContact(contacts.first.id);
 
     /// Listen to contacts database changes
-    FlutterContacts.onChange(() =&gt; print('Contact DB changed'));
+    FlutterContacts.addListener(() =&gt; print('Contact DB changed'));
 
     /// Create contact
-    Contact newContact = Contact.create()
+    Contact newContact = Contact()
         ..name = Name(first: 'John', last: 'Doe')
         ..phones = [Phone('555-123-4567'), Phone('555-999-9999', label: PhoneLabel.work)];
-    newContact = await FlutterContacts.newContact(newContact);
+    await newContact.insert();
 
     /// Update contact
     newContact.emails.add(Email('john.doe@example.com'));
-    await FlutterContacts.updateContact(newContact);
+    await newContact.update();
 
     /// Export to vCard
     String vCard = newContact.toVCard();
@@ -138,7 +156,7 @@ if (await Permission.contacts.request().isGranted) {
 )
 
     /// Delete contact
-    await FlutterContacts.deleteContact(newContact.id);
+    await newContact.delete();
 }
 </code></pre>
 <h2 id="data-model">Data model</h2>
@@ -146,7 +164,8 @@ if (await Permission.contacts.request().isGranted) {
 <pre class="language-dart"><code class="language-dart">class Contact {
     String id;
     String displayName;
-    Uint8List photo;
+    Uint8List photo; // high-resolution
+    Uint8List thumbnail; // low-resolution
     Name name;
     List&lt;Phone&gt; phones;
     List&lt;Email&gt; emails;
@@ -176,19 +195,13 @@ class Address {
     String id;
     String displayName;
 
-    // Fetched when calling:
-    //   - getContact()
-    //   - getContacts(withPhotos: true)
-    //   - getFullContacts(withPhotos: true)
-    // Photo is low-resolution, unless calling:
-    //   - getContact()
-    //   - getContacts(withPhotos: true, useHighResolutionPhotos: true)
-    //   - getFullContacts(withPhotos: true, useHighResolutionPhotos: true)
+    // Fetched when calling getContacts(withPhoto: true)
     Uint8List photo;
 
-    // Fetched when calling:
-    //   - getContact()
-    //   - getFullContacts()
+    // Fetched when calling getContacts(withThumbnail: true)
+    Uint8List thumbnail;
+
+    // Fetched when calling getContacts(withProperties: true)
     Name name;
     List&lt;Phone&gt; phones;
     List&lt;Email&gt; emails;
@@ -267,10 +280,11 @@ class SocialMedia {
 }
 
 class Event {
-    DateTime date;
+    int year;                 // can be null
+    int month;
+    int day;
     EventLabel label;         // https://cutt.ly/vhXJtAW, default EventLabel.birthday
     String customLabel;       // if label == EventLabel.customLabel
-    bool noYear;              // iOS only
 }
 
 class Note {
@@ -285,31 +299,34 @@ class Account {               // for debug purposes (android only)
 }
 </code></pre>
 <h3 id="default-values">Default values</h3>
-<p>Apart from <code>photo</code>, nothing can be <code>null</code>. String values default to <code>''</code>, boolean values
-to <code>false</code>, lists to <code>[]</code>, <code>DateTime</code> to Jan 1 1970, and enums as indicated above.</p>
+<p>Apart from <code>photo</code>, <code>thumbnail</code>, and <code>Event.year</code>, nothing can be <code>null</code>. String values
+default to <code>''</code>, boolean values to <code>false</code>, lists to <code>[]</code>, <code>DateTime</code> to Jan 1 1970,
+integers (<code>Event.month</code> and <code>Event.day</code>) to 1, and enums as indicated above.</p>
 <h3 id="androidios-availability">Android/iOS availability</h3>
 <p>Some fields are only available on iOS, others only on Android. Concretely it means that
-if, for example, you save a contact with <code>contact.events[0].noYear = true</code> on Android,
-you will lose that information when fetching it again.</p>
+if, for example, you save a contact with
+<code>contact.addresses[0].subLocality = 'some place'</code> on Android, you will lose that
+information when fetching it again.</p>
 <p>Regarding labels, some are present in both (e.g. <code>PhoneLabel.mobile</code>), others only on
 one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to save a contact with
 <code>contact.phones[0].label = PhoneLabel.iPhone</code> on Android, it will instead get saved with
 <code>label = PhoneLabel.custom</code> and <code>customLabel = 'iPhone'</code>.</p>
 <h2 id="installation">Installation</h2>
 <ol>
-<li>Add <code>json_serializable: ^3.5.0</code> (or higher) to the <code>dev_dependencies</code> in <code>pubspec.yaml</code>.</li>
-<li>Add <code>permission_handler: ^5.0.0+hotfix.3</code> (or higher) to the <code>dependencies</code> in <code>pubspec.yaml</code>: this is the package that allows you to request contact permissions.</li>
+<li>Add <code>permission_handler: ^5.1.0+2</code> (or higher) to the <code>dependencies</code> in
+<code>pubspec.yaml</code>: this is the package that allows you to request contact permissions.</li>
 <li>Add the following key/value pair to your app's <code>Info.plist</code> (for iOS):
 <pre class="language-xml"><code class="language-xml"> &lt;plist version="1.0"&gt;
  &lt;dict&gt;
      ...
      &lt;key&gt;NSContactsUsageDescription&lt;/key&gt;
-     &lt;string&gt;Access contact list&lt;/string&gt;
+     &lt;string&gt;Reason why we need access to the contact list&lt;/string&gt;
  &lt;/dict&gt;
  &lt;/plist&gt;
 </code></pre>
 </li>
-<li>Add the following <code>&lt;uses-permissions&gt;</code> tags to your app's <code>AndroidManifest.xml</code> (for Android):
+<li>Add the following <code>&lt;uses-permissions&gt;</code> tags to your app's <code>AndroidManifest.xml</code> (for
+Android):
 <pre class="language-xml"><code class="language-xml"> &lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" ...&gt;
      &lt;uses-permission android:name="android.permission.READ_CONTACTS"/&gt;
      &lt;uses-permission android:name="android.permission.WRITE_CONTACTS"/&gt;
@@ -335,6 +352,12 @@ one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to 
           <dd>
              
           </dd>
+          <dt id="config">
+            <span class="name"><a href="config/config-library.html">config</a></span>           
+          </dt>
+          <dd>
+             
+          </dd>
           <dt id="contact">
             <span class="name"><a href="contact/contact-library.html">contact</a></span>           
           </dt>
@@ -355,12 +378,6 @@ one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to 
           </dd>
           <dt id="flutter_contacts">
             <span class="name"><a href="flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></span>           
-          </dt>
-          <dd>
-             
-          </dd>
-          <dt id="flutter_contacts_config">
-            <span class="name"><a href="flutter_contacts_config/flutter_contacts_config-library.html">flutter_contacts_config</a></span>           
           </dt>
           <dd>
              
@@ -395,14 +412,8 @@ one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to 
           <dd>
              
           </dd>
-          <dt id="vcard_exporter">
-            <span class="name"><a href="vcard_exporter/vcard_exporter-library.html">vcard_exporter</a></span>           
-          </dt>
-          <dd>
-             
-          </dd>
-          <dt id="vcard_parser">
-            <span class="name"><a href="vcard_parser/vcard_parser-library.html">vcard_parser</a></span>           
+          <dt id="vcard">
+            <span class="name"><a href="vcard/vcard-library.html">vcard</a></span>           
           </dt>
           <dd>
              
@@ -426,7 +437,7 @@ one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to 
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

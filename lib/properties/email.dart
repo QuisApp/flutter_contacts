@@ -1,46 +1,93 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter_contacts/config.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/vcard.dart';
 
-part 'email.g.dart';
-
-/// An email address
-///
-/// | Field              | Android | iOS |
-/// |--------------------|:-------:|:---:|
-/// | address            | ✔       | ✔   |
-/// | label              | ✔       | ✔   |
-/// | customLabel        | ✔       | ✔   |
-/// | isPrimary          | ✔       | ⨯   |
-@JsonSerializable(disallowUnrecognizedKeys: true)
+/// Labeled email.
 class Email {
   /// Email address.
-  @JsonKey(required: true)
   String address;
 
-  /// The label or type of email it is. If `custom`, the free-form label can be
-  /// found in [customLabel].
-  @JsonKey(defaultValue: EmailLabel.home)
+  /// Label (default [EmailLabel.home]).
   EmailLabel label;
 
-  /// If [customLabel] is [EmailLabel.custom], free-form user-chosen label.
-  @JsonKey(defaultValue: '')
+  /// Custom label, if [label] is [EmailLabel.custom].
   String customLabel;
 
-  /// Android has a notion of primary email, so that "send an email to X" means
-  /// sending an email to X's primary email, in case there are multiple. Android
-  /// only.
-  @JsonKey(defaultValue: false)
+  /// Whether this is the email address to email by default for that contact
+  /// (Android only).
   bool isPrimary;
 
-  Email(this.address,
-      {this.label = EmailLabel.home,
-      this.customLabel = '',
-      this.isPrimary = false});
+  Email(
+    this.address, {
+    this.label = EmailLabel.home,
+    this.customLabel = '',
+    this.isPrimary = false,
+  });
 
-  factory Email.fromJson(Map<String, dynamic> json) => _$EmailFromJson(json);
-  Map<String, dynamic> toJson() => _$EmailToJson(this);
+  factory Email.fromJson(Map<String, dynamic> json) => Email(
+        (json['address'] as String) ?? '',
+        label: _stringToEmailLabel[json['label'] as String] ?? EmailLabel.home,
+        customLabel: (json['customLabel'] as String) ?? '',
+        isPrimary: (json['isPrimary'] as bool) ?? false,
+      );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'address': address,
+        'label': _emailLabelToString[label],
+        'customLabel': customLabel,
+        'isPrimary': isPrimary,
+      };
+
+  @override
+  int get hashCode =>
+      address.hashCode ^
+      label.hashCode ^
+      customLabel.hashCode ^
+      isPrimary.hashCode;
+
+  @override
+  bool operator ==(Object o) =>
+      o is Email &&
+      o.address == address &&
+      o.label == label &&
+      o.customLabel == customLabel &&
+      o.isPrimary == isPrimary;
+
+  @override
+  String toString() =>
+      'Email(address=$address, label=$label, customLabel=$customLabel, '
+      'isPrimary=$isPrimary)';
+
+  List<String> toVCard() {
+    // EMAIL (V3): https://tools.ietf.org/html/rfc2426#section-3.3.2
+    // EMAIL (V4): https://tools.ietf.org/html/rfc6350#section-6.4.2
+    var s = 'EMAIL';
+    if (FlutterContacts.config.vCardVersion == VCardVersion.v3) {
+      s += ';TYPE=internet';
+    } else {
+      switch (label) {
+        case EmailLabel.home:
+          s += ';TYPE=home';
+          break;
+        case EmailLabel.work:
+          s += ';TYPE=work';
+          break;
+        default:
+      }
+    }
+    if (isPrimary) {
+      if (FlutterContacts.config.vCardVersion == VCardVersion.v3) {
+        s += ',pref';
+      } else {
+        s += ';PREF=1';
+      }
+    }
+    s += ':${vCardEncode(address)}';
+    return [s];
+  }
 }
 
-/// Email labels
+/// Email labels.
 ///
 /// | Label    | Android | iOS |
 /// |----------|:-------:|:---:|
@@ -60,3 +107,23 @@ enum EmailLabel {
   other,
   custom,
 }
+
+final _emailLabelToString = {
+  EmailLabel.home: 'home',
+  EmailLabel.iCloud: 'iCloud',
+  EmailLabel.mobile: 'mobile',
+  EmailLabel.school: 'school',
+  EmailLabel.work: 'work',
+  EmailLabel.other: 'other',
+  EmailLabel.custom: 'custom',
+};
+
+final _stringToEmailLabel = {
+  'home': EmailLabel.home,
+  'iCloud': EmailLabel.iCloud,
+  'mobile': EmailLabel.mobile,
+  'school': EmailLabel.school,
+  'work': EmailLabel.work,
+  'other': EmailLabel.other,
+  'custom': EmailLabel.custom,
+};

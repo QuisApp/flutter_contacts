@@ -65,7 +65,7 @@
     <li><a href="../../properties_address/Address/city.html">city</a></li>
     <li><a href="../../properties_address/Address/country.html">country</a></li>
     <li><a href="../../properties_address/Address/customLabel.html">customLabel</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../properties_address/Address/hashCode.html">hashCode</a></li>
     <li><a href="../../properties_address/Address/isoCountry.html">isoCountry</a></li>
     <li><a href="../../properties_address/Address/label.html">label</a></li>
     <li><a href="../../properties_address/Address/neighborhood.html">neighborhood</a></li>
@@ -80,10 +80,11 @@
     <li class="section-title"><a href="../../properties_address/Address-class.html#instance-methods">Methods</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../properties_address/Address/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../properties_address/Address/toString.html">toString</a></li>
+    <li><a href="../../properties_address/Address/toVCard.html">toVCard</a></li>
 
     <li class="section-title"><a href="../../properties_address/Address-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../../properties_address/Address/operator_equals.html">operator ==</a></li>
 
 
 
@@ -97,16 +98,14 @@
         <section class="multi-line-signature">
           <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
           <span class="name ">street</span>
-          <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: &#39;&#39;), read / write</div>
+          <div class="features">read / write</div>
         </section>
         <section class="desc markdown">
-          <p>Street name. At least on Android this also includes house number and
-room/apartment/flat/floor number.</p>
+          <p>Street name and house number.</p>
         </section>
                 <section class="summary source-code" id="source">
           <h2><span>Implementation</span></h2>
-          <pre class="language-dart"><code class="language-dart">@JsonKey(defaultValue: &#39;&#39;)
-String street;
+          <pre class="language-dart"><code class="language-dart">String street;
 
 </code></pre>
         </section>
@@ -121,7 +120,7 @@ String street;
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

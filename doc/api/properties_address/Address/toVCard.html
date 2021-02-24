@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the toVCard method from the Address class, for the Dart programming language.">
+  <title>toVCard method - Address class - address library - Dart API</title>
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../../static-assets/github.css">
+  <link rel="stylesheet" href="../../static-assets/styles.css">
+  <link rel="icon" href="../../static-assets/favicon.png">
+
+</head>
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">flutter_contacts</a></li>
+    <li><a href="../../properties_address/properties_address-library.html">address</a></li>
+    <li><a href="../../properties_address/Address-class.html">Address</a></li>
+    <li class="self-crumb">toVCard method</li>
+  </ol>
+  <div class="self-name">toVCard</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="../../index.html">flutter_contacts</a></li>
+      <li><a href="../../properties_address/properties_address-library.html">address</a></li>
+      <li><a href="../../properties_address/Address-class.html">Address</a></li>
+      <li class="self-crumb">toVCard method</li>
+    </ol>
+    
+    <h5>Address class</h5>
+    <ol>
+
+
+    <li class="section-title"><a href="../../properties_address/Address-class.html#constructors">Constructors</a></li>
+    <li><a href="../../properties_address/Address/Address.html">Address</a></li>
+    <li><a href="../../properties_address/Address/Address.fromJson.html">fromJson</a></li>
+
+    <li class="section-title"> <a href="../../properties_address/Address-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../../properties_address/Address/address.html">address</a></li>
+    <li><a href="../../properties_address/Address/city.html">city</a></li>
+    <li><a href="../../properties_address/Address/country.html">country</a></li>
+    <li><a href="../../properties_address/Address/customLabel.html">customLabel</a></li>
+    <li><a href="../../properties_address/Address/hashCode.html">hashCode</a></li>
+    <li><a href="../../properties_address/Address/isoCountry.html">isoCountry</a></li>
+    <li><a href="../../properties_address/Address/label.html">label</a></li>
+    <li><a href="../../properties_address/Address/neighborhood.html">neighborhood</a></li>
+    <li><a href="../../properties_address/Address/pobox.html">pobox</a></li>
+    <li><a href="../../properties_address/Address/postalCode.html">postalCode</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+    <li><a href="../../properties_address/Address/state.html">state</a></li>
+    <li><a href="../../properties_address/Address/street.html">street</a></li>
+    <li><a href="../../properties_address/Address/subAdminArea.html">subAdminArea</a></li>
+    <li><a href="../../properties_address/Address/subLocality.html">subLocality</a></li>
+
+    <li class="section-title"><a href="../../properties_address/Address-class.html#instance-methods">Methods</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../properties_address/Address/toJson.html">toJson</a></li>
+    <li><a href="../../properties_address/Address/toString.html">toString</a></li>
+    <li><a href="../../properties_address/Address/toVCard.html">toVCard</a></li>
+
+    <li class="section-title"><a href="../../properties_address/Address-class.html#operators">Operators</a></li>
+    <li><a href="../../properties_address/Address/operator_equals.html">operator ==</a></li>
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <div><h1><span class="kind-method">toVCard</span> method </h1></div>
+
+    <section class="multi-line-signature">
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+            <span class="name ">toVCard</span>
+(<wbr>)
+      
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">List&lt;String&gt; toVCard() {
+  &#47;&#47; ADR (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.2.1
+  &#47;&#47; ADR (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.3.1
+  var s = &#39;ADR&#39;;
+  if (FlutterContacts.config.vCardVersion == VCardVersion.v3) {
+    switch (label) {
+      case AddressLabel.home:
+        s += &#39;;TYPE=home&#39;;
+        break;
+      case AddressLabel.work:
+        s += &#39;;TYPE=work&#39;;
+        break;
+      default:
+    }
+  } else {
+    switch (label) {
+      case AddressLabel.home:
+        s += &#39;;LABEL=home&#39;;
+        break;
+      case AddressLabel.school:
+        s += &#39;;LABEL=school&#39;;
+        break;
+      case AddressLabel.work:
+        s += &#39;;LABEL=work&#39;;
+        break;
+      case AddressLabel.other:
+        s += &#39;;LABEL=other&#39;;
+        break;
+      case AddressLabel.custom:
+        s += &#39;;LABEL=&quot;${vCardEncode(customLabel)}&quot;&#39;;
+        break;
+    }
+  }
+  if (street.isNotEmpty ||
+      pobox.isNotEmpty ||
+      city.isNotEmpty ||
+      state.isNotEmpty ||
+      postalCode.isNotEmpty) {
+    s += &#39;:${vCardEncode(pobox)};;&#39;
+        &#39;${vCardEncode(street)};&#39;
+        &#39;${vCardEncode(city)};&#39;
+        &#39;${vCardEncode(state)};&#39;
+        &#39;${vCardEncode(postalCode)};&#39;
+        &#39;${vCardEncode(country)}&#39;;
+  } else {
+    s += &#39;:;;${vCardEncode(address)};;;;&#39;;
+  }
+  return [s];
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    flutter_contacts
+      0.2.0
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="../../static-assets/typeahead.bundle.min.js"></script>
+<script src="../../static-assets/highlight.pack.js"></script>
+<script src="../../static-assets/URI.js"></script>
+<script src="../../static-assets/script.js"></script>
+
+
+</body>
+
+</html>

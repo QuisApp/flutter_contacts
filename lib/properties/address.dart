@@ -1,20 +1,18 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter_contacts/config.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/vcard.dart';
 
-part 'address.g.dart';
-
-/// A postal address.
+/// Labeled postal address.
 ///
-/// Postal address structure varies widely by country. See:
-/// https://en.wikipedia.org/wiki/Address#Format_by_country_and_area
-///
-/// Data models such as those from Android and iOS are typically US-centric and
-/// include street, city, state, zip code. They also always include a free-form
-/// formatted address, which we recommend to use instead. That said, other
-/// fields are included for compatibility.
+/// While structured components are available for compatibility with Android and
+/// iOS, it is recommended to use only the formatted [address]. Even if the
+/// native contact only has structured components (e.g. [street] and [city]),
+/// the [address] is reconstructed from them, so it is guaranteed to always be
+/// present.
 ///
 /// | Field           | Android | iOS |
 /// |-----------------|:-------:|:---:|
-/// | street          | ✔       | ⨯   |
+/// | street          | ✔       | ✔   |
 /// | pobox           | ✔       | ⨯   |
 /// | neighborhood    | ✔       | ⨯   |
 /// | city            | ✔       | ✔   |
@@ -24,95 +22,186 @@ part 'address.g.dart';
 /// | isoCountry      | ⨯       | ✔   |
 /// | subAdminArea    | ⨯       | ✔   |
 /// | subLocality     | ⨯       | ✔   |
-@JsonSerializable(disallowUnrecognizedKeys: true)
 class Address {
-  /// Free-form formatted address.
-  ///
-  /// It should *always* be included. (Even if the native contact doesn't have
-  /// one, it's the adapter's job to format the address into a single string.)
-  ///
-  /// It is recommended to use this instead of any structured field such as
-  /// [street] or [state], when possible.
-  @JsonKey(required: true)
+  /// Formatted address.
   String address;
 
-  /// The label or type of address it is. If `custom`, the free-form label can
-  /// be found in [customLabel].
-  @JsonKey(defaultValue: AddressLabel.home)
+  /// Label (default [AddressLabel.home]).
   AddressLabel label;
 
-  /// If [label] is [AddressLabel.custom], free-form user-chosen label.
-  @JsonKey(defaultValue: '')
+  /// Custom label, if [label] is [AddressLabel.custom].
   String customLabel;
 
-  /// Street name. At least on Android this also includes house number and
-  /// room/apartment/flat/floor number.
-  @JsonKey(defaultValue: '')
+  /// Street name and house number.
   String street;
 
-  /// P.O. box. This is (according to Android's doc) usually but not always
-  /// mutually exclusive with street. Android only.
-  @JsonKey(defaultValue: '')
+  /// PO box (Android only).
   String pobox;
 
-  /// According to Android's doc, this can help disambiguate a street address in
-  /// cases the same city has several streets with the same name. Android only.
-  @JsonKey(defaultValue: '')
+  /// Neighborhood (Android only).
   String neighborhood;
 
-  /// City/town.
-  @JsonKey(defaultValue: '')
+  /// City.
   String city;
 
-  /// State (in the US).
-  ///
-  /// On Android (which calls it "region") this also represent the province
-  /// (Canada), county (Ireland), Land (Germany), department (France), etc. On
-  /// iOS those are defined in [subAdminArea] instead.
-  @JsonKey(defaultValue: '')
+  /// US state, or region/department/county on Android.
   String state;
 
-  /// Zip code (US), postcode (UK), etc.
-  @JsonKey(defaultValue: '')
+  /// Postal code / zip code.
   String postalCode;
 
-  /// Country as a free-form text (e.g. "France").
-  @JsonKey(defaultValue: '')
+  /// Country.
   String country;
 
-  /// Country in the ISO 3166-1 alpha-2 standard (e.g. "fr"). iOS only.
-  @JsonKey(defaultValue: '')
+  /// ISO 3166-1 alpha-2 standard (iOS only).
   String isoCountry;
 
-  /// Subadministrative area, such as region or county. iOS only. On Android
-  /// those are folded into [state] (which Android calls "region").
-  @JsonKey(defaultValue: '')
+  /// Region/county on iOS.
   String subAdminArea;
 
-  /// Any additional information associated with the location. iOS only.
-  @JsonKey(defaultValue: '')
+  /// Anything else describing the address (iOS only).
   String subLocality;
 
-  Address(this.address,
-      {this.label = AddressLabel.home,
-      this.customLabel = '',
-      this.street = '',
-      this.pobox = '',
-      this.neighborhood = '',
-      this.city = '',
-      this.state = '',
-      this.postalCode = '',
-      this.country = '',
-      this.isoCountry = '',
-      this.subAdminArea = '',
-      this.subLocality = ''});
+  Address(
+    this.address, {
+    this.label = AddressLabel.home,
+    this.customLabel = '',
+    this.street = '',
+    this.pobox = '',
+    this.neighborhood = '',
+    this.city = '',
+    this.state = '',
+    this.postalCode = '',
+    this.country = '',
+    this.isoCountry = '',
+    this.subAdminArea = '',
+    this.subLocality = '',
+  });
 
-  factory Address.fromJson(Map<String, dynamic> json) =>
-      _$AddressFromJson(json);
-  Map<String, dynamic> toJson() => _$AddressToJson(this);
+  factory Address.fromJson(Map<String, dynamic> json) => Address(
+        (json['address'] as String) ?? '',
+        label: _stringToAddressLabel[json['label'] as String] ?? '',
+        customLabel: (json['customLabel'] as String) ?? '',
+        street: (json['street'] as String) ?? '',
+        pobox: (json['pobox'] as String) ?? '',
+        neighborhood: (json['neighborhood'] as String) ?? '',
+        city: (json['city'] as String) ?? '',
+        state: (json['state'] as String) ?? '',
+        postalCode: (json['postalCode'] as String) ?? '',
+        country: (json['country'] as String) ?? '',
+        isoCountry: (json['isoCountry'] as String) ?? '',
+        subAdminArea: (json['subAdminArea'] as String) ?? '',
+        subLocality: (json['subLocality'] as String) ?? '',
+      );
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'address': address,
+        'label': _addressLabelToString[label],
+        'customLabel': customLabel,
+        'street': street,
+        'pobox': pobox,
+        'neighborhood': neighborhood,
+        'city': city,
+        'state': state,
+        'postalCode': postalCode,
+        'country': country,
+        'isoCountry': isoCountry,
+        'subAdminArea': subAdminArea,
+        'subLocality': subLocality,
+      };
+
+  @override
+  int get hashCode =>
+      address.hashCode ^
+      label.hashCode ^
+      customLabel.hashCode ^
+      street.hashCode ^
+      pobox.hashCode ^
+      neighborhood.hashCode ^
+      city.hashCode ^
+      state.hashCode ^
+      postalCode.hashCode ^
+      country.hashCode ^
+      isoCountry.hashCode ^
+      subAdminArea.hashCode ^
+      subLocality.hashCode;
+
+  @override
+  bool operator ==(Object o) =>
+      o is Address &&
+      o.address == address &&
+      o.label == label &&
+      o.customLabel == customLabel &&
+      o.street == street &&
+      o.pobox == pobox &&
+      o.neighborhood == neighborhood &&
+      o.city == city &&
+      o.state == state &&
+      o.postalCode == postalCode &&
+      o.country == country &&
+      o.isoCountry == isoCountry &&
+      o.subAdminArea == subAdminArea &&
+      o.subLocality == subLocality;
+
+  @override
+  String toString() =>
+      'Address(address=$address, label=$label, customLabel=$customLabel, '
+      'street=$street, pobox=$pobox, neighborhood=$neighborhood, city=$city, '
+      'state=$state, postalCode=$postalCode, country=$country, '
+      'isoCountry=$isoCountry, subAdminArea=$subAdminArea, '
+      'subLocality=$subLocality)';
+
+  List<String> toVCard() {
+    // ADR (V3): https://tools.ietf.org/html/rfc2426#section-3.2.1
+    // ADR (V4): https://tools.ietf.org/html/rfc6350#section-6.3.1
+    var s = 'ADR';
+    if (FlutterContacts.config.vCardVersion == VCardVersion.v3) {
+      switch (label) {
+        case AddressLabel.home:
+          s += ';TYPE=home';
+          break;
+        case AddressLabel.work:
+          s += ';TYPE=work';
+          break;
+        default:
+      }
+    } else {
+      switch (label) {
+        case AddressLabel.home:
+          s += ';LABEL=home';
+          break;
+        case AddressLabel.school:
+          s += ';LABEL=school';
+          break;
+        case AddressLabel.work:
+          s += ';LABEL=work';
+          break;
+        case AddressLabel.other:
+          s += ';LABEL=other';
+          break;
+        case AddressLabel.custom:
+          s += ';LABEL="${vCardEncode(customLabel)}"';
+          break;
+      }
+    }
+    if (street.isNotEmpty ||
+        pobox.isNotEmpty ||
+        city.isNotEmpty ||
+        state.isNotEmpty ||
+        postalCode.isNotEmpty) {
+      s += ':${vCardEncode(pobox)};;'
+          '${vCardEncode(street)};'
+          '${vCardEncode(city)};'
+          '${vCardEncode(state)};'
+          '${vCardEncode(postalCode)};'
+          '${vCardEncode(country)}';
+    } else {
+      s += ':;;${vCardEncode(address)};;;;';
+    }
+    return [s];
+  }
 }
 
-/// Address labels
+/// Address labels.
 ///
 /// | Label    | Android | iOS |
 /// |----------|:-------:|:---:|
@@ -128,3 +217,19 @@ enum AddressLabel {
   other,
   custom,
 }
+
+final _addressLabelToString = {
+  AddressLabel.home: 'home',
+  AddressLabel.school: 'school',
+  AddressLabel.work: 'work',
+  AddressLabel.other: 'other',
+  AddressLabel.custom: 'custom',
+};
+
+final _stringToAddressLabel = {
+  'home': AddressLabel.home,
+  'school': AddressLabel.school,
+  'work': AddressLabel.work,
+  'other': AddressLabel.other,
+  'custom': AddressLabel.custom,
+};

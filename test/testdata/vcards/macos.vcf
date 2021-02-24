@@ -1,0 +1,82 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Apple Inc.//Mac OS X 10.15.7//EN
+N:Smith;John;Jøhñ;Dr;Jr
+FN:Dr John Jøhñ Smith Jr
+NICKNAME:Nick
+X-MAIDENNAME:Johnson
+X-PHONETIC-FIRST-NAME:[Jon]
+X-PHONETIC-LAST-NAME:[Smit]
+ORG:FlutterContacts;Package division
+X-PHONETIC-ORG:[FluttrKontakt]
+TITLE:Software Engineer
+EMAIL;type=INTERNET;type=HOME;type=pref:john1@smith.com
+EMAIL;type=INTERNET;type=WORK:john2@smith.com
+item1.EMAIL;type=INTERNET:john3@smith.com
+item1.X-ABLabel:_$!<Other>!$_
+item2.EMAIL;type=INTERNET:john4@smith.com
+item2.X-ABLabel:Custom Email
+TEL;type=CELL;type=VOICE;type=pref:(555) 111-1111
+TEL;type=IPHONE;type=CELL;type=VOICE:5552222222
+TEL;type=HOME;type=VOICE:5553333333
+TEL;type=WORK;type=VOICE:5554444444
+TEL;type=MAIN:5555555555
+TEL;type=HOME;type=FAX:5556666666
+TEL;type=WORK;type=FAX:5557777777
+TEL;type=OTHER;type=FAX:5558888888
+TEL;type=PAGER:5559999999
+TEL;type=OTHER;type=VOICE:5550000000
+item3.TEL:5551234567
+item3.X-ABLabel:Custom Label
+ADR;type=HOME;type=pref:;;123 Main St;Portland;TN;37148;USA
+ADR;type=WORK:;;1600 Amphitheatre Pkwy\, Mountain View\, CA 94043;;;;
+item4.ADR;type=OTHER:;;1 rue principale;Paris;;01000;France
+item4.X-ABADR:fr
+X-SOCIALPROFILE;type=twitter:http://twitter.com/profile
+X-SOCIALPROFILE;type=facebook:http://facebook.com/facebookProfile
+X-SOCIALPROFILE;type=flickr:http://www.flickr.com/photos/flickr
+X-SOCIALPROFILE;type=linkedin:http://www.linkedin.com/in/linkedin
+X-SOCIALPROFILE;type=myspace:http://www.myspace.com/myspace
+X-SOCIALPROFILE;type=sinaweibo:http://weibo.com/n/sina
+X-SOCIALPROFILE;type=JabberInstant;x-user=tencent:http://t.qq.com/tencent
+X-SOCIALPROFILE;type=Yelp:x-apple:yelp
+NOTE:Some notes 1\nSome notes 2
+item5.URL;type=pref:www.example1.com
+item5.X-ABLabel:_$!<HomePage>!$_
+URL;type=HOME:www.example2.com
+URL;type=WORK:www.example3.com
+item6.URL:www.example4.com
+item6.X-ABLabel:_$!<Other>!$_
+item7.URL:www.example5.com
+item7.X-ABLabel:Custom URL
+BDAY;X-APPLE-OMIT-YEAR=1604:1604-08-02
+X-ALTBDAY;CALSCALE=chinese:0071-0110
+X-JABBER;type=HOME;type=pref:jabberUserName
+item8.X-YAHOO;type=pref:yahoo
+item8.X-ABLabel:_$!<Other>!$_
+item9.X-ICQ;type=pref:icq
+item9.X-ABLabel:_$!<Other>!$_
+item10.IMPP;X-SERVICE-TYPE=ICQ;type=pref:aim:icq
+item10.X-ABLabel:_$!<Other>!$_
+IMPP;X-SERVICE-TYPE=Jabber;type=HOME:xmpp:jabberUserName
+item11.IMPP;X-SERVICE-TYPE=Yahoo:ymsgr:yahoo
+item11.X-ABLabel:_$!<Other>!$_
+IMPP;X-SERVICE-TYPE=Facebook;type=WORK:xmpp:facebookUserName
+item12.IMPP;X-SERVICE-TYPE=GaduGadu:x-apple:gadugadu
+item12.X-ABLabel:_$!<Other>!$_
+item13.IMPP;X-SERVICE-TYPE=GoogleTalk:xmpp:googletalk
+item13.X-ABLabel:_$!<Other>!$_
+item14.IMPP;X-SERVICE-TYPE=QQ:x-apple:qq
+item14.X-ABLabel:_$!<Other>!$_
+item15.IMPP;X-SERVICE-TYPE=Skype:skype:skype
+item15.X-ABLabel:_$!<Other>!$_
+PHOTO;ENCODING=b;TYPE=JPEG:/9j/4AAQSkZJRgABAQAAAQABAAD//gAfQ29tcHJlc3NlZCBieSBqcGVnLXJlY29tcHJlc3P/2wCEAAQEBAQEBAQEBAQGBgUGBggHBwcHCAwJCQkJCQwTDA4MDA4MExEUEA8QFBEeFxUVFx4iHRsdIiolJSo0MjRERFwBBAQEBAQEBAQEBAYGBQYGCAcHBwcIDAkJCQkJDBMMDgwMDgwTERQQDxAUER4XFRUXHiIdGx0iKiUlKjQyNEREXP/CABEIAAgACAMBIgACEQEDEQH/xAAUAAEAAAAAAAAAAAAAAAAAAAAI/9oACAEBAAAAAFZ//8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAhAAAAB//8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAxAAAAB//8QAIhAAAQEGBwAAAAAAAAAAAAAAAgQDBQYSExQAAQcVMTNi/9oACAEBAAE/AGr5iEdTmKQXXFJQ/Y2RkKJJtF125Kq09fxxLj//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAECAQE/AH//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/AH//2Q==
+item16.X-ABDATE;type=pref:2010-04-02
+item16.X-ABLabel:_$!<Anniversary>!$_
+item17.X-ABDATE:2011-05-02
+item17.X-ABLabel:_$!<Other>!$_
+item18.X-ABDATE;X-APPLE-OMIT-YEAR=1604:1604-03-31
+item18.X-ABLabel:Custom Event Date
+item19.X-ABRELATEDNAMES;type=pref:Mom
+item19.X-ABLabel:_$!<Mother>!$_
+END:VCARD

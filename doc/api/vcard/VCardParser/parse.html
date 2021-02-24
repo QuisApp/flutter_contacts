@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the parse method from the VCardParser class, for the Dart programming language.">
+  <title>parse method - VCardParser class - vcard library - Dart API</title>
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../../static-assets/github.css">
+  <link rel="stylesheet" href="../../static-assets/styles.css">
+  <link rel="icon" href="../../static-assets/favicon.png">
+
+</head>
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">flutter_contacts</a></li>
+    <li><a href="../../vcard/vcard-library.html">vcard</a></li>
+    <li><a href="../../vcard/VCardParser-class.html">VCardParser</a></li>
+    <li class="self-crumb">parse method</li>
+  </ol>
+  <div class="self-name">parse</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="../../index.html">flutter_contacts</a></li>
+      <li><a href="../../vcard/vcard-library.html">vcard</a></li>
+      <li><a href="../../vcard/VCardParser-class.html">VCardParser</a></li>
+      <li class="self-crumb">parse method</li>
+    </ol>
+    
+    <h5>VCardParser class</h5>
+    <ol>
+
+
+    <li class="section-title"><a href="../../vcard/VCardParser-class.html#constructors">Constructors</a></li>
+    <li><a href="../../vcard/VCardParser/VCardParser.html">VCardParser</a></li>
+
+    <li class="section-title"> <a href="../../vcard/VCardParser-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../vcard/VCardParser-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../vcard/VCardParser/decode.html">decode</a></li>
+    <li><a href="../../vcard/VCardParser/encode.html">encode</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../vcard/VCardParser/parse.html">parse</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../vcard/VCardParser/unfold.html">unfold</a></li>
+
+    <li class="section-title"><a href="../../vcard/VCardParser-class.html#operators">Operators</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <div><h1><span class="kind-method">parse</span> method </h1></div>
+
+    <section class="multi-line-signature">
+      <span class="returntype">void</span>
+            <span class="name ">parse</span>
+(<wbr><ol class="parameter-list"><li><span class="parameter" id="parse-param-content"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">content</span>, </span></li>
+<li><span class="parameter" id="parse-param-contact"><span class="type-annotation"><a href="../../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span></li>
+</ol>)
+      
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">void parse(String content, Contact contact) {
+  var lines = encode(unfold(content)).split(&#39;\n&#39;).map((String x) =&gt; x.trim());
+  for (final line in lines) {
+    &#47;&#47; In general, a vCard line is of the form
+    &#47;&#47; [&lt;group&gt;.]&lt;op&gt;[;&lt;param&gt;=&lt;value&gt;[;...]]:&lt;content&gt;
+    final parts = line.split(&#39;:&#39;);
+    if (parts.length &lt; 2) {
+      continue; &#47;&#47; invalid line
+    }
+    final prefix = parts[0];
+    var content = parts.sublist(1).join(&#39;:&#39;);
+    if (content.isEmpty) {
+      continue; &#47;&#47; no content =&gt; nothing to do
+    }
+    final prefixParts = prefix.split(&#39;;&#39;);
+    final groupKey = prefixParts[0].split(&#39;.&#39;);
+    final op = groupKey.last.toUpperCase(); &#47;&#47; drop the group
+    final group = groupKey.length == 2 ? groupKey.first : &#39;&#39;;
+    var params = &lt;Param&gt;[];
+    for (final p in prefixParts.sublist(1)) {
+      final paramParts = p.split(&#39;=&#39;);
+      if (paramParts.length &lt; 2) {
+        &#47;&#47; Allowed wtih vCard 2.1.
+        params.add(Param(paramParts[0].toUpperCase(), null));
+      }
+      params.add(Param(
+        paramParts[0].toUpperCase(),
+        paramParts.sublist(1).join(&#39;=&#39;).toUpperCase(),
+      ));
+    }
+
+    &#47;&#47; https:&#47;&#47;mathematica.stackexchange.com&#47;questions&#47;111637&#47;importing-a-vcf-file-with-quoted-printable-encoding
+    if (params
+        .any((p) =&gt; p.key == &#39;ENCODING&#39; &amp;&amp; p.value == &#39;QUOTED-PRINTABLE&#39;)) {
+      content = Uri.decodeFull(content.replaceAll(&#39;=&#39;, &#39;%&#39;));
+    }
+
+    var labelOverride = &#39;&#39;;
+    if (group.isNotEmpty) {
+      final relatedLines = lines.where((x) =&gt; x.startsWith(group));
+      for (final related in relatedLines) {
+        if (related
+            .toUpperCase()
+            .startsWith(&#39;${group.toUpperCase()}.X-ABLABEL:&#39;)) {
+          final label = related.split(&#39;:&#39;).last;
+          if (label.startsWith(&#39;_\$!&lt;&#39;) &amp;&amp; label.endsWith(&#39;&gt;!\$_&#39;)) {
+            labelOverride = label.substring(4, label.length - 4);
+          } else {
+            labelOverride = label;
+          }
+        }
+      }
+    }
+
+    &#47;&#47; We ignore lines that don&#39;t represent a property, such as BEGIN, END,
+    &#47;&#47; VERSION, etc. We also ignore a few unsupported properties such as GEO,
+    &#47;&#47; SOUND, GENDER, etc.
+    switch (op) {
+      case &#39;PHOTO&#39;:
+        &#47;&#47; The content can be base64-encoded or a URL. Try to decode it, and
+        &#47;&#47; ignore the line if it fails.
+        try {
+          contact.photo = base64.decode(decode(content));
+        } on FormatException {
+          &#47;&#47; Pass.
+        }
+        break;
+      case &#39;N&#39;:
+        &#47;&#47; Format is N:&lt;last&gt;;&lt;first&gt;;&lt;middle&gt;;&lt;prefix&gt;;&lt;suffix&gt;
+        final parts = content.split(&#39;;&#39;);
+        final n = parts.length;
+        if (n &gt;= 1) contact.name.last = decode(parts[0]);
+        if (n &gt;= 2) contact.name.first = decode(parts[1]);
+        if (n &gt;= 3) contact.name.middle = decode(parts[2]);
+        if (n &gt;= 4) contact.name.prefix = decode(parts[3]);
+        if (n &gt;= 5) contact.name.suffix = decode(parts[4]);
+        break;
+      case &#39;FN&#39;:
+        contact.displayName = decode(content);
+        break;
+      case &#39;NICKNAME&#39;:
+        &#47;&#47; Format is NICKNAME:&lt;nickname 1&gt;[,&lt;nickname 2&gt;[,...]]
+        final parts = content.split(&#39;,&#39;);
+        contact.name.nickname = decode(parts[0]);
+        break;
+      case &#39;TEL&#39;:
+      case &#39;PHONE&#39;:
+        &#47;&#47; 2.1 uses PHONE, 3.0&#47;4.0 use TEL. The label is denoted with
+        &#47;&#47; TYPE=&lt;label&gt;. Multiple labels are denoted with TYPE=&lt;label1&gt;,&lt;label2&gt;
+        &#47;&#47; or TYPE=&quot;&lt;label1&gt;,&lt;label2&gt;&quot; or TYPE=label1;TYPE=label2. vCard 3.0
+        &#47;&#47; specifies primary number by adding type &quot;pref&quot;, while vCard 4.0 uses
+        &#47;&#47; a separate param PREF=1 (or a higher value supposed to represent
+        &#47;&#47; higher priority). vCard 4.0 sometimes specifies VALUE=uri with a
+        &#47;&#47; value prefixed with &quot;tel:&quot;. There are sometimes extensions, for
+        &#47;&#47; example &quot;tel:+1-555-555-5555;ext=5555&quot;. In such cases we denote the
+        &#47;&#47; extension with a &#39;;&#39; – see https:&#47;&#47;www.lifewire.com&#47;automatically-dialing-extensions-on-android-577619
+        Phone phone;
+        final number =
+            content.startsWith(&#39;tel:&#39;) ? content.substring(4) : content;
+        final numberParts = number.split(&#39;;ext=&#39;);
+        if (numberParts.length == 2) {
+          phone =
+              Phone(&#39;${decode(numberParts[0])};${decode(numberParts[1])}&#39;);
+        } else {
+          phone = Phone(decode(numberParts[0]));
+        }
+        _parseLabel(params, labelOverride, _parsePhoneLabel, phone);
+        contact.phones.add(phone);
+        break;
+      case &#39;EMAIL&#39;:
+        var email = Email(decode(content));
+        _parseLabel(params, labelOverride, _parseEmailLabel, email);
+        contact.emails.add(email);
+        break;
+      case &#39;ADR&#39;:
+        &#47;&#47; Format is ADR:&lt;pobox&gt;;&lt;extended address&gt;;&lt;street&gt;;&lt;locality (city)&gt;;
+        &#47;&#47; &lt;region (state&#47;province)&gt;;&lt;postal code&gt;;&lt;country&gt;
+        var addressParts = content.split(&#39;;&#39;);
+        if (addressParts.length != 7) {
+          continue; &#47;&#47; invalid line
+        }
+        var address = Address(&#39;&#39;);
+        if (([addressParts[0]] + addressParts.sublist(3))
+            .any((x) =&gt; x.isNotEmpty)) {
+          address.pobox = decode(addressParts[0]);
+          address.street = decode(addressParts[2]);
+          address.city = decode(addressParts[3]);
+          address.state = decode(addressParts[4]);
+          address.postalCode = decode(addressParts[5]);
+          address.country = decode(addressParts[6]);
+        }
+        address.address =
+            addressParts.map(decode).where((x) =&gt; x.isNotEmpty).join(&#39; &#39;);
+        _parseLabel(params, labelOverride, _parseAddressLabel, address);
+        contact.addresses.add(address);
+        break;
+      case &#39;ORG&#39;:
+        &#47;&#47; Format is ORG:&lt;company&gt;[;&lt;division&gt;[:&lt;subdivision&gt;...]]
+        if (contact.organizations.isEmpty) {
+          contact.organizations = [Organization()];
+        }
+        final orgParts = content.split(&#39;;&#39;);
+        final n = orgParts.length;
+        if (n &gt;= 1) {
+          contact.organizations.first.company = decode(orgParts[0]);
+        }
+        if (n &gt;= 2) {
+          contact.organizations.first.department = decode(orgParts[1]);
+        }
+        break;
+      case &#39;TITLE&#39;:
+        if (contact.organizations.isEmpty) {
+          contact.organizations = [Organization()];
+        }
+        contact.organizations.first.title = decode(content);
+        break;
+      case &#39;ROLE&#39;:
+        if (contact.organizations.isEmpty) {
+          contact.organizations = [Organization()];
+        }
+        contact.organizations.first.jobDescription = decode(content);
+        break;
+      case &#39;URL&#39;:
+        var website = Website(decode(content));
+        _parseLabel(params, labelOverride, _parseWebsiteLabel, website);
+        contact.websites.add(website);
+        break;
+      case &#39;IMPP&#39;:
+        &#47;&#47; Format is IMPP:&lt;protocol&gt;:&lt;username&gt;
+        final contentParts = content.split(&#39;:&#39;);
+        if (contentParts.length != 2) {
+          continue; &#47;&#47; invalid line
+        }
+        final serviceTypes = params.where((p) =&gt; p.key == &#39;X-SERVICE-TYPE&#39;);
+        final protocol = decode(serviceTypes.isNotEmpty
+            ? serviceTypes.first.value
+            : contentParts[0]);
+        &#47;&#47; ICQ gets duplicated into an ICQ and an AIM line due to a bug:
+        &#47;&#47; https:&#47;&#47;discussions.apple.com&#47;thread&#47;2769242
+        if (serviceTypes.isNotEmpty &amp;&amp;
+            serviceTypes.first.value == &#39;ICQ&#39; &amp;&amp;
+            contentParts[0] == &#39;aim&#39;) {
+          continue;
+        }
+        final userName = decode(contentParts[1]);
+        final label =
+            lowerCaseStringToSocialMediaLabel[protocol.toLowerCase()] ??
+                SocialMediaLabel.custom;
+        final customLabel = label == SocialMediaLabel.custom ? protocol : &#39;&#39;;
+        contact.socialMedias.add(
+            SocialMedia(userName, label: label, customLabel: customLabel));
+        break;
+      case &#39;X-SOCIALPROFILE&#39;:
+        &#47;&#47; On iOS social profiles are different from instant messaging, and
+        &#47;&#47; exported as X-SOCIALPROFILE;type=&lt;protocol&gt;:&lt;username&gt;
+        var protocol = &#39;&#39;;
+        for (final param in params) {
+          if (param.key == &#39;TYPE&#39;) {
+            protocol = decode(param.value);
+          }
+        }
+        if (params.any((p) =&gt; p.key == &#39;X-USER&#39; &amp;&amp; p.value == &#39;TENCENT&#39;)) {
+          protocol = &#39;tencent&#39;;
+        }
+        var userName = decode(content);
+        for (final prefix in [&#39;x-apple:&#39;, &#39;xmpp:&#39;]) {
+          if (userName.startsWith(prefix)) {
+            userName = userName.substring(prefix.length);
+            break;
+          }
+        }
+        final label =
+            lowerCaseStringToSocialMediaLabel[protocol.toLowerCase()] ??
+                SocialMediaLabel.custom;
+        final customLabel = label == SocialMediaLabel.custom ? protocol : &#39;&#39;;
+        contact.socialMedias.add(
+            SocialMedia(userName, label: label, customLabel: customLabel));
+        break;
+      case &#39;BDAY&#39;:
+      case &#39;ANNIVERSARY&#39;:
+        final label =
+            op == &#39;BDAY&#39; ? EventLabel.birthday : EventLabel.anniversary;
+        final date = decode(content);
+        final omitYear = params.any((p) =&gt; p.key == &#39;X-APPLE-OMIT-YEAR&#39;);
+        _tryAddEvent(contact, date, label, &#39;&#39;, omitYear);
+        break;
+      case &#39;NOTE&#39;:
+        contact.notes.add(Note(decode(content)));
+        break;
+      case &#39;X-ANDROID-CUSTOM&#39;:
+        &#47;&#47; Android default contact app exports anniversary (1), other (2),
+        &#47;&#47; and custom events (0) as:
+        &#47;&#47; X-ANDROID-CUSTOM:vnd.android.cursor.item&#47;contact_event;--03-23;1;;;;;;;;;;;;;
+        &#47;&#47; X-ANDROID-CUSTOM:vnd.android.cursor.item&#47;contact_event;2021-04-23;2;;;;;;;;;;;;;
+        &#47;&#47; X-ANDROID-CUSTOM:vnd.android.cursor.item&#47;contact_event;2017-09-23;0;Custom;;;;;;;;;;;;
+        &#47;&#47; and nicknames as
+        &#47;&#47; X-ANDROID-CUSTOM:vnd.android.cursor.item&#47;nickname;Nick;1;;;;;;;;;;;;;
+        final contentParts = content.split(&#39;;&#39;);
+        final n = contentParts.length;
+        if (n &lt; 2) {
+          continue; &#47;&#47; invalid line
+        }
+        switch (contentParts[0]) {
+          case &#39;vnd.android.cursor.item&#47;contact_event&#39;:
+            final date = decode(contentParts[1]);
+            final labelStr = n &gt;= 3 ? contentParts[2] : &#39;&#39;;
+            var label = EventLabel.other;
+            if (labelStr == &#39;0&#39;) {
+              label = EventLabel.custom;
+            } else if (labelStr == &#39;1&#39;) {
+              label = EventLabel.anniversary;
+            }
+            final customLabel = n &gt;= 4 &amp;&amp; label == EventLabel.custom
+                ? decode(contentParts[3])
+                : &#39;&#39;;
+            _tryAddEvent(contact, date, label, customLabel, false);
+            break;
+          case &#39;vnd.android.cursor.item&#47;nickname&#39;:
+            contact.name.nickname = decode(contentParts[1]);
+            break;
+        }
+        break;
+      case &#39;X-AIM&#39;:
+        contact.socialMedias
+            .add(SocialMedia(decode(content), label: SocialMediaLabel.aim));
+        break;
+      case &#39;X-MSN&#39;:
+        contact.socialMedias
+            .add(SocialMedia(decode(content), label: SocialMediaLabel.msn));
+        break;
+      case &#39;X-YAHOO&#39;:
+        contact.socialMedias
+            .add(SocialMedia(decode(content), label: SocialMediaLabel.yahoo));
+        break;
+      case &#39;X-SKYPE-USERNAME&#39;:
+        contact.socialMedias
+            .add(SocialMedia(decode(content), label: SocialMediaLabel.skype));
+        break;
+      case &#39;X-QQ&#39;:
+        contact.socialMedias.add(
+            SocialMedia(decode(content), label: SocialMediaLabel.qqchat));
+        break;
+      case &#39;X-GOOGLE-TALK&#39;:
+        contact.socialMedias.add(
+            SocialMedia(decode(content), label: SocialMediaLabel.googleTalk));
+        break;
+      case &#39;X-ICQ&#39;:
+        contact.socialMedias
+            .add(SocialMedia(decode(content), label: SocialMediaLabel.icq));
+        break;
+      case &#39;X-JABBER&#39;:
+        contact.socialMedias.add(
+            SocialMedia(decode(content), label: SocialMediaLabel.jabber));
+        break;
+      case &#39;X-PHONETIC-FIRST-NAME&#39;:
+        contact.name.firstPhonetic = decode(content);
+        break;
+      case &#39;X-PHONETIC-LAST-NAME&#39;:
+        contact.name.lastPhonetic = decode(content);
+        break;
+      case &#39;X-PHONETIC-ORG&#39;:
+        if (contact.organizations.isEmpty) {
+          contact.organizations = [Organization()];
+        }
+        contact.organizations.first.phoneticName = decode(content);
+        break;
+      case &#39;X-ABDATE&#39;:
+        var tempContact = Contact();
+        final date = decode(content);
+        final omitYear = params.any((p) =&gt; p.key == &#39;X-APPLE-OMIT-YEAR&#39;);
+        _tryAddEvent(tempContact, date, EventLabel.birthday, &#39;&#39;, omitYear);
+        if (tempContact.events.isNotEmpty) {
+          _parseEventLabel(labelOverride, tempContact.events.last, true);
+          contact.events.add(tempContact.events.last);
+        }
+        break;
+    }
+  }
+  &#47;&#47; Deduplicate properties, mostly because of iOS duplicating social profiles
+  &#47;&#47; and instant messaging.
+  contact.deduplicateProperties();
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    flutter_contacts
+      0.2.0
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="../../static-assets/typeahead.bundle.min.js"></script>
+<script src="../../static-assets/highlight.pack.js"></script>
+<script src="../../static-assets/URI.js"></script>
+<script src="../../static-assets/script.js"></script>
+
+
+</body>
+
+</html>

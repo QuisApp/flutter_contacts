@@ -71,29 +71,17 @@
       <div><h1><span class="kind-class">Event</span> class  </h1></div>
 
     <section class="desc markdown">
-      <p>An event, e.g. a birthday or anniversary</p>
+      <p>Labeled event / birthday.</p>
+<p>Android allows multiple birthdays per contact, while iOS supports only one.</p>
     </section>
     
-    <section>
-      <dl class="dl-horizontal">
-
-
-
-
-
-        <dt>Annotations</dt>
-        <dd><ul class="annotation-list clazz-relationships">
-          <li>@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonSerializable-class.html">JsonSerializable</a>(disallowUnrecognizedKeys: true)</li>
-        </ul></dd>
-      </dl>
-    </section>
 
     <section class="summary offset-anchor" id="constructors">
       <h2>Constructors</h2>
 
       <dl class="constructor-summary-list">
         <dt id="Event" class="callable">
-          <span class="name"><a href="../properties_event/Event/Event.html">Event</a></span><span class="signature">(<span class="parameter" id="-param-date"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span> <span class="parameter-name">date</span>, </span><span class="parameter" id="-param-label">{<span class="type-annotation"><a href="../properties_event/EventLabel-class.html">EventLabel</a></span> <span class="parameter-name">label</span>: <span class="default-value">EventLabel.birthday</span>, </span><span class="parameter" id="-param-customLabel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">customLabel</span>: <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-noYear"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">noYear</span>: <span class="default-value">false</span>}</span>)</span>
+          <span class="name"><a href="../properties_event/Event/Event.html">Event</a></span><span class="signature">(<span class="parameter" id="-param-year">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">year</span>, </span><span class="parameter" id="-param-month"><span>@<a href="https://pub.dev/documentation/meta/1.3.0-nullsafety.3/meta/required-constant.html">required</a></span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span>, </span><span class="parameter" id="-param-day"><span>@<a href="https://pub.dev/documentation/meta/1.3.0-nullsafety.3/meta/required-constant.html">required</a></span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">day</span>, </span><span class="parameter" id="-param-label"><span class="type-annotation"><a href="../properties_event/EventLabel-class.html">EventLabel</a></span> <span class="parameter-name">label</span>: <span class="default-value">EventLabel.birthday</span>, </span><span class="parameter" id="-param-customLabel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">customLabel</span>: <span class="default-value">&#39;&#39;</span>}</span>)</span>
         </dt>
         <dd>
            
@@ -117,41 +105,40 @@
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
         </dt>
         <dd>
-          If <a href="../properties_event/Event/customLabel.html">customLabel</a> is <a href="../properties_event/EventLabel-class.html">EventLabel.custom</a>, free-form user-chosen label. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: &#39;&#39;), read / write</div>
+          Custom label, if <a href="../properties_event/Event/label.html">label</a> is <a href="../properties_event/EventLabel-class.html">EventLabel.custom</a>. 
+                  <div class="features">read / write</div>
 </dd>
-        <dt id="date" class="property">
-          <span class="name"><a href="../properties_event/Event/date.html">date</a></span>
-          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span>         
+        <dt id="day" class="property">
+          <span class="name"><a href="../properties_event/Event/day.html">day</a></span>
+          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>         
         </dt>
         <dd>
-          The event date. <a href="../properties_event/Event/date.html">[...]</a>
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(required: true, fromJson: _parseDate), read / write</div>
+          Event day (1-31). 
+                  <div class="features">read / write</div>
 </dd>
-        <dt id="hashCode" class="property inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+        <dt id="hashCode" class="property">
+          <span class="name"><a href="../properties_event/Event/hashCode.html">hashCode</a></span>
           <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>         
         </dt>
-        <dd class="inherited">
-          The hash code for this object. <a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">[...]</a>
-                  <div class="features">read-only, inherited</div>
+        <dd>
+          The hash code for this object. <a href="../properties_event/Event/hashCode.html">[...]</a>
+                  <div class="features">read-only, override</div>
 </dd>
         <dt id="label" class="property">
           <span class="name"><a href="../properties_event/Event/label.html">label</a></span>
           <span class="signature">&#8596; <a href="../properties_event/EventLabel-class.html">EventLabel</a></span>         
         </dt>
         <dd>
-          The label or type of event it is. If <code>custom</code>, the free-form label can
-be found in <a href="../properties_event/Event/customLabel.html">customLabel</a>. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: EventLabel.birthday), read / write</div>
+          Label (default <a href="../properties_event/EventLabel-class.html">EventLabel.birthday</a>). 
+                  <div class="features">read / write</div>
 </dd>
-        <dt id="noYear" class="property">
-          <span class="name"><a href="../properties_event/Event/noYear.html">noYear</a></span>
-          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>         
+        <dt id="month" class="property">
+          <span class="name"><a href="../properties_event/Event/month.html">month</a></span>
+          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>         
         </dt>
         <dd>
-          Whether the date has no year associated to it. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: false), read / write</div>
+          Event month (1-12). 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="runtimeType" class="property inherited">
           <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
@@ -160,6 +147,14 @@ be found in <a href="../properties_event/Event/customLabel.html">customLabel</a>
         <dd class="inherited">
           A representation of the runtime type of the object. 
                   <div class="features">read-only, inherited</div>
+</dd>
+        <dt id="year" class="property">
+          <span class="name"><a href="../properties_event/Event/year.html">year</a></span>
+          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>         
+        </dt>
+        <dd>
+          Event year (can be null). 
+                  <div class="features">read / write</div>
 </dd>
       </dl>
     </section>
@@ -185,29 +180,38 @@ be found in <a href="../properties_event/Event/customLabel.html">customLabel</a>
            
                   
 </dd>
-        <dt id="toString" class="callable inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+        <dt id="toString" class="callable">
+          <span class="name"><a href="../properties_event/Event/toString.html">toString</a></span><span class="signature">(<wbr>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
           </span>
                   </dt>
-        <dd class="inherited">
+        <dd>
           Returns a string representation of this object. 
-                  <div class="features">inherited</div>
+                  <div class="features">override</div>
+</dd>
+        <dt id="toVCard" class="callable">
+          <span class="name"><a href="../properties_event/Event/toVCard.html">toVCard</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+          </span>
+                  </dt>
+        <dd>
+           
+                  
 </dd>
       </dl>
     </section>
 
-    <section class="summary offset-anchor inherited" id="operators">
+    <section class="summary offset-anchor" id="operators">
       <h2>Operators</h2>
       <dl class="callables">
-        <dt id="operator ==" class="callable inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+        <dt id="operator ==" class="callable">
+          <span class="name"><a href="../properties_event/Event/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-o"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">o</span></span>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
           </span>
                   </dt>
-        <dd class="inherited">
-          The equality operator. <a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">[...]</a>
-                  <div class="features">inherited</div>
+        <dd>
+          The equality operator. <a href="../properties_event/Event/operator_equals.html">[...]</a>
+                  <div class="features">override</div>
 </dd>
       </dl>
     </section>
@@ -228,19 +232,21 @@ be found in <a href="../properties_event/Event/customLabel.html">customLabel</a>
     <li class="section-title"> <a href="../properties_event/Event-class.html#instance-properties">Properties</a>
     </li>
     <li><a href="../properties_event/Event/customLabel.html">customLabel</a></li>
-    <li><a href="../properties_event/Event/date.html">date</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../properties_event/Event/day.html">day</a></li>
+    <li><a href="../properties_event/Event/hashCode.html">hashCode</a></li>
     <li><a href="../properties_event/Event/label.html">label</a></li>
-    <li><a href="../properties_event/Event/noYear.html">noYear</a></li>
+    <li><a href="../properties_event/Event/month.html">month</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+    <li><a href="../properties_event/Event/year.html">year</a></li>
 
     <li class="section-title"><a href="../properties_event/Event-class.html#instance-methods">Methods</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../properties_event/Event/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../properties_event/Event/toString.html">toString</a></li>
+    <li><a href="../properties_event/Event/toVCard.html">toVCard</a></li>
 
     <li class="section-title"><a href="../properties_event/Event-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../properties_event/Event/operator_equals.html">operator ==</a></li>
 
 
 
@@ -253,7 +259,7 @@ be found in <a href="../properties_event/Event/customLabel.html">customLabel</a>
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

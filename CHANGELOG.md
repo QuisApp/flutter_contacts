@@ -1,3 +1,17 @@
+## 0.2.0
+
+* Not backward compatible!
+* Photo and thumbnail are now distinct fields
+* `Event.date` is now `Event.year`, `Event.month`, `Event.day`
+* Convenience methods `contact.insert()`, `contact.update()`, `contact.delete()`
+* Much more advanced vCard parsing and exporting (to version 3.0 and 4.0)
+* We can now add multiple listeners
+* Removed dependencies to `build_runner` and `json_serializable`
+* Implemented `toString()`, `hashCode` and `operator==` for contact and properties
+* Support for notes on iOS13+ by setting
+  `FlutterContacts.config.includeNotesOnIos13AndAbove = true`
+* Added tests
+
 ## 0.1.3
 
 * Remove extra print statements

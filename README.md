@@ -33,6 +33,25 @@ For a minimalistic example, take a look at `example/`. You can write a full-fled
     * Notes
     * Labels (such as "main" or "work" for phones)
 
+## Warning: breaking changes in version 0.2.0
+
+Version 0.2.0 introduces breaking changes compared to version 0.1.3:
+* The data model now has `photo` (high-resolution) and `thumbnail` (low-resolution) as
+  separate fields instead of just one field; you can use the getter `photoOrThumbnail`
+  where you previously used `photo`.
+* `Event.date` has been replaced with components `Event.year` (which can be null on both
+  Android and iOS), `Event.month` and `Event.day`.
+* `getFullContact()` has been renamed `getContact()`.
+* `updateContact()`, `insertContact()` and `deleteContacts()` still exist but we
+  recommend using the convenience methods `contact.update()`, `contact.insert()` and
+  `contact.delete()` instead.
+* `updateContact()` now fails unless the contact has been fetched completely.
+* What used to be called "details" is now called "properties" (phones, emails, etc), for
+  example in `getContacts(withProperties: true)`.
+* `Contact.create()` is now simply `Contact()`
+* `final deleteListener = FlutterContacts.onChange(() => print('...')); deleteListener();`
+  is now `final listener = () => print('...'); FlutterContacts.addListener(listener); FlutterContacts.removeListener(listener);`.
+
 ## Usage
 
 ```dart
@@ -47,17 +66,17 @@ if (await Permission.contacts.request().isGranted) {
     Contact contact = await FlutterContacts.getContact(contacts.first.id);
 
     /// Listen to contacts database changes
-    FlutterContacts.onChange(() => print('Contact DB changed'));
+    FlutterContacts.addListener(() => print('Contact DB changed'));
 
     /// Create contact
-    Contact newContact = Contact.create()
+    Contact newContact = Contact()
         ..name = Name(first: 'John', last: 'Doe')
         ..phones = [Phone('555-123-4567'), Phone('555-999-9999', label: PhoneLabel.work)];
-    newContact = await FlutterContacts.newContact(newContact);
+    await newContact.insert();
 
     /// Update contact
     newContact.emails.add(Email('john.doe@example.com'));
-    await FlutterContacts.updateContact(newContact);
+    await newContact.update();
 
     /// Export to vCard
     String vCard = newContact.toVCard();
@@ -72,7 +91,7 @@ if (await Permission.contacts.request().isGranted) {
 )
 
     /// Delete contact
-    await FlutterContacts.deleteContact(newContact.id);
+    await newContact.delete();
 }
 ```
 
@@ -84,7 +103,8 @@ if (await Permission.contacts.request().isGranted) {
 class Contact {
     String id;
     String displayName;
-    Uint8List photo;
+    Uint8List photo; // high-resolution
+    Uint8List thumbnail; // low-resolution
     Name name;
     List<Phone> phones;
     List<Email> emails;
@@ -117,19 +137,13 @@ class Contact {
     String id;
     String displayName;
 
-    // Fetched when calling:
-    //   - getContact()
-    //   - getContacts(withPhotos: true)
-    //   - getFullContacts(withPhotos: true)
-    // Photo is low-resolution, unless calling:
-    //   - getContact()
-    //   - getContacts(withPhotos: true, useHighResolutionPhotos: true)
-    //   - getFullContacts(withPhotos: true, useHighResolutionPhotos: true)
+    // Fetched when calling getContacts(withPhoto: true)
     Uint8List photo;
 
-    // Fetched when calling:
-    //   - getContact()
-    //   - getFullContacts()
+    // Fetched when calling getContacts(withThumbnail: true)
+    Uint8List thumbnail;
+
+    // Fetched when calling getContacts(withProperties: true)
     Name name;
     List<Phone> phones;
     List<Email> emails;
@@ -208,10 +222,11 @@ class SocialMedia {
 }
 
 class Event {
-    DateTime date;
+    int year;                 // can be null
+    int month;
+    int day;
     EventLabel label;         // https://cutt.ly/vhXJtAW, default EventLabel.birthday
     String customLabel;       // if label == EventLabel.customLabel
-    bool noYear;              // iOS only
 }
 
 class Note {
@@ -228,14 +243,16 @@ class Account {               // for debug purposes (android only)
 
 ### Default values
 
-Apart from `photo`, nothing can be `null`. String values default to `''`, boolean values
-to `false`, lists to `[]`, `DateTime` to Jan 1 1970, and enums as indicated above.
+Apart from `photo`, `thumbnail`, and `Event.year`, nothing can be `null`. String values
+default to `''`, boolean values to `false`, lists to `[]`, `DateTime` to Jan 1 1970,
+integers (`Event.month` and `Event.day`) to 1, and enums as indicated above.
 
 ### Android/iOS availability
 
 Some fields are only available on iOS, others only on Android. Concretely it means that
-if, for example, you save a contact with `contact.events[0].noYear = true` on Android,
-you will lose that information when fetching it again.
+if, for example, you save a contact with
+`contact.addresses[0].subLocality = 'some place'` on Android, you will lose that
+information when fetching it again.
 
 Regarding labels, some are present in both (e.g. `PhoneLabel.mobile`), others only on
 one platform (e.g. `PhoneLabel.iPhone`). If you try, for example, to save a contact with
@@ -244,19 +261,20 @@ one platform (e.g. `PhoneLabel.iPhone`). If you try, for example, to save a cont
 
 ## Installation
 
-1. Add `json_serializable: ^3.5.0` (or higher) to the `dev_dependencies` in `pubspec.yaml`.
-1. Add `permission_handler: ^5.0.0+hotfix.3` (or higher) to the `dependencies` in `pubspec.yaml`: this is the package that allows you to request contact permissions.
+1. Add `permission_handler: ^5.1.0+2` (or higher) to the `dependencies` in
+   `pubspec.yaml`: this is the package that allows you to request contact permissions.
 1. Add the following key/value pair to your app's `Info.plist` (for iOS):
     ```xml
     <plist version="1.0">
     <dict>
         ...
         <key>NSContactsUsageDescription</key>
-        <string>Access contact list</string>
+        <string>Reason why we need access to the contact list</string>
     </dict>
     </plist>
     ```
-1. Add the following `<uses-permissions>` tags to your app's `AndroidManifest.xml` (for Android):
+1. Add the following `<uses-permissions>` tags to your app's `AndroidManifest.xml` (for
+   Android):
     ```xml
     <manifest xmlns:android="http://schemas.android.com/apk/res/android" ...>
         <uses-permission android:name="android.permission.READ_CONTACTS"/>

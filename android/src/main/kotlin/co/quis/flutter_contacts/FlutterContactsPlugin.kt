@@ -53,55 +53,52 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
-            // Get fields for request contact, or for all contacts
-            "get" ->
+            // Selects fields for request contact, or for all contacts.
+            "select" ->
                 GlobalScope.launch(Dispatchers.IO) { // runs in a background thread
                     val args = call.arguments as List<Any>
                     val id = args[0] as String?
-                    val withDetails = args[1] as Boolean
-                    val withPhotos = args[2] as Boolean
-                    val useHighResolutionPhotos = args[3] as Boolean
+                    val withProperties = args[1] as Boolean
+                    val withThumbnail = args[2] as Boolean
+                    val withPhoto = args[3] as Boolean
                     val contacts: List<Map<String, Any?>> =
-                        FlutterContacts.get(
+                        FlutterContacts.select(
                             resolver!!,
-                            id, withDetails, withPhotos, useHighResolutionPhotos
+                            id, withProperties, withThumbnail, withPhoto
                         )
                     GlobalScope.launch(Dispatchers.Main) { result.success(contacts) }
                 }
-            // Create a new contact and return it
-            "new" ->
+            // Inserts a new contact and return it.
+            "insert" ->
                 GlobalScope.launch(Dispatchers.IO) {
-                    val newContact: Map<String, Any?>? =
-                        FlutterContacts.new(
-                            resolver!!,
-                            call.arguments as Map<String, Any>
-                        )
+                    val args = call.arguments as List<Any>
+                    val contact = args[0] as Map<String, Any>
+                    val insertedContact: Map<String, Any?>? =
+                        FlutterContacts.insert(resolver!!, contact)
                     GlobalScope.launch(Dispatchers.Main) {
-                        if (newContact != null) {
-                            result.success(newContact)
+                        if (insertedContact != null) {
+                            result.success(insertedContact)
                         } else {
                             result.error("", "failed to create contact", "")
                         }
                     }
                 }
-            // Update an existing contact
+            // Updates an existing contact and returns it.
             "update" ->
                 GlobalScope.launch(Dispatchers.IO) {
-                    val args = call.arguments as List<*>
-                    val errorMessage: String? =
-                        FlutterContacts.update(
-                            resolver!!, args[0] as Map<String, Any>,
-                            args[1] as Boolean
-                        )
+                    val args = call.arguments as List<Any>
+                    val contact = args[0] as Map<String, Any>
+                    val updatedContact: Map<String, Any?>? =
+                        FlutterContacts.update(resolver!!, contact)
                     GlobalScope.launch(Dispatchers.Main) {
-                        if (errorMessage == null) {
-                            result.success(null)
+                        if (updatedContact != null) {
+                            result.success(updatedContact)
                         } else {
-                            result.error("", errorMessage, "")
+                            result.error("", "failed to update contact", "")
                         }
                     }
                 }
-            // Delete contacts with given IDs
+            // Deletes contacts with given IDs.
             "delete" ->
                 GlobalScope.launch(Dispatchers.IO) {
                     FlutterContacts.delete(resolver!!, call.arguments as List<String>)

@@ -21,10 +21,9 @@ class EditContactPage extends StatefulWidget {
 
 class _EditContactPageState extends State<EditContactPage>
     with AfterLayoutMixin<EditContactPage> {
-  var _contact = Contact.create();
+  var _contact = Contact();
   bool _isEdit = false;
   void Function() _onUpdate;
-  var _deletePhoto = false;
 
   final _imagePicker = ImagePicker();
 
@@ -53,7 +52,20 @@ class _EditContactPageState extends State<EditContactPage>
               await showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  content: Text(prettyJson(_contact.toJson())),
+                  content: Text(prettyJson(
+                      _contact.toJson(withPhoto: false, withThumbnail: false))),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.file_present),
+            onPressed: () async {
+              await showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  content: Text(
+                      _contact.toVCard(withPhoto: false, includeDate: true)),
                 ),
               );
             },
@@ -62,10 +74,9 @@ class _EditContactPageState extends State<EditContactPage>
             icon: Icon(Icons.save),
             onPressed: () async {
               if (_isEdit) {
-                await FlutterContacts.updateContact(_contact,
-                    deletePhoto: _deletePhoto);
+                await _contact.update();
               } else {
-                _contact = await FlutterContacts.newContact(_contact);
+                await _contact.insert();
               }
               if (_onUpdate != null) _onUpdate();
               Navigator.of(context).pop();
@@ -109,7 +120,6 @@ class _EditContactPageState extends State<EditContactPage>
       final bytes = await photo.readAsBytes();
       setState(() {
         _contact.photo = bytes;
-        _deletePhoto = false;
       });
     }
   }
@@ -130,7 +140,6 @@ class _EditContactPageState extends State<EditContactPage>
                   ],
                   onSelected: (_) => setState(() {
                     _contact.photo = null;
-                    _deletePhoto = true;
                   }),
                 ),
               ),
@@ -159,8 +168,9 @@ class _EditContactPageState extends State<EditContactPage>
             addField();
           });
     }
+    var buttons = <ElevatedButton>[];
     if (addField != null) {
-      forms.add(
+      buttons.add(
         ElevatedButton(
           child: Text('+ New'),
           onPressed: onPressed,
@@ -168,12 +178,18 @@ class _EditContactPageState extends State<EditContactPage>
       );
     }
     if (clearAllFields != null) {
-      forms.add(ElevatedButton(
+      buttons.add(ElevatedButton(
         child: Text('Delete all'),
         onPressed: () {
           clearAllFields();
           setState(() {});
         },
+      ));
+    }
+    if (buttons.isNotEmpty) {
+      forms.add(Row(
+        children: buttons,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ));
     }
 
@@ -294,7 +310,10 @@ class _EditContactPageState extends State<EditContactPage>
         _contact.events,
         () async {
           final date = await _selectDate(context);
-          if (date != null) _contact.events = _contact.events + [Event(date)];
+          if (date != null) {
+            _contact.events = _contact.events +
+                [Event(year: date.year, month: date.month, day: date.day)];
+          }
         },
         (int i, dynamic w) => EventForm(
           w,

@@ -74,14 +74,13 @@
     <li><a href="../../flutter_contacts/FlutterContacts/config.html">config</a></li>
 
     <li class="section-title"><a href="../../flutter_contacts/FlutterContacts-class.html#static-methods">Static methods</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/compareDisplayNames.html">compareDisplayNames</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/addListener.html">addListener</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/deleteContact.html">deleteContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/deleteContacts.html">deleteContacts</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/getContact.html">getContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/getFullContacts.html">getFullContacts</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/newContact.html">newContact</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/onChange.html">onChange</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></li>
 
 </ol>
@@ -94,24 +93,45 @@
     <section class="multi-line-signature">
       <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../contact/Contact-class.html">Contact</a></span>&gt;</span></span>&gt;</span></span>
             <span class="name ">getContacts</span>
-(<wbr><ol class="parameter-list"><li><span class="parameter" id="getContacts-param-withPhotos">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhotos</span>: <span class="default-value">false</span>, </span></li>
-<li><span class="parameter" id="getContacts-param-sorted"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">sorted</span>: <span class="default-value">true</span>}</span></li>
+(<wbr><ol class="parameter-list"><li><span class="parameter" id="getContacts-param-withProperties">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withProperties</span>: <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-withThumbnail"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withThumbnail</span>: <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-sorted"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">sorted</span>: <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-deduplicateProperties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateProperties</span>: <span class="default-value">true</span>}</span></li>
 </ol>)
       
     </section>
     <section class="desc markdown">
-      <p>////////////////////////////////////////////////
-FETCHING CONTACTS              ///
-////////////////////////////////////////////////
-Fetches all contacts (IDs, display names, and optionally low-res photos)</p>
+      <p>Fetches all contacts.</p>
+<p>By default only ID and display name are fetched. If <code>withProperties</code> is
+true, properties (phones, emails, addresses, websites, etc) are also
+fetched.</p>
+<p>If <code>withThumbnail</code> is true, the low-resolution thumbnail is also
+fetched. If <code>withPhoto</code> is true, the high-resolution photo is also
+fetched.</p>
+<p>If <code>sorted</code> is true, the contacts are returned sorted by their
+normalized display names (ignoring case and diacritics).</p>
+<p>If <code>deduplicateProperties</code> is true, the properties will be de-duplicated,
+mainly to avoid the case (common on Android) where multiple equivalent
+phones are returned.</p>
     </section>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">&#47;&#47;&#47; Fetches all contacts (IDs, display names, and optionally low-res photos)
-static Future&lt;List&lt;Contact&gt;&gt; getContacts(
-        {bool withPhotos = false, bool sorted = true}) async =&gt;
-    await _get(withPhotos: withPhotos, sorted: sorted);</code></pre>
+      <pre class="language-dart"><code class="language-dart">static Future&lt;List&lt;Contact&gt;&gt; getContacts({
+  bool withProperties = false,
+  bool withThumbnail = false,
+  bool withPhoto = false,
+  bool sorted = true,
+  bool deduplicateProperties = true,
+}) async =&gt;
+    _select(
+      withProperties: withProperties,
+      withThumbnail: withThumbnail,
+      withPhoto: withPhoto,
+      sorted: sorted,
+      deduplicateProperties: deduplicateProperties,
+    );</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -124,7 +144,7 @@ static Future&lt;List&lt;Contact&gt;&gt; getContacts(
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

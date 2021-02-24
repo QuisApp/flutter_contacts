@@ -1,8 +1,4 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'account.g.dart';
-
-/// Account is only available on Android and represent raw contacts.
+/// Raw Android account.
 ///
 /// This is only exposed for information and debugging purposes and should be
 /// ignored in most cases.
@@ -14,38 +10,36 @@ part 'account.g.dart';
 /// If you have two Google accounts (e.g. two Gmail addresses registered on the
 /// phone) it's possible to have two raw contacts, part of the same contact,
 /// both with [type] `com.google` but with a different [name].
-@JsonSerializable(disallowUnrecognizedKeys: true)
 class Account {
-  /// The ID of the raw contact. It's different from the contact ID.
-  @JsonKey(required: true)
+  /// Raw account ID.
   String rawId;
 
-  /// The "type" of account, for example `com.google` for Google,
-  /// `com.facebook.messenger` for Facebook Messenger.
-  @JsonKey(required: true)
+  /// Account type, e.g. com.google or com.facebook.messenger.
   String type;
 
-  /// The "name" of the account, type-specific. For example it's the Gmail
-  /// address for `com.google`, but just "WhatsApp" for WhatsApp.
-  @JsonKey(required: true)
+  /// Account name, e.g. john.doe@gmail.com.
   String name;
 
-  /// Which data types are contributed to by this account.
-  ///
-  /// For example a Gmail
-  /// account can provide data of mime types `vnd.android.cursor.item/email_v2`,
-  /// `vnd.android.cursor.item/identity`, or `vnd.android.cursor.item/note`.
-  ///
-  /// They can also be type-specific, for example Skype provides types
-  /// `vnd.android.cursor.item/com.skype4life.phone` and
-  /// `vnd.android.cursor.item/com.skype4life.name`.
-  @JsonKey(defaultValue: [])
+  /// Android mimetypes provided by this account.
   List<String> mimetypes;
 
-  Account(this.rawId, this.type, this.name, [List<String> mimetypes])
-      : mimetypes = mimetypes ?? <String>[];
+  Account(this.rawId, this.type, this.name, this.mimetypes);
 
-  factory Account.fromJson(Map<String, dynamic> json) =>
-      _$AccountFromJson(json);
-  Map<String, dynamic> toJson() => _$AccountToJson(this);
+  factory Account.fromJson(Map<String, dynamic> json) => Account(
+        (json['rawId'] as String) ?? '',
+        (json['type'] as String) ?? '',
+        (json['name'] as String) ?? '',
+        (json['mimetypes'] as List)?.map((e) => e as String)?.toList() ?? [],
+      );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'rawId': rawId,
+        'type': type,
+        'name': name,
+        'mimetypes': mimetypes,
+      };
+
+  @override
+  String toString() =>
+      'Account(rawId=$rawId, type=$type, name=$name, mimetypes=$mimetypes)';
 }

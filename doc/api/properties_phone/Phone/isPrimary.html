@@ -62,7 +62,7 @@
     <li class="section-title"> <a href="../../properties_phone/Phone-class.html#instance-properties">Properties</a>
     </li>
     <li><a href="../../properties_phone/Phone/customLabel.html">customLabel</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../properties_phone/Phone/hashCode.html">hashCode</a></li>
     <li><a href="../../properties_phone/Phone/isPrimary.html">isPrimary</a></li>
     <li><a href="../../properties_phone/Phone/label.html">label</a></li>
     <li><a href="../../properties_phone/Phone/normalizedNumber.html">normalizedNumber</a></li>
@@ -72,10 +72,11 @@
     <li class="section-title"><a href="../../properties_phone/Phone-class.html#instance-methods">Methods</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../properties_phone/Phone/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../properties_phone/Phone/toString.html">toString</a></li>
+    <li><a href="../../properties_phone/Phone/toVCard.html">toVCard</a></li>
 
     <li class="section-title"><a href="../../properties_phone/Phone-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../../properties_phone/Phone/operator_equals.html">operator ==</a></li>
 
 
 
@@ -89,16 +90,15 @@
         <section class="multi-line-signature">
           <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
           <span class="name ">isPrimary</span>
-          <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: false), read / write</div>
+          <div class="features">read / write</div>
         </section>
         <section class="desc markdown">
-          <p>Android has a notion of primary phone, so that "call X" means call X's
-primary phone number, in case there are multiple. Android only.</p>
+          <p>Whether this is the phone number to call by default for that contact
+(Android only).</p>
         </section>
                 <section class="summary source-code" id="source">
           <h2><span>Implementation</span></h2>
-          <pre class="language-dart"><code class="language-dart">@JsonKey(defaultValue: false)
-bool isPrimary;
+          <pre class="language-dart"><code class="language-dart">bool isPrimary;
 
 </code></pre>
         </section>
@@ -113,7 +113,7 @@ bool isPrimary;
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

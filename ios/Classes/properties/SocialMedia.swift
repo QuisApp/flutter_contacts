@@ -135,9 +135,27 @@ struct SocialMedia {
             labelInv = label
         }
         if isSocialProfile {
-            c.socialProfiles.append(CNLabeledValue<CNSocialProfile>(label: nil, value: CNSocialProfile(urlString: nil, username: userName, userIdentifier: nil, service: labelInv)))
+            c.socialProfiles.append(
+                CNLabeledValue<CNSocialProfile>(
+                    label: nil,
+                    value: CNSocialProfile(
+                        urlString: nil,
+                        username: userName,
+                        userIdentifier: nil,
+                        service: labelInv
+                    )
+                )
+            )
         } else {
-            c.instantMessageAddresses.append(CNLabeledValue<CNInstantMessageAddress>(label: nil, value: CNInstantMessageAddress(username: userName, service: labelInv)))
+            c.instantMessageAddresses.append(
+                CNLabeledValue<CNInstantMessageAddress>(
+                    label: nil,
+                    value: CNInstantMessageAddress(
+                        username: userName,
+                        service: labelInv
+                    )
+                )
+            )
         }
     }
 }

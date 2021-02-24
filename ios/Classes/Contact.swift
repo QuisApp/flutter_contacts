@@ -5,6 +5,7 @@ struct Contact {
     var id: String = ""
     var displayName: String = ""
     var name = Name()
+    var thumbnail: Data?
     var photo: Data?
     var phones: [Phone] = []
     var emails: [Email] = []
@@ -19,20 +20,28 @@ struct Contact {
         id = m["id"] as! String
         displayName = m["displayName"] as! String
         name = Name(fromMap: m["name"] as! [String: Any])
+        thumbnail = m["thumbnail"] as? Data
         photo = m["photo"] as? Data
         phones = (m["phones"] as! [[String: Any]]).map { Phone(fromMap: $0) }
         emails = (m["emails"] as! [[String: Any]]).map { Email(fromMap: $0) }
         addresses = (m["addresses"] as! [[String: Any]]).map { Address(fromMap: $0) }
-        organizations = (m["organizations"] as! [[String: Any]]).map { Organization(fromMap: $0) }
+        organizations = (m["organizations"] as! [[String: Any]]).map {
+            Organization(fromMap: $0)
+        }
         websites = (m["websites"] as! [[String: Any]]).map { Website(fromMap: $0) }
-        socialMedias = (m["socialMedias"] as! [[String: Any]]).map { SocialMedia(fromMap: $0) }
-        events = (m["events"] as! [[String: Any]]).map { Event(fromMap: $0) }
+        socialMedias = (m["socialMedias"] as! [[String: Any]]).map {
+            SocialMedia(fromMap: $0)
+        }
+        events = (m["events"] as! [[String: Any?]]).map { Event(fromMap: $0) }
         notes = (m["notes"] as! [[String: Any]]).map { Note(fromMap: $0) }
     }
 
     init(fromContact c: CNContact) {
         id = c.identifier
-        displayName = CNContactFormatter.string(from: c, style: CNContactFormatterStyle.fullName) ?? ""
+        displayName = CNContactFormatter.string(
+            from: c,
+            style: CNContactFormatterStyle.fullName
+        ) ?? ""
 
         // Hack/shortcut: if this key is available, all others are too. (We could have
         // CNContactGivenNameKey instead but it seems to be included by default along
@@ -51,7 +60,11 @@ struct Contact {
                 organizations = [Organization(fromContact: c)]
             }
             websites = c.urlAddresses.map { Website(fromWebsite: $0) }
-            socialMedias = c.socialProfiles.map { SocialMedia(fromSocialProfile: $0) } + c.instantMessageAddresses.map { SocialMedia(fromInstantMessage: $0) }
+            socialMedias = c.socialProfiles.map {
+                SocialMedia(fromSocialProfile: $0)
+            } + c.instantMessageAddresses.map {
+                SocialMedia(fromInstantMessage: $0)
+            }
             if c.birthday != nil {
                 events = [Event(fromContact: c)]
             }
@@ -62,10 +75,11 @@ struct Contact {
                 notes = [Note(fromContact: c)]
             }
         }
+        if c.isKeyAvailable(CNContactThumbnailImageDataKey) {
+            thumbnail = c.thumbnailImageData
+        }
         if c.isKeyAvailable(CNContactImageDataKey) {
             photo = c.imageData
-        } else if c.isKeyAvailable(CNContactThumbnailImageDataKey) {
-            photo = c.thumbnailImageData
         }
     }
 
@@ -73,6 +87,7 @@ struct Contact {
         "id": id,
         "displayName": displayName,
         "name": name.toMap(),
+        "thumbnail": thumbnail,
         "photo": photo,
         "phones": phones.map { $0.toMap() },
         "emails": emails.map { $0.toMap() },

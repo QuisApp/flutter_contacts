@@ -14,6 +14,7 @@ import co.quis.flutter_contacts.properties.Website
 data class Contact(
     var id: String,
     var displayName: String,
+    var thumbnail: ByteArray? = null,
     var photo: ByteArray? = null,
     var name: Name = Name(),
     var phones: List<Phone> = listOf(),
@@ -31,6 +32,7 @@ data class Contact(
             return Contact(
                 m["id"] as String,
                 m["displayName"] as String,
+                m["thumbnail"] as? ByteArray,
                 m["photo"] as? ByteArray,
                 Name.fromMap(m["name"] as Map<String, Any>),
                 (m["phones"] as List<Map<String, Any>>).map { Phone.fromMap(it) },
@@ -39,7 +41,7 @@ data class Contact(
                 (m["organizations"] as List<Map<String, Any>>).map { Organization.fromMap(it) },
                 (m["websites"] as List<Map<String, Any>>).map { Website.fromMap(it) },
                 (m["socialMedias"] as List<Map<String, Any>>).map { SocialMedia.fromMap(it) },
-                (m["events"] as List<Map<String, Any>>).map { Event.fromMap(it) },
+                (m["events"] as List<Map<String, Any?>>).map { Event.fromMap(it) },
                 (m["notes"] as List<Map<String, Any>>).map { Note.fromMap(it) },
                 (m["accounts"] as List<Map<String, Any>>).map { Account.fromMap(it) }
             )
@@ -49,6 +51,7 @@ data class Contact(
     fun toMap(): Map<String, Any?> = mapOf(
         "id" to id,
         "displayName" to displayName,
+        "thumbnail" to thumbnail,
         "photo" to photo,
         "name" to name.toMap(),
         "phones" to phones.map { it.toMap() },

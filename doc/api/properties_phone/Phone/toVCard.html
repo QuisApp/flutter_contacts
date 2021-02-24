@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the toVCard method from the Phone class, for the Dart programming language.">
+  <title>toVCard method - Phone class - phone library - Dart API</title>
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="../../static-assets/github.css">
+  <link rel="stylesheet" href="../../static-assets/styles.css">
+  <link rel="icon" href="../../static-assets/favicon.png">
+
+</head>
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">flutter_contacts</a></li>
+    <li><a href="../../properties_phone/properties_phone-library.html">phone</a></li>
+    <li><a href="../../properties_phone/Phone-class.html">Phone</a></li>
+    <li class="self-crumb">toVCard method</li>
+  </ol>
+  <div class="self-name">toVCard</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="../../index.html">flutter_contacts</a></li>
+      <li><a href="../../properties_phone/properties_phone-library.html">phone</a></li>
+      <li><a href="../../properties_phone/Phone-class.html">Phone</a></li>
+      <li class="self-crumb">toVCard method</li>
+    </ol>
+    
+    <h5>Phone class</h5>
+    <ol>
+
+
+    <li class="section-title"><a href="../../properties_phone/Phone-class.html#constructors">Constructors</a></li>
+    <li><a href="../../properties_phone/Phone/Phone.html">Phone</a></li>
+    <li><a href="../../properties_phone/Phone/Phone.fromJson.html">fromJson</a></li>
+
+    <li class="section-title"> <a href="../../properties_phone/Phone-class.html#instance-properties">Properties</a>
+    </li>
+    <li><a href="../../properties_phone/Phone/customLabel.html">customLabel</a></li>
+    <li><a href="../../properties_phone/Phone/hashCode.html">hashCode</a></li>
+    <li><a href="../../properties_phone/Phone/isPrimary.html">isPrimary</a></li>
+    <li><a href="../../properties_phone/Phone/label.html">label</a></li>
+    <li><a href="../../properties_phone/Phone/normalizedNumber.html">normalizedNumber</a></li>
+    <li><a href="../../properties_phone/Phone/number.html">number</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../properties_phone/Phone-class.html#instance-methods">Methods</a></li>
+    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../properties_phone/Phone/toJson.html">toJson</a></li>
+    <li><a href="../../properties_phone/Phone/toString.html">toString</a></li>
+    <li><a href="../../properties_phone/Phone/toVCard.html">toVCard</a></li>
+
+    <li class="section-title"><a href="../../properties_phone/Phone-class.html#operators">Operators</a></li>
+    <li><a href="../../properties_phone/Phone/operator_equals.html">operator ==</a></li>
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <div><h1><span class="kind-method">toVCard</span> method </h1></div>
+
+    <section class="multi-line-signature">
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+            <span class="name ">toVCard</span>
+(<wbr>)
+      
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">List&lt;String&gt; toVCard() {
+  &#47;&#47; TEL (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.3.1
+  &#47;&#47; TEL (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.4.1
+  final v4 = FlutterContacts.config.vCardVersion == VCardVersion.v4;
+  var s = v4 ? &#39;TEL;VALUE=uri&#39; : &#39;TEL&#39;;
+  var types = &lt;String&gt;[];
+  switch (label) {
+    case PhoneLabel.faxHome:
+      types.add(&#39;fax&#39;);
+      types.add(&#39;home&#39;);
+      break;
+    case PhoneLabel.faxOther:
+      types.add(&#39;fax&#39;);
+      break;
+    case PhoneLabel.faxWork:
+      types.add(&#39;fax&#39;);
+      types.add(&#39;work&#39;);
+      break;
+    case PhoneLabel.home:
+      types.add(&#39;home&#39;);
+      break;
+    case PhoneLabel.iPhone:
+    case PhoneLabel.main:
+      types.add(&#39;voice&#39;);
+      types.add(v4 ? &#39;text&#39; : &#39;msg&#39;);
+      break;
+    case PhoneLabel.mms:
+    case PhoneLabel.mobile:
+      types.add(&#39;cell&#39;);
+      types.add(v4 ? &#39;text&#39; : &#39;msg&#39;);
+      break;
+    case PhoneLabel.workMobile:
+      types.add(&#39;cell&#39;);
+      types.add(v4 ? &#39;text&#39; : &#39;msg&#39;);
+      types.add(&#39;work&#39;);
+      break;
+    case PhoneLabel.pager:
+      types.add(&#39;pager&#39;);
+      break;
+    case PhoneLabel.workPager:
+      types.add(&#39;pager&#39;);
+      types.add(&#39;work&#39;);
+      break;
+    default:
+  }
+  if (!v4 &amp;&amp; isPrimary) {
+    types.add(&#39;pref&#39;);
+  }
+  if (types.length == 1) {
+    s += &#39;;TYPE=${types.first}&#39;;
+  } else if (types.length &gt; 1) {
+    if (v4) {
+      s += &#39;;TYPE=&quot;${types.join(&#39;,&#39;)}&quot;&#39;;
+    } else {
+      s += &#39;;TYPE=${types.join(&#39;,&#39;)}&#39;;
+    }
+  }
+  if (v4 &amp;&amp; isPrimary) {
+    s += &#39;;PREF=1&#39;;
+  }
+  if (v4) {
+    s += &#39;:tel:${vCardEncode(number)}&#39;;
+  } else {
+    s += &#39;:${vCardEncode(number)}&#39;;
+  }
+  return [s];
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    flutter_contacts
+      0.2.0
+  </span>
+
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="../../static-assets/typeahead.bundle.min.js"></script>
+<script src="../../static-assets/highlight.pack.js"></script>
+<script src="../../static-assets/URI.js"></script>
+<script src="../../static-assets/script.js"></script>
+
+
+</body>
+
+</html>

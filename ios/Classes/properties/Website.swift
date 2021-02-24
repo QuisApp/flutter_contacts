@@ -63,6 +63,11 @@ struct Website {
         default:
             labelInv = label
         }
-        c.urlAddresses.append(CNLabeledValue<NSString>(label: labelInv, value: url as NSString))
+        c.urlAddresses.append(
+            CNLabeledValue<NSString>(
+                label: labelInv,
+                value: url as NSString
+            )
+        )
     }
 }

@@ -32,7 +32,7 @@ class _ContactPageState extends State<ContactPage>
 
   Future _fetchContactWith(bool highRes) async {
     final contact = await FlutterContacts.getContact(_contact.id,
-        useHighResolutionPhotos: highRes);
+        withThumbnail: !highRes, withPhoto: highRes);
     setState(() {
       _contact = contact;
     });
@@ -44,12 +44,35 @@ class _ContactPageState extends State<ContactPage>
       appBar: AppBar(
         title: Text(_contact?.displayName ?? ''),
         actions: [
+          IconButton(
+            icon: Icon(Icons.remove_red_eye),
+            onPressed: () async {
+              await showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  content: Text(prettyJson(
+                      _contact.toJson(withPhoto: false, withThumbnail: false))),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.file_present),
+            onPressed: () async {
+              await showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  content: Text(
+                      _contact.toVCard(withPhoto: false, includeDate: true)),
+                ),
+              );
+            },
+          ),
           PopupMenuButton(
-            itemBuilder: (context) => [
-              PopupMenuItem(child: Text('Delete contact'), value: _contact.id)
-            ],
-            onSelected: (contactId) async {
-              await FlutterContacts.deleteContact(contactId);
+            itemBuilder: (context) =>
+                [PopupMenuItem(child: Text('Delete contact'), value: _contact)],
+            onSelected: (contact) async {
+              await contact.delete();
               Navigator.of(context).pop();
             },
           ),
@@ -177,10 +200,9 @@ class _ContactPageState extends State<ContactPage>
               contact.events,
               (x) => [
                     Divider(),
-                    Text('Date: ${x.date}'),
+                    Text('Date: ${_formatDate(x)}'),
                     Text('Label: ${x.label}'),
                     Text('Custom label: ${x.customLabel}'),
-                    Text('No year: ${x.noYear}'),
                   ]),
           _makeCard(
               'Notes',
@@ -204,12 +226,18 @@ class _ContactPageState extends State<ContactPage>
               [contact],
               (x) => [
                     Divider(),
-                    Text(prettyJson(x.toJson())),
+                    Text(prettyJson(
+                        x.toJson(withThumbnail: false, withPhoto: false))),
                   ]),
         ]),
       ),
     );
   }
+
+  String _formatDate(Event e) =>
+      '${e.year?.toString()?.padLeft(4, '0') ?? '--'}/'
+      '${e.month.toString().padLeft(2, '0')}/'
+      '${e.day.toString().padLeft(2, '0')}';
 
   List<Widget> _withSpacing(List<Widget> widgets) {
     final spacer = SizedBox(height: 8);

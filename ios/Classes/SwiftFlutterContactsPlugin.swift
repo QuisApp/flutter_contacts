@@ -4,19 +4,21 @@ import UIKit
 
 @available(iOS 9.0, *)
 public enum FlutterContacts {
-    static func initialize() {
-        Event.initialize()
-    }
-
-    // Get contact(s)
-    static func get(id: String?, withDetails: Bool, withPhotos: Bool, useHighResolutionPhotos: Bool) -> [[String: Any?]] {
+    // Fetches contact(s).
+    static func select(
+        id: String?,
+        withProperties: Bool,
+        withThumbnail: Bool,
+        withPhoto: Bool,
+        includeNotesOnIos13AndAbove: Bool
+    ) -> [[String: Any?]] {
         var contacts: [CNContact] = []
         let store = CNContactStore()
         var keys: [Any] = [
             CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
             CNContactIdentifierKey,
         ]
-        if withDetails {
+        if withProperties {
             keys += [
                 CNContactGivenNameKey,
                 CNContactFamilyNameKey,
@@ -42,26 +44,26 @@ public enum FlutterContacts {
             if #available(iOS 10, *) {
                 keys.append(CNContactPhoneticOrganizationNameKey)
             }
-            // Notes need approval now!
+            // Notes need explicit entitlement from Apple starting with iOS13.
             // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
-            if #available(iOS 13, *) {} else {
+            if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
                 keys.append(CNContactNoteKey)
             }
         }
-        if withPhotos {
-            if useHighResolutionPhotos { keys.append(CNContactImageDataKey) }
-            else { keys.append(CNContactThumbnailImageDataKey) }
-        }
+        if withThumbnail { keys.append(CNContactThumbnailImageDataKey) }
+        if withPhoto { keys.append(CNContactImageDataKey) }
 
         let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
         if id != nil {
-            // request for a specific contact
+            // Request for a specific contact.
             request.predicate = CNContact.predicateForContacts(withIdentifiers: [id!])
         }
         do {
-            try store.enumerateContacts(with: request, usingBlock: { (contact, _) -> Void in
-                contacts.append(contact)
-            })
+            try store.enumerateContacts(
+                with: request, usingBlock: { (contact, _) -> Void in
+                    contacts.append(contact)
+                }
+            )
         } catch {
             print("Unexpected error: \(error)")
             return []
@@ -70,11 +72,14 @@ public enum FlutterContacts {
         return contacts.map { Contact(fromContact: $0).toMap() }
     }
 
-    // Create new contact
-    static func new(_ args: [String: Any?]) throws -> [String: Any?] {
+    // Inserts a new contact into the database.
+    static func insert(
+        _ args: [String: Any?],
+        _ includeNotesOnIos13AndAbove: Bool
+    ) throws -> [String: Any?] {
         let contact = CNMutableContact()
 
-        addFieldsToContact(args, contact)
+        addFieldsToContact(args, contact, includeNotesOnIos13AndAbove)
 
         let saveRequest = CNSaveRequest()
         saveRequest.add(contact, toContainerWithIdentifier: nil)
@@ -82,9 +87,12 @@ public enum FlutterContacts {
         return Contact(fromContact: contact).toMap()
     }
 
-    // Update existing contact
-    static func update(_ args: [String: Any?], _ deletePhoto: Bool) throws {
-        // First fetch the original contact
+    // Updates an existing contact in the database.
+    static func update(
+        _ args: [String: Any?],
+        _ includeNotesOnIos13AndAbove: Bool
+    ) throws -> [String: Any?]? {
+        // First, fetch the original contact.
         let id = args["id"] as! String
         var keys: [Any] = [
             CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
@@ -112,19 +120,13 @@ public enum FlutterContacts {
             CNContactThumbnailImageDataKey,
             CNContactImageDataKey,
         ]
-        if #available(iOS 10, *) {
-            keys.append(CNContactPhoneticOrganizationNameKey)
-        }
-        // Notes need approval now!
-        // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
-        if #available(iOS 13, *) {} else {
+        if #available(iOS 10, *) { keys.append(CNContactPhoneticOrganizationNameKey) }
+        if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
             keys.append(CNContactNoteKey)
         }
 
         let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
-        if #available(iOS 10, *) {
-            request.mutableObjects = true
-        }
+        if #available(iOS 10, *) { request.mutableObjects = true }
         request.predicate = CNContact.predicateForContacts(withIdentifiers: [id])
         let store = CNContactStore()
         var contacts: [CNContact] = []
@@ -135,15 +137,15 @@ public enum FlutterContacts {
         // Mutate the contact
         if let firstContact = contacts.first {
             let contact = firstContact.mutableCopy() as! CNMutableContact
-            clearFields(contact)
-            addFieldsToContact(args, contact)
-            if deletePhoto {
-                contact.imageData = nil
-            }
+            clearFields(contact, includeNotesOnIos13AndAbove)
+            addFieldsToContact(args, contact, includeNotesOnIos13AndAbove)
 
             let saveRequest = CNSaveRequest()
             saveRequest.update(contact)
             try CNContactStore().execute(saveRequest)
+            return Contact(fromContact: contact).toMap()
+        } else {
+            return nil
         }
     }
 
@@ -166,7 +168,11 @@ public enum FlutterContacts {
         try CNContactStore().execute(saveRequest)
     }
 
-    private static func clearFields(_ contact: CNMutableContact) {
+    private static func clearFields(
+        _ contact: CNMutableContact,
+        _ includeNotesOnIos13AndAbove: Bool
+    ) {
+        contact.imageData = nil
         contact.phoneNumbers = []
         contact.emailAddresses = []
         contact.postalAddresses = []
@@ -175,22 +181,39 @@ public enum FlutterContacts {
         contact.instantMessageAddresses = []
         contact.dates = []
         contact.birthday = nil
+        if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
+            contact.note = ""
+        }
     }
 
-    private static func addFieldsToContact(_ args: [String: Any?], _ contact: CNMutableContact) {
+    private static func addFieldsToContact(
+        _ args: [String: Any?],
+        _ contact: CNMutableContact,
+        _ includeNotesOnIos13AndAbove: Bool
+    ) {
         Name(fromMap: args["name"] as! [String: Any]).addTo(contact)
-        (args["phones"] as! [[String: Any]]).forEach { Phone(fromMap: $0).addTo(contact) }
-        (args["emails"] as! [[String: Any]]).forEach { Email(fromMap: $0).addTo(contact) }
-        (args["addresses"] as! [[String: Any]]).forEach { Address(fromMap: $0).addTo(contact) }
+        (args["phones"] as! [[String: Any]]).forEach {
+            Phone(fromMap: $0).addTo(contact)
+        }
+        (args["emails"] as! [[String: Any]]).forEach {
+            Email(fromMap: $0).addTo(contact)
+        }
+        (args["addresses"] as! [[String: Any]]).forEach {
+            Address(fromMap: $0).addTo(contact)
+        }
         if let organization = (args["organizations"] as! [[String: Any]]).first {
             Organization(fromMap: organization).addTo(contact)
         }
-        (args["websites"] as! [[String: Any]]).forEach { Website(fromMap: $0).addTo(contact) }
-        (args["socialMedias"] as! [[String: Any]]).forEach { SocialMedia(fromMap: $0).addTo(contact) }
-        (args["events"] as! [[String: Any]]).forEach { Event(fromMap: $0).addTo(contact) }
-        // Notes need approval now!
-        // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
-        if #available(iOS 13, *) {} else {
+        (args["websites"] as! [[String: Any]]).forEach {
+            Website(fromMap: $0).addTo(contact)
+        }
+        (args["socialMedias"] as! [[String: Any]]).forEach {
+            SocialMedia(fromMap: $0).addTo(contact)
+        }
+        (args["events"] as! [[String: Any]]).forEach {
+            Event(fromMap: $0).addTo(contact)
+        }
+        if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
             if let note = (args["notes"] as! [[String: Any]]).first {
                 Note(fromMap: note).addTo(contact)
             }
@@ -204,30 +227,47 @@ public enum FlutterContacts {
 @available(iOS 9.0, *)
 public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "github.com/QuisApp/flutter_contacts", binaryMessenger: registrar.messenger())
-        let eventChannel = FlutterEventChannel(name: "github.com/QuisApp/flutter_contacts/events", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(
+            name: "github.com/QuisApp/flutter_contacts",
+            binaryMessenger: registrar.messenger()
+        )
+        let eventChannel = FlutterEventChannel(
+            name: "github.com/QuisApp/flutter_contacts/events",
+            binaryMessenger: registrar.messenger()
+        )
         let instance = SwiftFlutterContactsPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         eventChannel.setStreamHandler(instance)
-        FlutterContacts.initialize()
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "get":
+        case "select":
             DispatchQueue.global(qos: .userInteractive).async {
                 let args = call.arguments as! [Any?]
                 let id = args[0] as! String?
-                let withDetails = args[1] as! Bool
-                let withPhotos = args[2] as! Bool
-                let useHighResolutionPhotos = args[3] as! Bool
-                let contacts = FlutterContacts.get(id: id, withDetails: withDetails, withPhotos: withPhotos, useHighResolutionPhotos: useHighResolutionPhotos)
+                let withProperties = args[1] as! Bool
+                let withThumbnail = args[2] as! Bool
+                let withPhoto = args[3] as! Bool
+                let includeNotesOnIos13AndAbove = args[4] as! Bool
+                let contacts = FlutterContacts.select(
+                    id: id,
+                    withProperties: withProperties,
+                    withThumbnail: withThumbnail,
+                    withPhoto: withPhoto,
+                    includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
+                )
                 result(contacts)
             }
-        case "new":
+        case "insert":
             DispatchQueue.global(qos: .userInteractive).async {
+                let args = call.arguments as! [Any?]
+                let c = args[0] as! [String: Any?]
+                let includeNotesOnIos13AndAbove = args[1] as! Bool
                 do {
-                    let contact = try FlutterContacts.new(call.arguments as! [String: Any?])
+                    let contact = try FlutterContacts.insert(
+                        c, includeNotesOnIos13AndAbove
+                    )
                     result(contact)
                 } catch {
                     result(FlutterError(
@@ -239,12 +279,14 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
             }
         case "update":
             DispatchQueue.global(qos: .userInteractive).async {
+                let args = call.arguments as! [Any?]
+                let c = args[0] as! [String: Any?]
+                let includeNotesOnIos13AndAbove = args[1] as! Bool
                 do {
-                    let args = call.arguments as! [Any]
-                    let contact = args[0] as! [String: Any?]
-                    let deletePhoto = args[1] as! Bool
-                    try FlutterContacts.update(contact, deletePhoto)
-                    result(nil)
+                    let contact = try FlutterContacts.update(
+                        c, includeNotesOnIos13AndAbove
+                    )
+                    result(contact)
                 } catch {
                     result(FlutterError(
                         code: "unknown error",
@@ -271,7 +313,10 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
         }
     }
 
-    public func onListen(withArguments _: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+    public func onListen(
+        withArguments _: Any?,
+        eventSink events: @escaping FlutterEventSink
+    ) -> FlutterError? {
         NotificationCenter.default.addObserver(
             forName: NSNotification.Name.CNContactStoreDidChange,
             object: nil,

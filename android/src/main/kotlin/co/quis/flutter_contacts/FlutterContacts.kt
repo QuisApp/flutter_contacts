@@ -37,28 +37,31 @@ import co.quis.flutter_contacts.properties.Website as PWebsite
 
 class FlutterContacts {
     companion object {
-        fun get(
+        private val YYYY_MM_DD = """\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30|31)""".toRegex()
+        private val MM_DD = """--(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30|31)""".toRegex()
+
+        fun select(
             resolver: ContentResolver,
             id: String?,
-            withDetails: Boolean,
-            withPhotos: Boolean,
-            useHighResolutionPhotos: Boolean,
+            withProperties: Boolean,
+            withThumbnail: Boolean,
+            withPhoto: Boolean,
             idIsRawContactId: Boolean = false
         ): List<Map<String, Any?>> {
-            if (id == null && !withDetails && !withPhotos) {
+            if (id == null && !withProperties && !withThumbnail && !withPhoto) {
                 return getQuick(resolver)
             }
 
-            // All fields we care about – ID and display name are always included
+            // All fields we care about – ID and display name are always included.
             var projection = mutableListOf(
                 Data.CONTACT_ID,
                 Data.MIMETYPE,
                 Contacts.DISPLAY_NAME_PRIMARY
             )
-            if (withPhotos) {
+            if (withThumbnail) {
                 projection.add(Photo.PHOTO)
             }
-            if (withDetails) {
+            if (withProperties) {
                 projection.addAll(
                     listOf(
                         StructuredName.PREFIX,
@@ -113,7 +116,7 @@ class FlutterContacts {
                 )
             }
 
-            // This drops contacts not part of any group
+            // This drops contacts not part of any group.
             // See: https://stackoverflow.com/questions/28665587/what-does-contactscontract-contacts-in-visible-group-mean-in-android
             var selection = "${Data.IN_VISIBLE_GROUP} = 1"
             var selectionArgs = arrayOf<String>()
@@ -132,7 +135,7 @@ class FlutterContacts {
             // WHERE in the query which seems to double its execution time, so we
             // instead loop through all rows and filter them in Kotlin.
 
-            // Query contact database
+            // Query contact database.
             val cursor = resolver.query(
                 Data.CONTENT_URI,
                 projection.toTypedArray(),
@@ -141,20 +144,20 @@ class FlutterContacts {
                 /*sortOrder=*/null
             )
 
-            // List of all contacts
+            // List of all contacts.
             var contacts = mutableListOf<Contact>()
             if (cursor == null) {
                 return listOf()
             }
 
-            // Maps contact ID to its index in `contacts`
+            // Maps contact ID to its index in `contacts`.
             var index = mutableMapOf<String, Int>()
 
             fun getString(col: String): String = cursor.getString(cursor.getColumnIndex(col)) ?: ""
             fun getInt(col: String): Int = cursor.getInt(cursor.getColumnIndex(col)) ?: 0
 
             while (cursor.moveToNext()) {
-                // ID and display name
+                // ID and display name.
                 val id = getString(Data.CONTACT_ID)
                 if (id !in index) {
                     var contact = Contact(
@@ -162,8 +165,8 @@ class FlutterContacts {
                         /*displayName=*/getString(Contacts.DISPLAY_NAME_PRIMARY)
                     )
 
-                    // Fetch high-resolution photo if requested
-                    if (withPhotos && useHighResolutionPhotos) {
+                    // Fetch high-resolution photo if requested.
+                    if (withPhoto) {
                         val contactUri: Uri =
                             ContentUris.withAppendedId(Contacts.CONTENT_URI, id.toLong())
                         val displayPhotoUri: Uri =
@@ -173,7 +176,7 @@ class FlutterContacts {
                             contact.photo = fis?.readBytes()
                         } catch (e: FileNotFoundException) {
                             // This happens when no high-resolution photo exists, and is
-                            // a common situation
+                            // a common situation.
                         }
                     }
 
@@ -182,23 +185,19 @@ class FlutterContacts {
                 }
                 var contact: Contact = contacts[index[id]!!]
 
-                // The MIME type of the data in current row (e.g. phone, email, etc)
+                // The MIME type of the data in current row (e.g. phone, email, etc).
                 val mimetype = getString(Data.MIMETYPE)
 
-                // Photos
-                if (withPhotos && mimetype == Photo.CONTENT_ITEM_TYPE) {
-                    // Don't override high-resolution photo if there is one
-                    if (!useHighResolutionPhotos || contact.photo == null) {
-                        contact.photo =
-                            cursor.getBlob(cursor.getColumnIndex(Photo.PHOTO))
-                    }
+                // Thumbnails.
+                if (withThumbnail && mimetype == Photo.CONTENT_ITEM_TYPE) {
+                    contact.thumbnail = cursor.getBlob(cursor.getColumnIndex(Photo.PHOTO))
                 }
 
-                // Other fields
-                if (withDetails) {
+                // All all properties (phones, emails, etc).
+                if (withProperties) {
                     // Raw IDs are IDs of the contact in different accounts (e.g. the
                     // same contact might have Google, WhatsApp and Skype accounts, each
-                    // with its own raw ID)
+                    // with its own raw ID).
                     val rawId = getString(Data.RAW_CONTACT_ID)
                     val accountType = getString(RawContacts.ACCOUNT_TYPE)
                     val accountName = getString(RawContacts.ACCOUNT_NAME)
@@ -222,7 +221,7 @@ class FlutterContacts {
 
                     when (mimetype) {
                         StructuredName.CONTENT_ITEM_TYPE -> {
-                            // save nickname in case it was there already
+                            // Save nickname in case it was there already.
                             val nickname: String = contact.name.nickname
                             contact.name = PName(
                                 getString(StructuredName.GIVEN_NAME),
@@ -319,21 +318,36 @@ class FlutterContacts {
                             contact.socialMedias += socialMedia
                         }
                         Event.CONTENT_ITEM_TYPE -> {
-                            val label: String = getEventLabel(cursor)
-                            val customLabel: String =
-                                if (label == "custom") getEventCustomLabel(cursor) else ""
-                            val event = PEvent(
-                                getString(Event.START_DATE),
-                                label,
-                                customLabel,
-                                false
-                            )
-                            contact.events += event
+                            val date = getString(Event.START_DATE)
+                            var year: Int? = null
+                            var month: Int? = null
+                            var day: Int? = null
+                            if (YYYY_MM_DD matches date) {
+                                year = date.substring(0, 4).toInt()
+                                month = date.substring(5, 7).toInt()
+                                day = date.substring(8, 10).toInt()
+                            } else if (MM_DD matches date) {
+                                month = date.substring(2, 4).toInt()
+                                day = date.substring(5, 7).toInt()
+                            }
+                            if (month != null && day != null) {
+                                val label: String = getEventLabel(cursor)
+                                val customLabel: String =
+                                    if (label == "custom") getEventCustomLabel(cursor) else ""
+                                val event = PEvent(
+                                    year,
+                                    month!!,
+                                    day!!,
+                                    label,
+                                    customLabel
+                                )
+                                contact.events += event
+                            }
                         }
                         Note.CONTENT_ITEM_TYPE -> {
                             val note: String = getString(Note.NOTE)
                             // It seems that every contact has an empty note by default;
-                            // filter empty notes to avoid confusion
+                            // filter empty notes to avoid confusion.
                             if (!note.isEmpty()) {
                                 val note = PNote(getString(Note.NOTE))
                                 contact.notes += note
@@ -348,7 +362,7 @@ class FlutterContacts {
             return contacts.map { it.toMap() }
         }
 
-        fun new(
+        fun insert(
             resolver: ContentResolver,
             contactMap: Map<String, Any?>
         ): Map<String, Any?>? {
@@ -380,53 +394,49 @@ class FlutterContacts {
                 )
             }
 
-            // Build all properties
+            // Build all properties.
             buildOpsForContact(contact, ops)
 
-            // Save
+            // Save.
             val addContactResults =
                 resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
             val rawId: Long = ContentUris.parseId(addContactResults[0].uri!!)
 
-            // Add avatar if provided (needs to be after saving the contact so we know
-            // its raw contact ID)
+            // Add photo if provided (needs to be after saving the contact so we know
+            // its raw contact ID).
             if (contact.photo != null) {
                 buildOpsForPhoto(resolver, contact.photo!!, ops, rawId)
             }
 
             // Load contacts with that raw ID, which will give us the full contact as it
-            // was saved
-            val newContacts: List<Map<String, Any?>> = get(
+            // was saved.
+            val insertedContacts: List<Map<String, Any?>> = select(
                 resolver,
-                rawId.toString(), /*with_details=*/ true, /*with_photos=*/true,
-                /*useHighResolutionPhotos=*/true, /*idIsRawContactId=*/true
+                rawId.toString(), /*with_properties=*/ true, /*with_thumbnail=*/true,
+                /*withPhoto=*/true, /*idIsRawContactId=*/true
             )
 
-            if (newContacts.isEmpty()) {
+            if (insertedContacts.isEmpty()) {
                 return null
             }
-            return newContacts[0]
+            return insertedContacts[0]
         }
 
         fun update(
             resolver: ContentResolver,
-            contactMap: Map<String, Any?>,
-            deletePhoto: Boolean
-        ): String? {
+            contactMap: Map<String, Any?>
+        ): Map<String, Any?>? {
             val ops = mutableListOf<ContentProviderOperation>()
 
             val contact = Contact.fromMap(contactMap)
 
             // We'll use the first raw contact ID for adds. There might a better way to
             // do this...
-            if (contact.accounts.isEmpty()) {
-                return "cannot update contact without raw contact ID"
-            }
             val contactId = contact.id
             val rawContactId = contact.accounts.first().rawId
 
             // Update name and other properties, by deleting existing ones and creating
-            // new ones
+            // new ones.
             ops.add(
                 ContentProviderOperation.newDelete(Data.CONTENT_URI)
                     .withSelection(
@@ -447,28 +457,38 @@ class FlutterContacts {
                     )
                     .build()
             )
-            if (deletePhoto) {
-                ops.add(
-                    ContentProviderOperation.newDelete(Data.CONTENT_URI)
-                        .withSelection(
-                            "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
-                            arrayOf(
-                                contactId,
-                                Photo.CONTENT_ITEM_TYPE
-                            )
+            ops.add(
+                ContentProviderOperation.newDelete(Data.CONTENT_URI)
+                    .withSelection(
+                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
+                        arrayOf(
+                            contactId,
+                            Photo.CONTENT_ITEM_TYPE
                         )
-                        .build()
-                )
-            }
+                    )
+                    .build()
+            )
+
             buildOpsForContact(contact, ops, rawContactId)
             if (contact.photo != null) {
                 buildOpsForPhoto(resolver, contact.photo!!, ops, rawContactId.toLong())
             }
 
-            // Save
+            // Save.
             resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
 
-            return null
+            // Load contacts with that raw ID, which will give us the full contact as it
+            // was saved.
+            val updatedContacts: List<Map<String, Any?>> = select(
+                resolver,
+                contactId, /*with_properties=*/ true, /*with_thumbnail=*/true,
+                /*withPhoto=*/true, /*idIsRawContactId=*/false
+            )
+
+            if (updatedContacts.isEmpty()) {
+                return null
+            }
+            return updatedContacts[0]
         }
 
         fun delete(resolver: ContentResolver, contactIds: List<String>) {
@@ -485,14 +505,15 @@ class FlutterContacts {
             resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
         }
 
-        // getQuick is like get(id = null, withDetails = false, withPhotos = false) but
-        // much faster (100 ms vs 400 ms on a Pixel 3 with 600 contacts)
+        // getQuick is like `select(id = null, withProperties = false,
+        // withThumbnail = false, withPhoto = false)` but much faster (100 ms vs 400 ms
+        // on a Pixel 3 with 600 contacts).
         private fun getQuick(resolver: ContentResolver): List<Map<String, Any?>> {
-            // This drops contacts not part of any group
+            // This drops contacts not part of any group.
             // See: https://stackoverflow.com/questions/28665587/what-does-contactscontract-contacts-in-visible-group-mean-in-android
             val selection = "${Data.IN_VISIBLE_GROUP} = 1"
 
-            // Query contact database
+            // Query contact database.
             val cursor = resolver.query(
                 Contacts.CONTENT_URI,
                 /*projection=*/null,
@@ -501,7 +522,7 @@ class FlutterContacts {
                 /*sortOrder=*/null
             )
 
-            // List of all contacts
+            // List of all contacts.
             var contacts = mutableListOf<Contact>()
             if (cursor == null) {
                 return listOf()
@@ -738,6 +759,10 @@ class FlutterContacts {
             rawContactId: String? = null
         ) {
             fun emptyToNull(s: String): String? = if (s.isEmpty()) "" else s
+            fun eventToDate(e: PEvent): String =
+                (if (e.year == null) "--" else "${e.year.toString().padStart(4, '0')}-") +
+                    "${e.month.toString().padStart(2, '0')}-" +
+                    "${e.day.toString().padStart(2, '0')}"
             fun newInsert(): ContentProviderOperation.Builder =
                 if (rawContactId != null)
                     ContentProviderOperation
@@ -810,7 +835,6 @@ class FlutterContacts {
                         .withValue(StructuredPostal.REGION, emptyToNull(address.state))
                         .withValue(StructuredPostal.POSTCODE, emptyToNull(address.postalCode))
                         .withValue(StructuredPostal.COUNTRY, emptyToNull(address.country))
-                        // isoCountry, subAmdinArea, subLocality not supported
                         .build()
                 )
             }
@@ -858,10 +882,9 @@ class FlutterContacts {
                 ops.add(
                     newInsert()
                         .withValue(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
-                        .withValue(Event.START_DATE, emptyToNull(event.date))
+                        .withValue(Event.START_DATE, eventToDate(event))
                         .withValue(Event.TYPE, labelPair.label)
                         .withValue(Event.LABEL, emptyToNull(labelPair.customLabel))
-                        // noYear not supported
                         .build()
                 )
             }

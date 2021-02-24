@@ -70,45 +70,76 @@
 
     <section class="desc markdown">
       <p>A contact.</p>
-<p><a href="../contact/Contact/id.html">id</a> represents the unified contact ID (a concept shared by android and iOS:
-e.g. a "raw contact" from Gmail and another one from WhatsApp may be merged
-into a single unfied contact, which is what we care about most of the time).</p>
-<p><a href="../contact/Contact/displayName.html">displayName</a> is the only other required field, and represents a
-single-string representation of the contact's name.</p>
+<p>A contact always has a unique <a href="../contact/Contact/id.html">id</a> and a <a href="../contact/Contact/displayName.html">displayName</a>.</p>
+<p>If the high-resolution photo was fetched and the contact has a photo,
+<a href="../contact/Contact/photo.html">photo</a> will be non-null. If the low-resolution photo was fetched and the
+contact has a photo, <a href="../contact/Contact/thumbnail.html">thumbnail</a> will be non-null. To access the
+high-resolution photo if available and the low-resolution thumbnail
+otherwise, use the getter <a href="../contact/Contact/photoOrThumbnail.html">photoOrThumbnail</a>.</p>
+<p>If properties were fetched, fields <a href="../contact/Contact/name.html">name</a>, <a href="../contact/Contact/phones.html">phones</a>, <a href="../contact/Contact/emails.html">emails</a>, etc will be
+populated (but might be empty).</p>
+<p>If properties were fetched, <a href="../contact/Contact/accounts.html">accounts</a> will also be populated on Android and
+are not taken into account for contact equality and hash code. It is exposed
+for three reasons:</p>
+<ul>
+<li>most commonly, for debug purposes</li>
+<li><a href="../contact/Contact/update.html">update</a> needs it to associate properties to the raw ID of the first
+listed account</li>
+<li>if provided, <a href="../contact/Contact/insert.html">insert</a> will use the <a href="../properties_account/Account/type.html">Account.type</a> and <a href="../properties_account/Account/name.html">Account.name</a> of
+the first listed account</li>
+</ul>
+<p>In general no fields or nested fields can be null. For example if a phone is
+present, contact.phones.first.normalizedNumber cannot be null (but might be
+empty). Every field defaults to empty string for strings, empty list for
+lists, 0 for integers, false for booleans, and an appropriate value for
+label enums. The exceptions are as follows:</p>
+<ul>
+<li><a href="../contact/Contact/thumbnail.html">thumbnail</a> and <a href="../contact/Contact/photo.html">photo</a> can be null</li>
+<li><a href="../properties_event/Event/year.html">Event.year</a> can be null for dates with no year</li>
+<li><a href="../properties_event/Event/month.html">Event.month</a> defaults to 1</li>
+<li><a href="../properties_event/Event/day.html">Event.day</a> defaults to 1</li>
+</ul>
+<p>These metadata fields indicate what was fetched:</p>
+<ul>
+<li><a href="../contact/Contact/thumbnailFetched.html">thumbnailFetched</a> if low-resolution thumbnail was fetched</li>
+<li><a href="../contact/Contact/photoFetched.html">photoFetched</a> if high-resolution photo was fetched</li>
+<li><a href="../contact/Contact/propertiesFetched.html">propertiesFetched</a> if <a href="../contact/Contact/name.html">name</a>, <a href="../contact/Contact/phones.html">phones</a>, <a href="../contact/Contact/emails.html">emails</a>, etc were fetched</li>
+</ul>
+<p>Notable differences between iOS and Android:</p>
+<ul>
+<li>iOS doesn't support <a href="../contact/Contact/accounts.html">accounts</a></li>
+<li>iOS only supports one note</li>
+<li>on iOS13+ the app needs to be explicitly approved by Apple (see
+<a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);">https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);</a>
+if your app is entitled, you can use
+<code>FlutterContacts.config.includeNotesOnIos13AndAbove = true</code> to include
+them in the properties when fetching/inserting/updating contacts</li>
+<li>iOS supports only one <a href="../properties_event/Event-class.html">Event</a> of type <a href="../properties_event/EventLabel-class.html">EventLabel.birthday</a></li>
+<li>iOS doesn't support <a href="../properties_phone/Phone/isPrimary.html">Phone.isPrimary</a> and <a href="../properties_email/Email/isPrimary.html">Email.isPrimary</a></li>
+<li>labels vary widely between the two platforms, meaning that, for example,
+if you save a contact with <a href="../properties_phone/PhoneLabel-class.html">PhoneLabel.iPhone</a> on Android, under the
+hood it will get saved as <a href="../properties_phone/PhoneLabel-class.html">PhoneLabel.custom</a> and
+<a href="../properties_phone/Phone/customLabel.html">Phone.customLabel</a> = 'iPhone'</li>
+<li>available fields vary widely between the two platforms, for example
+<a href="../properties_address/Address/isoCountry.html">Address.isoCountry</a> is not available on Android and
+<a href="../properties_address/Address/neighborhood.html">Address.neighborhood</a> is not available on iOS, so if you save a contact
+with data for <a href="../properties_address/Address/neighborhood.html">Address.neighborhood</a> on iOS, that data will be lost</li>
+</ul>
     </section>
     
-    <section>
-      <dl class="dl-horizontal">
-
-
-
-
-
-        <dt>Annotations</dt>
-        <dd><ul class="annotation-list clazz-relationships">
-          <li>@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonSerializable-class.html">JsonSerializable</a>(explicitToJson: true, disallowUnrecognizedKeys: false, anyMap: true)</li>
-        </ul></dd>
-      </dl>
-    </section>
 
     <section class="summary offset-anchor" id="constructors">
       <h2>Constructors</h2>
 
       <dl class="constructor-summary-list">
         <dt id="Contact" class="callable">
-          <span class="name"><a href="../contact/Contact/Contact.html">Contact</a></span><span class="signature">(<span class="parameter" id="-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span>, </span><span class="parameter" id="-param-displayName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">displayName</span>, </span><span class="parameter" id="-param-photo">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-typed_data/Uint8List-class.html">Uint8List</a></span> <span class="parameter-name">photo</span>, </span><span class="parameter" id="-param-name"><span class="type-annotation"><a href="../properties_name/Name-class.html">Name</a></span> <span class="parameter-name">name</span>, </span><span class="parameter" id="-param-phones"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_phone/Phone-class.html">Phone</a></span>&gt;</span></span> <span class="parameter-name">phones</span>, </span><span class="parameter" id="-param-emails"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_email/Email-class.html">Email</a></span>&gt;</span></span> <span class="parameter-name">emails</span>, </span><span class="parameter" id="-param-addresses"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_address/Address-class.html">Address</a></span>&gt;</span></span> <span class="parameter-name">addresses</span>, </span><span class="parameter" id="-param-organizations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_organization/Organization-class.html">Organization</a></span>&gt;</span></span> <span class="parameter-name">organizations</span>, </span><span class="parameter" id="-param-websites"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_website/Website-class.html">Website</a></span>&gt;</span></span> <span class="parameter-name">websites</span>, </span><span class="parameter" id="-param-socialMedias"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></span>&gt;</span></span> <span class="parameter-name">socialMedias</span>, </span><span class="parameter" id="-param-events"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_event/Event-class.html">Event</a></span>&gt;</span></span> <span class="parameter-name">events</span>, </span><span class="parameter" id="-param-notes"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_note/Note-class.html">Note</a></span>&gt;</span></span> <span class="parameter-name">notes</span>, </span><span class="parameter" id="-param-accounts"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_account/Account-class.html">Account</a></span>&gt;</span></span> <span class="parameter-name">accounts</span>}</span>)</span>
+          <span class="name"><a href="../contact/Contact/Contact.html">Contact</a></span><span class="signature">(<span class="parameter" id="-param-id">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span>: <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-displayName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">displayName</span>: <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-thumbnail"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-typed_data/Uint8List-class.html">Uint8List</a></span> <span class="parameter-name">thumbnail</span>, </span><span class="parameter" id="-param-photo"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-typed_data/Uint8List-class.html">Uint8List</a></span> <span class="parameter-name">photo</span>, </span><span class="parameter" id="-param-name"><span class="type-annotation"><a href="../properties_name/Name-class.html">Name</a></span> <span class="parameter-name">name</span>, </span><span class="parameter" id="-param-phones"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_phone/Phone-class.html">Phone</a></span>&gt;</span></span> <span class="parameter-name">phones</span>, </span><span class="parameter" id="-param-emails"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_email/Email-class.html">Email</a></span>&gt;</span></span> <span class="parameter-name">emails</span>, </span><span class="parameter" id="-param-addresses"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_address/Address-class.html">Address</a></span>&gt;</span></span> <span class="parameter-name">addresses</span>, </span><span class="parameter" id="-param-organizations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_organization/Organization-class.html">Organization</a></span>&gt;</span></span> <span class="parameter-name">organizations</span>, </span><span class="parameter" id="-param-websites"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_website/Website-class.html">Website</a></span>&gt;</span></span> <span class="parameter-name">websites</span>, </span><span class="parameter" id="-param-socialMedias"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></span>&gt;</span></span> <span class="parameter-name">socialMedias</span>, </span><span class="parameter" id="-param-events"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_event/Event-class.html">Event</a></span>&gt;</span></span> <span class="parameter-name">events</span>, </span><span class="parameter" id="-param-notes"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_note/Note-class.html">Note</a></span>&gt;</span></span> <span class="parameter-name">notes</span>, </span><span class="parameter" id="-param-accounts"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_account/Account-class.html">Account</a></span>&gt;</span></span> <span class="parameter-name">accounts</span>}</span>)</span>
         </dt>
         <dd>
            
         </dd>
-        <dt id="Contact.create" class="callable">
-          <span class="name"><a href="../contact/Contact/Contact.create.html">Contact.create</a></span><span class="signature">(<span class="parameter" id="create-param-createEmptyName">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">createEmptyName</span>: <span class="default-value">true</span>}</span>)</span>
-        </dt>
-        <dd>
-          Create a new contact, with empty contact ID and display name. <a href="../contact/Contact/Contact.create.html">[...]</a>
-        </dd>
         <dt id="Contact.fromJson" class="callable">
-          <span class="name"><a href="../contact/Contact/Contact.fromJson.html">Contact.fromJson</a></span><span class="signature">(<span class="parameter" id="fromJson-param-json"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span> <span class="parameter-name">json</span></span>)</span>
+          <span class="name"><a href="../contact/Contact/Contact.fromJson.html">Contact.fromJson</a></span><span class="signature">(<span class="parameter" id="fromJson-param-json"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">json</span></span>)</span>
         </dt>
         <dd>
            
@@ -118,7 +149,7 @@ single-string representation of the contact's name.</p>
           <span class="name"><a href="../contact/Contact/Contact.fromVCard.html">Contact.fromVCard</a></span><span class="signature">(<span class="parameter" id="fromVCard-param-vCard"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">vCard</span></span>)</span>
         </dt>
         <dd>
-          Parse contact from vCard content 
+           
           <div class="constructor-modifier features">factory</div>
         </dd>
       </dl>
@@ -133,104 +164,120 @@ single-string representation of the contact's name.</p>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_account/Account-class.html">Account</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Android raw accounts. Android only. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Raw accounts (Android only). 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="addresses" class="property">
           <span class="name"><a href="../contact/Contact/addresses.html">addresses</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_address/Address-class.html">Address</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Postal addresses 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Postal addresses. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="displayName" class="property">
           <span class="name"><a href="../contact/Contact/displayName.html">displayName</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
         </dt>
         <dd>
-          Display name (name formatted into a single string). Always provided. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(required: true), read / write</div>
+          The contact display name. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="emails" class="property">
           <span class="name"><a href="../contact/Contact/emails.html">emails</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_email/Email-class.html">Email</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Email addresses 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Email addresses. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="events" class="property">
           <span class="name"><a href="../contact/Contact/events.html">events</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_event/Event-class.html">Event</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Events, such as birthday and anniversary 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Events / birthdays. 
+                  <div class="features">read / write</div>
 </dd>
-        <dt id="hashCode" class="property inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></span>
+        <dt id="hashCode" class="property">
+          <span class="name"><a href="../contact/Contact/hashCode.html">hashCode</a></span>
           <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>         
         </dt>
-        <dd class="inherited">
-          The hash code for this object. <a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">[...]</a>
-                  <div class="features">read-only, inherited</div>
+        <dd>
+          The hash code for this object. <a href="../contact/Contact/hashCode.html">[...]</a>
+                  <div class="features">read-only, override</div>
 </dd>
         <dt id="id" class="property">
           <span class="name"><a href="../contact/Contact/id.html">id</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
         </dt>
         <dd>
-          Contact ID, corresponding to the native contact ID. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(required: true), read / write</div>
+          The unique identifier of the contact. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="name" class="property">
           <span class="name"><a href="../contact/Contact/name.html">name</a></span>
           <span class="signature">&#8596; <a href="../properties_name/Name-class.html">Name</a></span>         
         </dt>
         <dd>
-          Structured name of the contact <a href="../contact/Contact/name.html">[...]</a>
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(nullable: true), read / write</div>
-</dd>
-        <dt id="normalizedName" class="property">
-          <span class="name"><a href="../contact/Contact/normalizedName.html">normalizedName</a></span>
-          <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
-        </dt>
-        <dd>
-          Returns normalized display name, which ignores case, space and diacritics. 
-                  <div class="features">read-only</div>
+          Structured name. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="notes" class="property">
           <span class="name"><a href="../contact/Contact/notes.html">notes</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_note/Note-class.html">Note</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Notes (iOS supports only one, Android allows multiple notes) 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Notes. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="organizations" class="property">
           <span class="name"><a href="../contact/Contact/organizations.html">organizations</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_organization/Organization-class.html">Organization</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Company / job <a href="../contact/Contact/organizations.html">[...]</a>
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Organizations / jobs. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="phones" class="property">
           <span class="name"><a href="../contact/Contact/phones.html">phones</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_phone/Phone-class.html">Phone</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Phone numbers 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Phone numbers. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="photo" class="property">
           <span class="name"><a href="../contact/Contact/photo.html">photo</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-typed_data/Uint8List-class.html">Uint8List</a></span>         
         </dt>
         <dd>
-          Photo, which can be null <a href="../contact/Contact/photo.html">[...]</a>
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(ignore: true), read / write</div>
+          The full-resolution contact picture. 
+                  <div class="features">read / write</div>
+</dd>
+        <dt id="photoFetched" class="property">
+          <span class="name"><a href="../contact/Contact/photoFetched.html">photoFetched</a></span>
+          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>         
+        </dt>
+        <dd>
+          Whether the high-resolution photo was fetched. 
+                  <div class="features">read / write</div>
+</dd>
+        <dt id="photoOrThumbnail" class="property">
+          <span class="name"><a href="../contact/Contact/photoOrThumbnail.html">photoOrThumbnail</a></span>
+          <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-typed_data/Uint8List-class.html">Uint8List</a></span>         
+        </dt>
+        <dd>
+          Returns the full-resolution photo if available, the thumbnail otherwise. 
+                  <div class="features">read-only</div>
+</dd>
+        <dt id="propertiesFetched" class="property">
+          <span class="name"><a href="../contact/Contact/propertiesFetched.html">propertiesFetched</a></span>
+          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>         
+        </dt>
+        <dd>
+          Whether properties (name, phones, emails, etc). 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="runtimeType" class="property inherited">
           <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
@@ -245,16 +292,32 @@ single-string representation of the contact's name.</p>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Social media profiles and instant messaging 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Social media / instant messaging profiles. 
+                  <div class="features">read / write</div>
+</dd>
+        <dt id="thumbnail" class="property">
+          <span class="name"><a href="../contact/Contact/thumbnail.html">thumbnail</a></span>
+          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-typed_data/Uint8List-class.html">Uint8List</a></span>         
+        </dt>
+        <dd>
+          A low-resolution version of the <a href="../contact/Contact/photo.html">photo</a>. 
+                  <div class="features">read / write</div>
+</dd>
+        <dt id="thumbnailFetched" class="property">
+          <span class="name"><a href="../contact/Contact/thumbnailFetched.html">thumbnailFetched</a></span>
+          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>         
+        </dt>
+        <dd>
+          Whether the low-resolution thumbnail was fetched. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="websites" class="property">
           <span class="name"><a href="../contact/Contact/websites.html">websites</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_website/Website-class.html">Website</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Websites / URLs 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Websites. 
+                  <div class="features">read / write</div>
 </dd>
       </dl>
     </section>
@@ -262,31 +325,31 @@ single-string representation of the contact's name.</p>
     <section class="summary offset-anchor" id="instance-methods">
       <h2>Methods</h2>
       <dl class="callables">
-        <dt id="deduplicateEmails" class="callable">
-          <span class="name"><a href="../contact/Contact/deduplicateEmails.html">deduplicateEmails</a></span><span class="signature">(<wbr>)
+        <dt id="deduplicateProperties" class="callable">
+          <span class="name"><a href="../contact/Contact/deduplicateProperties.html">deduplicateProperties</a></span><span class="signature">(<wbr>)
             <span class="returntype parameter">&#8594; void</span>
           </span>
                   </dt>
         <dd>
-           
+          Deduplicates properties. <a href="../contact/Contact/deduplicateProperties.html">[...]</a>
                   
 </dd>
-        <dt id="deduplicateEvents" class="callable">
-          <span class="name"><a href="../contact/Contact/deduplicateEvents.html">deduplicateEvents</a></span><span class="signature">(<wbr>)
-            <span class="returntype parameter">&#8594; void</span>
+        <dt id="delete" class="callable">
+          <span class="name"><a href="../contact/Contact/delete.html">delete</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
           </span>
                   </dt>
         <dd>
-           
+          Deletes the contact from the database. 
                   
 </dd>
-        <dt id="deduplicatePhones" class="callable">
-          <span class="name"><a href="../contact/Contact/deduplicatePhones.html">deduplicatePhones</a></span><span class="signature">(<wbr>)
-            <span class="returntype parameter">&#8594; void</span>
+        <dt id="insert" class="callable">
+          <span class="name"><a href="../contact/Contact/insert.html">insert</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
           </span>
                   </dt>
         <dd>
-           
+          Inserts the contact into the database. 
                   
 </dd>
         <dt id="noSuchMethod" class="callable inherited">
@@ -299,7 +362,7 @@ single-string representation of the contact's name.</p>
                   <div class="features">inherited</div>
 </dd>
         <dt id="toJson" class="callable">
-          <span class="name"><a href="../contact/Contact/toJson.html">toJson</a></span><span class="signature">(<wbr><span class="parameter" id="toJson-param-includePhoto">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">includePhoto</span>: <span class="default-value">false</span>, </span><span class="parameter" id="toJson-param-includeNormalizedNumber"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">includeNormalizedNumber</span>: <span class="default-value">true</span>}</span>)
+          <span class="name"><a href="../contact/Contact/toJson.html">toJson</a></span><span class="signature">(<wbr><span class="parameter" id="toJson-param-withThumbnail">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withThumbnail</span>: <span class="default-value">true</span>, </span><span class="parameter" id="toJson-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">true</span>}</span>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>
           </span>
                   </dt>
@@ -307,38 +370,47 @@ single-string representation of the contact's name.</p>
            
                   
 </dd>
-        <dt id="toString" class="callable inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
-          </span>
-                  </dt>
-        <dd class="inherited">
-          Returns a string representation of this object. 
-                  <div class="features">inherited</div>
-</dd>
-        <dt id="toVCard" class="callable">
-          <span class="name"><a href="../contact/Contact/toVCard.html">toVCard</a></span><span class="signature">(<wbr>)
+        <dt id="toString" class="callable">
+          <span class="name"><a href="../contact/Contact/toString.html">toString</a></span><span class="signature">(<wbr>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
           </span>
                   </dt>
         <dd>
-          Export contact to vCard 
+          Returns a string representation of this object. 
+                  <div class="features">override</div>
+</dd>
+        <dt id="toVCard" class="callable">
+          <span class="name"><a href="../contact/Contact/toVCard.html">toVCard</a></span><span class="signature">(<wbr><span class="parameter" id="toVCard-param-withPhoto">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">true</span>, </span><span class="parameter" id="toVCard-param-productId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">productId</span>, </span><span class="parameter" id="toVCard-param-includeDate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">includeDate</span>: <span class="default-value">false</span>}</span>)
+            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+          </span>
+                  </dt>
+        <dd>
+          Exports to vCard format. <a href="../contact/Contact/toVCard.html">[...]</a>
+                  
+</dd>
+        <dt id="update" class="callable">
+          <span class="name"><a href="../contact/Contact/update.html">update</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
+          </span>
+                  </dt>
+        <dd>
+          Updates the contact in the database. 
                   
 </dd>
       </dl>
     </section>
 
-    <section class="summary offset-anchor inherited" id="operators">
+    <section class="summary offset-anchor" id="operators">
       <h2>Operators</h2>
       <dl class="callables">
-        <dt id="operator ==" class="callable inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
+        <dt id="operator ==" class="callable">
+          <span class="name"><a href="../contact/Contact/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-o"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">o</span></span>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
           </span>
                   </dt>
-        <dd class="inherited">
-          The equality operator. <a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">[...]</a>
-                  <div class="features">inherited</div>
+        <dd>
+          The equality operator. <a href="../contact/Contact/operator_equals.html">[...]</a>
+                  <div class="features">override</div>
 </dd>
       </dl>
     </section>
@@ -354,7 +426,6 @@ single-string representation of the contact's name.</p>
 
     <li class="section-title"><a href="../contact/Contact-class.html#constructors">Constructors</a></li>
     <li><a href="../contact/Contact/Contact.html">Contact</a></li>
-    <li><a href="../contact/Contact/Contact.create.html">create</a></li>
     <li><a href="../contact/Contact/Contact.fromJson.html">fromJson</a></li>
     <li><a href="../contact/Contact/Contact.fromVCard.html">fromVCard</a></li>
 
@@ -365,29 +436,34 @@ single-string representation of the contact's name.</p>
     <li><a href="../contact/Contact/displayName.html">displayName</a></li>
     <li><a href="../contact/Contact/emails.html">emails</a></li>
     <li><a href="../contact/Contact/events.html">events</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../contact/Contact/hashCode.html">hashCode</a></li>
     <li><a href="../contact/Contact/id.html">id</a></li>
     <li><a href="../contact/Contact/name.html">name</a></li>
-    <li><a href="../contact/Contact/normalizedName.html">normalizedName</a></li>
     <li><a href="../contact/Contact/notes.html">notes</a></li>
     <li><a href="../contact/Contact/organizations.html">organizations</a></li>
     <li><a href="../contact/Contact/phones.html">phones</a></li>
     <li><a href="../contact/Contact/photo.html">photo</a></li>
+    <li><a href="../contact/Contact/photoFetched.html">photoFetched</a></li>
+    <li><a href="../contact/Contact/photoOrThumbnail.html">photoOrThumbnail</a></li>
+    <li><a href="../contact/Contact/propertiesFetched.html">propertiesFetched</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
     <li><a href="../contact/Contact/socialMedias.html">socialMedias</a></li>
+    <li><a href="../contact/Contact/thumbnail.html">thumbnail</a></li>
+    <li><a href="../contact/Contact/thumbnailFetched.html">thumbnailFetched</a></li>
     <li><a href="../contact/Contact/websites.html">websites</a></li>
 
     <li class="section-title"><a href="../contact/Contact-class.html#instance-methods">Methods</a></li>
-    <li><a href="../contact/Contact/deduplicateEmails.html">deduplicateEmails</a></li>
-    <li><a href="../contact/Contact/deduplicateEvents.html">deduplicateEvents</a></li>
-    <li><a href="../contact/Contact/deduplicatePhones.html">deduplicatePhones</a></li>
+    <li><a href="../contact/Contact/deduplicateProperties.html">deduplicateProperties</a></li>
+    <li><a href="../contact/Contact/delete.html">delete</a></li>
+    <li><a href="../contact/Contact/insert.html">insert</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../contact/Contact/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../contact/Contact/toString.html">toString</a></li>
     <li><a href="../contact/Contact/toVCard.html">toVCard</a></li>
+    <li><a href="../contact/Contact/update.html">update</a></li>
 
     <li class="section-title"><a href="../contact/Contact-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../contact/Contact/operator_equals.html">operator ==</a></li>
 
 
 
@@ -400,7 +476,7 @@ single-string representation of the contact's name.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

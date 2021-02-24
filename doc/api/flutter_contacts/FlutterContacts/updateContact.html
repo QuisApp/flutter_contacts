@@ -74,14 +74,13 @@
     <li><a href="../../flutter_contacts/FlutterContacts/config.html">config</a></li>
 
     <li class="section-title"><a href="../../flutter_contacts/FlutterContacts-class.html#static-methods">Static methods</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/compareDisplayNames.html">compareDisplayNames</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/addListener.html">addListener</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/deleteContact.html">deleteContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/deleteContacts.html">deleteContacts</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/getContact.html">getContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/getFullContacts.html">getFullContacts</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/newContact.html">newContact</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/onChange.html">onChange</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></li>
 
 </ol>
@@ -92,30 +91,45 @@
       <div><h1><span class="kind-method">updateContact</span> method </h1></div>
 
     <section class="multi-line-signature">
-      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a></span>
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
             <span class="name ">updateContact</span>
-(<wbr><ol class="parameter-list"><li><span class="parameter" id="updateContact-param-contact"><span class="type-annotation"><a href="../../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span>, </span></li>
-<li><span class="parameter" id="updateContact-param-deletePhoto">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deletePhoto</span>: <span class="default-value">false</span>}</span></li>
+(<wbr><ol class="parameter-list"><li><span class="parameter" id="updateContact-param-contact"><span class="type-annotation"><a href="../../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span></li>
 </ol>)
       
     </section>
     <section class="desc markdown">
-      <p>////////////////////////////////////////////////
-UPDATING CONTACTS              ///
-////////////////////////////////////////////////
-Updates existing contact</p>
-<p>To delete the photo, explicitly set <code>deletePhoto</code> to true</p>
+      <p>Updates existing contact and returns it.</p>
+<p>Note that output contact may be different from the input. If you intend to
+perform operations on the contact after update, you should perform them on
+the output rather than on the input.</p>
     </section>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">&#47;&#47;&#47; Updates existing contact
-&#47;&#47;&#47;
-&#47;&#47;&#47; To delete the photo, explicitly set [deletePhoto] to true
-static Future updateContact(Contact contact,
-        {bool deletePhoto = false}) async =&gt;
-    await _channel.invokeMethod(
-        &#39;update&#39;, [contact.toJson(includePhoto: true), deletePhoto]);</code></pre>
+      <pre class="language-dart"><code class="language-dart">static Future&lt;Contact&gt; updateContact(Contact contact) async {
+  &#47;&#47; This avoids the accidental case where we want to insert a contact but
+  &#47;&#47; update it instead, which won&#39;t work.
+  if (contact.id.isEmpty) {
+    throw Exception(&#39;Cannot update contact without ID&#39;);
+  }
+  &#47;&#47; In addition, on Android we need a raw contact ID.
+  if (Platform.isAndroid &amp;&amp;
+      !contact.accounts.any((x) =&gt; x.rawId.isNotEmpty)) {
+    throw Exception(&#39;Cannot update contact without raw ID on Android&#39;);
+  }
+  &#47;&#47; This avoids the accidental case where we try to update a contact before
+  &#47;&#47; fetching all their properties or photos, which would erase the existing
+  &#47;&#47; properties or photos.
+  if (!contact.propertiesFetched || !contact.photoFetched) {
+    throw Exception(
+        &#39;Cannot update contact without fetching properties and photos&#39;);
+  }
+  final json = await _channel.invokeMethod(&#39;update&#39;, [
+    contact.toJson(),
+    config.includeNotesOnIos13AndAbove,
+  ]);
+  return Contact.fromJson(Map&lt;String, dynamic&gt;.from(json));
+}</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -128,7 +142,7 @@ static Future updateContact(Contact contact,
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

@@ -96,6 +96,11 @@ struct Phone {
         default:
             labelInv = label
         }
-        c.phoneNumbers.append(CNLabeledValue<CNPhoneNumber>(label: labelInv, value: CNPhoneNumber(stringValue: number)))
+        c.phoneNumbers.append(
+            CNLabeledValue<CNPhoneNumber>(
+                label: labelInv,
+                value: CNPhoneNumber(stringValue: number)
+            )
+        )
     }
 }

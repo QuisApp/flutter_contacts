@@ -62,7 +62,7 @@
     <li class="section-title"> <a href="../../properties_phone/Phone-class.html#instance-properties">Properties</a>
     </li>
     <li><a href="../../properties_phone/Phone/customLabel.html">customLabel</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../properties_phone/Phone/hashCode.html">hashCode</a></li>
     <li><a href="../../properties_phone/Phone/isPrimary.html">isPrimary</a></li>
     <li><a href="../../properties_phone/Phone/label.html">label</a></li>
     <li><a href="../../properties_phone/Phone/normalizedNumber.html">normalizedNumber</a></li>
@@ -72,10 +72,11 @@
     <li class="section-title"><a href="../../properties_phone/Phone-class.html#instance-methods">Methods</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../properties_phone/Phone/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../properties_phone/Phone/toString.html">toString</a></li>
+    <li><a href="../../properties_phone/Phone/toVCard.html">toVCard</a></li>
 
     <li class="section-title"><a href="../../properties_phone/Phone-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../../properties_phone/Phone/operator_equals.html">operator ==</a></li>
 
 
 
@@ -95,7 +96,13 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Map&lt;String, dynamic&gt; toJson() =&gt; _$PhoneToJson(this);</code></pre>
+      <pre class="language-dart"><code class="language-dart">Map&lt;String, dynamic&gt; toJson() =&gt; &lt;String, dynamic&gt;{
+      &#39;number&#39;: number,
+      &#39;normalizedNumber&#39;: normalizedNumber,
+      &#39;label&#39;: _phoneLabelToString[label],
+      &#39;customLabel&#39;: customLabel,
+      &#39;isPrimary&#39;: isPrimary,
+    };</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -108,7 +115,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

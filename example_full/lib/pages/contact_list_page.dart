@@ -41,7 +41,7 @@ class _ContactListPageState extends State<ContactListPage>
     await _refetchContacts();
 
     // Listen to DB changes
-    FlutterContacts.onChange(() async {
+    FlutterContacts.addListener(() async {
       print('Contacts DB changed, refecthing contacts');
       await _refetchContacts();
     });
@@ -57,7 +57,7 @@ class _ContactListPageState extends State<ContactListPage>
 
   Future _loadContacts(bool withPhotos) async {
     final contacts = withPhotos
-        ? (await FlutterContacts.getContacts(withPhotos: true)).toList()
+        ? (await FlutterContacts.getContacts(withThumbnail: true)).toList()
         : (await FlutterContacts.getContacts()).toList();
     setState(() {
       _contacts = contacts;

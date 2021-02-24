@@ -71,7 +71,7 @@
     <li class="section-title"><a href="../../properties_account/Account-class.html#instance-methods">Methods</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../properties_account/Account/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../properties_account/Account/toString.html">toString</a></li>
 
     <li class="section-title"><a href="../../properties_account/Account-class.html#operators">Operators</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
@@ -94,8 +94,12 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">factory Account.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
-    _$AccountFromJson(json);</code></pre>
+      <pre class="language-dart"><code class="language-dart">factory Account.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Account(
+      (json[&#39;rawId&#39;] as String) ?? &#39;&#39;,
+      (json[&#39;type&#39;] as String) ?? &#39;&#39;,
+      (json[&#39;name&#39;] as String) ?? &#39;&#39;,
+      (json[&#39;mimetypes&#39;] as List)?.map((e) =&gt; e as String)?.toList() ?? [],
+    );</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -108,7 +112,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

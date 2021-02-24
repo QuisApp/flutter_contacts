@@ -57,7 +57,6 @@
 
     <li class="section-title"><a href="../../contact/Contact-class.html#constructors">Constructors</a></li>
     <li><a href="../../contact/Contact/Contact.html">Contact</a></li>
-    <li><a href="../../contact/Contact/Contact.create.html">create</a></li>
     <li><a href="../../contact/Contact/Contact.fromJson.html">fromJson</a></li>
     <li><a href="../../contact/Contact/Contact.fromVCard.html">fromVCard</a></li>
 
@@ -68,29 +67,34 @@
     <li><a href="../../contact/Contact/displayName.html">displayName</a></li>
     <li><a href="../../contact/Contact/emails.html">emails</a></li>
     <li><a href="../../contact/Contact/events.html">events</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../contact/Contact/hashCode.html">hashCode</a></li>
     <li><a href="../../contact/Contact/id.html">id</a></li>
     <li><a href="../../contact/Contact/name.html">name</a></li>
-    <li><a href="../../contact/Contact/normalizedName.html">normalizedName</a></li>
     <li><a href="../../contact/Contact/notes.html">notes</a></li>
     <li><a href="../../contact/Contact/organizations.html">organizations</a></li>
     <li><a href="../../contact/Contact/phones.html">phones</a></li>
     <li><a href="../../contact/Contact/photo.html">photo</a></li>
+    <li><a href="../../contact/Contact/photoFetched.html">photoFetched</a></li>
+    <li><a href="../../contact/Contact/photoOrThumbnail.html">photoOrThumbnail</a></li>
+    <li><a href="../../contact/Contact/propertiesFetched.html">propertiesFetched</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
     <li><a href="../../contact/Contact/socialMedias.html">socialMedias</a></li>
+    <li><a href="../../contact/Contact/thumbnail.html">thumbnail</a></li>
+    <li><a href="../../contact/Contact/thumbnailFetched.html">thumbnailFetched</a></li>
     <li><a href="../../contact/Contact/websites.html">websites</a></li>
 
     <li class="section-title"><a href="../../contact/Contact-class.html#instance-methods">Methods</a></li>
-    <li><a href="../../contact/Contact/deduplicateEmails.html">deduplicateEmails</a></li>
-    <li><a href="../../contact/Contact/deduplicateEvents.html">deduplicateEvents</a></li>
-    <li><a href="../../contact/Contact/deduplicatePhones.html">deduplicatePhones</a></li>
+    <li><a href="../../contact/Contact/deduplicateProperties.html">deduplicateProperties</a></li>
+    <li><a href="../../contact/Contact/delete.html">delete</a></li>
+    <li><a href="../../contact/Contact/insert.html">insert</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../contact/Contact/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../contact/Contact/toString.html">toString</a></li>
     <li><a href="../../contact/Contact/toVCard.html">toVCard</a></li>
+    <li><a href="../../contact/Contact/update.html">update</a></li>
 
     <li class="section-title"><a href="../../contact/Contact-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../../contact/Contact/operator_equals.html">operator ==</a></li>
 
 
 
@@ -104,16 +108,88 @@
     <section class="multi-line-signature">
       <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
             <span class="name ">toVCard</span>
-(<wbr>)
+(<wbr><ol class="parameter-list"><li><span class="parameter" id="toVCard-param-withPhoto">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="toVCard-param-productId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">productId</span>, </span></li>
+<li><span class="parameter" id="toVCard-param-includeDate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">includeDate</span>: <span class="default-value">false</span>}</span></li>
+</ol>)
       
     </section>
     <section class="desc markdown">
-      <p>Export contact to vCard</p>
+      <p>Exports to vCard format.</p>
+<p>By default we use vCard format v3 (<a href="https://tools.ietf.org/html/rfc2426">https://tools.ietf.org/html/rfc2426</a>)
+which is the most widely used, but it's possible to use the more recent
+vCard format v4 (<a href="https://tools.ietf.org/html/rfc6350">https://tools.ietf.org/html/rfc6350</a>) using:</p>
+<pre class="language-dart"><code class="language-dart">FlutterContacts.config.vCardVersion = VCardVersion.v4;
+</code></pre>
+<p>The optional <code>productId</code> specifies a product identifier, such as
+"-//Apple Inc.//Mac OS X 10.15.7//EN"</p>
     </section>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">String toVCard() =&gt; VCardExporter().toVCard(this);</code></pre>
+      <pre class="language-dart"><code class="language-dart">String toVCard({
+  bool withPhoto = true,
+  String productId,
+  bool includeDate = false,
+}) {
+  &#47;&#47; BEGIN (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-2.1.1
+  &#47;&#47; VERSION (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.6.9
+  &#47;&#47; PRODID (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.6.3
+  &#47;&#47; REV (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.6.4
+  &#47;&#47; FN (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.1.1
+  &#47;&#47; PHOTO (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.1.4
+  &#47;&#47; END (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-2.1.1
+  &#47;&#47; BEGIN (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.1.1
+  &#47;&#47; VERSION (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.7.9
+  &#47;&#47; PRODID (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.7.3
+  &#47;&#47; REV (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.7.4
+  &#47;&#47; FN (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.2.1
+  &#47;&#47; PHOTO (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.2.4
+  &#47;&#47; END (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.1.2
+  final v4 = FlutterContacts.config.vCardVersion == VCardVersion.v4;
+  var lines = [
+    &#39;BEGIN:VCARD&#39;,
+    v4 ? &#39;VERSION:4.0&#39; : &#39;VERSION:3.0&#39;,
+  ];
+  if (productId != null) {
+    lines.add(&#39;PRODID:$productId&#39;);
+  }
+  if (includeDate) {
+    lines.add(&#39;REV:${DateTime.now().toIso8601String()}&#39;);
+  }
+  if (displayName.isNotEmpty) {
+    lines.add(&#39;FN:${vCardEncode(displayName)}&#39;);
+  }
+  if (withPhoto &amp;&amp; photoOrThumbnail != null) {
+    final encoding = vCardEncode(base64.encode(photoOrThumbnail));
+    final prefix =
+        v4 ? &#39;PHOTO:data:image&#47;jpeg;base64,&#39; : &#39;PHOTO;ENCODING=b;TYPE=JPEG:&#39;;
+    &#47;&#47; 63 chars on each line.
+    final prefixLength = prefix.length;
+    lines.add(prefix +
+        encoding.substring(0, min(63 - prefixLength, encoding.length)));
+    &#47;&#47; Subsequent lines have a leading space, and 62 chars each.
+    var index = prefixLength;
+    while (index &lt; encoding.length) {
+      lines.add(
+          &#39; &#39; + encoding.substring(index, min(index + 62, encoding.length)));
+      index += 62;
+    }
+  }
+  lines.addAll([
+    name.toVCard(),
+    phones.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    emails.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    addresses.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    organizations.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    websites.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    socialMedias.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    events.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    notes.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+  ].expand((x) =&gt; x));
+  lines.add(&#39;END:VCARD&#39;);
+  return lines.join(&#39;\n&#39;);
+}</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -126,7 +202,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

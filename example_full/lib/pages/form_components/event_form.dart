@@ -24,27 +24,37 @@ class _EventFormState extends State<EventForm> {
   TextEditingController _dateController;
   EventLabel _label;
   TextEditingController _customLabelController;
+  int _year;
+  int _month;
+  int _day;
   bool _noYear;
+
+  String _formatDate() =>
+      '${_noYear ? '--' : _year.toString().padLeft(4, '0')}/'
+      '${_month.toString().padLeft(2, '0')}/'
+      '${_day.toString().padLeft(2, '0')}';
 
   @override
   void initState() {
     super.initState();
-    _dateController =
-        TextEditingController(text: widget.event.date?.toIso8601String());
     _label = widget.event.label;
     _customLabelController =
         TextEditingController(text: widget.event.customLabel);
-    _noYear = widget.event.noYear;
+    _year = widget.event.year ?? DateTime.now().year;
+    _month = widget.event.month;
+    _day = widget.event.day;
+    _noYear = widget.event.year == null;
+    _dateController = TextEditingController(text: _formatDate());
   }
 
   void _onChanged() {
     final event = Event(
-      DateTime.tryParse(_dateController.text) ??
-          DateTime.fromMillisecondsSinceEpoch(0),
+      year: _noYear ? null : _year,
+      month: _month,
+      day: _day,
       label: _label,
       customLabel:
           _label == EventLabel.custom ? _customLabelController.text : '',
-      noYear: _noYear,
     );
     widget.onUpdate(event);
   }
@@ -67,7 +77,7 @@ class _EventFormState extends State<EventForm> {
               TextFormField(
                 controller: _dateController,
                 keyboardType: TextInputType.datetime,
-                decoration: InputDecoration(hintText: 'mm/dd/yyyy'),
+                decoration: InputDecoration(hintText: 'yyyy/mm/dd'),
                 readOnly: true,
                 onTap: () async {
                   final date = await showDatePicker(
@@ -77,7 +87,10 @@ class _EventFormState extends State<EventForm> {
                       lastDate: DateTime(3000));
                   if (date != null) {
                     setState(() {
-                      _dateController.text = date.toIso8601String();
+                      _year = date.year;
+                      _month = date.month;
+                      _day = date.day;
+                      _dateController.text = _formatDate();
                     });
                   }
                 },
@@ -111,7 +124,10 @@ class _EventFormState extends State<EventForm> {
                 title: Text('No year'),
                 value: _noYear,
                 onChanged: (noYear) {
-                  setState(() => _noYear = noYear);
+                  setState(() {
+                    _noYear = noYear;
+                    _dateController.text = _formatDate();
+                  });
                   _onChanged();
                 },
               ),

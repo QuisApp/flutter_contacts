@@ -66,6 +66,11 @@ struct Email {
         default:
             labelInv = label
         }
-        c.emailAddresses.append(CNLabeledValue<NSString>(label: labelInv, value: address as NSString))
+        c.emailAddresses.append(
+            CNLabeledValue<NSString>(
+                label: labelInv,
+                value: address as NSString
+            )
+        )
     }
 }

@@ -69,7 +69,7 @@
       <div><h1><span class="kind-class">Account</span> class  </h1></div>
 
     <section class="desc markdown">
-      <p>Account is only available on Android and represent raw contacts.</p>
+      <p>Raw Android account.</p>
 <p>This is only exposed for information and debugging purposes and should be
 ignored in most cases.</p>
 <p>Raw contacts are aggregated into unified contacts (which are the ones we
@@ -80,26 +80,13 @@ phone) it's possible to have two raw contacts, part of the same contact,
 both with <a href="../properties_account/Account/type.html">type</a> <code>com.google</code> but with a different <a href="../properties_account/Account/name.html">name</a>.</p>
     </section>
     
-    <section>
-      <dl class="dl-horizontal">
-
-
-
-
-
-        <dt>Annotations</dt>
-        <dd><ul class="annotation-list clazz-relationships">
-          <li>@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonSerializable-class.html">JsonSerializable</a>(disallowUnrecognizedKeys: true)</li>
-        </ul></dd>
-      </dl>
-    </section>
 
     <section class="summary offset-anchor" id="constructors">
       <h2>Constructors</h2>
 
       <dl class="constructor-summary-list">
         <dt id="Account" class="callable">
-          <span class="name"><a href="../properties_account/Account/Account.html">Account</a></span><span class="signature">(<span class="parameter" id="-param-rawId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">rawId</span>, </span><span class="parameter" id="-param-type"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">type</span>, </span><span class="parameter" id="-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">name</span>, </span><span class="parameter" id="-param-mimetypes">[<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">mimetypes</span>]</span>)</span>
+          <span class="name"><a href="../properties_account/Account/Account.html">Account</a></span><span class="signature">(<span class="parameter" id="-param-rawId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">rawId</span>, </span><span class="parameter" id="-param-type"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">type</span>, </span><span class="parameter" id="-param-name"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">name</span>, </span><span class="parameter" id="-param-mimetypes"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">mimetypes</span></span>)</span>
         </dt>
         <dd>
            
@@ -131,25 +118,24 @@ both with <a href="../properties_account/Account/type.html">type</a> <code>com.g
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>         
         </dt>
         <dd>
-          Which data types are contributed to by this account. <a href="../properties_account/Account/mimetypes.html">[...]</a>
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(defaultValue: const []), read / write</div>
+          Android mimetypes provided by this account. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="name" class="property">
           <span class="name"><a href="../properties_account/Account/name.html">name</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
         </dt>
         <dd>
-          The "name" of the account, type-specific. For example it's the Gmail
-address for <code>com.google</code>, but just "WhatsApp" for WhatsApp. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(required: true), read / write</div>
+          Account name, e.g. john.doe@gmail.com. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="rawId" class="property">
           <span class="name"><a href="../properties_account/Account/rawId.html">rawId</a></span>
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
         </dt>
         <dd>
-          The ID of the raw contact. It's different from the contact ID. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(required: true), read / write</div>
+          Raw account ID. 
+                  <div class="features">read / write</div>
 </dd>
         <dt id="runtimeType" class="property inherited">
           <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
@@ -164,9 +150,8 @@ address for <code>com.google</code>, but just "WhatsApp" for WhatsApp.
           <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
         </dt>
         <dd>
-          The "type" of account, for example <code>com.google</code> for Google,
-<code>com.facebook.messenger</code> for Facebook Messenger. 
-                  <div class="features">@<a href="https://pub.dev/documentation/json_annotation/3.1.1/json_annotation/JsonKey-class.html">JsonKey</a>(required: true), read / write</div>
+          Account type, e.g. com.google or com.facebook.messenger. 
+                  <div class="features">read / write</div>
 </dd>
       </dl>
     </section>
@@ -192,14 +177,14 @@ address for <code>com.google</code>, but just "WhatsApp" for WhatsApp.
            
                   
 </dd>
-        <dt id="toString" class="callable inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></span><span class="signature">(<wbr>)
+        <dt id="toString" class="callable">
+          <span class="name"><a href="../properties_account/Account/toString.html">toString</a></span><span class="signature">(<wbr>)
             <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
           </span>
                   </dt>
-        <dd class="inherited">
+        <dd>
           Returns a string representation of this object. 
-                  <div class="features">inherited</div>
+                  <div class="features">override</div>
 </dd>
       </dl>
     </section>
@@ -244,7 +229,7 @@ address for <code>com.google</code>, but just "WhatsApp" for WhatsApp.
     <li class="section-title"><a href="../properties_account/Account-class.html#instance-methods">Methods</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../properties_account/Account/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../properties_account/Account/toString.html">toString</a></li>
 
     <li class="section-title"><a href="../properties_account/Account-class.html#operators">Operators</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
@@ -260,7 +245,7 @@ address for <code>com.google</code>, but just "WhatsApp" for WhatsApp.
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

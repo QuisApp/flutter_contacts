@@ -63,7 +63,7 @@
     </li>
     <li><a href="../../properties_name/Name/first.html">first</a></li>
     <li><a href="../../properties_name/Name/firstPhonetic.html">firstPhonetic</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../properties_name/Name/hashCode.html">hashCode</a></li>
     <li><a href="../../properties_name/Name/last.html">last</a></li>
     <li><a href="../../properties_name/Name/lastPhonetic.html">lastPhonetic</a></li>
     <li><a href="../../properties_name/Name/middle.html">middle</a></li>
@@ -76,10 +76,11 @@
     <li class="section-title"><a href="../../properties_name/Name-class.html#instance-methods">Methods</a></li>
     <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../../properties_name/Name/toJson.html">toJson</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li><a href="../../properties_name/Name/toString.html">toString</a></li>
+    <li><a href="../../properties_name/Name/toVCard.html">toVCard</a></li>
 
     <li class="section-title"><a href="../../properties_name/Name-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li><a href="../../properties_name/Name/operator_equals.html">operator ==</a></li>
 
 
 
@@ -99,7 +100,17 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">factory Name.fromJson(Map&lt;String, dynamic&gt; json) =&gt; _$NameFromJson(json);</code></pre>
+      <pre class="language-dart"><code class="language-dart">factory Name.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Name(
+      first: (json[&#39;first&#39;] as String) ?? &#39;&#39;,
+      last: (json[&#39;last&#39;] as String) ?? &#39;&#39;,
+      middle: (json[&#39;middle&#39;] as String) ?? &#39;&#39;,
+      prefix: (json[&#39;prefix&#39;] as String) ?? &#39;&#39;,
+      suffix: (json[&#39;suffix&#39;] as String) ?? &#39;&#39;,
+      nickname: (json[&#39;nickname&#39;] as String) ?? &#39;&#39;,
+      firstPhonetic: (json[&#39;firstPhonetic&#39;] as String) ?? &#39;&#39;,
+      lastPhonetic: (json[&#39;lastPhonetic&#39;] as String) ?? &#39;&#39;,
+      middlePhonetic: (json[&#39;middlePhonetic&#39;] as String) ?? &#39;&#39;,
+    );</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -112,7 +123,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>

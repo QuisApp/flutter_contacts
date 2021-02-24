@@ -140,6 +140,11 @@ struct Address {
         default:
             labelInv = label
         }
-        c.postalAddresses.append(CNLabeledValue<CNPostalAddress>(label: labelInv, value: mutableAddress))
+        c.postalAddresses.append(
+            CNLabeledValue<CNPostalAddress>(
+                label: labelInv,
+                value: mutableAddress
+            )
+        )
     }
 }

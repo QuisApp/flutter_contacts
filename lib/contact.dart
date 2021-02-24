@@ -1,112 +1,135 @@
+import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:diacritic/diacritic.dart';
-import 'package:flutter_contacts/vcard_exporter.dart';
-import 'package:flutter_contacts/vcard_parser.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-import 'properties/account.dart';
-import 'properties/address.dart';
-import 'properties/email.dart';
-import 'properties/event.dart';
-import 'properties/name.dart';
-import 'properties/note.dart';
-import 'properties/organization.dart';
-import 'properties/phone.dart';
-import 'properties/social_media.dart';
-import 'properties/website.dart';
-
-part 'contact.g.dart';
+import 'package:flutter_contacts/config.dart';
+import 'package:flutter_contacts/vcard.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/properties/account.dart';
+import 'package:flutter_contacts/properties/address.dart';
+import 'package:flutter_contacts/properties/email.dart';
+import 'package:flutter_contacts/properties/event.dart';
+import 'package:flutter_contacts/properties/name.dart';
+import 'package:flutter_contacts/properties/note.dart';
+import 'package:flutter_contacts/properties/organization.dart';
+import 'package:flutter_contacts/properties/phone.dart';
+import 'package:flutter_contacts/properties/social_media.dart';
+import 'package:flutter_contacts/properties/website.dart';
 
 /// A contact.
 ///
-/// [id] represents the unified contact ID (a concept shared by android and iOS:
-/// e.g. a "raw contact" from Gmail and another one from WhatsApp may be merged
-/// into a single unfied contact, which is what we care about most of the time).
+/// A contact always has a unique [id] and a [displayName].
 ///
-/// [displayName] is the only other required field, and represents a
-/// single-string representation of the contact's name.
-@JsonSerializable(
-    // call .toJson on nested fields
-    explicitToJson: true,
-    // we'd want this to be true, but can't because of the photo field
-    disallowUnrecognizedKeys: false,
-    // this is to expect `Map` instead of `Map<String, dynamic>`
-    anyMap: true)
+/// If the high-resolution photo was fetched and the contact has a photo,
+/// [photo] will be non-null. If the low-resolution photo was fetched and the
+/// contact has a photo, [thumbnail] will be non-null. To access the
+/// high-resolution photo if available and the low-resolution thumbnail
+/// otherwise, use the getter [photoOrThumbnail].
+///
+/// If properties were fetched, fields [name], [phones], [emails], etc will be
+/// populated (but might be empty).
+///
+/// If properties were fetched, [accounts] will also be populated on Android and
+/// are not taken into account for contact equality and hash code. It is exposed
+/// for three reasons:
+///   - most commonly, for debug purposes
+///   - [update] needs it to associate properties to the raw ID of the first
+///     listed account
+///   - if provided, [insert] will use the [Account.type] and [Account.name] of
+///     the first listed account
+///
+/// In general no fields or nested fields can be null. For example if a phone is
+/// present, contact.phones.first.normalizedNumber cannot be null (but might be
+/// empty). Every field defaults to empty string for strings, empty list for
+/// lists, 0 for integers, false for booleans, and an appropriate value for
+/// label enums. The exceptions are as follows:
+///   - [thumbnail] and [photo] can be null
+///   - [Event.year] can be null for dates with no year
+///   - [Event.month] defaults to 1
+///   - [Event.day] defaults to 1
+///
+/// These metadata fields indicate what was fetched:
+///   - [thumbnailFetched] if low-resolution thumbnail was fetched
+///   - [photoFetched] if high-resolution photo was fetched
+///   - [propertiesFetched] if [name], [phones], [emails], etc were fetched
+///
+/// Notable differences between iOS and Android:
+///   - iOS doesn't support [accounts]
+///   - iOS only supports one note
+///   - on iOS13+ the app needs to be explicitly approved by Apple (see
+///     https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);
+///     if your app is entitled, you can use
+///     `FlutterContacts.config.includeNotesOnIos13AndAbove = true` to include
+///     them in the properties when fetching/inserting/updating contacts
+///   - iOS supports only one [Event] of type [EventLabel.birthday]
+///   - iOS doesn't support [Phone.isPrimary] and [Email.isPrimary]
+///   - labels vary widely between the two platforms, meaning that, for example,
+///     if you save a contact with [PhoneLabel.iPhone] on Android, under the
+///     hood it will get saved as [PhoneLabel.custom] and
+///     [Phone.customLabel] = 'iPhone'
+///   - available fields vary widely between the two platforms, for example
+///     [Address.isoCountry] is not available on Android and
+///     [Address.neighborhood] is not available on iOS, so if you save a contact
+///     with data for [Address.neighborhood] on iOS, that data will be lost
 class Contact {
-  /// Create a new contact, with empty contact ID and display name.
-  ///
-  /// By default an empty name is also created (as opposed to name being null),
-  /// but that can be controlled with [createEmptyName].
-  Contact.create({bool createEmptyName = true})
-      : this('', '', name: createEmptyName ? Name() : null);
-
-  /// Contact ID, corresponding to the native contact ID.
-  @JsonKey(required: true)
+  /// The unique identifier of the contact.
   String id;
 
-  /// Display name (name formatted into a single string). Always provided.
-  @JsonKey(required: true)
+  /// The contact display name.
   String displayName;
 
-  /// Photo, which can be null
-  ///
-  /// JsonSerializer doesn't support Uint8List:
-  /// https://github.com/google/json_serializable.dart/issues/572
-  ///
-  /// Because of that we cannot set `disallowUnrecognizedKeys` to true on the
-  /// class.
-  @JsonKey(ignore: true)
+  /// A low-resolution version of the [photo].
+  Uint8List thumbnail;
+
+  /// The full-resolution contact picture.
   Uint8List photo;
 
-  /// Structured name of the contact
-  ///
-  /// Marked nullable because we can't use a default value of Name() since it's
-  /// not constant, but it is effectively the default value
-  @JsonKey(nullable: true /* defaultValue = Name() */)
+  /// Returns the full-resolution photo if available, the thumbnail otherwise.
+  Uint8List get photoOrThumbnail => photo ?? thumbnail;
+
+  /// Structured name.
   Name name;
 
-  /// Phone numbers
-  @JsonKey(defaultValue: [])
+  /// Phone numbers.
   List<Phone> phones;
 
-  /// Email addresses
-  @JsonKey(defaultValue: [])
+  /// Email addresses.
   List<Email> emails;
 
-  /// Postal addresses
-  @JsonKey(defaultValue: [])
+  /// Postal addresses.
   List<Address> addresses;
 
-  /// Company / job
-  ///
-  /// We support multiple entries for compatibility with Android.
-  @JsonKey(defaultValue: [])
+  /// Organizations / jobs.
   List<Organization> organizations;
 
-  /// Websites / URLs
-  @JsonKey(defaultValue: [])
+  /// Websites.
   List<Website> websites;
 
-  /// Social media profiles and instant messaging
-  @JsonKey(defaultValue: [])
+  /// Social media / instant messaging profiles.
   List<SocialMedia> socialMedias;
 
-  /// Events, such as birthday and anniversary
-  @JsonKey(defaultValue: [])
+  /// Events / birthdays.
   List<Event> events;
 
-  /// Notes (iOS supports only one, Android allows multiple notes)
-  @JsonKey(defaultValue: [])
+  /// Notes.
   List<Note> notes;
 
-  /// Android raw accounts. Android only.
-  @JsonKey(defaultValue: [])
+  /// Raw accounts (Android only).
   List<Account> accounts;
 
-  Contact(
-    this.id,
-    this.displayName, {
+  /// Whether the low-resolution thumbnail was fetched.
+  bool thumbnailFetched = true;
+
+  /// Whether the high-resolution photo was fetched.
+  bool photoFetched = true;
+
+  /// Whether properties (name, phones, emails, etc).
+  bool propertiesFetched = true;
+
+  Contact({
+    this.id = '',
+    this.displayName = '',
+    this.thumbnail,
     this.photo,
     Name name,
     List<Phone> phones,
@@ -129,85 +152,225 @@ class Contact {
         notes = notes ?? <Note>[],
         accounts = accounts ?? <Account>[];
 
-  /// Parse contact from vCard content
+  factory Contact.fromJson(Map<String, dynamic> json) => Contact(
+        id: json['id'] as String,
+        displayName: json['displayName'] as String,
+        thumbnail: json['thumbnail'] as Uint8List,
+        photo: json['photo'] as Uint8List,
+        name: Name.fromJson(Map<String, dynamic>.from(json['name'] ?? {})),
+        phones: ((json['phones'] as List) ?? [])
+            .map((x) => Phone.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+        emails: ((json['emails'] as List) ?? [])
+            .map((x) => Email.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+        addresses: ((json['addresses'] as List) ?? [])
+            .map((x) => Address.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+        organizations: ((json['organizations'] as List) ?? [])
+            .map((x) => Organization.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+        websites: ((json['websites'] as List) ?? [])
+            .map((x) => Website.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+        socialMedias: ((json['socialMedias'] as List) ?? [])
+            .map((x) => SocialMedia.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+        events: ((json['events'] as List) ?? [])
+            .map((x) => Event.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+        notes: ((json['notes'] as List) ?? [])
+            .map((x) => Note.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+        accounts: ((json['accounts'] as List) ?? [])
+            .map((x) => Account.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
+      );
+
+  Map<String, dynamic> toJson({
+    bool withThumbnail = true,
+    bool withPhoto = true,
+  }) =>
+      Map<String, dynamic>.from({
+        'id': id,
+        'displayName': displayName,
+        'thumbnail': withThumbnail ? thumbnail : null,
+        'photo': withPhoto ? photo : null,
+        'name': name.toJson(),
+        'phones': phones.map((x) => x.toJson()).toList(),
+        'emails': emails.map((x) => x.toJson()).toList(),
+        'addresses': addresses.map((x) => x.toJson()).toList(),
+        'organizations': organizations.map((x) => x.toJson()).toList(),
+        'websites': websites.map((x) => x.toJson()).toList(),
+        'socialMedias': socialMedias.map((x) => x.toJson()).toList(),
+        'events': events.map((x) => x.toJson()).toList(),
+        'notes': notes.map((x) => x.toJson()).toList(),
+        'accounts': accounts.map((x) => x.toJson()).toList(),
+      });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      displayName.hashCode ^
+      thumbnail.hashCode ^
+      photo.hashCode ^
+      name.hashCode ^
+      phones.hashCode ^
+      emails.hashCode ^
+      addresses.hashCode ^
+      organizations.hashCode ^
+      websites.hashCode ^
+      socialMedias.hashCode ^
+      events.hashCode ^
+      notes.hashCode;
+
+  @override
+  bool operator ==(Object o) =>
+      o is Contact &&
+      o.id == id &&
+      o.displayName == displayName &&
+      o.thumbnail == thumbnail &&
+      o.photo == photo &&
+      o.name == name &&
+      o.phones == phones &&
+      o.emails == emails &&
+      o.addresses == addresses &&
+      o.organizations == organizations &&
+      o.websites == websites &&
+      o.socialMedias == socialMedias &&
+      o.events == events &&
+      o.notes == notes;
+
+  @override
+  String toString() =>
+      'Contact(id=$id, displayName=$displayName, thumbnail=$thumbnail, '
+      'photo=$photo, name=$name, phones=$phones, emails=$emails, '
+      'addresses=$addresses, organizations=$organizations, websites=$websites, '
+      'socialMedias=$socialMedias, events=$events, notes=$notes, '
+      'accounts=$accounts)';
+
+  /// Inserts the contact into the database.
+  Future<Contact> insert() => FlutterContacts.insertContact(this);
+
+  /// Updates the contact in the database.
+  Future<Contact> update() => FlutterContacts.updateContact(this);
+
+  /// Deletes the contact from the database.
+  Future<void> delete() => FlutterContacts.deleteContact(this);
+
+  /// Exports to vCard format.
+  ///
+  /// By default we use vCard format v3 (https://tools.ietf.org/html/rfc2426)
+  /// which is the most widely used, but it's possible to use the more recent
+  /// vCard format v4 (https://tools.ietf.org/html/rfc6350) using:
+  /// ```dart
+  /// FlutterContacts.config.vCardVersion = VCardVersion.v4;
+  /// ```
+  ///
+  /// The optional [productId] specifies a product identifier, such as
+  /// "-//Apple Inc.//Mac OS X 10.15.7//EN"
+  String toVCard({
+    bool withPhoto = true,
+    String productId,
+    bool includeDate = false,
+  }) {
+    // BEGIN (V3): https://tools.ietf.org/html/rfc2426#section-2.1.1
+    // VERSION (V3): https://tools.ietf.org/html/rfc2426#section-3.6.9
+    // PRODID (V3): https://tools.ietf.org/html/rfc2426#section-3.6.3
+    // REV (V3): https://tools.ietf.org/html/rfc2426#section-3.6.4
+    // FN (V3): https://tools.ietf.org/html/rfc2426#section-3.1.1
+    // PHOTO (V3): https://tools.ietf.org/html/rfc2426#section-3.1.4
+    // END (V3): https://tools.ietf.org/html/rfc2426#section-2.1.1
+    // BEGIN (V4): https://tools.ietf.org/html/rfc6350#section-6.1.1
+    // VERSION (V4): https://tools.ietf.org/html/rfc6350#section-6.7.9
+    // PRODID (V4): https://tools.ietf.org/html/rfc6350#section-6.7.3
+    // REV (V4): https://tools.ietf.org/html/rfc6350#section-6.7.4
+    // FN (V4): https://tools.ietf.org/html/rfc6350#section-6.2.1
+    // PHOTO (V4): https://tools.ietf.org/html/rfc6350#section-6.2.4
+    // END (V4): https://tools.ietf.org/html/rfc6350#section-6.1.2
+    final v4 = FlutterContacts.config.vCardVersion == VCardVersion.v4;
+    var lines = [
+      'BEGIN:VCARD',
+      v4 ? 'VERSION:4.0' : 'VERSION:3.0',
+    ];
+    if (productId != null) {
+      lines.add('PRODID:$productId');
+    }
+    if (includeDate) {
+      lines.add('REV:${DateTime.now().toIso8601String()}');
+    }
+    if (displayName.isNotEmpty) {
+      lines.add('FN:${vCardEncode(displayName)}');
+    }
+    if (withPhoto && photoOrThumbnail != null) {
+      final encoding = vCardEncode(base64.encode(photoOrThumbnail));
+      final prefix =
+          v4 ? 'PHOTO:data:image/jpeg;base64,' : 'PHOTO;ENCODING=b;TYPE=JPEG:';
+      // 63 chars on each line.
+      final prefixLength = prefix.length;
+      lines.add(prefix +
+          encoding.substring(0, min(63 - prefixLength, encoding.length)));
+      // Subsequent lines have a leading space, and 62 chars each.
+      var index = prefixLength;
+      while (index < encoding.length) {
+        lines.add(
+            ' ' + encoding.substring(index, min(index + 62, encoding.length)));
+        index += 62;
+      }
+    }
+    lines.addAll([
+      name.toVCard(),
+      phones.map((x) => x.toVCard()).expand((x) => x),
+      emails.map((x) => x.toVCard()).expand((x) => x),
+      addresses.map((x) => x.toVCard()).expand((x) => x),
+      organizations.map((x) => x.toVCard()).expand((x) => x),
+      websites.map((x) => x.toVCard()).expand((x) => x),
+      socialMedias.map((x) => x.toVCard()).expand((x) => x),
+      events.map((x) => x.toVCard()).expand((x) => x),
+      notes.map((x) => x.toVCard()).expand((x) => x),
+    ].expand((x) => x));
+    lines.add('END:VCARD');
+    return lines.join('\n');
+  }
+
   factory Contact.fromVCard(String vCard) {
-    Contact c;
+    var c = Contact();
     VCardParser().parse(vCard, c);
     return c;
   }
 
-  /// Returns normalized display name, which ignores case, space and diacritics.
-  String get normalizedName =>
-      removeDiacritics(displayName.trim().toLowerCase());
-
-  factory Contact.fromJson(Map json) {
-    var contact = _$ContactFromJson(json);
-    // photo requires special handling since it's ignored by json serialization
-    contact.photo = json['photo'] as Uint8List;
-    return contact;
+  /// Deduplicates properties.
+  ///
+  /// Some properties sometimes appear duplicated because of third-party apps.
+  /// For phones we compare them using the normalized number phone number if
+  /// availalbe, falling back to the raw phone number. For emails we use the
+  /// email address. By default we use the property hash code.
+  void deduplicateProperties() {
+    phones = _depuplicateProperty(
+        phones,
+        (x) => (x.normalizedNumber.isNotEmpty ? x.normalizedNumber : x.number)
+            .hashCode);
+    emails = _depuplicateProperty(emails, (x) => x.address.hashCode);
+    addresses = _depuplicateProperty(addresses);
+    organizations = _depuplicateProperty(organizations);
+    websites = _depuplicateProperty(websites);
+    socialMedias = _depuplicateProperty(socialMedias);
+    events = _depuplicateProperty(events);
+    notes = _depuplicateProperty(notes);
   }
 
-  Map<String, dynamic> toJson({
-    bool includePhoto = false,
-    bool includeNormalizedNumber = true,
-  }) {
-    var json = _$ContactToJson(this);
-    // photo requires special handling since it's ignored by json serialization
-    if (includePhoto) json['photo'] = photo;
-    if (!includeNormalizedNumber) {
-      for (var i = 0; i < json['phones'].length; ++i) {
-        json['phones'][i]['normalizedNumber'] = '';
+  static List<T> _depuplicateProperty<T>(List<T> list,
+      [int Function(T) hashFn]) {
+    hashFn ??= (T x) => x.hashCode;
+    var deduplicated = <T>[];
+    var seen = Set<int>();
+    for (final o in list) {
+      final h = hashFn(o);
+      if (!seen.contains(h)) {
+        deduplicated.add(o);
+        seen.add(h);
       }
     }
-    return json;
-  }
-
-  /// Export contact to vCard
-  String toVCard() => VCardExporter().toVCard(this);
-
-  void deduplicatePhones() {
-    var normalizedPhonesSeen = Set<String>();
-    var phonesSeen = Set<String>();
-    var uniquePhones = <Phone>[];
-    for (var phone in phones) {
-      // Don't add phone if we've already seen that number (raw or normalized)
-      if (phonesSeen.contains(phone.number) ||
-          (phone.normalizedNumber.isNotEmpty &&
-              normalizedPhonesSeen.contains(phone.normalizedNumber))) {
-        continue;
-      }
-      normalizedPhonesSeen.add(phone.normalizedNumber);
-      phonesSeen.add(phone.number);
-      uniquePhones.add(phone);
-    }
-    phones = uniquePhones;
-  }
-
-  void deduplicateEmails() {
-    var emailsSeen = Set<String>();
-    var uniqueEmails = <Email>[];
-    for (var email in emails) {
-      if (!emailsSeen.contains(email.address)) {
-        emailsSeen.add(email.address);
-        uniqueEmails.add(email);
-      }
-    }
-    emails = uniqueEmails;
-  }
-
-  void deduplicateEvents() {
-    var eventsSeen = Set<int>();
-    var uniqueEvents = <Event>[];
-    for (var event in events) {
-      final hash = event.date.hashCode ^
-          event.label.hashCode ^
-          event.customLabel.hashCode ^
-          event.noYear.hashCode;
-      if (!eventsSeen.contains(hash)) {
-        eventsSeen.add(hash);
-        uniqueEvents.add(event);
-      }
-    }
-    events = uniqueEvents;
+    return deduplicated;
   }
 }

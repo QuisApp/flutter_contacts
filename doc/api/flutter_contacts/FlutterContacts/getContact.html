@@ -74,14 +74,13 @@
     <li><a href="../../flutter_contacts/FlutterContacts/config.html">config</a></li>
 
     <li class="section-title"><a href="../../flutter_contacts/FlutterContacts-class.html#static-methods">Static methods</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/compareDisplayNames.html">compareDisplayNames</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/addListener.html">addListener</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/deleteContact.html">deleteContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/deleteContacts.html">deleteContacts</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/getContact.html">getContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/getFullContacts.html">getFullContacts</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/newContact.html">newContact</a></li>
-    <li><a href="../../flutter_contacts/FlutterContacts/onChange.html">onChange</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></li>
 
 </ol>
@@ -95,29 +94,44 @@
       <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
             <span class="name ">getContact</span>
 (<wbr><ol class="parameter-list"><li><span class="parameter" id="getContact-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span>, </span></li>
-<li><span class="parameter" id="getContact-param-useHighResolutionPhotos">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">useHighResolutionPhotos</span>: <span class="default-value">true</span>, </span></li>
-<li><span class="parameter" id="getContact-param-deduplicateEmailsAndPhones"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateEmailsAndPhones</span>: <span class="default-value">true</span>}</span></li>
+<li><span class="parameter" id="getContact-param-withProperties">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withProperties</span>: <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="getContact-param-withThumbnail"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withThumbnail</span>: <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="getContact-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="getContact-param-deduplicateProperties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateProperties</span>: <span class="default-value">true</span>}</span></li>
 </ol>)
       
     </section>
     <section class="desc markdown">
-      <p>Fetches all fields for given contact</p>
+      <p>Fetches one contact.</p>
+<p>By default everything available is fetched. If <code>withProperties</code> is
+false, properties (phones, emails, addresses, websites, etc) won't be
+fetched.</p>
+<p>If <code>withThumbnail</code> is false, the low-resolution thumbnail won't be
+fetched. If <code>withPhoto</code> is false, the high-resolution photo won't be
+fetched.</p>
+<p>If <code>deduplicateProperties</code> is true, the properties will be de-duplicated,
+mainly to avoid the case (common on Android) where multiple equivalent
+phones are returned.</p>
     </section>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">static Future&lt;Contact&gt; getContact(
   String id, {
-  bool useHighResolutionPhotos = true,
-  bool deduplicateEmailsAndPhones = true,
+  bool withProperties = true,
+  bool withThumbnail = true,
+  bool withPhoto = true,
+  bool deduplicateProperties = true,
 }) async {
-  final contacts = await _get(
-      id: id,
-      withDetails: true,
-      withPhotos: true,
-      useHighResolutionPhotos: useHighResolutionPhotos,
-      deduplicateEmailsAndPhones: deduplicateEmailsAndPhones);
-  if (contacts.isEmpty) return null;
+  final contacts = await _select(
+    id: id,
+    withProperties: withProperties,
+    withThumbnail: withThumbnail,
+    withPhoto: withPhoto,
+    sorted: false,
+    deduplicateProperties: deduplicateProperties,
+  );
+  if (contacts.length != 1) return null;
   return contacts.first;
 }</code></pre>
     </section>
@@ -132,7 +146,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.1.3
+      0.2.0
   </span>
 
 </footer>
