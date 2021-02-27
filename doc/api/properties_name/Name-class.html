@@ -70,38 +70,28 @@
 
     <section class="desc markdown">
       <p>Structured name.</p>
-<p>Name structure varies widely by country. See:	
+<p>Name structure varies widely by country. See:
 <a href="https://en.wikipedia.org/wiki/Personal_name#Structure">https://en.wikipedia.org/wiki/Personal_name#Structure</a></p>
-<p>Data models such as those from Android and iOS are typically US-centric and	
-include middle name, prefix, suffix, etc. They also always include a	
-formatted displayed, which we recommend to use instead. That said, other	
-fields are included for compatibility, except for first and last names which	
+<p>Data models such as those from Android and iOS are typically US-centric and
+include middle name, prefix, suffix, etc. They also always include a
+formatted displayed, which we recommend to use instead. That said, other
+fields are included for compatibility, except for first and last names which
 are common in most countries.</p>
-<p>Since display name is always part of the top-level contact, it's not	
+<p>Since display name is always part of the top-level contact, it's not
 included here.</p>
-<p>Note that Android allows multiple names, while iOS allows only one. However	
-use cases for multiple names are debatable, especially since there is no	
-notion of "primary" name even on Android, and it is very common to see	
-multiple identical instances of the same name for the same contact. For all	
+<p>Note that Android allows multiple names, while iOS allows only one. However
+use cases for multiple names are debatable, especially since there is no
+notion of "primary" name even on Android, and it is very common to see
+multiple identical instances of the same name for the same contact. For all
 those reasons, we only support one name per contact.</p>
-<p>Note also that on iOS, nickname is included in the name fields (and again	
-only one is allowed), while on Android nickname is a separate data model and	
-one contact can have multiple nicknames, independent of their names. They	
-can also have distinct labels to indicate what type of nickname they are	
-(maiden name, short name, initials, default, other or any custom label). To	
-simplify, we only consider nickname as just another name field, and	
+<p>Note also that on iOS, nickname is included in the name fields (and again
+only one is allowed), while on Android nickname is a separate data model and
+one contact can have multiple nicknames, independent of their names. They
+can also have distinct labels to indicate what type of nickname they are
+(maiden name, short name, initials, default, other or any custom label). To
+simplify, we only consider nickname as just another name field, and
 disregard nickname labels.</p>
-<p>| Field              | Android | iOS |	
-|--------------------|:-------:|:---:|	
-| first              | ✔       | ✔   |	
-| last               | ✔       | ✔   |	
-| middle             | ✔       | ✔   |	
-| prefix             | ✔       | ✔   |	
-| suffix             | ✔       | ✔   |	
-| nickname           | ✔       | ✔   |	
-| firstPhonetic      | ✔       | ✔   |	
-| lastPhonetic       | ✔       | ✔   |	
-| middlePhonetic     | ✔       | ✔   |</p>
+<table><thead><tr><th>Field</th><th style="text-align: center;">Android</th><th style="text-align: center;">iOS</th></tr></thead><tbody><tr><td>first</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>last</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>middle</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>prefix</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>suffix</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>nickname</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>firstPhonetic</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>lastPhonetic</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>middlePhonetic</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr></tbody></table>
     </section>
     
 
@@ -324,7 +314,7 @@ disregard nickname labels.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.0
+      0.2.1
   </span>
 
 </footer>
