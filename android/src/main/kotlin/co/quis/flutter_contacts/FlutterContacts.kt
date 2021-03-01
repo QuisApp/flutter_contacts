@@ -21,9 +21,6 @@ import android.provider.ContactsContract.CommonDataKinds.Website
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.RawContacts
-import java.io.FileNotFoundException
-import java.io.InputStream
-import java.io.OutputStream
 import co.quis.flutter_contacts.properties.Account as PAccount
 import co.quis.flutter_contacts.properties.Address as PAddress
 import co.quis.flutter_contacts.properties.Email as PEmail
@@ -34,6 +31,9 @@ import co.quis.flutter_contacts.properties.Organization as POrganization
 import co.quis.flutter_contacts.properties.Phone as PPhone
 import co.quis.flutter_contacts.properties.SocialMedia as PSocialMedia
 import co.quis.flutter_contacts.properties.Website as PWebsite
+import java.io.FileNotFoundException
+import java.io.InputStream
+import java.io.OutputStream
 
 class FlutterContacts {
     companion object {
@@ -46,10 +46,14 @@ class FlutterContacts {
             withProperties: Boolean,
             withThumbnail: Boolean,
             withPhoto: Boolean,
+            returnUnifiedContacts: Boolean,
+            includeNonVisible: Boolean,
             idIsRawContactId: Boolean = false
         ): List<Map<String, Any?>> {
-            if (id == null && !withProperties && !withThumbnail && !withPhoto) {
-                return getQuick(resolver)
+            if (id == null && !withProperties && !withThumbnail && !withPhoto &&
+                returnUnifiedContacts
+            ) {
+                return getQuick(resolver, includeNonVisible)
             }
 
             // All fields we care about – ID and display name are always included.
@@ -108,7 +112,13 @@ class FlutterContacts {
                         Event.START_DATE,
                         Event.TYPE,
                         Event.LABEL,
-                        Note.NOTE,
+                        Note.NOTE
+                    )
+                )
+            }
+            if (withProperties || !returnUnifiedContacts) {
+                projection.addAll(
+                    listOf(
                         Data.RAW_CONTACT_ID,
                         RawContacts.ACCOUNT_TYPE,
                         RawContacts.ACCOUNT_NAME
@@ -116,19 +126,23 @@ class FlutterContacts {
                 )
             }
 
-            // This drops contacts not part of any group.
-            // See: https://stackoverflow.com/questions/28665587/what-does-contactscontract-contacts-in-visible-group-mean-in-android
-            var selection = "${Data.IN_VISIBLE_GROUP} = 1"
+            var selectionClauses = mutableListOf<String>()
+            if (!includeNonVisible) {
+                // This drops contacts not part of any group.
+                // See: https://stackoverflow.com/questions/28665587/what-does-contactscontract-contacts-in-visible-group-mean-in-android
+                selectionClauses.add("${Data.IN_VISIBLE_GROUP} = 1")
+            }
             var selectionArgs = arrayOf<String>()
 
             if (id != null) {
-                if (idIsRawContactId) {
-                    selection += " AND ${Data.RAW_CONTACT_ID} = ?"
+                if (idIsRawContactId || !returnUnifiedContacts) {
+                    selectionClauses.add("${Data.RAW_CONTACT_ID} = ?")
                 } else {
-                    selection += " AND ${Data.CONTACT_ID} = ?"
+                    selectionClauses.add("${Data.CONTACT_ID} = ?")
                 }
                 selectionArgs = arrayOf(id)
             }
+            val selection: String? = if (selectionClauses.isEmpty()) null else selectionClauses.joinToString(separator = " AND ")
 
             // NOTE: The projection filters columns, and the selection filters rows. We
             // could filter rows to those with requested MIME types, but it introduces a
@@ -158,7 +172,7 @@ class FlutterContacts {
 
             while (cursor.moveToNext()) {
                 // ID and display name.
-                val id = getString(Data.CONTACT_ID)
+                val id = if (returnUnifiedContacts) getString(Data.CONTACT_ID) else getString(Data.RAW_CONTACT_ID)
                 if (id !in index) {
                     var contact = Contact(
                         /*id=*/id,
@@ -413,7 +427,8 @@ class FlutterContacts {
             val insertedContacts: List<Map<String, Any?>> = select(
                 resolver,
                 rawId.toString(), /*with_properties=*/ true, /*with_thumbnail=*/true,
-                /*withPhoto=*/true, /*idIsRawContactId=*/true
+                /*withPhoto=*/true, /*returnUnifiedContacts=*/true,
+                /*includeNonVisible=*/true, /*idIsRawContactId=*/true
             )
 
             if (insertedContacts.isEmpty()) {
@@ -482,7 +497,8 @@ class FlutterContacts {
             val updatedContacts: List<Map<String, Any?>> = select(
                 resolver,
                 contactId, /*with_properties=*/ true, /*with_thumbnail=*/true,
-                /*withPhoto=*/true, /*idIsRawContactId=*/false
+                /*withPhoto=*/true, /*returnUnifiedContacts=*/true,
+                /*includeNonVisible=*/true, /*idIsRawContactId=*/false
             )
 
             if (updatedContacts.isEmpty()) {
@@ -508,10 +524,10 @@ class FlutterContacts {
         // getQuick is like `select(id = null, withProperties = false,
         // withThumbnail = false, withPhoto = false)` but much faster (100 ms vs 400 ms
         // on a Pixel 3 with 600 contacts).
-        private fun getQuick(resolver: ContentResolver): List<Map<String, Any?>> {
+        private fun getQuick(resolver: ContentResolver, includeNonVisible: Boolean): List<Map<String, Any?>> {
             // This drops contacts not part of any group.
             // See: https://stackoverflow.com/questions/28665587/what-does-contactscontract-contacts-in-visible-group-mean-in-android
-            val selection = "${Data.IN_VISIBLE_GROUP} = 1"
+            val selection: String? = if (includeNonVisible) null else "${Data.IN_VISIBLE_GROUP} = 1"
 
             // Query contact database.
             val cursor = resolver.query(

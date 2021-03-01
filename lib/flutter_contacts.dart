@@ -30,6 +30,12 @@ class FlutterContacts {
   /// Plugin configuration.
   static var config = FlutterContactsConfig();
 
+  /// Requests permission to read/write contacts. Returns true if granted, false
+  /// in any other case.
+  static Future<bool> requestPermission() async {
+    return await _channel.invokeMethod('requestPermission');
+  }
+
   /// Fetches all contacts.
   ///
   /// By default only ID and display name are fetched. If [withProperties] is
@@ -105,6 +111,9 @@ class FlutterContacts {
     if (contact.id.isNotEmpty) {
       throw Exception('Cannot insert contact that already has an ID');
     }
+    if (!contact.isUnified) {
+      throw Exception('Cannot insert raw contacts');
+    }
     final json = await _channel.invokeMethod('insert', [
       contact.toJson(),
       config.includeNotesOnIos13AndAbove,
@@ -135,6 +144,9 @@ class FlutterContacts {
       throw Exception(
           'Cannot update contact without fetching properties and photos');
     }
+    if (!contact.isUnified) {
+      throw Exception('Cannot update raw contacts');
+    }
     final json = await _channel.invokeMethod('update', [
       contact.toJson(),
       config.includeNotesOnIos13AndAbove,
@@ -147,6 +159,9 @@ class FlutterContacts {
     final ids = contacts.map((c) => c.id).toList();
     if (ids.any((x) => x.isEmpty)) {
       throw Exception('Cannot delete contacts without IDs');
+    }
+    if (contacts.any((c) => !c.isUnified)) {
+      throw Exception('Cannot delete raw contacts');
     }
     await _channel.invokeMethod('delete', ids);
   }
@@ -208,6 +223,8 @@ class FlutterContacts {
       withProperties,
       withThumbnail,
       withPhoto,
+      config.returnUnifiedContacts,
+      config.includeNonVisibleOnAndroid,
       config.includeNotesOnIos13AndAbove,
     ]);
     // ignore: omit_local_variable_types
@@ -223,7 +240,8 @@ class FlutterContacts {
     contacts.forEach((c) => c
       ..propertiesFetched = withProperties
       ..thumbnailFetched = withThumbnail
-      ..photoFetched = withPhoto);
+      ..photoFetched = withPhoto
+      ..isUnified = config.returnUnifiedContacts);
     return contacts;
   }
 

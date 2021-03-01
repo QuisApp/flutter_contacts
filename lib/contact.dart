@@ -123,6 +123,9 @@ class Contact {
   /// Whether the high-resolution photo was fetched.
   bool photoFetched = true;
 
+  /// Whether this is a unified contact (and not a raw contact).
+  bool isUnified = true;
+
   /// Whether properties (name, phones, emails, etc).
   bool propertiesFetched = true;
 

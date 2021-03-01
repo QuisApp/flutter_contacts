@@ -81,6 +81,7 @@
     <li><a href="../../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/requestPermission.html">requestPermission</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></li>
 
 </ol>
@@ -113,6 +114,9 @@ output rather than on the input.</p>
   if (contact.id.isNotEmpty) {
     throw Exception(&#39;Cannot insert contact that already has an ID&#39;);
   }
+  if (!contact.isUnified) {
+    throw Exception(&#39;Cannot insert raw contacts&#39;);
+  }
   final json = await _channel.invokeMethod(&#39;insert&#39;, [
     contact.toJson(),
     config.includeNotesOnIos13AndAbove,
@@ -131,7 +135,7 @@ output rather than on the input.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.1
+      0.2.2
   </span>
 
 </footer>

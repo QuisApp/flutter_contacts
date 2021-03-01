@@ -10,6 +10,7 @@ public enum FlutterContacts {
         withProperties: Bool,
         withThumbnail: Bool,
         withPhoto: Bool,
+        returnUnifiedContacts: Bool,
         includeNotesOnIos13AndAbove: Bool
     ) -> [[String: Any?]] {
         var contacts: [CNContact] = []
@@ -53,7 +54,8 @@ public enum FlutterContacts {
         if withThumbnail { keys.append(CNContactThumbnailImageDataKey) }
         if withPhoto { keys.append(CNContactImageDataKey) }
 
-        let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
+        var request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
+        request.unifyResults = returnUnifiedContacts
         if id != nil {
             // Request for a specific contact.
             request.predicate = CNContact.predicateForContacts(withIdentifiers: [id!])
@@ -142,7 +144,7 @@ public enum FlutterContacts {
 
             let saveRequest = CNSaveRequest()
             saveRequest.update(contact)
-            try CNContactStore().execute(saveRequest)
+            try store.execute(saveRequest)
             return Contact(fromContact: contact).toMap()
         } else {
             return nil
@@ -165,7 +167,7 @@ public enum FlutterContacts {
         contacts.forEach { contact in
             saveRequest.delete(contact.mutableCopy() as! CNMutableContact)
         }
-        try CNContactStore().execute(saveRequest)
+        try store.execute(saveRequest)
     }
 
     private static func clearFields(
@@ -242,6 +244,12 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
+        case "requestPermission":
+            DispatchQueue.global(qos: .userInteractive).async {
+                CNContactStore().requestAccess(for: .contacts, completionHandler: { (granted, _) -> Void in
+                    result(granted)
+                })
+            }
         case "select":
             DispatchQueue.global(qos: .userInteractive).async {
                 let args = call.arguments as! [Any?]
@@ -249,12 +257,15 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                 let withProperties = args[1] as! Bool
                 let withThumbnail = args[2] as! Bool
                 let withPhoto = args[3] as! Bool
-                let includeNotesOnIos13AndAbove = args[4] as! Bool
+                let returnUnifiedContacts = args[4] as! Bool
+                // args[5] = includeNonVisibleOnAndroid
+                let includeNotesOnIos13AndAbove = args[6] as! Bool
                 let contacts = FlutterContacts.select(
                     id: id,
                     withProperties: withProperties,
                     withThumbnail: withThumbnail,
                     withPhoto: withPhoto,
+                    returnUnifiedContacts: returnUnifiedContacts,
                     includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
                 )
                 result(contacts)

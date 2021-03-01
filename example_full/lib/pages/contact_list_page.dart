@@ -2,7 +2,6 @@ import 'package:after_layout/after_layout.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts_example/util/avatar.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ContactListPage extends StatefulWidget {
   @override
@@ -30,7 +29,7 @@ class _ContactListPageState extends State<ContactListPage>
   }
 
   Future _fetchContacts() async {
-    if (!await Permission.contacts.request().isGranted) {
+    if (!await FlutterContacts.requestPermission()) {
       setState(() {
         _contacts = null;
         _permissionDenied = true;

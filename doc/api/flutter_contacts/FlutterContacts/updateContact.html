@@ -81,6 +81,7 @@
     <li><a href="../../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/requestPermission.html">requestPermission</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></li>
 
 </ol>
@@ -124,6 +125,9 @@ the output rather than on the input.</p>
     throw Exception(
         &#39;Cannot update contact without fetching properties and photos&#39;);
   }
+  if (!contact.isUnified) {
+    throw Exception(&#39;Cannot update raw contacts&#39;);
+  }
   final json = await _channel.invokeMethod(&#39;update&#39;, [
     contact.toJson(),
     config.includeNotesOnIos13AndAbove,
@@ -142,7 +146,7 @@ the output rather than on the input.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.1
+      0.2.2
   </span>
 
 </footer>

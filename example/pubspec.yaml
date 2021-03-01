@@ -8,15 +8,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   flutter_contacts:
     path: ../
-  permission_handler: ^5.1.0+2
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  json_serializable: ^3.5.1
+  pedantic: ^1.9.2
 
 flutter:
   uses-material-design: true

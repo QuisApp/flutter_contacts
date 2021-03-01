@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the config property from the FlutterContacts class, for the Dart programming language.">
-  <title>config property - FlutterContacts class - flutter_contacts library - Dart API</title>
+  <meta name="description" content="API docs for the requestPermission method from the FlutterContacts class, for the Dart programming language.">
+  <title>requestPermission method - FlutterContacts class - flutter_contacts library - Dart API</title>
 
   
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
@@ -27,9 +27,9 @@
     <li><a href="../../index.html">flutter_contacts</a></li>
     <li><a href="../../flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
-    <li class="self-crumb">config property</li>
+    <li class="self-crumb">requestPermission method</li>
   </ol>
-  <div class="self-name">config</div>
+  <div class="self-name">requestPermission</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -48,7 +48,7 @@
       <li><a href="../../index.html">flutter_contacts</a></li>
       <li><a href="../../flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
       <li><a href="../../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
-      <li class="self-crumb">config property</li>
+      <li class="self-crumb">requestPermission method</li>
     </ol>
     
     <h5>FlutterContacts class</h5>
@@ -89,22 +89,25 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-property">config</span> property </h1></div>
+      <div><h1><span class="kind-method">requestPermission</span> method </h1></div>
 
-        <section class="multi-line-signature">
-          <span class="returntype"><a href="../../config/FlutterContactsConfig-class.html">FlutterContactsConfig</a></span>
-          <span class="name ">config</span>
-          <div class="features">read / write</div>
-        </section>
-        <section class="desc markdown">
-          <p>Plugin configuration.</p>
-        </section>
-                <section class="summary source-code" id="source">
-          <h2><span>Implementation</span></h2>
-          <pre class="language-dart"><code class="language-dart">static var config = FlutterContactsConfig();
-
-</code></pre>
-        </section>
+    <section class="multi-line-signature">
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
+            <span class="name ">requestPermission</span>
+(<wbr>)
+      
+    </section>
+    <section class="desc markdown">
+      <p>Requests permission to read/write contacts. Returns true if granted, false
+in any other case.</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">static Future&lt;bool&gt; requestPermission() async {
+  return await _channel.invokeMethod(&#39;requestPermission&#39;);
+}</code></pre>
+    </section>
 
   </div> <!-- /.main-content -->
 

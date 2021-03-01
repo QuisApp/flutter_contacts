@@ -73,135 +73,58 @@
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/pub%20points" alt="pub points"></a>
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/popularity" alt="popularity"></a>
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/likes" alt="likes"></a></p>
-<p>Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support</p>
-<p>For a minimalistic example, take a look at <code>example/</code>. You can write a full-fledged contacts app with it – see <code>example_full/</code> to see how.</p>
-<h2 id="demo">Demo</h2>
-<p><img src="https://user-images.githubusercontent.com/1289004/101141809-ab165c00-35c9-11eb-90ff-b10318b13f16.gif" alt="demo"></p>
-<h2 id="features">Features</h2>
-<ul>
-<li><strong>Fetch</strong> all contacts</li>
-<li><strong>Create</strong> new contact</li>
-<li><strong>Update</strong> existing contact</li>
-<li><strong>Delete</strong> contacts</li>
-<li><strong>Observe</strong> contact database changes</li>
-<li><strong>Export</strong> to and <strong>parse</strong> from vCard format</li>
-<li>Fetch all details for a given contact, including:
-<ul>
-<li>Photo (low / high resolution)</li>
-<li>Phones</li>
-<li>Emails</li>
-<li>Company / job title</li>
-<li>Postal addresses</li>
-<li>Websites</li>
-<li>Birthday / events</li>
-<li>Instant messaging / social profiles</li>
-<li>Notes</li>
-<li>Labels (such as "main" or "work" for phones)</li>
-</ul>
-</li>
-</ul>
-<h2 id="warning-breaking-changes-in-version-020">Warning: breaking changes in version 0.2.0</h2>
-<p>Version 0.2.0 introduces breaking changes compared to version 0.1.3:</p>
-<ul>
-<li>The data model now has <code>photo</code> (high-resolution) and <code>thumbnail</code> (low-resolution) as
-separate fields instead of just one field; you can use the getter <code>photoOrThumbnail</code>
-where you previously used <code>photo</code>.</li>
-<li><code>Event.date</code> has been replaced with components <code>Event.year</code> (which can be null on both
-Android and iOS), <code>Event.month</code> and <code>Event.day</code>.</li>
-<li><code>getFullContact()</code> has been renamed <code>getContact()</code>.</li>
-<li><code>updateContact()</code>, <code>insertContact()</code> and <code>deleteContacts()</code> still exist but we
-recommend using the convenience methods <code>contact.update()</code>, <code>contact.insert()</code> and
-<code>contact.delete()</code> instead.</li>
-<li><code>updateContact()</code> now fails unless the contact has been fetched completely.</li>
-<li>What used to be called "details" is now called "properties" (phones, emails, etc), for
-example in <code>getContacts(withProperties: true)</code>.</li>
-<li><code>Contact.create()</code> is now simply <code>Contact()</code></li>
-<li><code>final deleteListener = FlutterContacts.onChange(() =&gt; print('...')); deleteListener();</code>
-is now <code>final listener = () =&gt; print('...'); FlutterContacts.addListener(listener); FlutterContacts.removeListener(listener);</code>.</li>
-</ul>
-<h2 id="usage">Usage</h2>
-<pre class="language-dart"><code class="language-dart">import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:permission_handler/permission_handler.dart';
+<p>Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support.</p>
+<p>For a minimalistic example, take a look at <a href="https://github.com/QuisApp/flutter_contacts/blob/master/example"><code>example/</code></a>. You can write a full-fledged contacts app with it – see <a href="https://github.com/QuisApp/flutter_contacts/blob/master/example_full"><code>example_full/</code></a> to see how.</p>
+<h2 id="quick-start">Quick start</h2>
+<pre class="language-dart"><code class="language-dart">// See installation notes below regarding AndroidManifest.xml and Info.plist
+import 'package:flutter_contacts/flutter_contacts.dart';
 
-if (await Permission.contacts.request().isGranted) {
-    /// Get all contacts (IDs and names only)
+// Request contact permission
+if (await FlutterContacts.requestPermission()) {
+    // Get all contacts (lightly fetched)
     List&lt;Contact&gt; contacts = await FlutterContacts.getContacts();
 
-    /// Get all fields (phones, emails, photo, job, etc) for a given contact
-    Contact contact = await FlutterContacts.getContact(contacts.first.id);
+    // Get all contacts (fully fetched)
+    List&lt;Contact&gt; contacts = await FlutterContacts.getContacts(withProperties: true, withPhoto: true);
 
-    /// Listen to contacts database changes
+    // Get contact with specific ID (fully fetched)
+    Contact contact = await FlutterContacts.getContact(contacts.first.id)
+
+    // Insert new contact
+    await Contact()
+        ..name.first = 'John'
+        ..name.last = 'Smith'
+        ..phones = [Phone('555-123-4567')]
+        ..insert();
+
+    // Update contact
+    contact.name.first = 'Bob';
+    await contact.update();
+
+    // Delete contact
+    await contact.delete();
+
+    // Listen to contact database changes
     FlutterContacts.addListener(() =&gt; print('Contact DB changed'));
 
-    /// Create contact
-    Contact newContact = Contact()
-        ..name = Name(first: 'John', last: 'Doe')
-        ..phones = [Phone('555-123-4567'), Phone('555-999-9999', label: PhoneLabel.work)];
-    await newContact.insert();
+    // Export contact to vCard
+    String vCard = contact.toVCard();
 
-    /// Update contact
-    newContact.emails.add(Email('john.doe@example.com'));
-    await newContact.update();
-
-    /// Export to vCard
-    String vCard = newContact.toVCard();
-
-    /// Import from vCard
-    Contact importedContact = Contact.fromVCard(
-        'BEGIN:VCARD\n'
+    // Import contact from vCard
+    Contact contact = Contact.fromVCard('BEGIN:VCARD\n'
         'VERSION:3.0\n'
         'N:;Joe;;;\n'
         'TEL;TYPE=HOME:123456\n'
         'END:VCARD');
-)
-
-    /// Delete contact
-    await newContact.delete();
 }
 </code></pre>
-<h2 id="data-model">Data model</h2>
-<h3 id="essential-data-model-enough-for-most-use-cases">Essential data model (enough for most use cases)</h3>
+<h2 id="simplified-contact-model">Simplified contact model</h2>
+<p>See <a href="https://github.com/QuisApp/flutter_contacts/blob/master/lib/contact.dart">code</a> for complete data model.</p>
 <pre class="language-dart"><code class="language-dart">class Contact {
     String id;
     String displayName;
-    Uint8List photo; // high-resolution
-    Uint8List thumbnail; // low-resolution
-    Name name;
-    List&lt;Phone&gt; phones;
-    List&lt;Email&gt; emails;
-    List&lt;Address&gt; addresses;
-}
-
-class Name {
-    String first;
-    String last;
-}
-
-class Phone {
-    String number;
-}
-
-class Email {
-    String address;
-}
-
-class Address {
-    String address;
-}
-</code></pre>
-<h3 id="complete-data-model-for-power-users">Complete data model (for power users)</h3>
-<pre class="language-dart"><code class="language-dart">class Contact {
-    // Always fetched
-    String id;
-    String displayName;
-
-    // Fetched when calling getContacts(withPhoto: true)
     Uint8List photo;
-
-    // Fetched when calling getContacts(withThumbnail: true)
     Uint8List thumbnail;
-
-    // Fetched when calling getContacts(withProperties: true)
     Name name;
     List&lt;Phone&gt; phones;
     List&lt;Email&gt; emails;
@@ -211,116 +134,27 @@ class Address {
     List&lt;SocialMedia&gt; socialMedias;
     List&lt;Event&gt; events;
     List&lt;Note&gt; notes;
-    List&lt;Account&gt; accounts;
 }
-
-class Name {
-    String first;
-    String last;
-    String middle;
-    String prefix;             // e.g. "Dr" in American names
-    String suffix;             // e.g. "Jr" in American names
-    String nickname;
-    String firstPhonetic;
-    String lastPhonetic;
-    String middlePhonetic;
-}
-
-class Phone {
-    String number;
-    String normalizedNumber;  // e.g. +12345678900 for +1 (234) 567-8900 (android only)
-    PhoneLabel label;         // https://cutt.ly/4hXHFq2, default PhoneLabel.mobile
-    String customLabel;       // if label == PhoneLabel.custom
-    bool isPrimary;           // phone number called by default (android only)
-}
-
-class Email {
-    String address;
-    EmailLabel label;         // https://cutt.ly/zhXHGba, default EmailLabel.home
-    String customLabel;       // if label == EmailLabel.custom
-    bool isPrimary;           // email address used by default (android only)
-}
-
-class Address {
-    String address;           // formatted address (always available)
-    AddressLabel label;       // https://cutt.ly/ShXHFm6, default AddressLabel.home
-    String customLabel;       // if label == AddressLabel.custom
-    String street;            // street name and house number
-    String pobox;             // android only
-    String neighborhood;      // android only
-    String city;
-    String state;             // US state; also region/department/county on android
-    String postalCode;
-    String country;
-    String isoCountry;        // ISO 3166-1 alpha-2 standard (iOS only)
-    String subAdminArea       // region/county (iOS only)
-    String subLocality;       // anything else (iOS only)
-}
-
-class Organization {
-    String company;           // company name
-    String title;             // job title
-    String department;        // department
-    String jobDescription;    // job description (android only)
-    String symbol;            // ticker symbol (android only)
-    String phoneticName;
-    String officeLocation;    // android only
-}
-
-class Website {
-    String url;
-    WebsiteLabel label;       // https://cutt.ly/JhXH5CF, default WebsiteLabel.homepage
-    String customLabel;       // if label == WebsiteLabel.custom
-}
-
-class SocialMedia {
-    String userName;          // handle/username/login
-    SocialMediaLabel label;   // https://cutt.ly/9hXJwFH, default SocialMediaLabel.other
-    String customLabel;       // if label == SocialMediaLabel.custom
-}
-
-class Event {
-    int year;                 // can be null
-    int month;
-    int day;
-    EventLabel label;         // https://cutt.ly/vhXJtAW, default EventLabel.birthday
-    String customLabel;       // if label == EventLabel.customLabel
-}
-
-class Note {
-    String note;              // not available on iOS13+, see https://cutt.ly/HhXJoMR
-}
-
-class Account {               // for debug purposes (android only)
-    String rawId;             // raw contact ID
-    String type;              // e.g. com.google or com.facebook.messenger
-    String name;              // e.g. john.doe@gmail.com
-    List&lt;String&gt; mimetypes;   // list of android mimetypes
-}
+class Name { String first; String last; }
+class Phone { String number; PhoneLabel label; }
+class Email { String address; EmailLabel label; }
+class Address { String address; AddressLabel label; }
+class Organization { String company; String title; }
+class Website { String url; WebsiteLabel label; }
+class SocialMedia { String userName; SocialMediaLabel label; }
+class Event { int year; int month; int day; EventLabel label; }
+class Note { String note; }
 </code></pre>
-<h3 id="default-values">Default values</h3>
-<p>Apart from <code>photo</code>, <code>thumbnail</code>, and <code>Event.year</code>, nothing can be <code>null</code>. String values
-default to <code>''</code>, boolean values to <code>false</code>, lists to <code>[]</code>, <code>DateTime</code> to Jan 1 1970,
-integers (<code>Event.month</code> and <code>Event.day</code>) to 1, and enums as indicated above.</p>
-<h3 id="androidios-availability">Android/iOS availability</h3>
-<p>Some fields are only available on iOS, others only on Android. Concretely it means that
-if, for example, you save a contact with
-<code>contact.addresses[0].subLocality = 'some place'</code> on Android, you will lose that
-information when fetching it again.</p>
-<p>Regarding labels, some are present in both (e.g. <code>PhoneLabel.mobile</code>), others only on
-one platform (e.g. <code>PhoneLabel.iPhone</code>). If you try, for example, to save a contact with
-<code>contact.phones[0].label = PhoneLabel.iPhone</code> on Android, it will instead get saved with
-<code>label = PhoneLabel.custom</code> and <code>customLabel = 'iPhone'</code>.</p>
+<h2 id="demo">Demo</h2>
+<p><img src="https://user-images.githubusercontent.com/1289004/101141809-ab165c00-35c9-11eb-90ff-b10318b13f16.gif" alt="demo"></p>
 <h2 id="installation">Installation</h2>
 <ol>
-<li>Add <code>permission_handler: ^5.1.0+2</code> (or higher) to the <code>dependencies</code> in
-<code>pubspec.yaml</code>: this is the package that allows you to request contact permissions.</li>
 <li>Add the following key/value pair to your app's <code>Info.plist</code> (for iOS):
 <pre class="language-xml"><code class="language-xml"> &lt;plist version="1.0"&gt;
  &lt;dict&gt;
      ...
      &lt;key&gt;NSContactsUsageDescription&lt;/key&gt;
-     &lt;string&gt;Reason why we need access to the contact list&lt;/string&gt;
+     &lt;string&gt;Reason we need access to the contact list&lt;/string&gt;
  &lt;/dict&gt;
  &lt;/plist&gt;
 </code></pre>
@@ -335,6 +169,22 @@ Android):
 </code></pre>
 </li>
 </ol>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>On iOS13+ you can only access notes if your app is
+<a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes">entitled by Apple</a>
+so notes are disabled by default. If you get entitlement, enable them via
+<pre class="language-dart"><code class="language-dart">FlutterContacts.config.includeNotesOnIos13AndAbove = true;
+</code></pre>
+</li>
+<li>On both iOS and Android there is a concept of <strong>raw</strong> and <strong>unified</strong> contacts. A
+single person might have two raw contacts (for example from Gmail and from iCloud) but
+will be merged into a single view called a unified contact. In a contact app you
+typically want unified contacts, so this is what's returned by default. You can get
+raw contacts instead via
+<pre class="language-dart"><code class="language-dart">FlutterContacts.config.returnUnifiedContacts = false;
+</code></pre>However, for now, raw contacts cannot be inserted, updated or deleted.</li>
+</ul>
       </section>
       
       <section class="summary">
@@ -437,7 +287,7 @@ Android):
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.1
+      0.2.2
   </span>
 
 </footer>

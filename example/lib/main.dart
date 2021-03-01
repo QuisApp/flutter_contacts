@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(FlutterContactsExample());
 
@@ -20,7 +19,7 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
   }
 
   Future _fetchContacts() async {
-    if (!await Permission.contacts.request().isGranted) {
+    if (!await FlutterContacts.requestPermission()) {
       setState(() => _permissionDenied = true);
     } else {
       final contacts = await FlutterContacts.getContacts();

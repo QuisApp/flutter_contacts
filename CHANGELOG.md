@@ -1,3 +1,9 @@
+## 0.2.2
+
+* Support for requesting permissions
+* Option to return non-visible contacts on Android and raw contacts on Android/iOS
+  (https://github.com/QuisApp/flutter_contacts/issues/5)
+
 ## 0.2.1
 
 * Format

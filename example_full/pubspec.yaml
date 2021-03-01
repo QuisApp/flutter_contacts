@@ -11,15 +11,11 @@ dependencies:
   after_layout: ^1.0.7+2
   flutter_contacts:
     path: ../
-  flutter_form_builder: ^4.2.0
   image_picker: ^0.6.7+22
-  permission_handler: ^5.1.0+2
   pretty_json: ^1.1.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  json_serializable: ^3.5.1
+  pedantic: ^1.9.2
 
 flutter:
   uses-material-design: true
