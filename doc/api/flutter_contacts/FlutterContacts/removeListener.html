@@ -89,7 +89,8 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-method">removeListener</span> method </h1></div>
+      <div><h1><span class="kind-method">removeListener</span> method     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       <span class="returntype">void</span>
@@ -112,7 +113,7 @@ database.</p>
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">static void removeListener(void Function() listener) {
   if (_eventSubscription != null) {
-    _eventSubscription.cancel();
+    _eventSubscription!.cancel();
   }
   _eventSubscribers.remove(listener);
   if (_eventSubscribers.isEmpty) {
@@ -135,7 +136,7 @@ database.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

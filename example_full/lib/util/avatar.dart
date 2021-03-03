@@ -3,9 +3,9 @@ import 'package:flutter_contacts/contact.dart';
 
 Widget avatar(Contact contact,
     [double radius = 48.0, IconData defaultIcon = Icons.person]) {
-  if (contact.photo != null) {
+  if (contact.photoOrThumbnail != null) {
     return CircleAvatar(
-      backgroundImage: MemoryImage(contact.photo),
+      backgroundImage: MemoryImage(contact.photoOrThumbnail),
       radius: radius,
     );
   }

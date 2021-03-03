@@ -9,7 +9,7 @@ class FlutterContactsExample extends StatefulWidget {
 }
 
 class _FlutterContactsExampleState extends State<FlutterContactsExample> {
-  List<Contact> _contacts;
+  List<Contact>? _contacts;
   bool _permissionDenied = false;
 
   @override
@@ -37,14 +37,14 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
     if (_permissionDenied) return Center(child: Text('Permission denied'));
     if (_contacts == null) return Center(child: CircularProgressIndicator());
     return ListView.builder(
-        itemCount: _contacts.length,
+        itemCount: _contacts!.length,
         itemBuilder: (context, i) => ListTile(
-            title: Text(_contacts[i].displayName),
+            title: Text(_contacts![i].displayName),
             onTap: () async {
               final fullContact =
-                  await FlutterContacts.getContact(_contacts[i].id);
+                  await FlutterContacts.getContact(_contacts![i].id);
               await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => ContactPage(fullContact)));
+                  MaterialPageRoute(builder: (_) => ContactPage(fullContact!)));
             }));
   }
 }

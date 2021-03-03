@@ -85,7 +85,8 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-method">operator ==</span> method </h1></div>
+      <div><h1><span class="kind-method">operator ==</span> method     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       <div>
@@ -102,14 +103,13 @@
     <section class="desc markdown">
       <p>The equality operator.</p>
 <p>The default behavior for all <a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a>s is to return true if and
-only if <code>this</code> and <code>other</code> are the same object.</p>
+only if this object and <code>other</code> are the same object.</p>
 <p>Override this method to specify a different equality relation on
 a class. The overriding method must still be an equivalence relation.
 That is, it must be:</p>
 <ul>
 <li>
-<p>Total: It must return a boolean for all arguments. It should never throw
-or return <code>null</code>.</p>
+<p>Total: It must return a boolean for all arguments. It should never throw.</p>
 </li>
 <li>
 <p>Reflexive: For all objects <code>o</code>, <code>o == o</code> must be true.</p>
@@ -126,7 +126,7 @@ either both be true, or both be false.</p>
 <p>The method should also be consistent over time,
 so whether two objects are equal should only change
 if at least one of the objects was modified.</p>
-<p>If a subclass overrides the equality operator it should override
+<p>If a subclass overrides the equality operator, it should override
 the <a href="../../properties_event/Event/hashCode.html">hashCode</a> method as well to maintain consistency.</p>
     </section>
     
@@ -152,7 +152,7 @@ bool operator ==(Object o) =&gt;
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

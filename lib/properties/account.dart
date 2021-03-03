@@ -26,10 +26,10 @@ class Account {
   Account(this.rawId, this.type, this.name, this.mimetypes);
 
   factory Account.fromJson(Map<String, dynamic> json) => Account(
-        (json['rawId'] as String) ?? '',
-        (json['type'] as String) ?? '',
-        (json['name'] as String) ?? '',
-        (json['mimetypes'] as List)?.map((e) => e as String)?.toList() ?? [],
+        (json['rawId'] as String?) ?? '',
+        (json['type'] as String?) ?? '',
+        (json['name'] as String?) ?? '',
+        (json['mimetypes'] as List?)?.map((e) => e as String).toList() ?? [],
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{

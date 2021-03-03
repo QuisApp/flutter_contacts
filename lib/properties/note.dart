@@ -14,7 +14,7 @@ class Note {
   Note(this.note);
 
   factory Note.fromJson(Map<String, dynamic> json) =>
-      Note((json['note'] as String) ?? '');
+      Note((json['note'] as String?) ?? '');
 
   Map<String, dynamic> toJson() => <String, dynamic>{'note': note};
 

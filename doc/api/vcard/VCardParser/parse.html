@@ -81,7 +81,8 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-method">parse</span> method </h1></div>
+      <div><h1><span class="kind-method">parse</span> method     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       <span class="returntype">void</span>
@@ -269,7 +270,7 @@
         }
         final serviceTypes = params.where((p) =&gt; p.key == &#39;X-SERVICE-TYPE&#39;);
         final protocol = decode(serviceTypes.isNotEmpty
-            ? serviceTypes.first.value
+            ? serviceTypes.first.value!
             : contentParts[0]);
         &#47;&#47; ICQ gets duplicated into an ICQ and an AIM line due to a bug:
         &#47;&#47; https:&#47;&#47;discussions.apple.com&#47;thread&#47;2769242
@@ -292,7 +293,7 @@
         var protocol = &#39;&#39;;
         for (final param in params) {
           if (param.key == &#39;TYPE&#39;) {
-            protocol = decode(param.value);
+            protocol = decode(param.value!);
           }
         }
         if (params.any((p) =&gt; p.key == &#39;X-USER&#39; &amp;&amp; p.value == &#39;TENCENT&#39;)) {
@@ -428,7 +429,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

@@ -29,12 +29,12 @@ class Phone {
   });
 
   factory Phone.fromJson(Map<String, dynamic> json) => Phone(
-        (json['number'] as String) ?? '',
-        normalizedNumber: (json['normalizedNumber'] as String) ?? '',
-        label:
-            _stringToPhoneLabel[json['label'] as String] ?? PhoneLabel.mobile,
-        customLabel: (json['customLabel'] as String) ?? '',
-        isPrimary: (json['isPrimary'] as bool) ?? false,
+        (json['number'] as String?) ?? '',
+        normalizedNumber: (json['normalizedNumber'] as String?) ?? '',
+        label: _stringToPhoneLabel[json['label'] as String? ?? ''] ??
+            PhoneLabel.mobile,
+        customLabel: (json['customLabel'] as String?) ?? '',
+        isPrimary: (json['isPrimary'] as bool?) ?? false,
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{

@@ -5,9 +5,8 @@ import 'package:flutter_contacts/vcard.dart';
 /// Android and iOS define a few special account types (some of them defunct)
 /// like AIM, MSN, Jabber, Netmeeting.
 ///
-/// iOS distinguishes between instant messaging and social media but doesn't
-/// define any special account types. The default app does list a few, marked
-/// with *️⃣ in the list below.
+/// iOS distinguishes between instant messaging and social media, but both map
+/// to [SocialMedia].
 ///
 /// We add a few special values of our own, like Instagram, Twitter, TikTok,
 /// Discord, etc. Source: https://buffer.com/library/social-media-sites/
@@ -25,10 +24,10 @@ class SocialMedia {
       {this.label = SocialMediaLabel.other, this.customLabel = ''});
 
   factory SocialMedia.fromJson(Map<String, dynamic> json) => SocialMedia(
-        (json['userName'] as String) ?? '',
-        label: _stringToSocialMediaLabel[json['label'] as String] ??
+        (json['userName'] as String?) ?? '',
+        label: _stringToSocialMediaLabel[json['label'] as String? ?? ''] ??
             SocialMediaLabel.other,
-        customLabel: (json['customLabel'] as String) ?? '',
+        customLabel: (json['customLabel'] as String?) ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -56,7 +55,7 @@ class SocialMedia {
     // IMPP (V4): https://tools.ietf.org/html/rfc6350#section-6.4.3
     final protocol = label == SocialMediaLabel.custom
         ? customLabel
-        : _socialMediaLabelToString[label];
+        : _socialMediaLabelToString[label]!;
     return ['IMPP:${vCardEncode(protocol)}:${vCardEncode(userName)}'];
   }
 }

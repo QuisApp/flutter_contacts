@@ -85,7 +85,8 @@
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-constructor">Event.fromJson</span> constructor </h1></div>
+      <div><h1><span class="kind-constructor">Event.fromJson</span> constructor     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       
@@ -97,12 +98,12 @@
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">factory Event.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Event(
-      year: json[&#39;year&#39;] as int,
+      year: json[&#39;year&#39;] as int?,
       month: json[&#39;month&#39;] as int,
       day: json[&#39;day&#39;] as int,
-      label:
-          _stringToEventLabel[json[&#39;label&#39;] as String] ?? EventLabel.birthday,
-      customLabel: (json[&#39;customLabel&#39;] as String) ?? &#39;&#39;,
+      label: _stringToEventLabel[json[&#39;label&#39;] as String? ?? &#39;&#39;] ??
+          EventLabel.birthday,
+      customLabel: (json[&#39;customLabel&#39;] as String?) ?? &#39;&#39;,
     );</code></pre>
     </section>
 
@@ -116,7 +117,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

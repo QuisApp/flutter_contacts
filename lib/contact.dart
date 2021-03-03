@@ -79,13 +79,13 @@ class Contact {
   String displayName;
 
   /// A low-resolution version of the [photo].
-  Uint8List thumbnail;
+  Uint8List? thumbnail;
 
   /// The full-resolution contact picture.
-  Uint8List photo;
+  Uint8List? photo;
 
   /// Returns the full-resolution photo if available, the thumbnail otherwise.
-  Uint8List get photoOrThumbnail => photo ?? thumbnail;
+  Uint8List? get photoOrThumbnail => photo ?? thumbnail;
 
   /// Structured name.
   Name name;
@@ -134,16 +134,16 @@ class Contact {
     this.displayName = '',
     this.thumbnail,
     this.photo,
-    Name name,
-    List<Phone> phones,
-    List<Email> emails,
-    List<Address> addresses,
-    List<Organization> organizations,
-    List<Website> websites,
-    List<SocialMedia> socialMedias,
-    List<Event> events,
-    List<Note> notes,
-    List<Account> accounts,
+    Name? name,
+    List<Phone>? phones,
+    List<Email>? emails,
+    List<Address>? addresses,
+    List<Organization>? organizations,
+    List<Website>? websites,
+    List<SocialMedia>? socialMedias,
+    List<Event>? events,
+    List<Note>? notes,
+    List<Account>? accounts,
   })  : name = name ?? Name(),
         phones = phones ?? <Phone>[],
         emails = emails ?? <Email>[],
@@ -156,36 +156,36 @@ class Contact {
         accounts = accounts ?? <Account>[];
 
   factory Contact.fromJson(Map<String, dynamic> json) => Contact(
-        id: json['id'] as String,
-        displayName: json['displayName'] as String,
-        thumbnail: json['thumbnail'] as Uint8List,
-        photo: json['photo'] as Uint8List,
+        id: (json['id'] as String?) ?? '',
+        displayName: (json['displayName'] as String?) ?? '',
+        thumbnail: json['thumbnail'] as Uint8List?,
+        photo: json['photo'] as Uint8List?,
         name: Name.fromJson(Map<String, dynamic>.from(json['name'] ?? {})),
-        phones: ((json['phones'] as List) ?? [])
+        phones: ((json['phones'] as List?) ?? [])
             .map((x) => Phone.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
-        emails: ((json['emails'] as List) ?? [])
+        emails: ((json['emails'] as List?) ?? [])
             .map((x) => Email.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
-        addresses: ((json['addresses'] as List) ?? [])
+        addresses: ((json['addresses'] as List?) ?? [])
             .map((x) => Address.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
-        organizations: ((json['organizations'] as List) ?? [])
+        organizations: ((json['organizations'] as List?) ?? [])
             .map((x) => Organization.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
-        websites: ((json['websites'] as List) ?? [])
+        websites: ((json['websites'] as List?) ?? [])
             .map((x) => Website.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
-        socialMedias: ((json['socialMedias'] as List) ?? [])
+        socialMedias: ((json['socialMedias'] as List?) ?? [])
             .map((x) => SocialMedia.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
-        events: ((json['events'] as List) ?? [])
+        events: ((json['events'] as List?) ?? [])
             .map((x) => Event.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
-        notes: ((json['notes'] as List) ?? [])
+        notes: ((json['notes'] as List?) ?? [])
             .map((x) => Note.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
-        accounts: ((json['accounts'] as List) ?? [])
+        accounts: ((json['accounts'] as List?) ?? [])
             .map((x) => Account.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
       );
@@ -274,7 +274,7 @@ class Contact {
   /// "-//Apple Inc.//Mac OS X 10.15.7//EN"
   String toVCard({
     bool withPhoto = true,
-    String productId,
+    String? productId,
     bool includeDate = false,
   }) {
     // BEGIN (V3): https://tools.ietf.org/html/rfc2426#section-2.1.1
@@ -306,7 +306,7 @@ class Contact {
       lines.add('FN:${vCardEncode(displayName)}');
     }
     if (withPhoto && photoOrThumbnail != null) {
-      final encoding = vCardEncode(base64.encode(photoOrThumbnail));
+      final encoding = vCardEncode(base64.encode(photoOrThumbnail!));
       final prefix =
           v4 ? 'PHOTO:data:image/jpeg;base64,' : 'PHOTO;ENCODING=b;TYPE=JPEG:';
       // 63 chars on each line.
@@ -363,7 +363,7 @@ class Contact {
   }
 
   static List<T> _depuplicateProperty<T>(List<T> list,
-      [int Function(T) hashFn]) {
+      [int Function(T)? hashFn]) {
     hashFn ??= (T x) => x.hashCode;
     var deduplicated = <T>[];
     var seen = Set<int>();

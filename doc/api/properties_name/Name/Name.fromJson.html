@@ -89,7 +89,8 @@
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-constructor">Name.fromJson</span> constructor </h1></div>
+      <div><h1><span class="kind-constructor">Name.fromJson</span> constructor     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       
@@ -101,15 +102,15 @@
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">factory Name.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Name(
-      first: (json[&#39;first&#39;] as String) ?? &#39;&#39;,
-      last: (json[&#39;last&#39;] as String) ?? &#39;&#39;,
-      middle: (json[&#39;middle&#39;] as String) ?? &#39;&#39;,
-      prefix: (json[&#39;prefix&#39;] as String) ?? &#39;&#39;,
-      suffix: (json[&#39;suffix&#39;] as String) ?? &#39;&#39;,
-      nickname: (json[&#39;nickname&#39;] as String) ?? &#39;&#39;,
-      firstPhonetic: (json[&#39;firstPhonetic&#39;] as String) ?? &#39;&#39;,
-      lastPhonetic: (json[&#39;lastPhonetic&#39;] as String) ?? &#39;&#39;,
-      middlePhonetic: (json[&#39;middlePhonetic&#39;] as String) ?? &#39;&#39;,
+      first: (json[&#39;first&#39;] as String?) ?? &#39;&#39;,
+      last: (json[&#39;last&#39;] as String?) ?? &#39;&#39;,
+      middle: (json[&#39;middle&#39;] as String?) ?? &#39;&#39;,
+      prefix: (json[&#39;prefix&#39;] as String?) ?? &#39;&#39;,
+      suffix: (json[&#39;suffix&#39;] as String?) ?? &#39;&#39;,
+      nickname: (json[&#39;nickname&#39;] as String?) ?? &#39;&#39;,
+      firstPhonetic: (json[&#39;firstPhonetic&#39;] as String?) ?? &#39;&#39;,
+      lastPhonetic: (json[&#39;lastPhonetic&#39;] as String?) ?? &#39;&#39;,
+      middlePhonetic: (json[&#39;middlePhonetic&#39;] as String?) ?? &#39;&#39;,
     );</code></pre>
     </section>
 
@@ -123,7 +124,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

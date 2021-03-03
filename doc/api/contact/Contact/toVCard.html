@@ -104,13 +104,14 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-method">toVCard</span> method </h1></div>
+      <div><h1><span class="kind-method">toVCard</span> method     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
             <span class="name ">toVCard</span>
 (<wbr><ol class="parameter-list"><li><span class="parameter" id="toVCard-param-withPhoto">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">true</span>, </span></li>
-<li><span class="parameter" id="toVCard-param-productId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">productId</span>, </span></li>
+<li><span class="parameter" id="toVCard-param-productId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">productId</span>, </span></li>
 <li><span class="parameter" id="toVCard-param-includeDate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">includeDate</span>: <span class="default-value">false</span>}</span></li>
 </ol>)
       
@@ -130,7 +131,7 @@ vCard format v4 (<a href="https://tools.ietf.org/html/rfc6350">https://tools.iet
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">String toVCard({
   bool withPhoto = true,
-  String productId,
+  String? productId,
   bool includeDate = false,
 }) {
   &#47;&#47; BEGIN (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-2.1.1
@@ -162,7 +163,7 @@ vCard format v4 (<a href="https://tools.ietf.org/html/rfc6350">https://tools.iet
     lines.add(&#39;FN:${vCardEncode(displayName)}&#39;);
   }
   if (withPhoto &amp;&amp; photoOrThumbnail != null) {
-    final encoding = vCardEncode(base64.encode(photoOrThumbnail));
+    final encoding = vCardEncode(base64.encode(photoOrThumbnail!));
     final prefix =
         v4 ? &#39;PHOTO:data:image&#47;jpeg;base64,&#39; : &#39;PHOTO;ENCODING=b;TYPE=JPEG:&#39;;
     &#47;&#47; 63 chars on each line.
@@ -203,7 +204,7 @@ vCard format v4 (<a href="https://tools.ietf.org/html/rfc6350">https://tools.iet
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

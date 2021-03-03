@@ -79,19 +79,20 @@ class Address {
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-        (json['address'] as String) ?? '',
-        label: _stringToAddressLabel[json['label'] as String] ?? '',
-        customLabel: (json['customLabel'] as String) ?? '',
-        street: (json['street'] as String) ?? '',
-        pobox: (json['pobox'] as String) ?? '',
-        neighborhood: (json['neighborhood'] as String) ?? '',
-        city: (json['city'] as String) ?? '',
-        state: (json['state'] as String) ?? '',
-        postalCode: (json['postalCode'] as String) ?? '',
-        country: (json['country'] as String) ?? '',
-        isoCountry: (json['isoCountry'] as String) ?? '',
-        subAdminArea: (json['subAdminArea'] as String) ?? '',
-        subLocality: (json['subLocality'] as String) ?? '',
+        (json['address'] as String?) ?? '',
+        label: _stringToAddressLabel[json['label'] as String? ?? ''] ??
+            '' as AddressLabel,
+        customLabel: (json['customLabel'] as String?) ?? '',
+        street: (json['street'] as String?) ?? '',
+        pobox: (json['pobox'] as String?) ?? '',
+        neighborhood: (json['neighborhood'] as String?) ?? '',
+        city: (json['city'] as String?) ?? '',
+        state: (json['state'] as String?) ?? '',
+        postalCode: (json['postalCode'] as String?) ?? '',
+        country: (json['country'] as String?) ?? '',
+        isoCountry: (json['isoCountry'] as String?) ?? '',
+        subAdminArea: (json['subAdminArea'] as String?) ?? '',
+        subLocality: (json['subLocality'] as String?) ?? '',
       );
   Map<String, dynamic> toJson() => <String, dynamic>{
         'address': address,

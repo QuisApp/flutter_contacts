@@ -6,56 +6,58 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('android default contact app', () {
-    final vcfFile = File('testdata/vcards/android-default-contact-app.vcf');
-    final jsonFile = File('testdata/vcards/android-default-contact-app.json');
+    final vcfFile =
+        File('test/testdata/vcards/android-default-contact-app.vcf');
+    final jsonFile =
+        File('test/testdata/vcards/android-default-contact-app.json');
     final actual = Contact.fromVCard(vcfFile.readAsStringSync()).toJson();
     final expected = json.decode(jsonFile.readAsStringSync());
     expect(actual, expected);
   });
 
   test('ios', () {
-    final vcfFile = File('testdata/vcards/ios.vcf');
-    final jsonFile = File('testdata/vcards/ios.json');
+    final vcfFile = File('test/testdata/vcards/ios.vcf');
+    final jsonFile = File('test/testdata/vcards/ios.json');
     final actual = Contact.fromVCard(vcfFile.readAsStringSync()).toJson();
     final expected = json.decode(jsonFile.readAsStringSync());
     expect(actual, expected);
   });
 
   test('mac os', () {
-    final vcfFile = File('testdata/vcards/macos.vcf');
-    final jsonFile = File('testdata/vcards/macos.json');
+    final vcfFile = File('test/testdata/vcards/macos.vcf');
+    final jsonFile = File('test/testdata/vcards/macos.json');
     final actual = Contact.fromVCard(vcfFile.readAsStringSync()).toJson();
     final expected = json.decode(jsonFile.readAsStringSync());
     expect(actual, expected);
   });
 
   test('whatsapp', () {
-    final vcfFile = File('testdata/vcards/whatsapp.vcf');
-    final jsonFile = File('testdata/vcards/whatsapp.json');
+    final vcfFile = File('test/testdata/vcards/whatsapp.vcf');
+    final jsonFile = File('test/testdata/vcards/whatsapp.json');
     final actual = Contact.fromVCard(vcfFile.readAsStringSync()).toJson();
     final expected = json.decode(jsonFile.readAsStringSync());
     expect(actual, expected);
   });
 
   test('https://vcardmaker.com/', () {
-    final vcfFile = File('testdata/vcards/vcardmaker.com.vcf');
-    final jsonFile = File('testdata/vcards/vcardmaker.com.json');
+    final vcfFile = File('test/testdata/vcards/vcardmaker.com.vcf');
+    final jsonFile = File('test/testdata/vcards/vcardmaker.com.json');
     final actual = Contact.fromVCard(vcfFile.readAsStringSync()).toJson();
     final expected = json.decode(jsonFile.readAsStringSync());
     expect(actual, expected);
   });
 
   test('https://bvcard.com/', () {
-    final vcfFile = File('testdata/vcards/bvcard.com.vcf');
-    final jsonFile = File('testdata/vcards/bvcard.com.json');
+    final vcfFile = File('test/testdata/vcards/bvcard.com.vcf');
+    final jsonFile = File('test/testdata/vcards/bvcard.com.json');
     final actual = Contact.fromVCard(vcfFile.readAsStringSync()).toJson();
     final expected = json.decode(jsonFile.readAsStringSync());
     expect(actual, expected);
   });
 
   test('https://app.qr-code-generator.com/', () {
-    final vcfFile = File('testdata/vcards/qr-code-generator.com.vcf');
-    final jsonFile = File('testdata/vcards/qr-code-generator.com.json');
+    final vcfFile = File('test/testdata/vcards/qr-code-generator.com.vcf');
+    final jsonFile = File('test/testdata/vcards/qr-code-generator.com.json');
     final actual = Contact.fromVCard(vcfFile.readAsStringSync()).toJson();
     final expected = json.decode(jsonFile.readAsStringSync());
     expect(actual, expected);

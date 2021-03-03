@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Migrated to null-safety
+
 ## 0.2.2
 
 * Support for requesting permissions

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diacritic/diacritic.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/contact.dart';
+import 'package:flutter_contacts/diacritics.dart';
 
 export 'contact.dart';
 export 'properties/account.dart';
@@ -22,7 +22,7 @@ class FlutterContacts {
   static const _channel = MethodChannel('github.com/QuisApp/flutter_contacts');
   static const _eventChannel =
       EventChannel('github.com/QuisApp/flutter_contacts/events');
-  static StreamSubscription _eventSubscription;
+  static StreamSubscription? _eventSubscription;
   static final _eventSubscribers = <void Function()>[];
   static final _alpha = RegExp(r'\p{Letter}', unicode: true);
   static final _numeric = RegExp(r'\p{Number}', unicode: true);
@@ -32,9 +32,8 @@ class FlutterContacts {
 
   /// Requests permission to read/write contacts. Returns true if granted, false
   /// in any other case.
-  static Future<bool> requestPermission() async {
-    return await _channel.invokeMethod('requestPermission');
-  }
+  static Future<bool> requestPermission() async =>
+      await _channel.invokeMethod('requestPermission') ?? false;
 
   /// Fetches all contacts.
   ///
@@ -80,7 +79,7 @@ class FlutterContacts {
   /// If [deduplicateProperties] is true, the properties will be de-duplicated,
   /// mainly to avoid the case (common on Android) where multiple equivalent
   /// phones are returned.
-  static Future<Contact> getContact(
+  static Future<Contact?> getContact(
     String id, {
     bool withProperties = true,
     bool withThumbnail = true,
@@ -179,7 +178,7 @@ class FlutterContacts {
   /// database.
   static void addListener(void Function() listener) {
     if (_eventSubscription != null) {
-      _eventSubscription.cancel();
+      _eventSubscription!.cancel();
     }
     _eventSubscribers.add(listener);
     final runAllListeners = (event) => _eventSubscribers.forEach((f) => f());
@@ -196,7 +195,7 @@ class FlutterContacts {
   /// database.
   static void removeListener(void Function() listener) {
     if (_eventSubscription != null) {
-      _eventSubscription.cancel();
+      _eventSubscription!.cancel();
     }
     _eventSubscribers.remove(listener);
     if (_eventSubscribers.isEmpty) {
@@ -209,7 +208,7 @@ class FlutterContacts {
   }
 
   static Future<List<Contact>> _select({
-    String id,
+    String? id,
     bool withProperties = false,
     bool withThumbnail = false,
     bool withPhoto = false,

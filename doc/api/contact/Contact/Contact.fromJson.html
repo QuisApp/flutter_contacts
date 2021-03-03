@@ -104,7 +104,8 @@
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-constructor">Contact.fromJson</span> constructor </h1></div>
+      <div><h1><span class="kind-constructor">Contact.fromJson</span> constructor     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       
@@ -116,36 +117,36 @@
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">factory Contact.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Contact(
-      id: json[&#39;id&#39;] as String,
-      displayName: json[&#39;displayName&#39;] as String,
-      thumbnail: json[&#39;thumbnail&#39;] as Uint8List,
-      photo: json[&#39;photo&#39;] as Uint8List,
+      id: (json[&#39;id&#39;] as String?) ?? &#39;&#39;,
+      displayName: (json[&#39;displayName&#39;] as String?) ?? &#39;&#39;,
+      thumbnail: json[&#39;thumbnail&#39;] as Uint8List?,
+      photo: json[&#39;photo&#39;] as Uint8List?,
       name: Name.fromJson(Map&lt;String, dynamic&gt;.from(json[&#39;name&#39;] ?? {})),
-      phones: ((json[&#39;phones&#39;] as List) ?? [])
+      phones: ((json[&#39;phones&#39;] as List?) ?? [])
           .map((x) =&gt; Phone.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
-      emails: ((json[&#39;emails&#39;] as List) ?? [])
+      emails: ((json[&#39;emails&#39;] as List?) ?? [])
           .map((x) =&gt; Email.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
-      addresses: ((json[&#39;addresses&#39;] as List) ?? [])
+      addresses: ((json[&#39;addresses&#39;] as List?) ?? [])
           .map((x) =&gt; Address.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
-      organizations: ((json[&#39;organizations&#39;] as List) ?? [])
+      organizations: ((json[&#39;organizations&#39;] as List?) ?? [])
           .map((x) =&gt; Organization.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
-      websites: ((json[&#39;websites&#39;] as List) ?? [])
+      websites: ((json[&#39;websites&#39;] as List?) ?? [])
           .map((x) =&gt; Website.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
-      socialMedias: ((json[&#39;socialMedias&#39;] as List) ?? [])
+      socialMedias: ((json[&#39;socialMedias&#39;] as List?) ?? [])
           .map((x) =&gt; SocialMedia.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
-      events: ((json[&#39;events&#39;] as List) ?? [])
+      events: ((json[&#39;events&#39;] as List?) ?? [])
           .map((x) =&gt; Event.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
-      notes: ((json[&#39;notes&#39;] as List) ?? [])
+      notes: ((json[&#39;notes&#39;] as List?) ?? [])
           .map((x) =&gt; Note.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
-      accounts: ((json[&#39;accounts&#39;] as List) ?? [])
+      accounts: ((json[&#39;accounts&#39;] as List?) ?? [])
           .map((x) =&gt; Account.fromJson(Map&lt;String, dynamic&gt;.from(x)))
           .toList(),
     );</code></pre>
@@ -161,7 +162,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

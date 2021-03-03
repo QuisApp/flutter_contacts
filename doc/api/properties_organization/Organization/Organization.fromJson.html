@@ -87,7 +87,8 @@
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-constructor">Organization.fromJson</span> constructor </h1></div>
+      <div><h1><span class="kind-constructor">Organization.fromJson</span> constructor     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       
@@ -99,13 +100,13 @@
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">factory Organization.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Organization(
-      company: (json[&#39;company&#39;] as String) ?? &#39;&#39;,
-      title: (json[&#39;title&#39;] as String) ?? &#39;&#39;,
-      department: (json[&#39;department&#39;] as String) ?? &#39;&#39;,
-      jobDescription: (json[&#39;jobDescription&#39;] as String) ?? &#39;&#39;,
-      symbol: (json[&#39;symbol&#39;] as String) ?? &#39;&#39;,
-      phoneticName: (json[&#39;phoneticName&#39;] as String) ?? &#39;&#39;,
-      officeLocation: (json[&#39;officeLocation&#39;] as String) ?? &#39;&#39;,
+      company: (json[&#39;company&#39;] as String?) ?? &#39;&#39;,
+      title: (json[&#39;title&#39;] as String?) ?? &#39;&#39;,
+      department: (json[&#39;department&#39;] as String?) ?? &#39;&#39;,
+      jobDescription: (json[&#39;jobDescription&#39;] as String?) ?? &#39;&#39;,
+      symbol: (json[&#39;symbol&#39;] as String?) ?? &#39;&#39;,
+      phoneticName: (json[&#39;phoneticName&#39;] as String?) ?? &#39;&#39;,
+      officeLocation: (json[&#39;officeLocation&#39;] as String?) ?? &#39;&#39;,
     );</code></pre>
     </section>
 
@@ -119,7 +120,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

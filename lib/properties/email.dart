@@ -25,10 +25,11 @@ class Email {
   });
 
   factory Email.fromJson(Map<String, dynamic> json) => Email(
-        (json['address'] as String) ?? '',
-        label: _stringToEmailLabel[json['label'] as String] ?? EmailLabel.home,
-        customLabel: (json['customLabel'] as String) ?? '',
-        isPrimary: (json['isPrimary'] as bool) ?? false,
+        (json['address'] as String?) ?? '',
+        label: _stringToEmailLabel[json['label'] as String? ?? ''] ??
+            EmailLabel.home,
+        customLabel: (json['customLabel'] as String?) ?? '',
+        isPrimary: (json['isPrimary'] as bool?) ?? false,
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{

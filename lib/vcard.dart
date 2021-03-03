@@ -20,7 +20,7 @@ final _noYearDateNoDashRegexp =
 
 class Param {
   final String key;
-  final String value;
+  final String? value;
 
   Param(this.key, this.value);
 
@@ -224,7 +224,7 @@ class VCardParser {
           }
           final serviceTypes = params.where((p) => p.key == 'X-SERVICE-TYPE');
           final protocol = decode(serviceTypes.isNotEmpty
-              ? serviceTypes.first.value
+              ? serviceTypes.first.value!
               : contentParts[0]);
           // ICQ gets duplicated into an ICQ and an AIM line due to a bug:
           // https://discussions.apple.com/thread/2769242
@@ -247,7 +247,7 @@ class VCardParser {
           var protocol = '';
           for (final param in params) {
             if (param.key == 'TYPE') {
-              protocol = decode(param.value);
+              protocol = decode(param.value!);
             }
           }
           if (params.any((p) => p.key == 'X-USER' && p.value == 'TENCENT')) {
@@ -582,10 +582,11 @@ void _parseLabel<T>(
   } else {
     for (final param in params) {
       if (param.key == 'TYPE') {
-        final types = (param.value.startsWith('"') && param.value.endsWith('"')
-                ? param.value.substring(1, param.value.length - 1)
-                : param.value)
-            .split(',');
+        final types =
+            (param.value!.startsWith('"') && param.value!.endsWith('"')
+                    ? param.value!.substring(1, param.value!.length - 1)
+                    : param.value)!
+                .split(',');
         for (final type in types) {
           parseFunction(type, property, false);
         }

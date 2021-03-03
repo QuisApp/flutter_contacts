@@ -83,7 +83,8 @@
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-constructor">Website.fromJson</span> constructor </h1></div>
+      <div><h1><span class="kind-constructor">Website.fromJson</span> constructor     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       
@@ -95,10 +96,10 @@
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">factory Website.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Website(
-      (json[&#39;url&#39;] as String) ?? &#39;&#39;,
-      label: _stringToWebsiteLabel[json[&#39;label&#39;] as String] ??
+      (json[&#39;url&#39;] as String?) ?? &#39;&#39;,
+      label: _stringToWebsiteLabel[json[&#39;label&#39;] as String? ?? &#39;&#39;] ??
           WebsiteLabel.homepage,
-      customLabel: (json[&#39;customLabel&#39;] as String) ?? &#39;&#39;,
+      customLabel: (json[&#39;customLabel&#39;] as String?) ?? &#39;&#39;,
     );</code></pre>
     </section>
 
@@ -112,7 +113,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

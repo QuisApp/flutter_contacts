@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
@@ -7,7 +6,7 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 /// Android allows multiple birthdays per contact, while iOS supports only one.
 class Event {
   /// Event year (can be null).
-  int year;
+  int? year;
 
   /// Event month (1-12).
   int month;
@@ -23,20 +22,19 @@ class Event {
 
   Event({
     this.year,
-    @required this.month,
-    @required this.day,
+    required this.month,
+    required this.day,
     this.label = EventLabel.birthday,
     this.customLabel = '',
-  })  : assert(month != null),
-        assert(day != null);
+  });
 
   factory Event.fromJson(Map<String, dynamic> json) => Event(
-        year: json['year'] as int,
+        year: json['year'] as int?,
         month: json['month'] as int,
         day: json['day'] as int,
-        label:
-            _stringToEventLabel[json['label'] as String] ?? EventLabel.birthday,
-        customLabel: (json['customLabel'] as String) ?? '',
+        label: _stringToEventLabel[json['label'] as String? ?? ''] ??
+            EventLabel.birthday,
+        customLabel: (json['customLabel'] as String?) ?? '',
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{

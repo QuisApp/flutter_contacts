@@ -89,7 +89,8 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-method">requestPermission</span> method </h1></div>
+      <div><h1><span class="kind-method">requestPermission</span> method     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
@@ -104,9 +105,8 @@ in any other case.</p>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">static Future&lt;bool&gt; requestPermission() async {
-  return await _channel.invokeMethod(&#39;requestPermission&#39;);
-}</code></pre>
+      <pre class="language-dart"><code class="language-dart">static Future&lt;bool&gt; requestPermission() async =&gt;
+    await _channel.invokeMethod(&#39;requestPermission&#39;) ?? false;</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -119,7 +119,7 @@ in any other case.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

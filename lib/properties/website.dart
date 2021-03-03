@@ -15,10 +15,10 @@ class Website {
       {this.label = WebsiteLabel.homepage, this.customLabel = ''});
 
   factory Website.fromJson(Map<String, dynamic> json) => Website(
-        (json['url'] as String) ?? '',
-        label: _stringToWebsiteLabel[json['label'] as String] ??
+        (json['url'] as String?) ?? '',
+        label: _stringToWebsiteLabel[json['label'] as String? ?? ''] ??
             WebsiteLabel.homepage,
-        customLabel: (json['customLabel'] as String) ?? '',
+        customLabel: (json['customLabel'] as String?) ?? '',
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{

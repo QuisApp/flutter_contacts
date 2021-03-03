@@ -34,13 +34,13 @@ class Organization {
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) => Organization(
-        company: (json['company'] as String) ?? '',
-        title: (json['title'] as String) ?? '',
-        department: (json['department'] as String) ?? '',
-        jobDescription: (json['jobDescription'] as String) ?? '',
-        symbol: (json['symbol'] as String) ?? '',
-        phoneticName: (json['phoneticName'] as String) ?? '',
-        officeLocation: (json['officeLocation'] as String) ?? '',
+        company: (json['company'] as String?) ?? '',
+        title: (json['title'] as String?) ?? '',
+        department: (json['department'] as String?) ?? '',
+        jobDescription: (json['jobDescription'] as String?) ?? '',
+        symbol: (json['symbol'] as String?) ?? '',
+        phoneticName: (json['phoneticName'] as String?) ?? '',
+        officeLocation: (json['officeLocation'] as String?) ?? '',
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{

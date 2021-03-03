@@ -87,7 +87,8 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-property">hashCode</span> property </h1></div>
+      <div><h1><span class="kind-property">hashCode</span> property     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
 
         <section id="getter">
@@ -103,11 +104,14 @@
 <p>A hash code is a single integer which represents the state of the object
 that affects <a href="../../properties_organization/Organization/operator_equals.html">operator ==</a> comparisons.</p>
 <p>All objects have hash codes.
-The default hash code represents only the identity of the object,
+The default hash code implemented by <a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a>
+represents only the identity of the object,
 the same way as the default <a href="../../properties_organization/Organization/operator_equals.html">operator ==</a> implementation only considers objects
 equal if they are identical (see <a href="https://api.flutter.dev/flutter/dart-core/identityHashCode.html">identityHashCode</a>).</p>
 <p>If <a href="../../properties_organization/Organization/operator_equals.html">operator ==</a> is overridden to use the object state instead,
-the hash code must also be changed to represent that state.</p>
+the hash code must also be changed to represent that state,
+otherwise the object cannot be used in hash based data structures
+like the default <a href="https://api.flutter.dev/flutter/dart-core/Set-class.html">Set</a> and <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a> implementations.</p>
 <p>Hash codes must be the same for objects that are equal to each other
 according to <a href="../../properties_organization/Organization/operator_equals.html">operator ==</a>.
 The hash code of an object should only change if the object changes
@@ -115,10 +119,11 @@ in a way that affects equality.
 There are no further requirements for the hash codes.
 They need not be consistent between executions of the same program
 and there are no distribution guarantees.</p>
-<p>Objects that are not equal are allowed to have the same hash code,
-it is even technically allowed that all instances have the same hash code,
-but if clashes happen too often, it may reduce the efficiency of hash-based
-data structures like <a href="https://api.flutter.dev/flutter/dart-collection/HashSet-class.html">HashSet</a> or <a href="https://api.flutter.dev/flutter/dart-collection/HashMap-class.html">HashMap</a>.</p>
+<p>Objects that are not equal are allowed to have the same hash code.
+It is even technically allowed that all instances have the same hash code,
+but if clashes happen too often,
+it may reduce the efficiency of hash-based data structures
+like <a href="https://api.flutter.dev/flutter/dart-collection/HashSet-class.html">HashSet</a> or <a href="https://api.flutter.dev/flutter/dart-collection/HashMap-class.html">HashMap</a>.</p>
 <p>If a subclass overrides <a href="../../properties_organization/Organization/hashCode.html">hashCode</a>, it should override the
 <a href="../../properties_organization/Organization/operator_equals.html">operator ==</a> operator as well to maintain consistency.</p>
         </section>
@@ -146,7 +151,7 @@ int get hashCode =&gt;
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

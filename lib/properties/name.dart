@@ -80,15 +80,15 @@ class Name {
   });
 
   factory Name.fromJson(Map<String, dynamic> json) => Name(
-        first: (json['first'] as String) ?? '',
-        last: (json['last'] as String) ?? '',
-        middle: (json['middle'] as String) ?? '',
-        prefix: (json['prefix'] as String) ?? '',
-        suffix: (json['suffix'] as String) ?? '',
-        nickname: (json['nickname'] as String) ?? '',
-        firstPhonetic: (json['firstPhonetic'] as String) ?? '',
-        lastPhonetic: (json['lastPhonetic'] as String) ?? '',
-        middlePhonetic: (json['middlePhonetic'] as String) ?? '',
+        first: (json['first'] as String?) ?? '',
+        last: (json['last'] as String?) ?? '',
+        middle: (json['middle'] as String?) ?? '',
+        prefix: (json['prefix'] as String?) ?? '',
+        suffix: (json['suffix'] as String?) ?? '',
+        nickname: (json['nickname'] as String?) ?? '',
+        firstPhonetic: (json['firstPhonetic'] as String?) ?? '',
+        lastPhonetic: (json['lastPhonetic'] as String?) ?? '',
+        middlePhonetic: (json['middlePhonetic'] as String?) ?? '',
       );
 
   Map<String, dynamic> toJson() => {

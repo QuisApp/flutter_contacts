@@ -21,6 +21,9 @@ import android.provider.ContactsContract.CommonDataKinds.Website
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.RawContacts
+import java.io.FileNotFoundException
+import java.io.InputStream
+import java.io.OutputStream
 import co.quis.flutter_contacts.properties.Account as PAccount
 import co.quis.flutter_contacts.properties.Address as PAddress
 import co.quis.flutter_contacts.properties.Email as PEmail
@@ -31,9 +34,6 @@ import co.quis.flutter_contacts.properties.Organization as POrganization
 import co.quis.flutter_contacts.properties.Phone as PPhone
 import co.quis.flutter_contacts.properties.SocialMedia as PSocialMedia
 import co.quis.flutter_contacts.properties.Website as PWebsite
-import java.io.FileNotFoundException
-import java.io.InputStream
-import java.io.OutputStream
 
 class FlutterContacts {
     companion object {

@@ -85,13 +85,14 @@
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-constructor">Event</span> constructor </h1></div>
+      <div><h1><span class="kind-constructor">Event</span> constructor     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
+</h1></div>
 
     <section class="multi-line-signature">
       
-      <span class="name ">Event</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-year">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">year</span>, </span></li>
-<li><span class="parameter" id="-param-month"><span>@<a href="https://pub.dev/documentation/meta/1.3.0-nullsafety.3/meta/required-constant.html">required</a></span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span>, </span></li>
-<li><span class="parameter" id="-param-day"><span>@<a href="https://pub.dev/documentation/meta/1.3.0-nullsafety.3/meta/required-constant.html">required</a></span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">day</span>, </span></li>
+      <span class="name ">Event</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-year">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">year</span>, </span></li>
+<li><span class="parameter" id="-param-month"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">month</span>, </span></li>
+<li><span class="parameter" id="-param-day"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">day</span>, </span></li>
 <li><span class="parameter" id="-param-label"><span class="type-annotation"><a href="../../properties_event/EventLabel-class.html">EventLabel</a></span> <span class="parameter-name">label</span>: <span class="default-value">EventLabel.birthday</span>, </span></li>
 <li><span class="parameter" id="-param-customLabel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">customLabel</span>: <span class="default-value">&#39;&#39;</span>}</span></li>
 </ol>)
@@ -102,12 +103,11 @@
       <h2><span>Implementation</span></h2>
       <pre class="language-dart"><code class="language-dart">Event({
   this.year,
-  @required this.month,
-  @required this.day,
+  required this.month,
+  required this.day,
   this.label = EventLabel.birthday,
   this.customLabel = &#39;&#39;,
-})  : assert(month != null),
-      assert(day != null);</code></pre>
+});</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -120,7 +120,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.2.2
+      0.3.0
   </span>
 
 </footer>

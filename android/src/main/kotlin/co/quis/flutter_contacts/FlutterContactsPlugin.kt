@@ -1,17 +1,17 @@
 package co.quis.flutter_contacts
 
+import android.Manifest
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
-import android.Manifest
 import android.provider.ContactsContract
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -121,8 +121,11 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     val contacts: List<Map<String, Any?>> =
                         FlutterContacts.select(
                             resolver!!,
-                            id, withProperties, withThumbnail, withPhoto,
-                            returnUnifiedContacts, includeNonVisible
+                            id, withProperties,
+                            // Sometimes thumbnail is available but photo is not, so we
+                            // fetch thumbnails even if only the photo was requested.
+                            withThumbnail || withPhoto,
+                            withPhoto, returnUnifiedContacts, includeNonVisible
                         )
                     GlobalScope.launch(Dispatchers.Main) { result.success(contacts) }
                 }
