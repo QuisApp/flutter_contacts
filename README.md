@@ -63,8 +63,8 @@ See [code](https://github.com/QuisApp/flutter_contacts/blob/master/lib/contact.d
 class Contact {
     String id;
     String displayName;
-    Uint8List photo;
-    Uint8List thumbnail;
+    Uint8List? photo;
+    Uint8List? thumbnail;
     Name name;
     List<Phone> phones;
     List<Email> emails;
@@ -82,7 +82,7 @@ class Address { String address; AddressLabel label; }
 class Organization { String company; String title; }
 class Website { String url; WebsiteLabel label; }
 class SocialMedia { String userName; SocialMediaLabel label; }
-class Event { int year; int month; int day; EventLabel label; }
+class Event { int? year; int month; int day; EventLabel label; }
 class Note { String note; }
 ```
 

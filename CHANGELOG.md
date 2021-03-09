@@ -1,3 +1,15 @@
+## 0.3.3
+
+* Fix lint warning
+
+## 0.3.2
+
+* Remove unused dependency
+
+## 0.3.1
+
+* Change Dart SDK version requirements
+
 ## 0.3.0
 
 * Migrated to null-safety

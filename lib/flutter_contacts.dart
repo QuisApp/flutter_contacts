@@ -22,6 +22,9 @@ class FlutterContacts {
   static const _channel = MethodChannel('github.com/QuisApp/flutter_contacts');
   static const _eventChannel =
       EventChannel('github.com/QuisApp/flutter_contacts/events');
+  // The linter is confused by this. It's the caller's responsibility to call
+  // removeListener when appropriate.
+  // ignore: cancel_subscriptions
   static StreamSubscription? _eventSubscription;
   static final _eventSubscribers = <void Function()>[];
   static final _alpha = RegExp(r'\p{Letter}', unicode: true);

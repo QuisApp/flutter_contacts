@@ -124,8 +124,8 @@ if (await FlutterContacts.requestPermission()) {
 <pre class="language-dart"><code class="language-dart">class Contact {
     String id;
     String displayName;
-    Uint8List photo;
-    Uint8List thumbnail;
+    Uint8List? photo;
+    Uint8List? thumbnail;
     Name name;
     List&lt;Phone&gt; phones;
     List&lt;Email&gt; emails;
@@ -143,7 +143,7 @@ class Address { String address; AddressLabel label; }
 class Organization { String company; String title; }
 class Website { String url; WebsiteLabel label; }
 class SocialMedia { String userName; SocialMediaLabel label; }
-class Event { int year; int month; int day; EventLabel label; }
+class Event { int? year; int month; int day; EventLabel label; }
 class Note { String note; }
 </code></pre>
 <h2 id="demo">Demo</h2>
@@ -294,7 +294,7 @@ raw contacts instead via
 <footer>
   <span class="no-break">
     flutter_contacts
-      0.3.0
+      0.3.3
   </span>
 
 </footer>
