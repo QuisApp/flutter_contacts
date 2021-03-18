@@ -472,17 +472,19 @@ class FlutterContacts {
                     )
                     .build()
             )
-            ops.add(
-                ContentProviderOperation.newDelete(Data.CONTENT_URI)
-                    .withSelection(
-                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
-                        arrayOf(
-                            contactId,
-                            Photo.CONTENT_ITEM_TYPE
+            if (contact.photo == null) {
+                ops.add(
+                    ContentProviderOperation.newDelete(Data.CONTENT_URI)
+                        .withSelection(
+                            "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
+                            arrayOf(
+                                contactId,
+                                Photo.CONTENT_ITEM_TYPE
+                            )
                         )
-                    )
-                    .build()
-            )
+                        .build()
+                )
+            }
 
             buildOpsForContact(contact, ops, rawContactId)
             if (contact.photo != null) {
