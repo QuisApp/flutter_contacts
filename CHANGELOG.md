@@ -1,3 +1,7 @@
+## 0.3.3+1
+
+* Fix https://github.com/QuisApp/flutter_contacts/issues/9
+
 ## 0.3.3
 
 * Fix lint warning
