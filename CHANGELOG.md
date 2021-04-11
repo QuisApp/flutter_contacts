@@ -1,3 +1,9 @@
+## 1.0.0
+
+* Stable release 🎉
+* Follow-up fix for https://github.com/QuisApp/flutter_contacts/issues/9
+* Fix https://github.com/QuisApp/flutter_contacts/issues/14
+
 ## 0.3.3+1
 
 * Fix https://github.com/QuisApp/flutter_contacts/issues/9
