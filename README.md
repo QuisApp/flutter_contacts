@@ -17,41 +17,42 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 
 // Request contact permission
 if (await FlutterContacts.requestPermission()) {
-    // Get all contacts (lightly fetched)
-    List<Contact> contacts = await FlutterContacts.getContacts();
+  // Get all contacts (lightly fetched)
+  List<Contact> contacts = await FlutterContacts.getContacts();
 
-    // Get all contacts (fully fetched)
-    List<Contact> contacts = await FlutterContacts.getContacts(withProperties: true, withPhoto: true);
+  // Get all contacts (fully fetched)
+  contacts = await FlutterContacts.getContacts(
+      withProperties: true, withPhoto: true);
 
-    // Get contact with specific ID (fully fetched)
-    Contact contact = await FlutterContacts.getContact(contacts.first.id)
+  // Get contact with specific ID (fully fetched)
+  Contact contact = await FlutterContacts.getContact(contacts.first.id);
 
-    // Insert new contact
-    await Contact()
-        ..name.first = 'John'
-        ..name.last = 'Smith'
-        ..phones = [Phone('555-123-4567')]
-        ..insert();
+  // Insert new contact
+  final newContact = Contact()
+    ..name.first = 'John'
+    ..name.last = 'Smith'
+    ..phones = [Phone('555-123-4567')];
+  await newContact.insert();
 
-    // Update contact
-    contact.name.first = 'Bob';
-    await contact.update();
+  // Update contact
+  contact.name.first = 'Bob';
+  await contact.update();
 
-    // Delete contact
-    await contact.delete();
+  // Delete contact
+  await contact.delete();
 
-    // Listen to contact database changes
-    FlutterContacts.addListener(() => print('Contact DB changed'));
+  // Listen to contact database changes
+  FlutterContacts.addListener(() => print('Contact DB changed'));
 
-    // Export contact to vCard
-    String vCard = contact.toVCard();
+  // Export contact to vCard
+  String vCard = contact.toVCard();
 
-    // Import contact from vCard
-    Contact contact = Contact.fromVCard('BEGIN:VCARD\n'
-        'VERSION:3.0\n'
-        'N:;Joe;;;\n'
-        'TEL;TYPE=HOME:123456\n'
-        'END:VCARD');
+  // Import contact from vCard
+  contact = Contact.fromVCard('BEGIN:VCARD\n'
+      'VERSION:3.0\n'
+      'N:;Joe;;;\n'
+      'TEL;TYPE=HOME:123456\n'
+      'END:VCARD');
 }
 ```
 
