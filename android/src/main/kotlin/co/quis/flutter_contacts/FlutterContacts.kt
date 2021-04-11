@@ -472,7 +472,7 @@ class FlutterContacts {
                     )
                     .build()
             )
-            if (contact.photo == null) {
+            if (contact.photo == null && contact.thumbnail == null) {
                 ops.add(
                     ContentProviderOperation.newDelete(Data.CONTENT_URI)
                         .withSelection(
