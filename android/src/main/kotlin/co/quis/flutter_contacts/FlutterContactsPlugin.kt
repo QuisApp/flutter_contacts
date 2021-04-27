@@ -71,7 +71,7 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
             permissionCode -> {
                 val granted = grantResults != null &&
                     grantResults!!.size == 2 &&
-                    grantResults!![0] == PackageManager.PERMISSION_GRANTED
+                    grantResults!![0] == PackageManager.PERMISSION_GRANTED &&
                 grantResults!![1] == PackageManager.PERMISSION_GRANTED
                 if (permissionResult != null) {
                     GlobalScope.launch(Dispatchers.Main) {
