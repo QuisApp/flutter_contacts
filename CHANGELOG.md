@@ -1,3 +1,8 @@
+## 1.0.0+1
+
+* Fix for permission handler on Android (https://github.com/QuisApp/flutter_contacts/pull/17) - thanks @scroollocker
+* Fix type cast error on iOS 14.5 (https://github.com/QuisApp/flutter_contacts/issues/19) - thanks @jadasi
+
 ## 1.0.0
 
 * Stable release 🎉
