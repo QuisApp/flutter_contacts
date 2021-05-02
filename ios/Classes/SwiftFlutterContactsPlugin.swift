@@ -253,7 +253,7 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
         case "select":
             DispatchQueue.global(qos: .userInteractive).async {
                 let args = call.arguments as! [Any?]
-                let id = args[0] as! String?
+                let id = args[0] as? String
                 let withProperties = args[1] as! Bool
                 let withThumbnail = args[2] as! Bool
                 let withPhoto = args[3] as! Bool
