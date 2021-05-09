@@ -70,7 +70,7 @@ class _ContactPageState extends State<ContactPage>
           ),
           PopupMenuButton(
             itemBuilder: (context) =>
-                [PopupMenuItem(child: Text('Delete contact'), value: _contact)],
+                [PopupMenuItem(value: _contact, child: Text('Delete contact'))],
             onSelected: (contact) async {
               await contact.delete();
               Navigator.of(context).pop();
@@ -80,7 +80,6 @@ class _ContactPageState extends State<ContactPage>
       ),
       body: _body(_contact),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.edit),
         onPressed: () =>
             Navigator.of(context).pushNamed('/editContact', arguments: {
           'contact': _contact,
@@ -88,6 +87,7 @@ class _ContactPageState extends State<ContactPage>
           // changes, but this will do for now
           'onUpdate': _fetchContact,
         }),
+        child: Icon(Icons.edit),
       ),
     );
   }

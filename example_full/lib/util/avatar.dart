@@ -10,7 +10,7 @@ Widget avatar(Contact contact,
     );
   }
   return CircleAvatar(
-    child: Icon(defaultIcon),
     radius: radius,
+    child: Icon(defaultIcon),
   );
 }

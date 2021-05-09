@@ -127,8 +127,8 @@ class _EditContactPageState extends State<EditContactPage>
   Widget _photoField() => Stack(children: [
         Center(
             child: InkWell(
-          child: avatar(_contact, 48, Icons.add),
           onTap: _pickPhoto,
+          child: avatar(_contact, 48, Icons.add),
         )),
         _contact.photo == null
             ? Container()
@@ -136,7 +136,7 @@ class _EditContactPageState extends State<EditContactPage>
                 alignment: Alignment.topRight,
                 child: PopupMenuButton(
                   itemBuilder: (context) => [
-                    PopupMenuItem(child: Text('Delete photo'), value: 'Delete')
+                    PopupMenuItem(value: 'Delete', child: Text('Delete photo'))
                   ],
                   onSelected: (_) => setState(() {
                     _contact.photo = null;

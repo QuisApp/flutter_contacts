@@ -40,7 +40,7 @@ class _NoteFormState extends State<NoteForm> {
     return ListTile(
       trailing: PopupMenuButton(
         itemBuilder: (context) =>
-            [PopupMenuItem(child: Text('Delete'), value: 'Delete')],
+            [PopupMenuItem(value: 'Delete', child: Text('Delete'))],
         onSelected: (_) => widget.onDelete(),
       ),
       subtitle: Padding(
