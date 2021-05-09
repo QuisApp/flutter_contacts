@@ -172,24 +172,24 @@ class _EditContactPageState extends State<EditContactPage>
     if (addField != null) {
       buttons.add(
         ElevatedButton(
-          child: Text('+ New'),
           onPressed: onPressed,
+          child: Text('+ New'),
         ),
       );
     }
     if (clearAllFields != null) {
       buttons.add(ElevatedButton(
-        child: Text('Delete all'),
         onPressed: () {
           clearAllFields();
           setState(() {});
         },
+        child: Text('Delete all'),
       ));
     }
     if (buttons.isNotEmpty) {
       forms.add(Row(
-        children: buttons,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: buttons,
       ));
     }
 

@@ -68,8 +68,8 @@ class _ContactListPageState extends State<ContactListPage>
         appBar: AppBar(title: Text('flutter_contacts_example')),
         body: _body(),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
           onPressed: () => Navigator.of(context).pushNamed('/editContact'),
+          child: Icon(Icons.add),
         ),
       );
 
