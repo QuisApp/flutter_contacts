@@ -1,8 +1,11 @@
 package co.quis.flutter_contacts
 
+import android.app.Activity
 import android.content.ContentProviderOperation
 import android.content.ContentResolver
 import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
 import android.content.res.AssetFileDescriptor
 import android.database.Cursor
 import android.net.Uri
@@ -39,6 +42,11 @@ class FlutterContacts {
     companion object {
         private val YYYY_MM_DD = """\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30|31)""".toRegex()
         private val MM_DD = """--(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30|31)""".toRegex()
+
+        val REQUEST_CODE_VIEW = 77881
+        val REQUEST_CODE_EDIT = 77882
+        val REQUEST_CODE_PICK = 77883
+        val REQUEST_CODE_INSERT = 77884
 
         fun select(
             resolver: ContentResolver,
@@ -521,6 +529,34 @@ class FlutterContacts {
             }
 
             resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+        }
+
+        fun openExternalViewOrEdit(activity: Activity?, context: Context?, id: String, edit: Boolean) {
+            if (activity == null && context == null) return
+            val uri = Uri.withAppendedPath(Contacts.CONTENT_URI, id)
+            var intent = Intent(if (edit) Intent.ACTION_EDIT else Intent.ACTION_VIEW)
+            intent.setDataAndType(uri, Contacts.CONTENT_ITEM_TYPE)
+            // https://developer.android.com/training/contacts-provider/modify-data#add-the-navigation-flag
+            intent.putExtra("finishActivityOnSaveCompleted", true)
+            if (activity != null) {
+                activity!!.startActivityForResult(intent, if (edit) REQUEST_CODE_EDIT else REQUEST_CODE_VIEW)
+            } else {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context!!.startActivity(intent)
+            }
+        }
+
+        fun openExternalPickOrInsert(activity: Activity?, context: Context?, insert: Boolean) {
+            if (activity == null && context == null) return
+            var intent = Intent(if (insert) Intent.ACTION_INSERT else Intent.ACTION_PICK, Contacts.CONTENT_URI)
+            // https://developer.android.com/training/contacts-provider/modify-data#add-the-navigation-flag
+            intent.putExtra("finishActivityOnSaveCompleted", true)
+            if (activity != null) {
+                activity!!.startActivityForResult(intent, if (insert) REQUEST_CODE_INSERT else REQUEST_CODE_PICK)
+            } else {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context!!.startActivity(intent)
+            }
         }
 
         // getQuick is like `select(id = null, withProperties = false,

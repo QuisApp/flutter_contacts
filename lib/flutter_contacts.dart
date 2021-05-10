@@ -210,6 +210,33 @@ class FlutterContacts {
     }
   }
 
+  /// Opens external contact app to view an existing contact.
+  static Future<void> openExternalView(String id) async =>
+      await _channel.invokeMethod(
+          Platform.isAndroid ? 'openExternalView' : 'openExternalViewOrEdit',
+          [id]);
+
+  /// Opens external contact app to edit an existing contact.
+  static Future<Contact?> openExternalEdit(String id) async {
+    // New ID should be the same as original ID, but just to be safe.
+    final newId = await _channel.invokeMethod(
+        Platform.isAndroid ? 'openExternalEdit' : 'openExternalViewOrEdit',
+        [id]);
+    return newId == null ? null : getContact(newId);
+  }
+
+  /// Opens external contact app to pick an existing contact.
+  static Future<Contact?> openExternalPick() async {
+    final id = await _channel.invokeMethod('openExternalPick');
+    return id == null ? null : getContact(id);
+  }
+
+  /// Opens external contact app to insert a new contact.
+  static Future<Contact?> openExternalInsert() async {
+    final id = await _channel.invokeMethod('openExternalInsert');
+    return id == null ? null : getContact(id);
+  }
+
   static Future<List<Contact>> _select({
     String? id,
     bool withProperties = false,

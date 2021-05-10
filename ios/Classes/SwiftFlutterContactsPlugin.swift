@@ -1,18 +1,19 @@
 import Contacts
+import ContactsUI
 import Flutter
 import UIKit
 
 @available(iOS 9.0, *)
 public enum FlutterContacts {
     // Fetches contact(s).
-    static func select(
+    static func selectInternal(
         id: String?,
         withProperties: Bool,
         withThumbnail: Bool,
         withPhoto: Bool,
         returnUnifiedContacts: Bool,
         includeNotesOnIos13AndAbove: Bool
-    ) -> [[String: Any?]] {
+    ) -> [CNContact] {
         var contacts: [CNContact] = []
         let store = CNContactStore()
         var keys: [Any] = [
@@ -41,6 +42,7 @@ public enum FlutterContacts {
                 CNContactInstantMessageAddressesKey,
                 CNContactBirthdayKey,
                 CNContactDatesKey,
+                CNContactViewController.descriptorForRequiredKeys(),
             ]
             if #available(iOS 10, *) {
                 keys.append(CNContactPhoneticOrganizationNameKey)
@@ -54,7 +56,7 @@ public enum FlutterContacts {
         if withThumbnail { keys.append(CNContactThumbnailImageDataKey) }
         if withPhoto { keys.append(CNContactImageDataKey) }
 
-        var request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
+        let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
         request.unifyResults = returnUnifiedContacts
         if id != nil {
             // Request for a specific contact.
@@ -71,6 +73,25 @@ public enum FlutterContacts {
             return []
         }
 
+        return contacts
+    }
+
+    static func select(
+        id: String?,
+        withProperties: Bool,
+        withThumbnail: Bool,
+        withPhoto: Bool,
+        returnUnifiedContacts: Bool,
+        includeNotesOnIos13AndAbove: Bool
+    ) -> [[String: Any?]] {
+        let contacts = selectInternal(
+            id: id,
+            withProperties: withProperties,
+            withThumbnail: withThumbnail,
+            withPhoto: withPhoto,
+            returnUnifiedContacts: returnUnifiedContacts,
+            includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
+        )
         return contacts.map { Contact(fromContact: $0).toMap() }
     }
 
@@ -227,7 +248,10 @@ public enum FlutterContacts {
 }
 
 @available(iOS 9.0, *)
-public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
+public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandler, CNContactViewControllerDelegate, CNContactPickerDelegate {
+    private let rootViewController: UIViewController
+    private var externalResult: FlutterResult?
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(
             name: "github.com/QuisApp/flutter_contacts",
@@ -237,9 +261,14 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
             name: "github.com/QuisApp/flutter_contacts/events",
             binaryMessenger: registrar.messenger()
         )
-        let instance = SwiftFlutterContactsPlugin()
+        let rootViewController = UIApplication.shared.delegate!.window!!.rootViewController!
+        let instance = SwiftFlutterContactsPlugin(rootViewController)
         registrar.addMethodCallDelegate(instance, channel: channel)
         eventChannel.setStreamHandler(instance)
+    }
+
+    init(_ rootViewController: UIViewController) {
+        self.rootViewController = rootViewController
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -319,6 +348,55 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                     ))
                 }
             }
+        case "openExternalViewOrEdit":
+            DispatchQueue.main.async {
+                let args = call.arguments as! [Any?]
+                let id = args[0] as! String
+                let contacts = FlutterContacts.selectInternal(
+                    id: id,
+                    withProperties: true,
+                    withThumbnail: true,
+                    withPhoto: true,
+                    returnUnifiedContacts: true,
+                    includeNotesOnIos13AndAbove: false
+                )
+                if !contacts.isEmpty {
+                    let contactView = CNContactViewController(for: contacts.first!)
+                    contactView.navigationItem.backBarButtonItem = UIBarButtonItem(
+                        title: "Back",
+                        style: .plain,
+                        target: self,
+                        action: #selector(self.contactViewControllerDidCancel)
+                    )
+                    contactView.delegate = self
+                    // https://stackoverflow.com/a/39594589
+                    let navigationController = UINavigationController(rootViewController: contactView)
+                    self.rootViewController.present(navigationController, animated: true, completion: nil)
+                    self.externalResult = result
+                }
+            }
+        case "openExternalPick":
+            DispatchQueue.main.async {
+                let contactPicker = CNContactPickerViewController()
+                contactPicker.delegate = self
+                self.rootViewController.present(contactPicker, animated: true, completion: nil)
+                self.externalResult = result
+            }
+        case "openExternalInsert":
+            DispatchQueue.main.async {
+                let contactView = CNContactViewController(forNewContact: CNContact())
+                contactView.navigationItem.backBarButtonItem = UIBarButtonItem(
+                    title: "Cancel",
+                    style: .plain,
+                    target: self,
+                    action: #selector(self.contactViewControllerDidCancel)
+                )
+                contactView.delegate = self
+                // https://stackoverflow.com/a/39594589
+                let navigationController = UINavigationController(rootViewController: contactView)
+                self.rootViewController.present(navigationController, animated: true, completion: nil)
+                self.externalResult = result
+            }
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -340,5 +418,34 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
     public func onCancel(withArguments _: Any?) -> FlutterError? {
         NotificationCenter.default.removeObserver(self)
         return nil
+    }
+
+    public func contactViewController(_: CNContactViewController, didCompleteWith contact: CNContact?) {
+        if let result = externalResult {
+            result(contact?.identifier)
+            externalResult = nil
+        }
+    }
+
+    @objc func contactViewControllerDidCancel() {
+        if let result = externalResult {
+            rootViewController.dismiss(animated: true, completion: nil)
+            result(nil)
+            externalResult = nil
+        }
+    }
+
+    public func contactPicker(_: CNContactPickerViewController, didSelect contact: CNContact) {
+        if let result = externalResult {
+            result(contact.identifier)
+            externalResult = nil
+        }
+    }
+
+    public func contactPickerDidCancel(_: CNContactPickerViewController) {
+        if let result = externalResult {
+            result(nil)
+            externalResult = nil
+        }
     }
 }

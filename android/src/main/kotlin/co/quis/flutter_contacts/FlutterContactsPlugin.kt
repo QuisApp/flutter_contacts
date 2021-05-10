@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.ContactsContract
 import androidx.annotation.NonNull
@@ -17,18 +18,23 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, RequestPermissionsResultListener {
+public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
     companion object {
         private var activity: Activity? = null
         private var context: Context? = null
         private var resolver: ContentResolver? = null
         private val permissionCode: Int = 0
         private var permissionResult: Result? = null
+        private var viewResult: Result? = null
+        private var editResult: Result? = null
+        private var pickResult: Result? = null
+        private var insertResult: Result? = null
     }
 
     // --- FlutterPlugin implementation ---
@@ -53,11 +59,70 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
     override fun onReattachedToActivityForConfigChanges(@NonNull binding: ActivityPluginBinding) {
         activity = binding.activity
         binding.addRequestPermissionsResultListener(this)
+        binding.addActivityResultListener(this)
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activity = binding.activity
         binding.addRequestPermissionsResultListener(this)
+        binding.addActivityResultListener(this)
+    }
+
+    // --- ActivityResultListener implementation ---
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        intent: Intent?
+    ): Boolean {
+        when (requestCode) {
+            FlutterContacts.REQUEST_CODE_VIEW ->
+                if (viewResult != null) {
+                    viewResult!!.success(null)
+                    viewResult = null
+                }
+            FlutterContacts.REQUEST_CODE_EDIT ->
+                if (editResult != null) {
+                    // Result is of the form:
+                    // content://com.android.contacts/contacts/lookup/<hash>/<id>
+                    val id = intent?.getData()?.getLastPathSegment()
+                    editResult!!.success(id)
+                    editResult = null
+                }
+            FlutterContacts.REQUEST_CODE_PICK ->
+                if (pickResult != null) {
+                    // Result is of the form:
+                    // content://com.android.contacts/contacts/lookup/<hash>/<id>
+                    val id = intent?.getData()?.getLastPathSegment()
+                    pickResult!!.success(id)
+                    pickResult = null
+                }
+            FlutterContacts.REQUEST_CODE_INSERT ->
+                if (insertResult != null) {
+                    // Result is of the form:
+                    // content://com.android.contacts/raw_contacts/<raw_id>
+                    // So we need to get the ID from the raw ID.
+                    val rawId = intent?.getData()?.getLastPathSegment()
+                    if (rawId != null) {
+                        val contacts: List<Map<String, Any?>> =
+                            FlutterContacts.select(
+                                resolver!!, rawId, /*withProperties=*/false,
+                                /*withThumbnail=*/false, /*withPhoto=*/false,
+                                /*returnUnifiedContacts=*/true,
+                                /*includeNonVisible=*/true, /*idIsRawContactId=*/true
+                            )
+                        if (contacts.isNotEmpty()) {
+                            insertResult!!.success(contacts[0]["id"])
+                        } else {
+                            insertResult!!.success(null)
+                        }
+                    } else {
+                        insertResult!!.success(null)
+                    }
+                    insertResult = null
+                }
+        }
+        return true
     }
 
     // --- RequestPermissionsResultListener implementation ---
@@ -164,6 +229,34 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                 GlobalScope.launch(Dispatchers.IO) {
                     FlutterContacts.delete(resolver!!, call.arguments as List<String>)
                     GlobalScope.launch(Dispatchers.Main) { result.success(null) }
+                }
+            // Opens external contact app to view existing contact.
+            "openExternalView" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val args = call.arguments as List<Any>
+                    val id = args[0] as String
+                    FlutterContacts.openExternalViewOrEdit(activity, context, id, false)
+                    viewResult = result
+                }
+            // Opens external contact app to edit existing contact.
+            "openExternalEdit" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val args = call.arguments as List<Any>
+                    val id = args[0] as String
+                    FlutterContacts.openExternalViewOrEdit(activity, context, id, true)
+                    editResult = result
+                }
+            // Opens external contact app to pick an existing contact.
+            "openExternalPick" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    FlutterContacts.openExternalPickOrInsert(activity, context, false)
+                    pickResult = result
+                }
+            // Opens external contact app to insert a new contact.
+            "openExternalInsert" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    FlutterContacts.openExternalPickOrInsert(activity, context, true)
+                    insertResult = result
                 }
             else -> result.notImplemented()
         }

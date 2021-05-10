@@ -41,6 +41,12 @@ if (await FlutterContacts.requestPermission()) {
   // Delete contact
   await contact.delete();
 
+  // Open external contact app to view/edit/pick/insert contacts.
+  await FlutterContacts.openExternalView(contact.id);
+  await FlutterContacts.openExternalEdit(contact.id);
+  final contact = await FlutterContacts.openExternalPick();
+  final contact = await FlutterContacts.openExternalInsert();
+
   // Listen to contact database changes
   FlutterContacts.addListener(() => print('Contact DB changed'));
 

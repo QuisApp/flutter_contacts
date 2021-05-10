@@ -106,6 +106,12 @@ if (await FlutterContacts.requestPermission()) {
   // Delete contact
   await contact.delete();
 
+  // Open external contact app to view/edit/pick/insert contacts.
+  await FlutterContacts.openExternalView(contact.id);
+  await FlutterContacts.openExternalEdit(contact.id);
+  final contact = await FlutterContacts.openExternalPick();
+  final contact = await FlutterContacts.openExternalInsert();
+
   // Listen to contact database changes
   FlutterContacts.addListener(() =&gt; print('Contact DB changed'));
 
@@ -295,7 +301,7 @@ raw contacts instead via
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.0.0+1
+      1.1.0
   </span>
 
 </footer>
