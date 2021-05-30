@@ -218,14 +218,14 @@ class Contact {
       thumbnail.hashCode ^
       photo.hashCode ^
       name.hashCode ^
-      phones.hashCode ^
-      emails.hashCode ^
-      addresses.hashCode ^
-      organizations.hashCode ^
-      websites.hashCode ^
-      socialMedias.hashCode ^
-      events.hashCode ^
-      notes.hashCode;
+      _listHashCode(phones) ^
+      _listHashCode(emails) ^
+      _listHashCode(addresses) ^
+      _listHashCode(organizations) ^
+      _listHashCode(websites) ^
+      _listHashCode(socialMedias) ^
+      _listHashCode(events) ^
+      _listHashCode(notes);
 
   @override
   bool operator ==(Object o) =>
@@ -235,14 +235,14 @@ class Contact {
       o.thumbnail == thumbnail &&
       o.photo == photo &&
       o.name == name &&
-      o.phones == phones &&
-      o.emails == emails &&
-      o.addresses == addresses &&
-      o.organizations == organizations &&
-      o.websites == websites &&
-      o.socialMedias == socialMedias &&
-      o.events == events &&
-      o.notes == notes;
+      _listEqual(o.phones, phones) &&
+      _listEqual(o.emails, emails) &&
+      _listEqual(o.addresses, addresses) &&
+      _listEqual(o.organizations, organizations) &&
+      _listEqual(o.websites, websites) &&
+      _listEqual(o.socialMedias, socialMedias) &&
+      _listEqual(o.events, events) &&
+      _listEqual(o.notes, notes);
 
   @override
   String toString() =>
@@ -376,4 +376,12 @@ class Contact {
     }
     return deduplicated;
   }
+
+  int _listHashCode(List<dynamic> elements) => elements.isEmpty
+      ? 0
+      : elements.map((x) => x.hashCode).reduce((x, y) => x ^ y);
+
+  bool _listEqual(List<dynamic> aa, List<dynamic> bb) =>
+      aa.length == bb.length &&
+      Iterable.generate(aa.length, (i) => i).every((i) => aa[i] == bb[i]);
 }
