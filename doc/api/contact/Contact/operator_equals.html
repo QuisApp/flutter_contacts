@@ -159,14 +159,14 @@ bool operator ==(Object o) =&gt;
     o.thumbnail == thumbnail &amp;&amp;
     o.photo == photo &amp;&amp;
     o.name == name &amp;&amp;
-    o.phones == phones &amp;&amp;
-    o.emails == emails &amp;&amp;
-    o.addresses == addresses &amp;&amp;
-    o.organizations == organizations &amp;&amp;
-    o.websites == websites &amp;&amp;
-    o.socialMedias == socialMedias &amp;&amp;
-    o.events == events &amp;&amp;
-    o.notes == notes;</code></pre>
+    _listEqual(o.phones, phones) &amp;&amp;
+    _listEqual(o.emails, emails) &amp;&amp;
+    _listEqual(o.addresses, addresses) &amp;&amp;
+    _listEqual(o.organizations, organizations) &amp;&amp;
+    _listEqual(o.websites, websites) &amp;&amp;
+    _listEqual(o.socialMedias, socialMedias) &amp;&amp;
+    _listEqual(o.events, events) &amp;&amp;
+    _listEqual(o.notes, notes);</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -179,7 +179,7 @@ bool operator ==(Object o) =&gt;
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.0+1
+      1.1.0+2
   </span>
 
 </footer>

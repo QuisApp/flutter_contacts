@@ -153,14 +153,14 @@ int get hashCode =&gt;
     thumbnail.hashCode ^
     photo.hashCode ^
     name.hashCode ^
-    phones.hashCode ^
-    emails.hashCode ^
-    addresses.hashCode ^
-    organizations.hashCode ^
-    websites.hashCode ^
-    socialMedias.hashCode ^
-    events.hashCode ^
-    notes.hashCode;</code></pre>
+    _listHashCode(phones) ^
+    _listHashCode(emails) ^
+    _listHashCode(addresses) ^
+    _listHashCode(organizations) ^
+    _listHashCode(websites) ^
+    _listHashCode(socialMedias) ^
+    _listHashCode(events) ^
+    _listHashCode(notes);</code></pre>
         </section>
 </section>
         
@@ -174,7 +174,7 @@ int get hashCode =&gt;
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.0+1
+      1.1.0+2
   </span>
 
 </footer>

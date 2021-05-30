@@ -1,3 +1,7 @@
+## 1.1.0+2
+
+* Fix hashCode and ==
+
 ## 1.1.0+1
 
 * Fix a diacritics bug
