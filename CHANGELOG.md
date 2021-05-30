@@ -1,3 +1,7 @@
+## 1.1.0+1
+
+* Fix a diacritics bug
+
 ## 1.1.0
 
 * Add ability to open external contact app to view, edit, pick or insert contacts (https://github.com/QuisApp/flutter_contacts/issues/16)
