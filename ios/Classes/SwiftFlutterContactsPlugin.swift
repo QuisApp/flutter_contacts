@@ -12,7 +12,8 @@ public enum FlutterContacts {
         withThumbnail: Bool,
         withPhoto: Bool,
         returnUnifiedContacts: Bool,
-        includeNotesOnIos13AndAbove: Bool
+        includeNotesOnIos13AndAbove: Bool,
+        externalIntent: Bool = false
     ) -> [CNContact] {
         var contacts: [CNContact] = []
         let store = CNContactStore()
@@ -42,7 +43,6 @@ public enum FlutterContacts {
                 CNContactInstantMessageAddressesKey,
                 CNContactBirthdayKey,
                 CNContactDatesKey,
-                CNContactViewController.descriptorForRequiredKeys(),
             ]
             if #available(iOS 10, *) {
                 keys.append(CNContactPhoneticOrganizationNameKey)
@@ -51,6 +51,9 @@ public enum FlutterContacts {
             // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
             if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
                 keys.append(CNContactNoteKey)
+            }
+            if externalIntent {
+                keys.append(CNContactViewController.descriptorForRequiredKeys())
             }
         }
         if withThumbnail { keys.append(CNContactThumbnailImageDataKey) }
@@ -358,7 +361,8 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                     withThumbnail: true,
                     withPhoto: true,
                     returnUnifiedContacts: true,
-                    includeNotesOnIos13AndAbove: false
+                    includeNotesOnIos13AndAbove: false,
+                    externalIntent: true
                 )
                 if !contacts.isEmpty {
                     let contactView = CNContactViewController(for: contacts.first!)
