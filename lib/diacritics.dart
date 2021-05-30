@@ -72,7 +72,7 @@ final _diacritics = {
   'OU': RegExp('[\u0222]'),
   'P': RegExp('[\u0050\u24C5\uFF30\u1E54\u1E56\u01A4\u2C63\uA750\uA752\uA754]'),
   'Q': RegExp('[\u0051\u24C6\uFF31\uA756\uA758\u024A]'),
-  '': RegExp(
+  'R': RegExp(
       '[\u0052\u24C7\uFF32\u0154\u1E58\u0158\u0210\u0212\u1E5A\u1E5C\u0156'
       '\u1E5E\u024C\u2C64\uA75A\uA7A6\uA782]'),
   'S': RegExp(
