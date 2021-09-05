@@ -506,9 +506,9 @@ class FlutterContacts {
             // was saved.
             val updatedContacts: List<Map<String, Any?>> = select(
                 resolver,
-                contactId, /*with_properties=*/ true, /*with_thumbnail=*/true,
+                rawContactId, /*with_properties=*/ true, /*with_thumbnail=*/true,
                 /*withPhoto=*/true, /*returnUnifiedContacts=*/true,
-                /*includeNonVisible=*/true, /*idIsRawContactId=*/false
+                /*includeNonVisible=*/true, /*idIsRawContactId=*/true
             )
 
             if (updatedContacts.isEmpty()) {
