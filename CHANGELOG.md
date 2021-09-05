@@ -1,3 +1,7 @@
+## 1.1.0+4
+
+* Load rawContact instead of contactId after update, since Android sometimes changes the contactId
+
 ## 1.1.0+3
 
 * Fix withThumbnail on iOS

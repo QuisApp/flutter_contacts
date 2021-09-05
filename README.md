@@ -136,3 +136,13 @@ class Note { String note; }
   FlutterContacts.config.returnUnifiedContacts = false;
   ```
   However, for now, raw contacts cannot be inserted, updated or deleted.
+
+## Feature requests
+
+These features have been requested and will be available soon.
+
+* Read/write groups ("labels" on Android, "groups" on iOS) [#29](https://github.com/QuisApp/flutter_contacts/issues/29)
+* Read/write custom ringtones [#22](https://github.com/QuisApp/flutter_contacts/issues/22)
+* Block contacts [#28](https://github.com/QuisApp/flutter_contacts/issues/28)
+* Support for contacts stored in SIM card [#26](https://github.com/QuisApp/flutter_contacts/issues/26) [#23](https://github.com/QuisApp/flutter_contacts/issues/23)
+* More raw account information on Android [#5](https://github.com/QuisApp/flutter_contacts/issues/5) [#8](https://github.com/QuisApp/flutter_contacts/issues/8)
