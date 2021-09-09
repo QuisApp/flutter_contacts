@@ -33,10 +33,11 @@ class FlutterContacts {
   /// Plugin configuration.
   static var config = FlutterContactsConfig();
 
-  /// Requests permission to read/write contacts. Returns true if granted, false
-  /// in any other case.
-  static Future<bool> requestPermission() async =>
-      await _channel.invokeMethod('requestPermission') ?? false;
+  /// Requests permission to read or read/write contacts. Returns true if
+  /// granted, false in any other case. Note: read-only mode is only applicable
+  /// to Android.
+  static Future<bool> requestPermission({bool readonly = false}) async =>
+      await _channel.invokeMethod('requestPermission', readonly) ?? false;
 
   /// Fetches all contacts.
   ///

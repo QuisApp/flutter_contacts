@@ -29,7 +29,8 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
         private var activity: Activity? = null
         private var context: Context? = null
         private var resolver: ContentResolver? = null
-        private val permissionCode: Int = 0
+        private val permissionReadWriteCode: Int = 0
+        private val permissionReadOnlyCode: Int = 1
         private var permissionResult: Result? = null
         private var viewResult: Result? = null
         private var editResult: Result? = null
@@ -139,11 +140,23 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
         grantResults: IntArray?
     ): Boolean {
         when (requestCode) {
-            permissionCode -> {
+            permissionReadWriteCode -> {
                 val granted = grantResults != null &&
                     grantResults!!.size == 2 &&
                     grantResults!![0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults!![1] == PackageManager.PERMISSION_GRANTED
+                if (permissionResult != null) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        permissionResult!!.success(granted)
+                        permissionResult = null
+                    }
+                }
+                return true
+            }
+            permissionReadOnlyCode -> {
+                val granted = grantResults != null &&
+                    grantResults!!.size == 1 &&
+                    grantResults!![0] == PackageManager.PERMISSION_GRANTED
                 if (permissionResult != null) {
                     GlobalScope.launch(Dispatchers.Main) {
                         permissionResult!!.success(granted)
@@ -166,15 +179,20 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     if (context == null) {
                         GlobalScope.launch(Dispatchers.Main) { result.success(false); }
                     } else {
+                        val readonly = call.arguments as Boolean
                         val readPermission = Manifest.permission.READ_CONTACTS
                         val writePermission = Manifest.permission.WRITE_CONTACTS
                         if (ContextCompat.checkSelfPermission(context!!, readPermission) == PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(context!!, writePermission) == PackageManager.PERMISSION_GRANTED
+                            (readonly || ContextCompat.checkSelfPermission(context!!, writePermission) == PackageManager.PERMISSION_GRANTED)
                         ) {
                             GlobalScope.launch(Dispatchers.Main) { result.success(true) }
                         } else if (activity != null) {
                             permissionResult = result
-                            ActivityCompat.requestPermissions(activity!!, arrayOf(readPermission, writePermission), permissionCode)
+                            if (readonly) {
+                                ActivityCompat.requestPermissions(activity!!, arrayOf(readPermission), permissionReadOnlyCode)
+                            } else {
+                                ActivityCompat.requestPermissions(activity!!, arrayOf(readPermission, writePermission), permissionReadWriteCode)
+                            }
                         }
                     }
                 }

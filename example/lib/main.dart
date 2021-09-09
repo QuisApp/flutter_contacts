@@ -19,7 +19,7 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
   }
 
   Future _fetchContacts() async {
-    if (!await FlutterContacts.requestPermission()) {
+    if (!await FlutterContacts.requestPermission(readonly: true)) {
       setState(() => _permissionDenied = true);
     } else {
       final contacts = await FlutterContacts.getContacts();
