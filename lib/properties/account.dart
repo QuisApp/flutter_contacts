@@ -1,15 +1,10 @@
-/// Raw Android account.
+/// Account information, which is exposed for information and debugging purposes
+/// and should be ignored in most cases.
 ///
-/// This is only exposed for information and debugging purposes and should be
-/// ignored in most cases.
-///
-/// Raw contacts are aggregated into unified contacts (which are the ones we
-/// usually care about). For example a single contact can have multiple raw
-/// contacts, one from Google, one from Skype, one from WhatsApp, etc.
-///
-/// If you have two Google accounts (e.g. two Gmail addresses registered on the
-/// phone) it's possible to have two raw contacts, part of the same contact,
-/// both with [type] `com.google` but with a different [name].
+/// On Android this is the raw account, and there can be several accounts per
+/// unified contact (for example one for Gmail, one for Skype and one for
+/// WhatsApp). On iOS it is called container, and there can be only one
+/// container per contact.
 class Account {
   /// Raw account ID.
   String rawId;

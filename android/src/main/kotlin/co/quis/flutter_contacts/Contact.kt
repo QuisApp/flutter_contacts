@@ -4,6 +4,7 @@ import co.quis.flutter_contacts.properties.Account
 import co.quis.flutter_contacts.properties.Address
 import co.quis.flutter_contacts.properties.Email
 import co.quis.flutter_contacts.properties.Event
+import co.quis.flutter_contacts.properties.Group
 import co.quis.flutter_contacts.properties.Name
 import co.quis.flutter_contacts.properties.Note
 import co.quis.flutter_contacts.properties.Organization
@@ -25,7 +26,8 @@ data class Contact(
     var socialMedias: List<SocialMedia> = listOf(),
     var events: List<Event> = listOf(),
     var notes: List<Note> = listOf(),
-    var accounts: List<Account> = listOf()
+    var accounts: List<Account> = listOf(),
+    var groups: List<Group> = listOf()
 ) {
     companion object {
         fun fromMap(m: Map<String, Any?>): Contact {
@@ -43,7 +45,8 @@ data class Contact(
                 (m["socialMedias"] as List<Map<String, Any>>).map { SocialMedia.fromMap(it) },
                 (m["events"] as List<Map<String, Any?>>).map { Event.fromMap(it) },
                 (m["notes"] as List<Map<String, Any>>).map { Note.fromMap(it) },
-                (m["accounts"] as List<Map<String, Any>>).map { Account.fromMap(it) }
+                (m["accounts"] as List<Map<String, Any>>).map { Account.fromMap(it) },
+                (m["groups"] as List<Map<String, Any>>).map { Group.fromMap(it) }
             )
         }
     }
@@ -62,6 +65,7 @@ data class Contact(
         "socialMedias" to socialMedias.map { it.toMap() },
         "events" to events.map { it.toMap() },
         "notes" to notes.map { it.toMap() },
-        "accounts" to accounts.map { it.toMap() }
+        "accounts" to accounts.map { it.toMap() },
+        "groups" to groups.map { it.toMap() }
     )
 }

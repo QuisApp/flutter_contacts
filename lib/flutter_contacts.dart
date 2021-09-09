@@ -48,6 +48,15 @@ class FlutterContacts {
   /// fetched. If [withPhoto] is true, the high-resolution photo is also
   /// fetched.
   ///
+  /// If [withGroups] is true, it also returns the group information (called
+  /// labels on Android and groups on iOS).
+  ///
+  /// If [withAccounts] is true, it also returns the account information. On
+  /// Android this is the raw account, and there can be several accounts per
+  /// unified contact (for example one for Gmail, one for Skype and one for
+  /// WhatsApp). On iOS it is called container, and there can be only one
+  /// container per contact.
+  ///
   /// If [sorted] is true, the contacts are returned sorted by their
   /// normalized display names (ignoring case and diacritics).
   ///
@@ -58,6 +67,8 @@ class FlutterContacts {
     bool withProperties = false,
     bool withThumbnail = false,
     bool withPhoto = false,
+    bool withGroups = false,
+    bool withAccounts = false,
     bool sorted = true,
     bool deduplicateProperties = true,
   }) async =>
@@ -65,6 +76,8 @@ class FlutterContacts {
         withProperties: withProperties,
         withThumbnail: withThumbnail,
         withPhoto: withPhoto,
+        withGroups: withGroups,
+        withAccounts: withAccounts,
         sorted: sorted,
         deduplicateProperties: deduplicateProperties,
       );
@@ -79,6 +92,15 @@ class FlutterContacts {
   /// fetched. If [withPhoto] is false, the high-resolution photo won't be
   /// fetched.
   ///
+  /// If [withGroups] is true, it also returns the group information (called
+  /// labels on Android and groups on iOS).
+  ///
+  /// If [withAccounts] is true, it also returns the account information. On
+  /// Android this is the raw account, and there can be several accounts per
+  /// unified contact (for example one for Gmail, one for Skype and one for
+  /// WhatsApp). On iOS it is called container, and there can be only one
+  /// container per contact.
+  ///
   /// If [deduplicateProperties] is true, the properties will be de-duplicated,
   /// mainly to avoid the case (common on Android) where multiple equivalent
   /// phones are returned.
@@ -87,6 +109,8 @@ class FlutterContacts {
     bool withProperties = true,
     bool withThumbnail = true,
     bool withPhoto = true,
+    bool withGroups = false,
+    bool withAccounts = false,
     bool deduplicateProperties = true,
   }) async {
     final contacts = await _select(
@@ -94,6 +118,8 @@ class FlutterContacts {
       withProperties: withProperties,
       withThumbnail: withThumbnail,
       withPhoto: withPhoto,
+      withGroups: withGroups,
+      withAccounts: withAccounts,
       sorted: false,
       deduplicateProperties: deduplicateProperties,
     );
@@ -242,6 +268,8 @@ class FlutterContacts {
     bool withProperties = false,
     bool withThumbnail = false,
     bool withPhoto = false,
+    bool withGroups = false,
+    bool withAccounts = false,
     bool sorted = true,
     bool deduplicateProperties = true,
   }) async {
@@ -252,6 +280,8 @@ class FlutterContacts {
       withProperties,
       withThumbnail,
       withPhoto,
+      withGroups,
+      withAccounts,
       config.returnUnifiedContacts,
       config.includeNonVisibleOnAndroid,
       config.includeNotesOnIos13AndAbove,

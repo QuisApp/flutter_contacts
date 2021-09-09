@@ -15,6 +15,8 @@ struct Contact {
     var socialMedias: [SocialMedia] = []
     var events: [Event] = []
     var notes: [Note] = []
+    var accounts: [Account] = []
+    var groups: [Group] = []
 
     init(fromMap m: [String: Any?]) {
         id = m["id"] as! String
@@ -34,6 +36,8 @@ struct Contact {
         }
         events = (m["events"] as! [[String: Any?]]).map { Event(fromMap: $0) }
         notes = (m["notes"] as! [[String: Any]]).map { Note(fromMap: $0) }
+        accounts = (m["accounts"] as! [[String: Any]]).map { Account(fromMap: $0) }
+        groups = (m["groups"] as! [[String: Any]]).map { Group(fromMap: $0) }
     }
 
     init(fromContact c: CNContact) {
@@ -97,7 +101,8 @@ struct Contact {
         "socialMedias": socialMedias.map { $0.toMap() },
         "events": events.map { $0.toMap() },
         "notes": notes.map { $0.toMap() },
-        "accounts": [],
+        "accounts": accounts.map { $0.toMap() },
+        "groups": groups.map { $0.toMap() },
     ]
     }
 }

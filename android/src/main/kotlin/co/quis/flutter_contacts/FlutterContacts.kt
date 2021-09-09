@@ -12,6 +12,7 @@ import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Event
+import android.provider.ContactsContract.CommonDataKinds.GroupMembership
 import android.provider.ContactsContract.CommonDataKinds.Im
 import android.provider.ContactsContract.CommonDataKinds.Nickname
 import android.provider.ContactsContract.CommonDataKinds.Note
@@ -23,6 +24,7 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import android.provider.ContactsContract.CommonDataKinds.Website
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
+import android.provider.ContactsContract.Groups
 import android.provider.ContactsContract.RawContacts
 import java.io.FileNotFoundException
 import java.io.InputStream
@@ -31,6 +33,7 @@ import co.quis.flutter_contacts.properties.Account as PAccount
 import co.quis.flutter_contacts.properties.Address as PAddress
 import co.quis.flutter_contacts.properties.Email as PEmail
 import co.quis.flutter_contacts.properties.Event as PEvent
+import co.quis.flutter_contacts.properties.Group as PGroup
 import co.quis.flutter_contacts.properties.Name as PName
 import co.quis.flutter_contacts.properties.Note as PNote
 import co.quis.flutter_contacts.properties.Organization as POrganization
@@ -54,6 +57,8 @@ class FlutterContacts {
             withProperties: Boolean,
             withThumbnail: Boolean,
             withPhoto: Boolean,
+            withGroups: Boolean,
+            withAccounts: Boolean,
             returnUnifiedContacts: Boolean,
             includeNonVisible: Boolean,
             idIsRawContactId: Boolean = false
@@ -124,7 +129,7 @@ class FlutterContacts {
                     )
                 )
             }
-            if (withProperties || !returnUnifiedContacts) {
+            if (withAccounts || !returnUnifiedContacts) {
                 projection.addAll(
                     listOf(
                         Data.RAW_CONTACT_ID,
@@ -133,6 +138,11 @@ class FlutterContacts {
                     )
                 )
             }
+            if (withGroups) {
+                projection.add(GroupMembership.GROUP_ROW_ID)
+            }
+
+            val groups = if (withGroups) fetchGroups(resolver) else mapOf<String, PGroup>()
 
             var selectionClauses = mutableListOf<String>()
             if (!includeNonVisible) {
@@ -215,30 +225,32 @@ class FlutterContacts {
                     contact.thumbnail = cursor.getBlob(cursor.getColumnIndex(Photo.PHOTO))
                 }
 
-                // All all properties (phones, emails, etc).
+                // All properties (phones, emails, etc).
                 if (withProperties) {
-                    // Raw IDs are IDs of the contact in different accounts (e.g. the
-                    // same contact might have Google, WhatsApp and Skype accounts, each
-                    // with its own raw ID).
-                    val rawId = getString(Data.RAW_CONTACT_ID)
-                    val accountType = getString(RawContacts.ACCOUNT_TYPE)
-                    val accountName = getString(RawContacts.ACCOUNT_NAME)
-                    var accountSeen = false
-                    for (account in contact.accounts) {
-                        if (account.rawId == rawId) {
-                            accountSeen = true
-                            account.mimetypes =
-                                (account.mimetypes + mimetype).toSortedSet().toList()
+                    if (withAccounts) {
+                        // Raw IDs are IDs of the contact in different accounts (e.g. the
+                        // same contact might have Google, WhatsApp and Skype accounts, each
+                        // with its own raw ID).
+                        val rawId = getString(Data.RAW_CONTACT_ID)
+                        val accountType = getString(RawContacts.ACCOUNT_TYPE)
+                        val accountName = getString(RawContacts.ACCOUNT_NAME)
+                        var accountSeen = false
+                        for (account in contact.accounts) {
+                            if (account.rawId == rawId) {
+                                accountSeen = true
+                                account.mimetypes =
+                                    (account.mimetypes + mimetype).toSortedSet().toList()
+                            }
                         }
-                    }
-                    if (!accountSeen) {
-                        val account = PAccount(
-                            rawId,
-                            accountType,
-                            accountName,
-                            listOf(mimetype)
-                        )
-                        contact.accounts += account
+                        if (!accountSeen) {
+                            val account = PAccount(
+                                rawId,
+                                accountType,
+                                accountName,
+                                listOf(mimetype)
+                            )
+                            contact.accounts += account
+                        }
                     }
 
                     when (mimetype) {
@@ -375,6 +387,14 @@ class FlutterContacts {
                                 contact.notes += note
                             }
                         }
+                        GroupMembership.CONTENT_ITEM_TYPE -> {
+                            if (withGroups) {
+                                val groupId: String = getString(GroupMembership.GROUP_ROW_ID)
+                                if (groups.containsKey(groupId)) {
+                                    contact.groups += groups[groupId]!!
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -382,6 +402,30 @@ class FlutterContacts {
             cursor.close()
 
             return contacts.map { it.toMap() }
+        }
+
+        private fun fetchGroups(resolver: ContentResolver): Map<String, PGroup> {
+            val projection = listOf(
+                Groups._ID,
+                Groups.TITLE
+            )
+            val cursor = resolver.query(
+                Groups.CONTENT_URI,
+                projection.toTypedArray(),
+                /*selection=*/null,
+                /*selectionArgs=*/null,
+                /*sortOrder=*/null
+            )
+            if (cursor == null) {
+                return mapOf()
+            }
+            var groups = mutableMapOf<String, PGroup>()
+            while (cursor.moveToNext()) {
+                val groupId = cursor.getString(cursor.getColumnIndex(Groups._ID)) ?: ""
+                val groupName = cursor.getString(cursor.getColumnIndex(Groups.TITLE)) ?: ""
+                groups[groupId] = PGroup(id = groupId, name = groupName)
+            }
+            return groups
         }
 
         fun insert(
@@ -434,9 +478,15 @@ class FlutterContacts {
             // was saved.
             val insertedContacts: List<Map<String, Any?>> = select(
                 resolver,
-                rawId.toString(), /*with_properties=*/ true, /*with_thumbnail=*/true,
-                /*withPhoto=*/true, /*returnUnifiedContacts=*/true,
-                /*includeNonVisible=*/true, /*idIsRawContactId=*/true
+                rawId.toString(),
+                /*withProperties=*/ true,
+                /*withThumbnail=*/true,
+                /*withPhoto=*/true,
+                /*withGroups=*/false, // slower, usually not needed
+                /*withAccounts=*/true,
+                /*returnUnifiedContacts=*/true,
+                /*includeNonVisible=*/true,
+                /*idIsRawContactId=*/true
             )
 
             if (insertedContacts.isEmpty()) {
@@ -506,9 +556,15 @@ class FlutterContacts {
             // was saved.
             val updatedContacts: List<Map<String, Any?>> = select(
                 resolver,
-                rawContactId, /*with_properties=*/ true, /*with_thumbnail=*/true,
-                /*withPhoto=*/true, /*returnUnifiedContacts=*/true,
-                /*includeNonVisible=*/true, /*idIsRawContactId=*/true
+                rawContactId,
+                /*withProperties=*/ true,
+                /*withThumbnail=*/true,
+                /*withPhoto=*/true,
+                /*withGroups=*/false, // slower, usually not needed
+                /*withAccounts=*/true,
+                /*returnUnifiedContacts=*/true,
+                /*includeNonVisible=*/true,
+                /*idIsRawContactId=*/true
             )
 
             if (updatedContacts.isEmpty()) {

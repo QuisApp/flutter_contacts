@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter_contacts/config.dart';
+import 'package:flutter_contacts/properties/group.dart';
 import 'package:flutter_contacts/vcard.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_contacts/properties/account.dart';
@@ -117,6 +118,9 @@ class Contact {
   /// Raw accounts (Android only).
   List<Account> accounts;
 
+  /// Groups.
+  List<Group> groups;
+
   /// Whether the low-resolution thumbnail was fetched.
   bool thumbnailFetched = true;
 
@@ -144,6 +148,7 @@ class Contact {
     List<Event>? events,
     List<Note>? notes,
     List<Account>? accounts,
+    List<Group>? groups,
   })  : name = name ?? Name(),
         phones = phones ?? <Phone>[],
         emails = emails ?? <Email>[],
@@ -153,7 +158,8 @@ class Contact {
         socialMedias = socialMedias ?? <SocialMedia>[],
         events = events ?? <Event>[],
         notes = notes ?? <Note>[],
-        accounts = accounts ?? <Account>[];
+        accounts = accounts ?? <Account>[],
+        groups = groups ?? <Group>[];
 
   factory Contact.fromJson(Map<String, dynamic> json) => Contact(
         id: (json['id'] as String?) ?? '',
@@ -188,6 +194,9 @@ class Contact {
         accounts: ((json['accounts'] as List?) ?? [])
             .map((x) => Account.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
+        groups: ((json['groups'] as List?) ?? [])
+            .map((x) => Group.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
       );
 
   Map<String, dynamic> toJson({
@@ -209,6 +218,7 @@ class Contact {
         'events': events.map((x) => x.toJson()).toList(),
         'notes': notes.map((x) => x.toJson()).toList(),
         'accounts': accounts.map((x) => x.toJson()).toList(),
+        'groups': groups.map((x) => x.toJson()).toList(),
       });
 
   @override
@@ -250,7 +260,7 @@ class Contact {
       'photo=$photo, name=$name, phones=$phones, emails=$emails, '
       'addresses=$addresses, organizations=$organizations, websites=$websites, '
       'socialMedias=$socialMedias, events=$events, notes=$notes, '
-      'accounts=$accounts)';
+      'accounts=$accounts, groups=$groups)';
 
   /// Inserts the contact into the database.
   Future<Contact> insert() => FlutterContacts.insertContact(this);

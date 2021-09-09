@@ -24,15 +24,20 @@ class _ContactPageState extends State<ContactPage>
 
   Future _fetchContact() async {
     // First fetch all contact details
-    await _fetchContactWith(false);
+    await _fetchContactWith(highRes: false);
 
     // Then fetch contact with high resolution photo
-    await _fetchContactWith(true);
+    await _fetchContactWith(highRes: true);
   }
 
-  Future _fetchContactWith(bool highRes) async {
-    final contact = await FlutterContacts.getContact(_contact.id,
-        withThumbnail: !highRes, withPhoto: highRes);
+  Future _fetchContactWith({@required bool highRes}) async {
+    final contact = await FlutterContacts.getContact(
+      _contact.id,
+      withThumbnail: !highRes,
+      withPhoto: highRes,
+      withGroups: true,
+      withAccounts: true,
+    );
     setState(() {
       _contact = contact;
     });
@@ -210,6 +215,14 @@ class _ContactPageState extends State<ContactPage>
               (x) => [
                     Divider(),
                     Text('Note: ${x.note}'),
+                  ]),
+          _makeCard(
+              'Groups',
+              contact.groups,
+              (x) => [
+                    Divider(),
+                    Text('Group ID: ${x.id}'),
+                    Text('Name: ${x.name}'),
                   ]),
           _makeCard(
               'Accounts',

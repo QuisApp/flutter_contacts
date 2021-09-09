@@ -7,6 +7,7 @@ import UIKit
 public enum FlutterContacts {
     // Fetches contact(s).
     static func selectInternal(
+        store: CNContactStore,
         id: String?,
         withProperties: Bool,
         withThumbnail: Bool,
@@ -16,7 +17,6 @@ public enum FlutterContacts {
         externalIntent: Bool = false
     ) -> [CNContact] {
         var contacts: [CNContact] = []
-        let store = CNContactStore()
         var keys: [Any] = [
             CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
             CNContactIdentifierKey,
@@ -84,10 +84,14 @@ public enum FlutterContacts {
         withProperties: Bool,
         withThumbnail: Bool,
         withPhoto: Bool,
+        withGroups: Bool,
+        withAccounts: Bool,
         returnUnifiedContacts: Bool,
         includeNotesOnIos13AndAbove: Bool
     ) -> [[String: Any?]] {
-        let contacts = selectInternal(
+        let store = CNContactStore()
+        let contactsInternal = selectInternal(
+            store: store,
             id: id,
             withProperties: withProperties,
             withThumbnail: withThumbnail,
@@ -95,7 +99,88 @@ public enum FlutterContacts {
             returnUnifiedContacts: returnUnifiedContacts,
             includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
         )
-        return contacts.map { Contact(fromContact: $0).toMap() }
+        var contacts = contactsInternal.map { Contact(fromContact: $0) }
+        if withGroups {
+            let groups = fetchGroups(store)
+            let groupMemberships = fetchGroupMemberships(store, groups)
+            for (index, contact) in contacts.enumerated() {
+                if let contactGroups = groupMemberships[contact.id] {
+                    contacts[index].groups = contactGroups.map { Group(fromGroup: groups[$0]) }
+                }
+            }
+        }
+        if withAccounts {
+            let containers = fetchContainers(store)
+            let containerMemberships = fetchContainerMemberships(store, containers)
+            for (index, contact) in contacts.enumerated() {
+                if let contactContainers = containerMemberships[contact.id] {
+                    contacts[index].accounts = contactContainers.map { Account(fromContainer: containers[$0]) }
+                }
+            }
+        }
+        return contacts.map { $0.toMap() }
+    }
+
+    static func fetchGroups(_ store: CNContactStore) -> [CNGroup] {
+        var groups: [CNGroup] = []
+        do {
+            try groups = store.groups(matching: nil)
+        } catch {
+            print("Unexpected error: \(error)")
+            return []
+        }
+        return groups
+    }
+
+    static func fetchGroupMemberships(_ store: CNContactStore, _ groups: [CNGroup]) -> [String: [Int]] {
+        var memberships = [String: [Int]]()
+        for (groupIndex, group) in groups.enumerated() {
+            let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey] as [CNKeyDescriptor])
+            request.predicate = CNContact.predicateForContactsInGroup(withIdentifier: group.identifier)
+            do {
+                try store.enumerateContacts(with: request) { (contact, _) -> Void in
+                    if let contactGroups = memberships[contact.identifier] {
+                        memberships[contact.identifier] = contactGroups + [groupIndex]
+                    } else {
+                        memberships[contact.identifier] = [groupIndex]
+                    }
+                }
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+        }
+        return memberships
+    }
+
+    static func fetchContainers(_ store: CNContactStore) -> [CNContainer] {
+        var containers: [CNContainer] = []
+        do {
+            try containers = store.containers(matching: nil)
+        } catch {
+            print("Unexpected error: \(error)")
+            return []
+        }
+        return containers
+    }
+
+    static func fetchContainerMemberships(_ store: CNContactStore, _ containers: [CNContainer]) -> [String: [Int]] {
+        var memberships = [String: [Int]]()
+        for (containerIndex, container) in containers.enumerated() {
+            let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey] as [CNKeyDescriptor])
+            request.predicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
+            do {
+                try store.enumerateContacts(with: request) { (contact, _) -> Void in
+                    if let contactContainers = memberships[contact.identifier] {
+                        memberships[contact.identifier] = contactContainers + [containerIndex]
+                    } else {
+                        memberships[contact.identifier] = [containerIndex]
+                    }
+                }
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+        }
+        return memberships
     }
 
     // Inserts a new contact into the database.
@@ -289,14 +374,18 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                 let withProperties = args[1] as! Bool
                 let withThumbnail = args[2] as! Bool
                 let withPhoto = args[3] as! Bool
-                let returnUnifiedContacts = args[4] as! Bool
-                // args[5] = includeNonVisibleOnAndroid
-                let includeNotesOnIos13AndAbove = args[6] as! Bool
+                let withGroups = args[4] as! Bool
+                let withAccounts = args[5] as! Bool
+                let returnUnifiedContacts = args[6] as! Bool
+                // args[7] = includeNonVisibleOnAndroid
+                let includeNotesOnIos13AndAbove = args[8] as! Bool
                 let contacts = FlutterContacts.select(
                     id: id,
                     withProperties: withProperties,
                     withThumbnail: withThumbnail,
                     withPhoto: withPhoto,
+                    withGroups: withGroups,
+                    withAccounts: withAccounts,
                     returnUnifiedContacts: returnUnifiedContacts,
                     includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
                 )
@@ -356,6 +445,7 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                 let args = call.arguments as! [Any?]
                 let id = args[0] as! String
                 let contacts = FlutterContacts.selectInternal(
+                    store: CNContactStore(),
                     id: id,
                     withProperties: true,
                     withThumbnail: true,

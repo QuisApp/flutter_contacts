@@ -106,10 +106,16 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     if (rawId != null) {
                         val contacts: List<Map<String, Any?>> =
                             FlutterContacts.select(
-                                resolver!!, rawId, /*withProperties=*/false,
-                                /*withThumbnail=*/false, /*withPhoto=*/false,
+                                resolver!!,
+                                rawId,
+                                /*withProperties=*/false,
+                                /*withThumbnail=*/false,
+                                /*withPhoto=*/false,
+                                /*withGroups=*/false,
+                                /*withAccounts=*/false,
                                 /*returnUnifiedContacts=*/true,
-                                /*includeNonVisible=*/true, /*idIsRawContactId=*/true
+                                /*includeNonVisible=*/true,
+                                /*idIsRawContactId=*/true
                             )
                         if (contacts.isNotEmpty()) {
                             insertResult!!.success(contacts[0]["id"])
@@ -180,17 +186,24 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     val withProperties = args[1] as Boolean
                     val withThumbnail = args[2] as Boolean
                     val withPhoto = args[3] as Boolean
-                    val returnUnifiedContacts = args[4] as Boolean
-                    val includeNonVisible = args[5] as Boolean
-                    // args[6] = includeNotesOnIos13AndAbove
+                    val withGroups = args[4] as Boolean
+                    val withAccounts = args[5] as Boolean
+                    val returnUnifiedContacts = args[6] as Boolean
+                    val includeNonVisible = args[7] as Boolean
+                    // args[8] = includeNotesOnIos13AndAbove
                     val contacts: List<Map<String, Any?>> =
                         FlutterContacts.select(
                             resolver!!,
-                            id, withProperties,
+                            id,
+                            withProperties,
                             // Sometimes thumbnail is available but photo is not, so we
                             // fetch thumbnails even if only the photo was requested.
                             withThumbnail || withPhoto,
-                            withPhoto, returnUnifiedContacts, includeNonVisible
+                            withPhoto,
+                            withGroups,
+                            withAccounts,
+                            returnUnifiedContacts,
+                            includeNonVisible
                         )
                     GlobalScope.launch(Dispatchers.Main) { result.success(contacts) }
                 }
