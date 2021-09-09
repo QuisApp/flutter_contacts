@@ -2352,5 +2352,6 @@
             "note": "Notes line 1\nNotes line 2\nNotes line 3"
         }
     ],
-    "accounts": []
+    "accounts": [],
+    "groups": []
 }

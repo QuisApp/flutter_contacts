@@ -770,5 +770,6 @@
             "note": "Some notes 1\nSome notes 2"
         }
     ],
-    "accounts": []
+    "accounts": [],
+    "groups": []
 }

@@ -598,5 +598,6 @@
             "note": "Some notes"
         }
     ],
-    "accounts": []
+    "accounts": [],
+    "groups": []
 }

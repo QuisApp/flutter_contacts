@@ -87,5 +87,6 @@
             "note": "Some notes line 1 Some notes line 2"
         }
     ],
-    "accounts": []
+    "accounts": [],
+    "groups": []
 }

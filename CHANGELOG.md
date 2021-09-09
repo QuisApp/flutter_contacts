@@ -1,3 +1,8 @@
+## 1.1.1
+
+* Fetch groups (iOS) / labels (Android) and containers (iOS) / accounts (Android) (https://github.com/QuisApp/flutter_contacts/issues/29)
+* Ability to request read-only permissions (https://github.com/QuisApp/flutter_contacts/issues/25)
+
 ## 1.1.0+4
 
 * Load rawContact instead of contactId after update, since Android sometimes changes the contactId
