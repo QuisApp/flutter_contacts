@@ -75,7 +75,7 @@
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/pub%20points" alt="pub points"></a>
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/popularity" alt="popularity"></a>
 <a href="https://pub.dev/packages/flutter_contacts/score"><img src="https://badges.bar/flutter_contacts/likes" alt="likes"></a></p>
-<p>Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support.</p>
+<p>Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support, and contact permission handling.</p>
 <p>For a minimalistic example, take a look at <a href="https://github.com/QuisApp/flutter_contacts/blob/master/example"><code>example/</code></a>. You can write a full-fledged contacts app with it – see <a href="https://github.com/QuisApp/flutter_contacts/blob/master/example_full"><code>example_full/</code></a> to see how.</p>
 <h2 id="quick-start">Quick start</h2>
 <pre class="language-dart"><code class="language-dart">// See installation notes below regarding AndroidManifest.xml and Info.plist
@@ -143,6 +143,7 @@ if (await FlutterContacts.requestPermission()) {
     List&lt;SocialMedia&gt; socialMedias;
     List&lt;Event&gt; events;
     List&lt;Note&gt; notes;
+    List&lt;Group&gt; groups;
 }
 class Name { String first; String last; }
 class Phone { String number; PhoneLabel label; }
@@ -153,6 +154,7 @@ class Website { String url; WebsiteLabel label; }
 class SocialMedia { String userName; SocialMediaLabel label; }
 class Event { int? year; int month; int day; EventLabel label; }
 class Note { String note; }
+class Group { String id; String name; }
 </code></pre>
 <h2 id="demo">Demo</h2>
 <p><img src="https://user-images.githubusercontent.com/1289004/101141809-ab165c00-35c9-11eb-90ff-b10318b13f16.gif" alt="demo"></p>
@@ -317,7 +319,7 @@ raw contacts instead via
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.1
+      1.1.1+1
   </span>
 
 </footer>

@@ -5,7 +5,7 @@
 [![popularity](https://badges.bar/flutter_contacts/popularity)](https://pub.dev/packages/flutter_contacts/score)
 [![likes](https://badges.bar/flutter_contacts/likes)](https://pub.dev/packages/flutter_contacts/score)
 
-Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support.
+Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support, and contact permission handling.
 
 For a minimalistic example, take a look at [`example/`](https://github.com/QuisApp/flutter_contacts/blob/master/example). You can write a full-fledged contacts app with it – see [`example_full/`](https://github.com/QuisApp/flutter_contacts/blob/master/example_full) to see how.
 
@@ -81,6 +81,7 @@ class Contact {
     List<SocialMedia> socialMedias;
     List<Event> events;
     List<Note> notes;
+    List<Group> groups;
 }
 class Name { String first; String last; }
 class Phone { String number; PhoneLabel label; }
@@ -91,6 +92,7 @@ class Website { String url; WebsiteLabel label; }
 class SocialMedia { String userName; SocialMediaLabel label; }
 class Event { int? year; int month; int day; EventLabel label; }
 class Note { String note; }
+class Group { String id; String name; }
 ```
 
 ## Demo
