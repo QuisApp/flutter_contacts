@@ -67,6 +67,7 @@
     <li><a href="../../contact/Contact/displayName.html">displayName</a></li>
     <li><a href="../../contact/Contact/emails.html">emails</a></li>
     <li><a href="../../contact/Contact/events.html">events</a></li>
+    <li><a href="../../contact/Contact/groups.html">groups</a></li>
     <li><a href="../../contact/Contact/hashCode.html">hashCode</a></li>
     <li><a href="../../contact/Contact/id.html">id</a></li>
     <li><a href="../../contact/Contact/isUnified.html">isUnified</a></li>
@@ -122,7 +123,8 @@
 <li><span class="parameter" id="-param-socialMedias"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_social_media/SocialMedia-class.html">SocialMedia</a></span>&gt;</span>?</span> <span class="parameter-name">socialMedias</span>, </span></li>
 <li><span class="parameter" id="-param-events"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_event/Event-class.html">Event</a></span>&gt;</span>?</span> <span class="parameter-name">events</span>, </span></li>
 <li><span class="parameter" id="-param-notes"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_note/Note-class.html">Note</a></span>&gt;</span>?</span> <span class="parameter-name">notes</span>, </span></li>
-<li><span class="parameter" id="-param-accounts"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_account/Account-class.html">Account</a></span>&gt;</span>?</span> <span class="parameter-name">accounts</span>}</span></li>
+<li><span class="parameter" id="-param-accounts"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_account/Account-class.html">Account</a></span>&gt;</span>?</span> <span class="parameter-name">accounts</span>, </span></li>
+<li><span class="parameter" id="-param-groups"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_group/Group-class.html">Group</a></span>&gt;</span>?</span> <span class="parameter-name">groups</span>}</span></li>
 </ol>)
     </section>
 
@@ -144,6 +146,7 @@
   List&lt;Event&gt;? events,
   List&lt;Note&gt;? notes,
   List&lt;Account&gt;? accounts,
+  List&lt;Group&gt;? groups,
 })  : name = name ?? Name(),
       phones = phones ?? &lt;Phone&gt;[],
       emails = emails ?? &lt;Email&gt;[],
@@ -153,7 +156,8 @@
       socialMedias = socialMedias ?? &lt;SocialMedia&gt;[],
       events = events ?? &lt;Event&gt;[],
       notes = notes ?? &lt;Note&gt;[],
-      accounts = accounts ?? &lt;Account&gt;[];</code></pre>
+      accounts = accounts ?? &lt;Account&gt;[],
+      groups = groups ?? &lt;Group&gt;[];</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -166,7 +170,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.0+4
+      1.1.1
   </span>
 
 </footer>

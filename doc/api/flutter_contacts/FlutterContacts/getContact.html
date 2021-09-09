@@ -103,6 +103,8 @@
 <li><span class="parameter" id="getContact-param-withProperties">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withProperties</span>: <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="getContact-param-withThumbnail"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withThumbnail</span>: <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="getContact-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span>: <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="getContact-param-withGroups"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withGroups</span>: <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContact-param-withAccounts"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withAccounts</span>: <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="getContact-param-deduplicateProperties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateProperties</span>: <span class="default-value">true</span>}</span></li>
 </ol>)
       
@@ -115,6 +117,13 @@ fetched.</p>
 <p>If <code>withThumbnail</code> is false, the low-resolution thumbnail won't be
 fetched. If <code>withPhoto</code> is false, the high-resolution photo won't be
 fetched.</p>
+<p>If <code>withGroups</code> is true, it also returns the group information (called
+labels on Android and groups on iOS).</p>
+<p>If <code>withAccounts</code> is true, it also returns the account information. On
+Android this is the raw account, and there can be several accounts per
+unified contact (for example one for Gmail, one for Skype and one for
+WhatsApp). On iOS it is called container, and there can be only one
+container per contact.</p>
 <p>If <code>deduplicateProperties</code> is true, the properties will be de-duplicated,
 mainly to avoid the case (common on Android) where multiple equivalent
 phones are returned.</p>
@@ -127,6 +136,8 @@ phones are returned.</p>
   bool withProperties = true,
   bool withThumbnail = true,
   bool withPhoto = true,
+  bool withGroups = false,
+  bool withAccounts = false,
   bool deduplicateProperties = true,
 }) async {
   final contacts = await _select(
@@ -134,6 +145,8 @@ phones are returned.</p>
     withProperties: withProperties,
     withThumbnail: withThumbnail,
     withPhoto: withPhoto,
+    withGroups: withGroups,
+    withAccounts: withAccounts,
     sorted: false,
     deduplicateProperties: deduplicateProperties,
   );
@@ -152,7 +165,7 @@ phones are returned.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.0+4
+      1.1.1
   </span>
 
 </footer>

@@ -70,15 +70,12 @@
  </h1></div>
 
     <section class="desc markdown">
-      <p>Raw Android account.</p>
-<p>This is only exposed for information and debugging purposes and should be
-ignored in most cases.</p>
-<p>Raw contacts are aggregated into unified contacts (which are the ones we
-usually care about). For example a single contact can have multiple raw
-contacts, one from Google, one from Skype, one from WhatsApp, etc.</p>
-<p>If you have two Google accounts (e.g. two Gmail addresses registered on the
-phone) it's possible to have two raw contacts, part of the same contact,
-both with <a href="../properties_account/Account/type.html">type</a> <code>com.google</code> but with a different <a href="../properties_account/Account/name.html">name</a>.</p>
+      <p>Account information, which is exposed for information and debugging purposes
+and should be ignored in most cases.</p>
+<p>On Android this is the raw account, and there can be several accounts per
+unified contact (for example one for Gmail, one for Skype and one for
+WhatsApp). On iOS it is called container, and there can be only one
+container per contact.</p>
     </section>
     
 
@@ -246,7 +243,7 @@ both with <a href="../properties_account/Account/type.html">type</a> <code>com.g
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.0+4
+      1.1.1
   </span>
 
 </footer>

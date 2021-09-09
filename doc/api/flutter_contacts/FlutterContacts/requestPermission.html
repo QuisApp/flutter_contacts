@@ -99,18 +99,20 @@
     <section class="multi-line-signature">
       <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
             <span class="name ">requestPermission</span>
-(<wbr>)
+(<wbr><ol class="parameter-list"><li><span class="parameter" id="requestPermission-param-readonly">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">readonly</span>: <span class="default-value">false</span>}</span></li>
+</ol>)
       
     </section>
     <section class="desc markdown">
-      <p>Requests permission to read/write contacts. Returns true if granted, false
-in any other case.</p>
+      <p>Requests permission to read or read/write contacts. Returns true if
+granted, false in any other case. Note: read-only mode is only applicable
+to Android.</p>
     </section>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">static Future&lt;bool&gt; requestPermission() async =&gt;
-    await _channel.invokeMethod(&#39;requestPermission&#39;) ?? false;</code></pre>
+      <pre class="language-dart"><code class="language-dart">static Future&lt;bool&gt; requestPermission({bool readonly = false}) async =&gt;
+    await _channel.invokeMethod(&#39;requestPermission&#39;, readonly) ?? false;</code></pre>
     </section>
 
   </div> <!-- /.main-content -->
@@ -123,7 +125,7 @@ in any other case.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.0+4
+      1.1.1
   </span>
 
 </footer>
