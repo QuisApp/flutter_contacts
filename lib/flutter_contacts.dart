@@ -164,14 +164,18 @@ class FlutterContacts {
     // In addition, on Android we need a raw contact ID.
     if (Platform.isAndroid &&
         !contact.accounts.any((x) => x.rawId.isNotEmpty)) {
-      throw Exception('Cannot update contact without raw ID on Android');
+      throw Exception(
+          'Cannot update contact without raw ID on Android, make sure to '
+          'specify `withAccounts: true` when fetching contacts');
     }
     // This avoids the accidental case where we try to update a contact before
     // fetching all their properties or photos, which would erase the existing
     // properties or photos.
     if (!contact.propertiesFetched || !contact.photoFetched) {
       throw Exception(
-          'Cannot update contact without fetching properties and photos');
+          'Cannot update contact without properties and photo, make sure to '
+          'specify `withProperties: true` and `withPhoto: true` when fetching '
+          'contacts');
     }
     if (!contact.isUnified) {
       throw Exception('Cannot update raw contacts');

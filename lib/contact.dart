@@ -30,7 +30,7 @@ import 'package:flutter_contacts/properties/website.dart';
 /// If properties were fetched, fields [name], [phones], [emails], etc will be
 /// populated (but might be empty).
 ///
-/// If properties were fetched, [accounts] will also be populated on Android and
+/// If accounts were fetched, [accounts] will also be populated on Android and
 /// are not taken into account for contact equality and hash code. It is exposed
 /// for three reasons:
 ///   - most commonly, for debug purposes
@@ -38,6 +38,11 @@ import 'package:flutter_contacts/properties/website.dart';
 ///     listed account
 ///   - if provided, [insert] will use the [Account.type] and [Account.name] of
 ///     the first listed account
+/// On iOS, accounts correspond to containers and there can be only one per
+/// contact.
+///
+/// If groups are fetched, [groups] (called labels on Android) will also be
+/// populated.
 ///
 /// In general no fields or nested fields can be null. For example if a phone is
 /// present, contact.phones.first.normalizedNumber cannot be null (but might be
@@ -55,7 +60,6 @@ import 'package:flutter_contacts/properties/website.dart';
 ///   - [propertiesFetched] if [name], [phones], [emails], etc were fetched
 ///
 /// Notable differences between iOS and Android:
-///   - iOS doesn't support [accounts]
 ///   - iOS only supports one note
 ///   - on iOS13+ the app needs to be explicitly approved by Apple (see
 ///     https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);
@@ -72,6 +76,7 @@ import 'package:flutter_contacts/properties/website.dart';
 ///     [Address.isoCountry] is not available on Android and
 ///     [Address.neighborhood] is not available on iOS, so if you save a contact
 ///     with data for [Address.neighborhood] on iOS, that data will be lost
+///   - [accounts] represent raw accounts on Android and containers on iOS
 class Contact {
   /// The unique identifier of the contact.
   String id;
