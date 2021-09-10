@@ -79,7 +79,7 @@ high-resolution photo if available and the low-resolution thumbnail
 otherwise, use the getter <a href="../contact/Contact/photoOrThumbnail.html">photoOrThumbnail</a>.</p>
 <p>If properties were fetched, fields <a href="../contact/Contact/name.html">name</a>, <a href="../contact/Contact/phones.html">phones</a>, <a href="../contact/Contact/emails.html">emails</a>, etc will be
 populated (but might be empty).</p>
-<p>If properties were fetched, <a href="../contact/Contact/accounts.html">accounts</a> will also be populated on Android and
+<p>If accounts were fetched, <a href="../contact/Contact/accounts.html">accounts</a> will also be populated on Android and
 are not taken into account for contact equality and hash code. It is exposed
 for three reasons:</p>
 <ul>
@@ -87,8 +87,12 @@ for three reasons:</p>
 <li><a href="../contact/Contact/update.html">update</a> needs it to associate properties to the raw ID of the first
 listed account</li>
 <li>if provided, <a href="../contact/Contact/insert.html">insert</a> will use the <a href="../properties_account/Account/type.html">Account.type</a> and <a href="../properties_account/Account/name.html">Account.name</a> of
-the first listed account</li>
+the first listed account
+On iOS, accounts correspond to containers and there can be only one per
+contact.</li>
 </ul>
+<p>If groups are fetched, <a href="../contact/Contact/groups.html">groups</a> (called labels on Android) will also be
+populated.</p>
 <p>In general no fields or nested fields can be null. For example if a phone is
 present, contact.phones.first.normalizedNumber cannot be null (but might be
 empty). Every field defaults to empty string for strings, empty list for
@@ -108,7 +112,6 @@ label enums. The exceptions are as follows:</p>
 </ul>
 <p>Notable differences between iOS and Android:</p>
 <ul>
-<li>iOS doesn't support <a href="../contact/Contact/accounts.html">accounts</a></li>
 <li>iOS only supports one note</li>
 <li>on iOS13+ the app needs to be explicitly approved by Apple (see
 <a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);">https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);</a>
@@ -125,6 +128,7 @@ hood it will get saved as <a href="../properties_phone/PhoneLabel-class.html">Ph
 <a href="../properties_address/Address/isoCountry.html">Address.isoCountry</a> is not available on Android and
 <a href="../properties_address/Address/neighborhood.html">Address.neighborhood</a> is not available on iOS, so if you save a contact
 with data for <a href="../properties_address/Address/neighborhood.html">Address.neighborhood</a> on iOS, that data will be lost</li>
+<li><a href="../contact/Contact/accounts.html">accounts</a> represent raw accounts on Android and containers on iOS</li>
 </ul>
     </section>
     
@@ -495,7 +499,7 @@ with data for <a href="../properties_address/Address/neighborhood.html">Address.
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.1+1
+      1.1.1+2
   </span>
 
 </footer>

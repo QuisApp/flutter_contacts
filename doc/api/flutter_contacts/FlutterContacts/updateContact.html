@@ -121,14 +121,18 @@ the output rather than on the input.</p>
   &#47;&#47; In addition, on Android we need a raw contact ID.
   if (Platform.isAndroid &amp;&amp;
       !contact.accounts.any((x) =&gt; x.rawId.isNotEmpty)) {
-    throw Exception(&#39;Cannot update contact without raw ID on Android&#39;);
+    throw Exception(
+        &#39;Cannot update contact without raw ID on Android, make sure to &#39;
+        &#39;specify `withAccounts: true` when fetching contacts&#39;);
   }
   &#47;&#47; This avoids the accidental case where we try to update a contact before
   &#47;&#47; fetching all their properties or photos, which would erase the existing
   &#47;&#47; properties or photos.
   if (!contact.propertiesFetched || !contact.photoFetched) {
     throw Exception(
-        &#39;Cannot update contact without fetching properties and photos&#39;);
+        &#39;Cannot update contact without properties and photo, make sure to &#39;
+        &#39;specify `withProperties: true` and `withPhoto: true` when fetching &#39;
+        &#39;contacts&#39;);
   }
   if (!contact.isUnified) {
     throw Exception(&#39;Cannot update raw contacts&#39;);
@@ -151,7 +155,7 @@ the output rather than on the input.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.1+1
+      1.1.1+2
   </span>
 
 </footer>
