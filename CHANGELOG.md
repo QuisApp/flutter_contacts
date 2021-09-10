@@ -1,3 +1,7 @@
+## 1.1.1+2
+
+* Update comments
+
 ## 1.1.1+1
 
 * Update README
