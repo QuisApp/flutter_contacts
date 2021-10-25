@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/contact.dart';
@@ -17,6 +18,48 @@ export 'properties/organization.dart';
 export 'properties/phone.dart';
 export 'properties/social_media.dart';
 export 'properties/website.dart';
+
+/// From StandardMethodCodec.decodeEnvelope.
+/// Needed to be able to call compute() with it.
+dynamic decodeEnvelope(ByteData envelope) {
+  final messageCodec = const StandardMessageCodec();
+  // First byte is zero in success case, and non-zero otherwise.
+  if (envelope.lengthInBytes == 0) {
+    throw const FormatException('Expected envelope, got nothing');
+  }
+  final buffer = ReadBuffer(envelope);
+  if (buffer.getUint8() == 0) return messageCodec.readValue(buffer);
+  final errorCode = messageCodec.readValue(buffer);
+  final errorMessage = messageCodec.readValue(buffer);
+  final errorDetails = messageCodec.readValue(buffer);
+  final errorStacktrace =
+      (buffer.hasRemaining) ? messageCodec.readValue(buffer) as String? : null;
+  if (errorCode is String &&
+      (errorMessage == null || errorMessage is String) &&
+      !buffer.hasRemaining) {
+    throw PlatformException(
+        code: errorCode,
+        message: errorMessage as String?,
+        details: errorDetails,
+        stacktrace: errorStacktrace);
+  } else {
+    throw const FormatException('Invalid envelope');
+  }
+}
+
+/// Like MethodChannel.invokeMethod, but decode on a thread
+Future<T?> _invokeMethodDecodeOnThread<T>(MethodChannel channel, String method,
+    [dynamic arguments]) async {
+  final result = await channel.binaryMessenger.send(
+    channel.name,
+    channel.codec.encodeMethodCall(MethodCall(method, arguments)),
+  );
+  if (result == null) {
+    throw MissingPluginException(
+        'No implementation found for method $method on channel ${channel.name}');
+  }
+  return await compute(decodeEnvelope, result) as T?;
+}
 
 class FlutterContacts {
   static const _channel = MethodChannel('github.com/QuisApp/flutter_contacts');
@@ -280,7 +323,8 @@ class FlutterContacts {
   }) async {
     // removing the types makes it crash at runtime
     // ignore: omit_local_variable_types
-    List untypedContacts = await _channel.invokeMethod('select', [
+    List untypedContacts =
+        await _invokeMethodDecodeOnThread(_channel, 'select', [
       id,
       withProperties,
       withThumbnail,
