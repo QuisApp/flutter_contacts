@@ -113,6 +113,7 @@ class _ContactPageState extends State<ContactPage>
                     Divider(),
                     Text('ID: ${x.id}'),
                     Text('Display name: ${x.displayName}'),
+                    Text('Starred: ${x.isStarred}'),
                   ]),
           _makeCard(
               'Name',

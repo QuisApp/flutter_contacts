@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ContentProviderOperation
 import android.content.ContentResolver
 import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.res.AssetFileDescriptor
@@ -73,7 +74,8 @@ class FlutterContacts {
             var projection = mutableListOf(
                 Data.CONTACT_ID,
                 Data.MIMETYPE,
-                Contacts.DISPLAY_NAME_PRIMARY
+                Contacts.DISPLAY_NAME_PRIMARY,
+                Contacts.STARRED
             )
             if (withThumbnail) {
                 projection.add(Photo.PHOTO)
@@ -187,6 +189,7 @@ class FlutterContacts {
 
             fun getString(col: String): String = cursor.getString(cursor.getColumnIndex(col)) ?: ""
             fun getInt(col: String): Int = cursor.getInt(cursor.getColumnIndex(col)) ?: 0
+            fun getBool(col: String): Boolean = getInt(col) == 1
 
             while (cursor.moveToNext()) {
                 // ID and display name.
@@ -194,7 +197,8 @@ class FlutterContacts {
                 if (id !in index) {
                     var contact = Contact(
                         /*id=*/id,
-                        /*displayName=*/getString(Contacts.DISPLAY_NAME_PRIMARY)
+                        /*displayName=*/getString(Contacts.DISPLAY_NAME_PRIMARY),
+                        isStarred = getBool(Contacts.STARRED)
                     )
 
                     // Fetch high-resolution photo if requested.
@@ -474,6 +478,16 @@ class FlutterContacts {
                 buildOpsForPhoto(resolver, contact.photo!!, ops, rawId)
             }
 
+            // Update starred status.
+            val contentValues = ContentValues()
+            contentValues.put(ContactsContract.RawContacts.STARRED, if (contact.isStarred) 1 else 0)
+            resolver.update(
+                ContactsContract.RawContacts.CONTENT_URI,
+                contentValues,
+                ContactsContract.RawContacts._ID + "=?",
+                /*selectionArgs=*/arrayOf(rawId.toString())
+            )
+
             // Load contacts with that raw ID, which will give us the full contact as it
             // was saved.
             val insertedContacts: List<Map<String, Any?>> = select(
@@ -551,6 +565,16 @@ class FlutterContacts {
 
             // Save.
             resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+
+            // Update starred status.
+            val contentValues = ContentValues()
+            contentValues.put(ContactsContract.Contacts.STARRED, if (contact.isStarred) 1 else 0)
+            resolver.update(
+                ContactsContract.Contacts.CONTENT_URI,
+                contentValues,
+                ContactsContract.Contacts._ID + "=?",
+                /*selectionArgs=*/arrayOf(contactId)
+            )
 
             // Load contacts with that raw ID, which will give us the full contact as it
             // was saved.
@@ -642,7 +666,8 @@ class FlutterContacts {
                 contacts.add(
                     Contact(
                         /*id=*/(cursor.getString(cursor.getColumnIndex(Contacts._ID)) ?: ""),
-                        /*displayName=*/(cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: "")
+                        /*displayName=*/(cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: ""),
+                        isStarred = (cursor.getInt(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: 0) == 0
                     )
                 )
             }

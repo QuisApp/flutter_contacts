@@ -6,16 +6,6 @@ import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/properties/group.dart';
 import 'package:flutter_contacts/vcard.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:flutter_contacts/properties/account.dart';
-import 'package:flutter_contacts/properties/address.dart';
-import 'package:flutter_contacts/properties/email.dart';
-import 'package:flutter_contacts/properties/event.dart';
-import 'package:flutter_contacts/properties/name.dart';
-import 'package:flutter_contacts/properties/note.dart';
-import 'package:flutter_contacts/properties/organization.dart';
-import 'package:flutter_contacts/properties/phone.dart';
-import 'package:flutter_contacts/properties/social_media.dart';
-import 'package:flutter_contacts/properties/website.dart';
 
 /// A contact.
 ///
@@ -93,6 +83,9 @@ class Contact {
   /// Returns the full-resolution photo if available, the thumbnail otherwise.
   Uint8List? get photoOrThumbnail => photo ?? thumbnail;
 
+  /// Whether the contact is starred (Android only).
+  bool isStarred;
+
   /// Structured name.
   Name name;
 
@@ -143,6 +136,7 @@ class Contact {
     this.displayName = '',
     this.thumbnail,
     this.photo,
+    this.isStarred = false,
     Name? name,
     List<Phone>? phones,
     List<Email>? emails,
@@ -171,6 +165,7 @@ class Contact {
         displayName: (json['displayName'] as String?) ?? '',
         thumbnail: json['thumbnail'] as Uint8List?,
         photo: json['photo'] as Uint8List?,
+        isStarred: (json['isStarred'] as bool?) ?? false,
         name: Name.fromJson(Map<String, dynamic>.from(json['name'] ?? {})),
         phones: ((json['phones'] as List?) ?? [])
             .map((x) => Phone.fromJson(Map<String, dynamic>.from(x)))
@@ -213,6 +208,7 @@ class Contact {
         'displayName': displayName,
         'thumbnail': withThumbnail ? thumbnail : null,
         'photo': withPhoto ? photo : null,
+        'isStarred': isStarred,
         'name': name.toJson(),
         'phones': phones.map((x) => x.toJson()).toList(),
         'emails': emails.map((x) => x.toJson()).toList(),
@@ -232,6 +228,7 @@ class Contact {
       displayName.hashCode ^
       thumbnail.hashCode ^
       photo.hashCode ^
+      isStarred.hashCode ^
       name.hashCode ^
       _listHashCode(phones) ^
       _listHashCode(emails) ^
@@ -249,6 +246,7 @@ class Contact {
       o.displayName == displayName &&
       o.thumbnail == thumbnail &&
       o.photo == photo &&
+      o.isStarred == isStarred &&
       o.name == name &&
       _listEqual(o.phones, phones) &&
       _listEqual(o.emails, emails) &&
@@ -262,10 +260,10 @@ class Contact {
   @override
   String toString() =>
       'Contact(id=$id, displayName=$displayName, thumbnail=$thumbnail, '
-      'photo=$photo, name=$name, phones=$phones, emails=$emails, '
-      'addresses=$addresses, organizations=$organizations, websites=$websites, '
-      'socialMedias=$socialMedias, events=$events, notes=$notes, '
-      'accounts=$accounts, groups=$groups)';
+      'photo=$photo, isStarred=$isStarred, name=$name, phones=$phones, '
+      'emails=$emails, addresses=$addresses, organizations=$organizations, '
+      'websites=$websites, socialMedias=$socialMedias, events=$events, '
+      'notes=$notes, accounts=$accounts, groups=$groups)';
 
   /// Inserts the contact into the database.
   Future<Contact> insert() => FlutterContacts.insertContact(this);

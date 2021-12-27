@@ -103,6 +103,7 @@ class _EditContactPageState extends State<EditContactPage>
 
   List<Widget> _contactFields() => [
         _photoField(),
+        _starredField(),
         _nameCard(),
         _phoneCard(),
         _emailCard(),
@@ -336,5 +337,21 @@ class _EditContactPageState extends State<EditContactPage>
           key: UniqueKey(),
         ),
         () => _contact.notes = [],
+      );
+
+  Card _starredField() => Card(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Starred'),
+            SizedBox(width: 24.0),
+            Checkbox(
+              value: _contact.isStarred,
+              onChanged: (bool isStarred) =>
+                  setState(() => _contact.isStarred = isStarred),
+            ),
+          ],
+        ),
       );
 }
