@@ -7,14 +7,19 @@
   <meta name="description" content="API docs for the SocialMedia class from the social_media library, for the Dart programming language.">
   <title>SocialMedia class - social_media library - Dart API</title>
 
-  
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="../static-assets/github.css">
-  <link rel="stylesheet" href="../static-assets/styles.css">
-  <link rel="icon" href="../static-assets/favicon.png">
 
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
 </head>
+
 
 <body data-base-href="../"
       data-using-base-href="false">
@@ -36,60 +41,33 @@
 
 <main>
 
-  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
-      <form class="search-sidebar" role="search">
-        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
-      </form>
-    </header>
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-class">SocialMedia</span> class 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+ 
+</h1></div>
+
     
-    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-      <li><a href="../index.html">flutter_contacts</a></li>
-      <li><a href="../properties_social_media/properties_social_media-library.html">social_media</a></li>
-      <li class="self-crumb">SocialMedia class</li>
-    </ol>
-    
-    <h5>social_media library</h5>
-    <ol>
-  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#classes">Classes</a></li>
-  <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
-
-
-
-
-  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#properties">Properties</a></li>
-  <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
-
-
-  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#enums">Enums</a></li>
-  <li><a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel</a></li>
-
-
-</ol>
-
-  </div>
-
-  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-class">SocialMedia</span> class     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
- </h1></div>
-
-    <section class="desc markdown">
-      <p>Social media / instant messaging profile.</p>
+<section class="desc markdown">
+  <p>Social media / instant messaging profile.</p>
 <p>Android and iOS define a few special account types (some of them defunct)
 like AIM, MSN, Jabber, Netmeeting.</p>
 <p>iOS distinguishes between instant messaging and social media, but both map
 to <a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a>.</p>
 <p>We add a few special values of our own, like Instagram, Twitter, TikTok,
 Discord, etc. Source: <a href="https://buffer.com/library/social-media-sites/">https://buffer.com/library/social-media-sites/</a></p>
-    </section>
-    
+</section>
+
+
 
     <section class="summary offset-anchor" id="constructors">
       <h2>Constructors</h2>
 
       <dl class="constructor-summary-list">
         <dt id="SocialMedia" class="callable">
-          <span class="name"><a href="../properties_social_media/SocialMedia/SocialMedia.html">SocialMedia</a></span><span class="signature">(<span class="parameter" id="-param-userName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">userName</span>, </span><span class="parameter" id="-param-label">{<span class="type-annotation"><a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel</a></span> <span class="parameter-name">label</span>: <span class="default-value">SocialMediaLabel.other</span>, </span><span class="parameter" id="-param-customLabel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">customLabel</span>: <span class="default-value">&#39;&#39;</span>}</span>)</span>
+          <span class="name"><a href="../properties_social_media/SocialMedia/SocialMedia.html">SocialMedia</a></span><span class="signature">(<span class="parameter" id="-param-userName"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">userName</span>, </span><span class="parameter" id="-param-label">{<span class="type-annotation"><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span> <span class="parameter-name">label</span> = <span class="default-value">SocialMediaLabel.other</span>, </span><span class="parameter" id="-param-customLabel"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">customLabel</span> = <span class="default-value">&#39;&#39;</span>}</span>)</span>
         </dt>
         <dd>
            
@@ -109,45 +87,60 @@ Discord, etc. Source: <a href="https://buffer.com/library/social-media-sites/">h
 
       <dl class="properties">
         <dt id="customLabel" class="property">
-          <span class="name"><a href="../properties_social_media/SocialMedia/customLabel.html">customLabel</a></span>
-          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
-        </dt>
-        <dd>
-          Custom label, if <a href="../properties_social_media/SocialMedia/label.html">label</a> is <a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel.custom</a>. 
-                  <div class="features">read / write</div>
+  <span class="name"><a href="../properties_social_media/SocialMedia/customLabel.html">customLabel</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+
+</dt>
+<dd>
+  Custom label, if <a href="../properties_social_media/SocialMedia/label.html">label</a> is <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel.custom</a>. 
+  <div class="features">read / write</div>
+
 </dd>
+
         <dt id="hashCode" class="property">
-          <span class="name"><a href="../properties_social_media/SocialMedia/hashCode.html">hashCode</a></span>
-          <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>         
-        </dt>
-        <dd>
-          The hash code for this object. <a href="../properties_social_media/SocialMedia/hashCode.html">[...]</a>
-                  <div class="features">read-only, override</div>
+  <span class="name"><a href="../properties_social_media/SocialMedia/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> 
+
+</dt>
+<dd>
+  The hash code for this object. <a href="../properties_social_media/SocialMedia/hashCode.html">[...]</a>
+  <div class="features">read-only, override</div>
+
 </dd>
+
         <dt id="label" class="property">
-          <span class="name"><a href="../properties_social_media/SocialMedia/label.html">label</a></span>
-          <span class="signature">&#8596; <a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel</a></span>         
-        </dt>
-        <dd>
-          Label / platform (default <a href="../properties_social_media/SocialMediaLabel-class.html">SocialMediaLabel.other</a>). 
-                  <div class="features">read / write</div>
+  <span class="name"><a href="../properties_social_media/SocialMedia/label.html">label</a></span>
+  <span class="signature">&#8596; <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span> 
+
+</dt>
+<dd>
+  Label / platform (default <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel.other</a>). 
+  <div class="features">read / write</div>
+
 </dd>
+
         <dt id="runtimeType" class="property inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
-          <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>         
-        </dt>
-        <dd class="inherited">
-          A representation of the runtime type of the object. 
-                  <div class="features">read-only, inherited</div>
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span> 
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object. 
+  <div class="features">read-only, inherited</div>
+
 </dd>
+
         <dt id="userName" class="property">
-          <span class="name"><a href="../properties_social_media/SocialMedia/userName.html">userName</a></span>
-          <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>         
-        </dt>
-        <dd>
-          Handle / username / login. 
-                  <div class="features">read / write</div>
+  <span class="name"><a href="../properties_social_media/SocialMedia/userName.html">userName</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+
+</dt>
+<dd>
+  Handle / username / login. 
+  <div class="features">read / write</div>
+
 </dd>
+
       </dl>
     </section>
 
@@ -155,41 +148,57 @@ Discord, etc. Source: <a href="https://buffer.com/library/social-media-sites/">h
       <h2>Methods</h2>
       <dl class="callables">
         <dt id="noSuchMethod" class="callable inherited">
-          <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
-            <span class="returntype parameter">&#8594; dynamic</span>
-          </span>
-                  </dt>
-        <dd class="inherited">
-          Invoked when a non-existent method or property is accessed. <a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">[...]</a>
-                  <div class="features">inherited</div>
+  <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a non-existent method or property is accessed. <a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">[...]</a>
+  <div class="features">inherited</div>
+
 </dd>
+
         <dt id="toJson" class="callable">
-          <span class="name"><a href="../properties_social_media/SocialMedia/toJson.html">toJson</a></span><span class="signature">(<wbr>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>
-          </span>
-                  </dt>
-        <dd>
-           
-                  
+  <span class="name"><a href="../properties_social_media/SocialMedia/toJson.html">toJson</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+   
+  
+
 </dd>
+
         <dt id="toString" class="callable">
-          <span class="name"><a href="../properties_social_media/SocialMedia/toString.html">toString</a></span><span class="signature">(<wbr>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
-          </span>
-                  </dt>
-        <dd>
-          A string representation of this object. <a href="../properties_social_media/SocialMedia/toString.html">[...]</a>
-                  <div class="features">override</div>
+  <span class="name"><a href="../properties_social_media/SocialMedia/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  A string representation of this object. <a href="../properties_social_media/SocialMedia/toString.html">[...]</a>
+  <div class="features">override</div>
+
 </dd>
+
         <dt id="toVCard" class="callable">
-          <span class="name"><a href="../properties_social_media/SocialMedia/toVCard.html">toVCard</a></span><span class="signature">(<wbr>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
-          </span>
-                  </dt>
-        <dd>
-           
-                  
+  <span class="name"><a href="../properties_social_media/SocialMedia/toVCard.html">toVCard</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+   
+  
+
 </dd>
+
       </dl>
     </section>
 
@@ -197,14 +206,18 @@ Discord, etc. Source: <a href="https://buffer.com/library/social-media-sites/">h
       <h2>Operators</h2>
       <dl class="callables">
         <dt id="operator ==" class="callable">
-          <span class="name"><a href="../properties_social_media/SocialMedia/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-o"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">o</span></span>)
-            <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
-          </span>
-                  </dt>
-        <dd>
-          The equality operator. <a href="../properties_social_media/SocialMedia/operator_equals.html">[...]</a>
-                  <div class="features">override</div>
+  <span class="name"><a href="../properties_social_media/SocialMedia/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-o"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">o</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  The equality operator. <a href="../properties_social_media/SocialMedia/operator_equals.html">[...]</a>
+  <div class="features">override</div>
+
 </dd>
+
       </dl>
     </section>
 
@@ -213,30 +226,66 @@ Discord, etc. Source: <a href="https://buffer.com/library/social-media-sites/">h
 
   </div> <!-- /.main-content -->
 
-  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
-    <ol>
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
 
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../index.html">flutter_contacts</a></li>
+  <li><a href="../properties_social_media/properties_social_media-library.html">social_media</a></li>
+  <li class="self-crumb">SocialMedia class</li>
+</ol>
+
+
+    <h5>social_media library</h5>
+    <ol>
+  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#classes">Classes</a></li>
+  <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
+
+
+
+
+  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#properties">Properties</a></li>
+  <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
+
+
+  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#enums">Enums</a></li>
+  <li><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></li>
+
+
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <ol>
 
     <li class="section-title"><a href="../properties_social_media/SocialMedia-class.html#constructors">Constructors</a></li>
     <li><a href="../properties_social_media/SocialMedia/SocialMedia.html">SocialMedia</a></li>
     <li><a href="../properties_social_media/SocialMedia/SocialMedia.fromJson.html">fromJson</a></li>
 
-    <li class="section-title"> <a href="../properties_social_media/SocialMedia-class.html#instance-properties">Properties</a>
+
+    <li class="section-title">
+      <a href="../properties_social_media/SocialMedia-class.html#instance-properties">Properties</a>
     </li>
     <li><a href="../properties_social_media/SocialMedia/customLabel.html">customLabel</a></li>
     <li><a href="../properties_social_media/SocialMedia/hashCode.html">hashCode</a></li>
     <li><a href="../properties_social_media/SocialMedia/label.html">label</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
     <li><a href="../properties_social_media/SocialMedia/userName.html">userName</a></li>
 
     <li class="section-title"><a href="../properties_social_media/SocialMedia-class.html#instance-methods">Methods</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li><a href="../properties_social_media/SocialMedia/toJson.html">toJson</a></li>
     <li><a href="../properties_social_media/SocialMedia/toString.html">toString</a></li>
     <li><a href="../properties_social_media/SocialMedia/toVCard.html">toVCard</a></li>
 
     <li class="section-title"><a href="../properties_social_media/SocialMedia-class.html#operators">Operators</a></li>
     <li><a href="../properties_social_media/SocialMedia/operator_equals.html">operator ==</a></li>
+
 
 
 
@@ -249,18 +298,20 @@ Discord, etc. Source: <a href="https://buffer.com/library/social-media-sites/">h
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.1+2
+      1.1.2
   </span>
 
+  
 </footer>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="../static-assets/typeahead.bundle.min.js"></script>
-<script src="../static-assets/highlight.pack.js"></script>
-<script src="../static-assets/URI.js"></script>
-<script src="../static-assets/script.js"></script>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/script.js?v1"></script>
+
 
 
 </body>
 
 </html>
+

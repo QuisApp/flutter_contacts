@@ -7,14 +7,19 @@
   <meta name="description" content="API docs for the requestPermission method from the FlutterContacts class, for the Dart programming language.">
   <title>requestPermission method - FlutterContacts class - flutter_contacts library - Dart API</title>
 
-  
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="../../static-assets/github.css">
-  <link rel="stylesheet" href="../../static-assets/styles.css">
-  <link rel="icon" href="../../static-assets/favicon.png">
 
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
 </head>
+
 
 <body data-base-href="../../"
       data-using-base-href="false">
@@ -37,38 +42,76 @@
 
 <main>
 
-  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">requestPermission</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
+<span class="name ">requestPermission</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="requestPermission-param-readonly">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">readonly</span> = <span class="default-value">false</span>}</span></li>
+</ol>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Requests permission to read or read/write contacts. Returns true if
+granted, false in any other case. Note: read-only mode is only applicable
+to Android.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">static Future&lt;bool&gt; requestPermission({bool readonly = false}) async =&gt;
+    await _channel.invokeMethod(&#39;requestPermission&#39;, readonly) ?? false;</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
     <header id="header-search-sidebar" class="hidden-l">
-      <form class="search-sidebar" role="search">
-        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
-      </form>
-    </header>
-    
-    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-      <li><a href="../../index.html">flutter_contacts</a></li>
-      <li><a href="../../flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
-      <li><a href="../../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
-      <li class="self-crumb">requestPermission method</li>
-    </ol>
-    
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">flutter_contacts</a></li>
+  <li><a href="../../flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
+  <li><a href="../../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
+  <li class="self-crumb">requestPermission method</li>
+</ol>
+
+
     <h5>FlutterContacts class</h5>
     <ol>
-
 
     <li class="section-title"><a href="../../flutter_contacts/FlutterContacts-class.html#constructors">Constructors</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/FlutterContacts.html">FlutterContacts</a></li>
 
-    <li class="section-title"> <a href="../../flutter_contacts/FlutterContacts-class.html#instance-properties">Properties</a>
+
+    <li class="section-title inherited">
+      <a href="../../flutter_contacts/FlutterContacts-class.html#instance-properties">Properties</a>
     </li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
-    <li class="section-title"><a href="../../flutter_contacts/FlutterContacts-class.html#instance-methods">Methods</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+    <li class="section-title inherited"><a href="../../flutter_contacts/FlutterContacts-class.html#instance-methods">Methods</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
 
-    <li class="section-title"><a href="../../flutter_contacts/FlutterContacts-class.html#operators">Operators</a></li>
-    <li><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+    <li class="section-title inherited"><a href="../../flutter_contacts/FlutterContacts-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
 
     <li class="section-title"><a href="../../flutter_contacts/FlutterContacts-class.html#static-properties">Static properties</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/config.html">config</a></li>
@@ -92,32 +135,7 @@
 
   </div><!--/.sidebar-offcanvas-->
 
-  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-method">requestPermission</span> method     <span class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</span>
-</h1></div>
-
-    <section class="multi-line-signature">
-      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
-            <span class="name ">requestPermission</span>
-(<wbr><ol class="parameter-list"><li><span class="parameter" id="requestPermission-param-readonly">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">readonly</span>: <span class="default-value">false</span>}</span></li>
-</ol>)
-      
-    </section>
-    <section class="desc markdown">
-      <p>Requests permission to read or read/write contacts. Returns true if
-granted, false in any other case. Note: read-only mode is only applicable
-to Android.</p>
-    </section>
-    
-    <section class="summary source-code" id="source">
-      <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">static Future&lt;bool&gt; requestPermission({bool readonly = false}) async =&gt;
-    await _channel.invokeMethod(&#39;requestPermission&#39;, readonly) ?? false;</code></pre>
-    </section>
-
-  </div> <!-- /.main-content -->
-
-  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
   </div><!--/.sidebar-offcanvas-->
 
 </main>
@@ -125,18 +143,20 @@ to Android.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.1+2
+      1.1.2
   </span>
 
+  
 </footer>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="../../static-assets/typeahead.bundle.min.js"></script>
-<script src="../../static-assets/highlight.pack.js"></script>
-<script src="../../static-assets/URI.js"></script>
-<script src="../../static-assets/script.js"></script>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
 
 
 </body>
 
 </html>
+
