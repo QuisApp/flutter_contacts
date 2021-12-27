@@ -322,17 +322,7 @@ class Contact {
       final encoding = vCardEncode(base64.encode(photoOrThumbnail!));
       final prefix =
           v4 ? 'PHOTO:data:image/jpeg;base64,' : 'PHOTO;ENCODING=b;TYPE=JPEG:';
-      // 63 chars on each line.
-      final prefixLength = prefix.length;
-      lines.add(prefix +
-          encoding.substring(0, min(63 - prefixLength, encoding.length)));
-      // Subsequent lines have a leading space, and 62 chars each.
-      var index = prefixLength;
-      while (index < encoding.length) {
-        lines.add(
-            ' ' + encoding.substring(index, min(index + 62, encoding.length)));
-        index += 62;
-      }
+      lines.add(prefix + encoding);
     }
     lines.addAll([
       name.toVCard(),
