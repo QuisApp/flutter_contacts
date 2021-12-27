@@ -4,6 +4,7 @@ import Contacts
 struct Contact {
     var id: String = ""
     var displayName: String = ""
+    var isStarred: Bool = false
     var name = Name()
     var thumbnail: Data?
     var photo: Data?
@@ -90,6 +91,7 @@ struct Contact {
     func toMap() -> [String: Any?] { [
         "id": id,
         "displayName": displayName,
+        "isStarred": isStarred,
         "name": name.toMap(),
         "thumbnail": thumbnail,
         "photo": photo,
