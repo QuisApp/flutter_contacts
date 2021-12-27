@@ -3,6 +3,7 @@
     "displayName": "John Smith",
     "thumbnail": null,
     "photo": null,
+    "isStarred": false,
     "name": {
         "first": "John",
         "last": "Smith",

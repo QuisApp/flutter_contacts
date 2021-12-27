@@ -1,3 +1,8 @@
+## 1.1.2
+
+* Read/write starred contacts on Android (https://github.com/QuisApp/flutter_contacts/issues/37)
+* Fix vCard photo encoding (https://github.com/QuisApp/flutter_contacts/issues/34)
+
 ## 1.1.1+2
 
 * Update comments
