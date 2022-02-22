@@ -1,3 +1,7 @@
+## 1.1.3
+
+* Fix social media custom label bug (https://github.com/QuisApp/flutter_contacts/issues/42)
+
 ## 1.1.2
 
 * Read/write starred contacts on Android (https://github.com/QuisApp/flutter_contacts/issues/37)
