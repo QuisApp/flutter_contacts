@@ -857,8 +857,8 @@ class FlutterContacts {
                 "qqchat" -> SocialMediaLabelPair(Im.PROTOCOL_QQ, "")
                 "skype" -> SocialMediaLabelPair(Im.PROTOCOL_SKYPE, "")
                 "yahoo" -> SocialMediaLabelPair(Im.PROTOCOL_YAHOO, "")
-                "custom" -> SocialMediaLabelPair(StructuredPostal.TYPE_CUSTOM, customLabel)
-                else -> SocialMediaLabelPair(StructuredPostal.TYPE_CUSTOM, label)
+                "custom" -> SocialMediaLabelPair(Im.PROTOCOL_CUSTOM, customLabel)
+                else -> SocialMediaLabelPair(Im.PROTOCOL_CUSTOM, label)
             }
         }
 
