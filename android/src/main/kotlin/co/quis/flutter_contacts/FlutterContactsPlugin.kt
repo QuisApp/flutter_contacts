@@ -136,8 +136,8 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<out String>?,
-        grantResults: IntArray?
+        permissions: Array<out String>,
+        grantResults: IntArray
     ): Boolean {
         when (requestCode) {
             permissionReadWriteCode -> {
