@@ -1,3 +1,7 @@
+## 1.1.4
+
+* Fix gradle compile error (https://github.com/QuisApp/flutter_contacts/issues/49)
+
 ## 1.1.3
 
 * Fix social media custom label bug (https://github.com/QuisApp/flutter_contacts/issues/42)
