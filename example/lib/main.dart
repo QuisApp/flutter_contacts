@@ -10,13 +10,8 @@ class FlutterContactsExample extends StatefulWidget {
 
 class _FlutterContactsExampleState extends State<FlutterContactsExample> {
   List<Contact>? _contacts;
+  bool _notStarted = true;
   bool _permissionDenied = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchContacts();
-  }
 
   Future _fetchContacts() async {
     if (!await FlutterContacts.requestPermission(readonly: true)) {
@@ -34,6 +29,17 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
           body: _body()));
 
   Widget _body() {
+    if (_notStarted) {
+      return Center(
+        child: ElevatedButton(
+          onPressed: () {
+            setState(() => _notStarted = false);
+            _fetchContacts();
+          },
+          child: Text('Start'),
+        ),
+      );
+    }
     if (_permissionDenied) return Center(child: Text('Permission denied'));
     if (_contacts == null) return Center(child: CircularProgressIndicator());
     return ListView.builder(

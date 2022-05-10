@@ -13,37 +13,33 @@ import androidx.core.content.ContextCompat
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.*
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.nio.ByteBuffer
 
-public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
+public class FlutterContactsPlugin : FlutterPlugin, BinaryMessenger.BinaryMessageHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
     companion object {
         private var activity: Activity? = null
         private var context: Context? = null
         private var resolver: ContentResolver? = null
         private val permissionReadWriteCode: Int = 0
         private val permissionReadOnlyCode: Int = 1
-        private var permissionResult: Result? = null
-        private var viewResult: Result? = null
-        private var editResult: Result? = null
-        private var pickResult: Result? = null
-        private var insertResult: Result? = null
+        private var permissionReply: BinaryMessenger.BinaryReply? = null
+        private var viewReply: BinaryMessenger.BinaryReply? = null
+        private var editReply: BinaryMessenger.BinaryReply? = null
+        private var pickReply: BinaryMessenger.BinaryReply? = null
+        private var insertReply: BinaryMessenger.BinaryReply? = null
     }
 
     // --- FlutterPlugin implementation ---
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "github.com/QuisApp/flutter_contacts")
+        flutterPluginBinding.binaryMessenger.setMessageHandler("github.com/QuisApp/flutter_contacts", FlutterContactsPlugin())
         val eventChannel = EventChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "github.com/QuisApp/flutter_contacts/events")
-        channel.setMethodCallHandler(FlutterContactsPlugin())
         eventChannel.setStreamHandler(FlutterContactsPlugin())
         context = flutterPluginBinding.applicationContext
         resolver = context!!.contentResolver
@@ -78,28 +74,28 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
     ): Boolean {
         when (requestCode) {
             FlutterContacts.REQUEST_CODE_VIEW ->
-                if (viewResult != null) {
-                    viewResult!!.success(null)
-                    viewResult = null
+                if (viewReply != null) {
+                    success(viewReply!!, null)
+                    viewReply = null
                 }
             FlutterContacts.REQUEST_CODE_EDIT ->
-                if (editResult != null) {
+                if (editReply != null) {
                     // Result is of the form:
                     // content://com.android.contacts/contacts/lookup/<hash>/<id>
                     val id = intent?.getData()?.getLastPathSegment()
-                    editResult!!.success(id)
-                    editResult = null
+                    success(editReply!!, id)
+                    editReply = null
                 }
             FlutterContacts.REQUEST_CODE_PICK ->
-                if (pickResult != null) {
+                if (pickReply != null) {
                     // Result is of the form:
                     // content://com.android.contacts/contacts/lookup/<hash>/<id>
                     val id = intent?.getData()?.getLastPathSegment()
-                    pickResult!!.success(id)
-                    pickResult = null
+                    success(pickReply!!, id)
+                    pickReply = null
                 }
             FlutterContacts.REQUEST_CODE_INSERT ->
-                if (insertResult != null) {
+                if (insertReply != null) {
                     // Result is of the form:
                     // content://com.android.contacts/raw_contacts/<raw_id>
                     // So we need to get the ID from the raw ID.
@@ -119,14 +115,14 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                                 /*idIsRawContactId=*/true
                             )
                         if (contacts.isNotEmpty()) {
-                            insertResult!!.success(contacts[0]["id"])
+                            success(insertReply!!, contacts[0]["id"])
                         } else {
-                            insertResult!!.success(null)
+                            success(insertReply!!, null)
                         }
                     } else {
-                        insertResult!!.success(null)
+                        success(insertReply!!, null)
                     }
-                    insertResult = null
+                    insertReply = null
                 }
         }
         return true
@@ -145,10 +141,10 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     grantResults!!.size == 2 &&
                     grantResults!![0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults!![1] == PackageManager.PERMISSION_GRANTED
-                if (permissionResult != null) {
+                if (permissionReply != null) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        permissionResult!!.success(granted)
-                        permissionResult = null
+                        success(permissionReply!!, granted)
+                        permissionReply = null
                     }
                 }
                 return true
@@ -157,10 +153,10 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                 val granted = grantResults != null &&
                     grantResults!!.size == 1 &&
                     grantResults!![0] == PackageManager.PERMISSION_GRANTED
-                if (permissionResult != null) {
+                if (permissionReply != null) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        permissionResult!!.success(granted)
-                        permissionResult = null
+                        success(permissionReply!!, granted)
+                        permissionReply = null
                     }
                 }
                 return true
@@ -171,13 +167,25 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
 
     // --- MethodCallHandler implementation ---
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    private fun success(reply: BinaryMessenger.BinaryReply, result: Any?) {
+        val codec = StandardMethodCodec.INSTANCE
+        reply.reply(codec.encodeSuccessEnvelope(result))
+    }
+
+    private fun error(reply: BinaryMessenger.BinaryReply, errorCode: String, errorMessage: String, errorDetails: Any) {
+        val codec = StandardMethodCodec.INSTANCE
+        reply.reply(codec.encodeErrorEnvelope(errorCode, errorMessage, errorDetails))
+    }
+
+    override fun onMessage(message: ByteBuffer?, reply: BinaryMessenger.BinaryReply) {
+        val codec = StandardMethodCodec.INSTANCE
+        val call = codec.decodeMethodCall(message)
         when (call.method) {
             // Requests permission to read/write contacts.
             "requestPermission" ->
                 GlobalScope.launch(Dispatchers.IO) {
                     if (context == null) {
-                        GlobalScope.launch(Dispatchers.Main) { result.success(false); }
+                        GlobalScope.launch(Dispatchers.Main) { success(reply, false); }
                     } else {
                         val readonly = call.arguments as Boolean
                         val readPermission = Manifest.permission.READ_CONTACTS
@@ -185,9 +193,9 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                         if (ContextCompat.checkSelfPermission(context!!, readPermission) == PackageManager.PERMISSION_GRANTED &&
                             (readonly || ContextCompat.checkSelfPermission(context!!, writePermission) == PackageManager.PERMISSION_GRANTED)
                         ) {
-                            GlobalScope.launch(Dispatchers.Main) { result.success(true) }
+                            GlobalScope.launch(Dispatchers.Main) { success(reply, true) }
                         } else if (activity != null) {
-                            permissionResult = result
+                            permissionReply = reply
                             if (readonly) {
                                 ActivityCompat.requestPermissions(activity!!, arrayOf(readPermission), permissionReadOnlyCode)
                             } else {
@@ -223,7 +231,8 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                             returnUnifiedContacts,
                             includeNonVisible
                         )
-                    GlobalScope.launch(Dispatchers.Main) { result.success(contacts) }
+                    val encodedContacts = codec.encodeSuccessEnvelope(contacts)
+                    GlobalScope.launch(Dispatchers.Main) { reply.reply(encodedContacts) }
                 }
             // Inserts a new contact and return it.
             "insert" ->
@@ -234,9 +243,9 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                         FlutterContacts.insert(resolver!!, contact)
                     GlobalScope.launch(Dispatchers.Main) {
                         if (insertedContact != null) {
-                            result.success(insertedContact)
+                            success(reply, insertedContact)
                         } else {
-                            result.error("", "failed to create contact", "")
+                            error(reply, "", "failed to create contact", "")
                         }
                     }
                 }
@@ -249,9 +258,9 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                         FlutterContacts.update(resolver!!, contact)
                     GlobalScope.launch(Dispatchers.Main) {
                         if (updatedContact != null) {
-                            result.success(updatedContact)
+                            success(reply, updatedContact)
                         } else {
-                            result.error("", "failed to update contact", "")
+                            error(reply, "", "failed to update contact", "")
                         }
                     }
                 }
@@ -259,7 +268,7 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
             "delete" ->
                 GlobalScope.launch(Dispatchers.IO) {
                     FlutterContacts.delete(resolver!!, call.arguments as List<String>)
-                    GlobalScope.launch(Dispatchers.Main) { result.success(null) }
+                    GlobalScope.launch(Dispatchers.Main) { success(reply, null) }
                 }
             // Opens external contact app to view existing contact.
             "openExternalView" ->
@@ -267,7 +276,7 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     val args = call.arguments as List<Any>
                     val id = args[0] as String
                     FlutterContacts.openExternalViewOrEdit(activity, context, id, false)
-                    viewResult = result
+                    viewReply = reply
                 }
             // Opens external contact app to edit existing contact.
             "openExternalEdit" ->
@@ -275,21 +284,22 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     val args = call.arguments as List<Any>
                     val id = args[0] as String
                     FlutterContacts.openExternalViewOrEdit(activity, context, id, true)
-                    editResult = result
+                    editReply = reply
                 }
             // Opens external contact app to pick an existing contact.
             "openExternalPick" ->
                 GlobalScope.launch(Dispatchers.IO) {
                     FlutterContacts.openExternalPickOrInsert(activity, context, false)
-                    pickResult = result
+                    pickReply = reply
                 }
             // Opens external contact app to insert a new contact.
             "openExternalInsert" ->
                 GlobalScope.launch(Dispatchers.IO) {
                     FlutterContacts.openExternalPickOrInsert(activity, context, true)
-                    insertResult = result
+                    insertReply = reply
                 }
-            else -> result.notImplemented()
+            // notImplemented
+            else -> reply.reply(null)
         }
     }
 
