@@ -411,7 +411,9 @@ class FlutterContacts {
         private fun fetchGroups(resolver: ContentResolver): Map<String, PGroup> {
             val projection = listOf(
                 Groups._ID,
-                Groups.TITLE
+                Groups.TITLE,
+                RawContacts.ACCOUNT_TYPE,
+                RawContacts.ACCOUNT_NAME
             )
             val cursor = resolver.query(
                 Groups.CONTENT_URI,
@@ -427,7 +429,9 @@ class FlutterContacts {
             while (cursor.moveToNext()) {
                 val groupId = cursor.getString(cursor.getColumnIndex(Groups._ID)) ?: ""
                 val groupName = cursor.getString(cursor.getColumnIndex(Groups.TITLE)) ?: ""
-                groups[groupId] = PGroup(id = groupId, name = groupName)
+                val accountName = cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_NAME)) ?: ""
+                val accountType = cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_TYPE)) ?: ""
+                groups[groupId] = PGroup(id = groupId, name = groupName, accountId = "$accountName|$accountType")
             }
             return groups
         }

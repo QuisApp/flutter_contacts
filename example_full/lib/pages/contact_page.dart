@@ -223,7 +223,8 @@ class _ContactPageState extends State<ContactPage>
               (x) => [
                     Divider(),
                     Text('Group ID: ${x.id}'),
-                    Text('Name: ${x.name}'),
+                Text('Name: ${x.name}'),
+                Text('AccountId: ${x.accountId}'),
                   ]),
           _makeCard(
               'Accounts',

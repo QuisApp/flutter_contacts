@@ -103,9 +103,14 @@ public enum FlutterContacts {
         if withGroups {
             let groups = fetchGroups(store)
             let groupMemberships = fetchGroupMemberships(store, groups)
+            let groupsContainer = fetchGroupContainer(withAccounts, store, groups)
+
             for (index, contact) in contacts.enumerated() {
                 if let contactGroups = groupMemberships[contact.id] {
-                    contacts[index].groups = contactGroups.map { Group(fromGroup: groups[$0]) }
+                    contacts[index].groups = contactGroups.map {
+                        let accountId = groupsContainer[groups[$0].identifier]
+                        return Group(fromGroup: groups[$0], accountId: accountId ?? "")
+                    }
                 }
             }
         }
@@ -120,6 +125,31 @@ public enum FlutterContacts {
         }
         return contacts.map { $0.toMap() }
     }
+
+    static func fetchGroupContainer(_ withAccounts: Bool, _ store: CNContactStore, _ groups: [CNGroup]) -> [String: String] {
+        if (!withAccounts) {
+           return [String: String]()
+        }
+
+        var groupContainer = [String: String]()
+        for (groupIndex, group) in groups.enumerated() {
+            let containerPredicate = CNContainer.predicateForContainerOfGroup(withIdentifier: group.identifier)
+
+            var cnContainers: [CNContainer] = []
+            do {
+                cnContainers = try store.containers(matching: containerPredicate)
+            } catch {
+                print("Error fetching containers")
+            }
+
+            if cnContainers.count > 0 {
+                groupContainer[group.identifier] = cnContainers.first!.identifier
+            }
+        }
+
+        return groupContainer
+    }
+
 
     static func fetchGroups(_ store: CNContactStore) -> [CNGroup] {
         var groups: [CNGroup] = []
