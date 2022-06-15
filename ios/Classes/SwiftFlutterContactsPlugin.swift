@@ -279,6 +279,65 @@ public enum FlutterContacts {
         try store.execute(saveRequest)
     }
 
+    static func getGroups() -> [[String: Any]] {
+        let store = CNContactStore()
+        let groups = fetchGroups(store)
+        return groups.map { Group(fromGroup: $0).toMap() }
+    }
+
+    static func insertGroup(_ args: [String: Any]) throws -> [String: Any] {
+        let group = Group(fromMap: args)
+        let newGroup = CNMutableGroup()
+        newGroup.name = group.name
+
+        let saveRequest = CNSaveRequest()
+        saveRequest.add(newGroup, toContainerWithIdentifier: nil)
+        try CNContactStore().execute(saveRequest)
+
+        return Group(fromGroup: newGroup).toMap()
+    }
+
+    static func updateGroup(_ args: [String: Any]) throws -> [String: Any] {
+        let group = Group(fromMap: args)
+
+        let store = CNContactStore()
+        let groups = fetchGroups(store)
+
+        for g in groups {
+            if g.identifier == group.id {
+                let updatedGroup = g.mutableCopy() as! CNMutableGroup
+                updatedGroup.name = group.name
+
+                let saveRequest = CNSaveRequest()
+                saveRequest.update(updatedGroup)
+                try CNContactStore().execute(saveRequest)
+
+                return Group(fromGroup: updatedGroup).toMap()
+            }
+        }
+
+        return args
+    }
+
+    static func deleteGroup(_ args: [String: Any]) throws {
+        let group = Group(fromMap: args)
+
+        let store = CNContactStore()
+        let groups = fetchGroups(store)
+
+        for g in groups {
+            if g.identifier == group.id {
+                let deletedGroup = g.mutableCopy() as! CNMutableGroup
+
+                let saveRequest = CNSaveRequest()
+                saveRequest.delete(deletedGroup)
+                try CNContactStore().execute(saveRequest)
+
+                return
+            }
+        }
+    }
+
     private static func clearFields(
         _ contact: CNMutableContact,
         _ includeNotesOnIos13AndAbove: Bool
@@ -431,6 +490,64 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
             DispatchQueue.global(qos: .userInteractive).async {
                 do {
                     try FlutterContacts.delete(call.arguments as! [String])
+                    result(nil)
+                } catch {
+                    result(FlutterError(
+                        code: "unknown error",
+                        message: "unknown error",
+                        details: error.localizedDescription
+                    ))
+                }
+            }
+        case "getGroups":
+            DispatchQueue.global(qos: .userInteractive).async {
+                do {
+                    let groups = try FlutterContacts.getGroups()
+                    result(groups)
+                } catch {
+                    result(FlutterError(
+                        code: "unknown error",
+                        message: "unknown error",
+                        details: error.localizedDescription
+                    ))
+                }
+            }
+        case "insertGroup":
+            DispatchQueue.global(qos: .userInteractive).async {
+                do {
+                    let args = call.arguments as! [Any?]
+                    let g = args[0] as! [String: Any]
+                    let group = try FlutterContacts.insertGroup(g)
+                    result(group)
+                } catch {
+                    result(FlutterError(
+                        code: "unknown error",
+                        message: "unknown error",
+                        details: error.localizedDescription
+                    ))
+                }
+            }
+        case "updateGroup":
+            DispatchQueue.global(qos: .userInteractive).async {
+                do {
+                    let args = call.arguments as! [Any?]
+                    let g = args[0] as! [String: Any]
+                    let group = try FlutterContacts.updateGroup(g)
+                    result(group)
+                } catch {
+                    result(FlutterError(
+                        code: "unknown error",
+                        message: "unknown error",
+                        details: error.localizedDescription
+                    ))
+                }
+            }
+        case "deleteGroup":
+            DispatchQueue.global(qos: .userInteractive).async {
+                do {
+                    let args = call.arguments as! [Any?]
+                    let g = args[0] as! [String: Any]
+                    try FlutterContacts.deleteGroup(g)
                     result(nil)
                 } catch {
                     result(FlutterError(
