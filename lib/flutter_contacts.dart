@@ -157,7 +157,10 @@ class FlutterContacts {
   /// Note that output contact may be different from the input. If you intend to
   /// perform operations on the contact after update, you should perform them on
   /// the output rather than on the input.
-  static Future<Contact> updateContact(Contact contact) async {
+  static Future<Contact> updateContact(
+    Contact contact, {
+    bool withGroups = false,
+  }) async {
     // This avoids the accidental case where we want to insert a contact but
     // update it instead, which won't work.
     if (contact.id.isEmpty) {
@@ -184,6 +187,7 @@ class FlutterContacts {
     }
     final json = await _channel.invokeMethod('update', [
       contact.toJson(),
+      withGroups,
       config.includeNotesOnIos13AndAbove,
     ]);
     return Contact.fromJson(Map<String, dynamic>.from(json));

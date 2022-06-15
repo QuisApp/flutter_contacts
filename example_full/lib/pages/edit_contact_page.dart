@@ -1,4 +1,5 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_contacts_example/pages/form_components/address_form.dart';
@@ -74,7 +75,7 @@ class _EditContactPageState extends State<EditContactPage>
             icon: Icon(Icons.save),
             onPressed: () async {
               if (_isEdit) {
-                await _contact.update();
+                await _contact.update(withGroups: true);
               } else {
                 await _contact.insert();
               }
@@ -113,6 +114,7 @@ class _EditContactPageState extends State<EditContactPage>
         _socialMediaCard(),
         _eventCard(),
         _noteCard(),
+        _groupCard(),
       ];
 
   Future _pickPhoto() async {
@@ -332,11 +334,30 @@ class _EditContactPageState extends State<EditContactPage>
         () => _contact.notes = _contact.notes + [Note('')],
         (int i, dynamic w) => NoteForm(
           w,
-          onUpdate: (note) => _contact.notes[i] = note,
-          onDelete: () => setState(() => _contact.notes.removeAt(i)),
+          onUpdate: null,
+          onDelete: () => setState(() => _contact.groups.removeAt(i)),
           key: UniqueKey(),
         ),
         () => _contact.notes = [],
+      );
+
+  Card _groupCard() => _fieldCard(
+        'Groups',
+        _contact.groups,
+        () async {
+          final group = await _promptGroup(exclude: _contact.groups);
+          if (group != null) {
+            setState(() => _contact.groups = _contact.groups + [group]);
+          }
+        },
+        (int i, dynamic w) => ListTile(
+          title: Text(_contact.groups[i].name),
+          trailing: IconButton(
+            onPressed: () => setState(() => _contact.groups.removeAt(i)),
+            icon: Icon(Icons.delete),
+          ),
+        ),
+        () => setState(() => _contact.groups = []),
       );
 
   Card _starredField() => Card(
@@ -354,4 +375,33 @@ class _EditContactPageState extends State<EditContactPage>
           ],
         ),
       );
+
+  Future<Group> _promptGroup({@required List<Group> exclude}) async {
+    final excludeIds = exclude.map((x) => x.id).toSet();
+    final groups = (await FlutterContacts.getGroups())
+        .where((g) => !excludeIds.contains(g.id))
+        .toList();
+    Group selectedGroup;
+    await showDialog(
+      context: context,
+      builder: (BuildContext ctx) => AlertDialog(
+        content: Container(
+          height: 300.0,
+          width: 300.0,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: groups.length,
+            itemBuilder: (BuildContext ctx, int i) => ListTile(
+              title: Text(groups[i].name),
+              onTap: () {
+                selectedGroup = groups[i];
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+    return selectedGroup;
+  }
 }

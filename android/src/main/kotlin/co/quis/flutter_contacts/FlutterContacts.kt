@@ -487,7 +487,8 @@ class FlutterContacts {
 
         fun update(
             resolver: ContentResolver,
-            contactMap: Map<String, Any?>
+            contactMap: Map<String, Any?>,
+            withGroups: Boolean
         ): Map<String, Any?>? {
             val ops = mutableListOf<ContentProviderOperation>()
 
@@ -528,6 +529,19 @@ class FlutterContacts {
                             arrayOf(
                                 contactId,
                                 Photo.CONTENT_ITEM_TYPE
+                            )
+                        )
+                        .build()
+                )
+            }
+            if (withGroups) {
+                ops.add(
+                    ContentProviderOperation.newDelete(Data.CONTENT_URI)
+                        .withSelection(
+                            "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
+                            arrayOf(
+                                contactId,
+                                GroupMembership.CONTENT_ITEM_TYPE
                             )
                         )
                         .build()
@@ -1087,6 +1101,14 @@ class FlutterContacts {
                             .build()
                     )
                 }
+            }
+            for (group in contact.groups) {
+                ops.add(
+                    newInsert()
+                        .withValue(Data.MIMETYPE, GroupMembership.CONTENT_ITEM_TYPE)
+                        .withValue(GroupMembership.GROUP_ROW_ID, group.id)
+                        .build()
+                )
             }
         }
 

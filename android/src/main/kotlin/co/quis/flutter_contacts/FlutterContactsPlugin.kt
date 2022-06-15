@@ -245,8 +245,9 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                 GlobalScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val contact = args[0] as Map<String, Any>
+                    val withGroups = args[1] as Boolean
                     val updatedContact: Map<String, Any?>? =
-                        FlutterContacts.update(resolver!!, contact)
+                        FlutterContacts.update(resolver!!, contact, withGroups)
                     GlobalScope.launch(Dispatchers.Main) {
                         if (updatedContact != null) {
                             result.success(updatedContact)
