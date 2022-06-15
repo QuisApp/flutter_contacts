@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'pages/contact_list_page.dart';
 import 'pages/contact_page.dart';
 import 'pages/edit_contact_page.dart';
+import 'pages/groups_page.dart';
 
 void main() => runApp(FlutterContactsExample());
 
@@ -19,6 +20,7 @@ class FlutterContactsExample extends StatelessWidget {
         '/contactList': (context) => ContactListPage(),
         '/contact': (context) => ContactPage(),
         '/editContact': (context) => EditContactPage(),
+        '/groups': (context) => GroupsPage(),
       },
     );
   }

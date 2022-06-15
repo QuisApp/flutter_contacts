@@ -261,6 +261,45 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                     FlutterContacts.delete(resolver!!, call.arguments as List<String>)
                     GlobalScope.launch(Dispatchers.Main) { result.success(null) }
                 }
+            // Fetches all groups.
+            "getGroups" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val groups: List<Map<String, Any?>> =
+                        FlutterContacts.getGroups(resolver!!)
+                    GlobalScope.launch(Dispatchers.Main) { result.success(groups) }
+                }
+            // Insert a new group and returns it.
+            "insertGroup" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val args = call.arguments as List<Any>
+                    val group = args[0] as Map<String, Any>
+                    val insertedGroup: Map<String, Any?>? =
+                        FlutterContacts.insertGroup(resolver!!, group)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        result.success(insertedGroup)
+                    }
+                }
+            // Updates a group and returns it.
+            "updateGroup" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val args = call.arguments as List<Any>
+                    val group = args[0] as Map<String, Any>
+                    val updatedGroup: Map<String, Any?>? =
+                        FlutterContacts.updateGroup(resolver!!, group)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        result.success(updatedGroup)
+                    }
+                }
+            // Deletes a group.
+            "deleteGroup" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val args = call.arguments as List<Any>
+                    val group = args[0] as Map<String, Any>
+                    FlutterContacts.deleteGroup(resolver!!, group)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        result.success(null)
+                    }
+                }
             // Opens external contact app to view existing contact.
             "openExternalView" ->
                 GlobalScope.launch(Dispatchers.IO) {

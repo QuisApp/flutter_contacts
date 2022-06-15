@@ -5,12 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_contacts/diacritics.dart';
+import 'package:flutter_contacts/properties/group.dart';
 
 export 'contact.dart';
 export 'properties/account.dart';
 export 'properties/address.dart';
 export 'properties/email.dart';
 export 'properties/event.dart';
+export 'properties/group.dart';
 export 'properties/name.dart';
 export 'properties/note.dart';
 export 'properties/organization.dart';
@@ -202,6 +204,33 @@ class FlutterContacts {
   /// Deletes one contact from the database.
   static Future<void> deleteContact(Contact contact) async =>
       deleteContacts([contact]);
+
+  /// Fetches all groups (or labels on Android).
+  static Future<List<Group>> getGroups() async {
+    List untypedGroups = await _channel.invokeMethod('getGroups');
+    // ignore: omit_local_variable_types
+    List<Group> groups = untypedGroups
+        .map((x) => Group.fromJson(Map<String, dynamic>.from(x)))
+        .toList();
+    return groups;
+  }
+
+  /// Inserts a new group (or label on Android).
+  static Future<Group> insertGroup(Group group) async {
+    return Group.fromJson(Map<String, dynamic>.from(
+        await _channel.invokeMethod('insertGroup', [group.toJson()])));
+  }
+
+  /// Updates a group (or label on Android).
+  static Future<Group> updateGroup(Group group) async {
+    return Group.fromJson(Map<String, dynamic>.from(
+        await _channel.invokeMethod('updateGroup', [group.toJson()])));
+  }
+
+  /// Deletes a group (or label on Android).
+  static Future<void> deleteGroup(Group group) async {
+    await _channel.invokeMethod('deleteGroup', [group.toJson()]);
+  }
 
   /// Listens to contact database changes.
   ///
