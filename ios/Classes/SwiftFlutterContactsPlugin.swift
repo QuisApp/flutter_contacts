@@ -132,17 +132,19 @@ public enum FlutterContacts {
         return groups
     }
 
-    static func fetchGroupMemberships(_ store: CNContactStore, _ groups: [CNGroup]) -> [String: [Int]] {
+    static func fetchGroupMemberships(_ store: CNContactStore, _ groups: [CNGroup], forContactId contactId: String? = nil) -> [String: [Int]] {
         var memberships = [String: [Int]]()
         for (groupIndex, group) in groups.enumerated() {
             let request = CNContactFetchRequest(keysToFetch: [CNContactIdentifierKey] as [CNKeyDescriptor])
             request.predicate = CNContact.predicateForContactsInGroup(withIdentifier: group.identifier)
             do {
                 try store.enumerateContacts(with: request) { (contact, _) -> Void in
-                    if let contactGroups = memberships[contact.identifier] {
-                        memberships[contact.identifier] = contactGroups + [groupIndex]
-                    } else {
-                        memberships[contact.identifier] = [groupIndex]
+                    if (contactId == nil || contact.identifier == contactId) {
+                        if let contactGroups = memberships[contact.identifier] {
+                            memberships[contact.identifier] = contactGroups + [groupIndex]
+                        } else {
+                            memberships[contact.identifier] = [groupIndex]
+                        }
                     }
                 }
             } catch {
@@ -201,6 +203,7 @@ public enum FlutterContacts {
     // Updates an existing contact in the database.
     static func update(
         _ args: [String: Any?],
+        _ withGroups: Bool,
         _ includeNotesOnIos13AndAbove: Bool
     ) throws -> [String: Any?]? {
         // First, fetch the original contact.
@@ -254,6 +257,27 @@ public enum FlutterContacts {
             let saveRequest = CNSaveRequest()
             saveRequest.update(contact)
             try store.execute(saveRequest)
+
+            // Update group membership
+            if withGroups {
+                let groups = fetchGroups(store)
+                let groupMemberships = fetchGroupMemberships(store, groups, forContactId: contact.identifier)
+                for groupIndex in groupMemberships[contact.identifier] ?? [] {
+                    let deleteRequest = CNSaveRequest()
+                    deleteRequest.removeMember(contact, from: groups[groupIndex])
+                    try store.execute(deleteRequest)
+                }
+
+                let groupIds = Set((args["groups"] as! [[String: Any]]).map { Group(fromMap: $0).id })
+                for group in groups {
+                    if groupIds.contains(group.identifier) {
+                        let addRequest = CNSaveRequest()
+                        addRequest.addMember(contact, to: group)
+                        try store.execute(addRequest)
+                    }
+                }
+            }
+
             return Contact(fromContact: contact).toMap()
         } else {
             return nil
@@ -472,10 +496,11 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
             DispatchQueue.global(qos: .userInteractive).async {
                 let args = call.arguments as! [Any?]
                 let c = args[0] as! [String: Any?]
-                let includeNotesOnIos13AndAbove = args[1] as! Bool
+                let withGroups = args[1] as! Bool
+                let includeNotesOnIos13AndAbove = args[2] as! Bool
                 do {
                     let contact = try FlutterContacts.update(
-                        c, includeNotesOnIos13AndAbove
+                        c, withGroups, includeNotesOnIos13AndAbove
                     )
                     result(contact)
                 } catch {
