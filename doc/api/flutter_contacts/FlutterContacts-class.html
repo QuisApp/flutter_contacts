@@ -206,6 +206,19 @@
 
 </dd>
 
+        <dt id="deleteGroup" class="callable">
+  <span class="name"><a href="../flutter_contacts/FlutterContacts/deleteGroup.html">deleteGroup</a></span><span class="signature">(<wbr><span class="parameter" id="deleteGroup-param-group"><span class="type-annotation"><a href="../properties_group/Group-class.html">Group</a></span> <span class="parameter-name">group</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Deletes a group (or label on Android). 
+  
+
+</dd>
+
         <dt id="getContact" class="callable">
   <span class="name"><a href="../flutter_contacts/FlutterContacts/getContact.html">getContact</a></span><span class="signature">(<wbr><span class="parameter" id="getContact-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span>, </span><span class="parameter" id="getContact-param-withProperties">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withProperties</span> = <span class="default-value">true</span>, </span><span class="parameter" id="getContact-param-withThumbnail"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withThumbnail</span> = <span class="default-value">true</span>, </span><span class="parameter" id="getContact-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span> = <span class="default-value">true</span>, </span><span class="parameter" id="getContact-param-withGroups"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withGroups</span> = <span class="default-value">false</span>, </span><span class="parameter" id="getContact-param-withAccounts"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withAccounts</span> = <span class="default-value">false</span>, </span><span class="parameter" id="getContact-param-deduplicateProperties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateProperties</span> = <span class="default-value">true</span>}</span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a>?</span>&gt;</span></span>
@@ -232,6 +245,19 @@
 
 </dd>
 
+        <dt id="getGroups" class="callable">
+  <span class="name"><a href="../flutter_contacts/FlutterContacts/getGroups.html">getGroups</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_group/Group-class.html">Group</a></span>&gt;</span></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Fetches all groups (or labels on Android). 
+  
+
+</dd>
+
         <dt id="insertContact" class="callable">
   <span class="name"><a href="../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></span><span class="signature">(<wbr><span class="parameter" id="insertContact-param-contact"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
@@ -241,6 +267,19 @@
 </dt>
 <dd>
   Inserts a new <code>contact</code> in the database and returns it. <a href="../flutter_contacts/FlutterContacts/insertContact.html">[...]</a>
+  
+
+</dd>
+
+        <dt id="insertGroup" class="callable">
+  <span class="name"><a href="../flutter_contacts/FlutterContacts/insertGroup.html">insertGroup</a></span><span class="signature">(<wbr><span class="parameter" id="insertGroup-param-group"><span class="type-annotation"><a href="../properties_group/Group-class.html">Group</a></span> <span class="parameter-name">group</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_group/Group-class.html">Group</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Inserts a new group (or label on Android). 
   
 
 </dd>
@@ -326,7 +365,7 @@ to Android.
 </dd>
 
         <dt id="updateContact" class="callable">
-  <span class="name"><a href="../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></span><span class="signature">(<wbr><span class="parameter" id="updateContact-param-contact"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span>)
+  <span class="name"><a href="../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></span><span class="signature">(<wbr><span class="parameter" id="updateContact-param-contact"><span class="type-annotation"><a href="../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span>, </span><span class="parameter" id="updateContact-param-withGroups">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withGroups</span> = <span class="default-value">false</span>}</span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
   </span>
   
@@ -334,6 +373,19 @@ to Android.
 </dt>
 <dd>
   Updates existing contact and returns it. <a href="../flutter_contacts/FlutterContacts/updateContact.html">[...]</a>
+  
+
+</dd>
+
+        <dt id="updateGroup" class="callable">
+  <span class="name"><a href="../flutter_contacts/FlutterContacts/updateGroup.html">updateGroup</a></span><span class="signature">(<wbr><span class="parameter" id="updateGroup-param-group"><span class="type-annotation"><a href="../properties_group/Group-class.html">Group</a></span> <span class="parameter-name">group</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_group/Group-class.html">Group</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Updates a group (or label on Android). 
   
 
 </dd>
@@ -367,6 +419,7 @@ to Android.
   <li><a href="../properties_email/Email-class.html">Email</a></li>
   <li><a href="../properties_event/Event-class.html">Event</a></li>
   <li><a href="../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
+  <li><a href="../properties_group/Group-class.html">Group</a></li>
   <li><a href="../properties_name/Name-class.html">Name</a></li>
   <li><a href="../properties_note/Note-class.html">Note</a></li>
   <li><a href="../properties_organization/Organization-class.html">Organization</a></li>
@@ -422,9 +475,12 @@ to Android.
     <li><a href="../flutter_contacts/FlutterContacts/addListener.html">addListener</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/deleteContact.html">deleteContact</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/deleteContacts.html">deleteContacts</a></li>
+    <li><a href="../flutter_contacts/FlutterContacts/deleteGroup.html">deleteGroup</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/getContact.html">getContact</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></li>
+    <li><a href="../flutter_contacts/FlutterContacts/getGroups.html">getGroups</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></li>
+    <li><a href="../flutter_contacts/FlutterContacts/insertGroup.html">insertGroup</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/openExternalEdit.html">openExternalEdit</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/openExternalInsert.html">openExternalInsert</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/openExternalPick.html">openExternalPick</a></li>
@@ -432,6 +488,7 @@ to Android.
     <li><a href="../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/requestPermission.html">requestPermission</a></li>
     <li><a href="../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></li>
+    <li><a href="../flutter_contacts/FlutterContacts/updateGroup.html">updateGroup</a></li>
 
 </ol>
 
@@ -442,7 +499,7 @@ to Android.
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.4
+      1.1.5
   </span>
 
   

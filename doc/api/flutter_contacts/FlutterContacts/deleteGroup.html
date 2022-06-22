@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the FlutterContacts constructor from the Class FlutterContacts class from the flutter_contacts library, for the Dart programming language.">
-  <title>FlutterContacts constructor - FlutterContacts class - flutter_contacts library - Dart API</title>
+  <meta name="description" content="API docs for the deleteGroup method from the FlutterContacts class, for the Dart programming language.">
+  <title>deleteGroup method - FlutterContacts class - flutter_contacts library - Dart API</title>
 
 
   
@@ -32,9 +32,9 @@
     <li><a href="../../index.html">flutter_contacts</a></li>
     <li><a href="../../flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
-    <li class="self-crumb">FlutterContacts constructor</li>
+    <li class="self-crumb">deleteGroup method</li>
   </ol>
-  <div class="self-name">FlutterContacts</div>
+  <div class="self-name">deleteGroup</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,18 +45,33 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-constructor">FlutterContacts</span> constructor 
+<h1><span class="kind-method">deleteGroup</span> method 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
     <section class="multi-line-signature">
-      <span class="name ">FlutterContacts</span>(<wbr>)
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">deleteGroup</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="deleteGroup-param-group"><span class="type-annotation"><a href="../../properties_group/Group-class.html">Group</a></span> <span class="parameter-name">group</span></span></li>
+</ol>)
+
+      
+
     </section>
+    
+<section class="desc markdown">
+  <p>Deletes a group (or label on Android).</p>
+</section>
+
 
     
-
-
-    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">static Future&lt;void&gt; deleteGroup(Group group) async {
+  await _channel.invokeMethod(&#39;deleteGroup&#39;, [group.toJson()]);
+}</code></pre>
+</section>
 
 
   </div> <!-- /.main-content -->
@@ -72,7 +87,7 @@
   <li><a href="../../index.html">flutter_contacts</a></li>
   <li><a href="../../flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
   <li><a href="../../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
-  <li class="self-crumb">FlutterContacts constructor</li>
+  <li class="self-crumb">deleteGroup method</li>
 </ol>
 
 
@@ -121,7 +136,7 @@
 
 </ol>
 
-  </div><!--/.sidebar-offcanvas-left-->
+  </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
   </div><!--/.sidebar-offcanvas-->

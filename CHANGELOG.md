@@ -1,3 +1,7 @@
+## 1.1.5
+
+* Edit groups (iOS) / labels (Android) and group/label membership
+
 ## 1.1.4
 
 * Fix gradle compile error (https://github.com/QuisApp/flutter_contacts/issues/49)

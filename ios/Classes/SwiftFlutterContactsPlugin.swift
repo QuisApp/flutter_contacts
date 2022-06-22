@@ -139,7 +139,7 @@ public enum FlutterContacts {
             request.predicate = CNContact.predicateForContactsInGroup(withIdentifier: group.identifier)
             do {
                 try store.enumerateContacts(with: request) { (contact, _) -> Void in
-                    if (contactId == nil || contact.identifier == contactId) {
+                    if contactId == nil || contact.identifier == contactId {
                         if let contactGroups = memberships[contact.identifier] {
                             memberships[contact.identifier] = contactGroups + [groupIndex]
                         } else {

@@ -5,7 +5,7 @@
 [![popularity](https://badges.bar/flutter_contacts/popularity)](https://pub.dev/packages/flutter_contacts/score)
 [![likes](https://badges.bar/flutter_contacts/likes)](https://pub.dev/packages/flutter_contacts/score)
 
-Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with vCard support, and contact permission handling.
+Flutter plugin to read, create, update, delete and observe native contacts on Android and iOS, with group support, vCard support, and contact permission handling.
 
 For a minimalistic example, take a look at [`example/`](https://github.com/QuisApp/flutter_contacts/blob/master/example). You can write a full-fledged contacts app with it – see [`example_full/`](https://github.com/QuisApp/flutter_contacts/blob/master/example_full) to see how.
 
@@ -49,6 +49,9 @@ if (await FlutterContacts.requestPermission()) {
 
   // Listen to contact database changes
   FlutterContacts.addListener(() => print('Contact DB changed'));
+
+  // Create a new group (iOS) / label (Android).
+  await FlutterContacts.insertGroup(Group('', 'Coworkers'));
 
   // Export contact to vCard
   String vCard = contact.toVCard();
@@ -143,7 +146,6 @@ class Group { String id; String name; }
 
 These features have been requested and will be available soon.
 
-* Write groups ("labels" on Android, "groups" on iOS), currently read-only
 * Read/write custom ringtones [#22](https://github.com/QuisApp/flutter_contacts/issues/22)
 * Block contacts [#28](https://github.com/QuisApp/flutter_contacts/issues/28)
 * Support for contacts stored in SIM card [#26](https://github.com/QuisApp/flutter_contacts/issues/26) [#23](https://github.com/QuisApp/flutter_contacts/issues/23)
