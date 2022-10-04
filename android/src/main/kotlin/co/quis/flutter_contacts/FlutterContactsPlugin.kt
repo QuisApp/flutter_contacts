@@ -24,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
+class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
     companion object {
         private var activity: Activity? = null
         private var context: Context? = null
@@ -141,25 +141,20 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
     ): Boolean {
         when (requestCode) {
             permissionReadWriteCode -> {
-                val granted = grantResults != null &&
-                    grantResults!!.size == 2 &&
-                    grantResults!![0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults!![1] == PackageManager.PERMISSION_GRANTED
+                val granted = grantResults.size == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 if (permissionResult != null) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        permissionResult!!.success(granted)
+                        permissionResult?.success(granted)
                         permissionResult = null
                     }
                 }
                 return true
             }
             permissionReadOnlyCode -> {
-                val granted = grantResults != null &&
-                    grantResults!!.size == 1 &&
-                    grantResults!![0] == PackageManager.PERMISSION_GRANTED
+                val granted = grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 if (permissionResult != null) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        permissionResult!!.success(granted)
+                        permissionResult?.success(granted)
                         permissionResult = null
                     }
                 }
