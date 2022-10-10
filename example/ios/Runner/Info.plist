@@ -43,5 +43,7 @@
 	<false/>
     <key>NSContactsUsageDescription</key>
     <string>Access contact list</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
