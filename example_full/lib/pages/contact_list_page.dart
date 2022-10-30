@@ -65,7 +65,22 @@ class _ContactListPageState extends State<ContactListPage>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text('flutter_contacts_example')),
+        appBar: AppBar(
+          title: Text('flutter_contacts_example'),
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: _handleOverflowSelected,
+              itemBuilder: (BuildContext context) {
+                return ['Groups'].map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
+          ],
+        ),
         body: _body(),
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context).pushNamed('/editContact'),
@@ -91,5 +106,11 @@ class _ContactListPageState extends State<ContactListPage>
                 Navigator.of(context).pushNamed('/contact', arguments: contact),
           );
         });
+  }
+
+  void _handleOverflowSelected(String value) {
+    if (value == 'Groups') {
+      Navigator.of(context).pushNamed('/groups');
+    }
   }
 }

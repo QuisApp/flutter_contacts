@@ -408,34 +408,6 @@ class FlutterContacts {
             return contacts.map { it.toMap() }
         }
 
-        private fun fetchGroups(resolver: ContentResolver): Map<String, PGroup> {
-            val projection = listOf(
-                Groups._ID,
-                Groups.TITLE,
-                RawContacts.ACCOUNT_TYPE,
-                RawContacts.ACCOUNT_NAME
-            )
-            val cursor = resolver.query(
-                Groups.CONTENT_URI,
-                projection.toTypedArray(),
-                /*selection=*/null,
-                /*selectionArgs=*/null,
-                /*sortOrder=*/null
-            )
-            if (cursor == null) {
-                return mapOf()
-            }
-            var groups = mutableMapOf<String, PGroup>()
-            while (cursor.moveToNext()) {
-                val groupId = cursor.getString(cursor.getColumnIndex(Groups._ID)) ?: ""
-                val groupName = cursor.getString(cursor.getColumnIndex(Groups.TITLE)) ?: ""
-                val accountName = cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_NAME)) ?: ""
-                val accountType = cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_TYPE)) ?: ""
-                groups[groupId] = PGroup(id = groupId, name = groupName, accountId = "$accountName|$accountType")
-            }
-            return groups
-        }
-
         fun insert(
             resolver: ContentResolver,
             contactMap: Map<String, Any?>
@@ -515,7 +487,8 @@ class FlutterContacts {
 
         fun update(
             resolver: ContentResolver,
-            contactMap: Map<String, Any?>
+            contactMap: Map<String, Any?>,
+            withGroups: Boolean
         ): Map<String, Any?>? {
             val ops = mutableListOf<ContentProviderOperation>()
 
@@ -556,6 +529,19 @@ class FlutterContacts {
                             arrayOf(
                                 contactId,
                                 Photo.CONTENT_ITEM_TYPE
+                            )
+                        )
+                        .build()
+                )
+            }
+            if (withGroups) {
+                ops.add(
+                    ContentProviderOperation.newDelete(Data.CONTENT_URI)
+                        .withSelection(
+                            "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
+                            arrayOf(
+                                contactId,
+                                GroupMembership.CONTENT_ITEM_TYPE
                             )
                         )
                         .build()
@@ -613,6 +599,61 @@ class FlutterContacts {
             }
 
             resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+        }
+
+        fun getGroups(resolver: ContentResolver): List<Map<String, Any>> {
+            val groups = fetchGroups(resolver)
+            return groups.values.map { it.toMap() }
+        }
+
+        fun insertGroup(resolver: ContentResolver, groupMap: Map<String, Any>): Map<String, Any> {
+            val ops = mutableListOf<ContentProviderOperation>()
+
+            var group = PGroup.fromMap(groupMap)
+
+            ops.add(
+                ContentProviderOperation.newInsert(Groups.CONTENT_URI)
+                    .withValue(Groups.TITLE, group.name)
+                    .build()
+            )
+
+            val addGroupResults =
+                resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+            val id: Long = ContentUris.parseId(addGroupResults[0].uri!!)
+
+            group.id = id.toString()
+            return group.toMap()
+        }
+
+        fun updateGroup(resolver: ContentResolver, groupMap: Map<String, Any>): Map<String, Any> {
+            val ops = mutableListOf<ContentProviderOperation>()
+
+            val group = PGroup.fromMap(groupMap)
+
+            ops.add(
+                ContentProviderOperation.newUpdate(Groups.CONTENT_URI)
+                    .withSelection("${Groups._ID}=?", arrayOf(group.id))
+                    .withValue(Groups.TITLE, group.name)
+                    .build()
+            )
+            resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+
+            return groupMap
+        }
+
+        fun deleteGroup(resolver: ContentResolver, groupMap: Map<String, Any>) {
+            val ops = mutableListOf<ContentProviderOperation>()
+
+            val group = PGroup.fromMap(groupMap)
+
+            ops.add(
+                ContentProviderOperation.newDelete(
+                    Groups.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build()
+                )
+                    .withSelection("${Groups._ID}=?", arrayOf(group.id))
+                    .build()
+            )
+            val results = resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
         }
 
         fun openExternalViewOrEdit(activity: Activity?, context: Context?, id: String, edit: Boolean) {
@@ -706,6 +747,34 @@ class FlutterContacts {
                 Phone.TYPE_CUSTOM -> "custom"
                 else -> "mobile"
             }
+        }
+
+        private fun fetchGroups(resolver: ContentResolver): Map<String, PGroup> {
+            val projection = listOf(
+                Groups._ID,
+                Groups.TITLE,
+                RawContacts.ACCOUNT_TYPE,
+                RawContacts.ACCOUNT_NAME
+            )
+            val cursor = resolver.query(
+                Groups.CONTENT_URI,
+                projection.toTypedArray(),
+                /*selection=*/null,
+                /*selectionArgs=*/null,
+                /*sortOrder=*/null
+            )
+            if (cursor == null) {
+                return mapOf()
+            }
+            var groups = mutableMapOf<String, PGroup>()
+            while (cursor.moveToNext()) {
+                val groupId = cursor.getString(cursor.getColumnIndex(Groups._ID)) ?: ""
+                val groupName = cursor.getString(cursor.getColumnIndex(Groups.TITLE)) ?: ""
+                val accountName = cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_NAME)) ?: ""
+                val accountType = cursor.getString(cursor.getColumnIndex(RawContacts.ACCOUNT_TYPE)) ?: ""
+                groups[groupId] = PGroup(id = groupId, name = groupName,  accountId = "$accountName|$accountType")
+            }
+            return groups
         }
 
         private fun getPhoneCustomLabel(cursor: Cursor): String {
@@ -1036,6 +1105,14 @@ class FlutterContacts {
                             .build()
                     )
                 }
+            }
+            for (group in contact.groups) {
+                ops.add(
+                    newInsert()
+                        .withValue(Data.MIMETYPE, GroupMembership.CONTENT_ITEM_TYPE)
+                        .withValue(GroupMembership.GROUP_ROW_ID, group.id)
+                        .build()
+                )
             }
         }
 

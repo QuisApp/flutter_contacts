@@ -1,3 +1,12 @@
+## 1.1.5+1
+
+* Fix null pointer error (https://github.com/QuisApp/flutter_contacts/pull/71 - thanks anggrayudi)
+* Update README
+
+## 1.1.5
+
+* Edit groups (iOS) / labels (Android) and group/label membership
+
 ## 1.1.4
 
 * Fix gradle compile error (https://github.com/QuisApp/flutter_contacts/issues/49)

@@ -53,7 +53,8 @@
       
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../contact/Contact-class.html">Contact</a></span>&gt;</span></span>
-<span class="name ">updateContact</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="updateContact-param-contact"><span class="type-annotation"><a href="../../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span></span></li>
+<span class="name ">updateContact</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="updateContact-param-contact"><span class="type-annotation"><a href="../../contact/Contact-class.html">Contact</a></span> <span class="parameter-name">contact</span>, </span></li>
+<li><span class="parameter" id="updateContact-param-withGroups">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withGroups</span> = <span class="default-value">false</span>}</span></li>
 </ol>)
 
       
@@ -71,7 +72,10 @@ the output rather than on the input.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">static Future&lt;Contact&gt; updateContact(Contact contact) async {
+  <pre class="language-dart"><code class="language-dart">static Future&lt;Contact&gt; updateContact(
+  Contact contact, {
+  bool withGroups = false,
+}) async {
   &#47;&#47; This avoids the accidental case where we want to insert a contact but
   &#47;&#47; update it instead, which won&#39;t work.
   if (contact.id.isEmpty) {
@@ -98,6 +102,7 @@ the output rather than on the input.</p>
   }
   final json = await _channel.invokeMethod(&#39;update&#39;, [
     contact.toJson(),
+    withGroups,
     config.includeNotesOnIos13AndAbove,
   ]);
   return Contact.fromJson(Map&lt;String, dynamic&gt;.from(json));
@@ -150,9 +155,12 @@ the output rather than on the input.</p>
     <li><a href="../../flutter_contacts/FlutterContacts/addListener.html">addListener</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/deleteContact.html">deleteContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/deleteContacts.html">deleteContacts</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/deleteGroup.html">deleteGroup</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/getContact.html">getContact</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/getContacts.html">getContacts</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/getGroups.html">getGroups</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/insertContact.html">insertContact</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/insertGroup.html">insertGroup</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/openExternalEdit.html">openExternalEdit</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/openExternalInsert.html">openExternalInsert</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/openExternalPick.html">openExternalPick</a></li>
@@ -160,6 +168,7 @@ the output rather than on the input.</p>
     <li><a href="../../flutter_contacts/FlutterContacts/removeListener.html">removeListener</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/requestPermission.html">requestPermission</a></li>
     <li><a href="../../flutter_contacts/FlutterContacts/updateContact.html">updateContact</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts/updateGroup.html">updateGroup</a></li>
 
 </ol>
 
@@ -173,7 +182,7 @@ the output rather than on the input.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.4
+      1.1.5+1
   </span>
 
   

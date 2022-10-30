@@ -24,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
+class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
     companion object {
         private var activity: Activity? = null
         private var context: Context? = null
@@ -141,25 +141,20 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
     ): Boolean {
         when (requestCode) {
             permissionReadWriteCode -> {
-                val granted = grantResults != null &&
-                    grantResults!!.size == 2 &&
-                    grantResults!![0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults!![1] == PackageManager.PERMISSION_GRANTED
+                val granted = grantResults.size == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 if (permissionResult != null) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        permissionResult!!.success(granted)
+                        permissionResult?.success(granted)
                         permissionResult = null
                     }
                 }
                 return true
             }
             permissionReadOnlyCode -> {
-                val granted = grantResults != null &&
-                    grantResults!!.size == 1 &&
-                    grantResults!![0] == PackageManager.PERMISSION_GRANTED
+                val granted = grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 if (permissionResult != null) {
                     GlobalScope.launch(Dispatchers.Main) {
-                        permissionResult!!.success(granted)
+                        permissionResult?.success(granted)
                         permissionResult = null
                     }
                 }
@@ -245,8 +240,9 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                 GlobalScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val contact = args[0] as Map<String, Any>
+                    val withGroups = args[1] as Boolean
                     val updatedContact: Map<String, Any?>? =
-                        FlutterContacts.update(resolver!!, contact)
+                        FlutterContacts.update(resolver!!, contact, withGroups)
                     GlobalScope.launch(Dispatchers.Main) {
                         if (updatedContact != null) {
                             result.success(updatedContact)
@@ -260,6 +256,45 @@ public class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChan
                 GlobalScope.launch(Dispatchers.IO) {
                     FlutterContacts.delete(resolver!!, call.arguments as List<String>)
                     GlobalScope.launch(Dispatchers.Main) { result.success(null) }
+                }
+            // Fetches all groups.
+            "getGroups" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val groups: List<Map<String, Any?>> =
+                        FlutterContacts.getGroups(resolver!!)
+                    GlobalScope.launch(Dispatchers.Main) { result.success(groups) }
+                }
+            // Insert a new group and returns it.
+            "insertGroup" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val args = call.arguments as List<Any>
+                    val group = args[0] as Map<String, Any>
+                    val insertedGroup: Map<String, Any?>? =
+                        FlutterContacts.insertGroup(resolver!!, group)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        result.success(insertedGroup)
+                    }
+                }
+            // Updates a group and returns it.
+            "updateGroup" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val args = call.arguments as List<Any>
+                    val group = args[0] as Map<String, Any>
+                    val updatedGroup: Map<String, Any?>? =
+                        FlutterContacts.updateGroup(resolver!!, group)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        result.success(updatedGroup)
+                    }
+                }
+            // Deletes a group.
+            "deleteGroup" ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    val args = call.arguments as List<Any>
+                    val group = args[0] as Map<String, Any>
+                    FlutterContacts.deleteGroup(resolver!!, group)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        result.success(null)
+                    }
                 }
             // Opens external contact app to view existing contact.
             "openExternalView" ->

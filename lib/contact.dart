@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_contacts/config.dart';
-import 'package:flutter_contacts/properties/group.dart';
 import 'package:flutter_contacts/vcard.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
@@ -268,7 +267,8 @@ class Contact {
   Future<Contact> insert() => FlutterContacts.insertContact(this);
 
   /// Updates the contact in the database.
-  Future<Contact> update() => FlutterContacts.updateContact(this);
+  Future<Contact> update({bool withGroups = false}) =>
+      FlutterContacts.updateContact(this, withGroups: withGroups);
 
   /// Deletes the contact from the database.
   Future<void> delete() => FlutterContacts.deleteContact(this);
