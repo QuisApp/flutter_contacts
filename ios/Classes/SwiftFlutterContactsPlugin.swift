@@ -362,6 +362,43 @@ public enum FlutterContacts {
         }
     }
 
+    static func getGroupsForAccount(accountId: String) -> [[String: Any]] {
+        let store = CNContactStore()
+        let groupsContainer = fetchGroupForAccount(store, accountId)
+
+        return groupsContainer.map {
+            Group(fromGroup: $0).toMap()
+        }
+    }
+
+    private static func fetchGroupForAccount(_ store: CNContactStore, _ accountId: String) -> [CNGroup] {
+        let containerPredicate =  CNContainer.predicateForContainers(withIdentifiers: [accountId])
+
+        var cnContainers: [CNContainer] = []
+        do {
+            cnContainers = try store.containers(matching: containerPredicate)
+        } catch {
+            print("Error fetching containers")
+        }
+        
+        if (cnContainers.count == 0) {
+            return []
+        }
+        
+        var container = cnContainers.first!
+        
+        let groupPredicate = CNGroup.predicateForGroupsInContainer(withIdentifier: container.identifier)
+
+        var cnGroups: [CNGroup] = []
+        do {
+            cnGroups = try store.groups(matching: groupPredicate)
+        } catch {
+            print("Error fetching groups")
+        }
+        
+        return cnGroups
+    }
+
     private static func clearFields(
         _ contact: CNMutableContact,
         _ includeNotesOnIos13AndAbove: Bool
@@ -537,6 +574,15 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                     ))
                 }
             }
+        case "getGroupsForAccount":
+            DispatchQueue.global(qos: .userInteractive).async {
+                let args = call.arguments as! [Any?]
+                let accountId = args[0] as! String
+                let groups = FlutterContacts.getGroupsForAccount(accountId: accountId)
+                result(groups)
+            }
+
+            break;
         case "insertGroup":
             DispatchQueue.global(qos: .userInteractive).async {
                 do {
