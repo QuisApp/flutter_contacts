@@ -220,6 +220,47 @@ class Contact {
         'groups': groups.map((x) => x.toJson()).toList(),
       });
 
+  Contact copyWith({
+    String? id,
+    String? displayName,
+    Uint8List? thumbnail,
+    Uint8List? photo,
+    bool? isStarred,
+    Name? name,
+    List<Phone>? phones,
+    List<Email>? emails,
+    List<Address>? addresses,
+    List<Organization>? organizations,
+    List<Website>? websites,
+    List<SocialMedia>? socialMedias,
+    List<Event>? events,
+    List<Note>? notes,
+    List<Account>? accounts,
+    List<Group>? groups,
+    bool? thumbnailFetched,
+    bool? photoFetched,
+    bool? isUnified,
+    bool? propertiesFetched,
+  }) {
+    return Contact(
+        id: id ?? this.id,
+        displayName: displayName ?? this.displayName,
+        thumbnail: thumbnail ?? this.thumbnail,
+        photo: photo ?? this.photo,
+        isStarred: isStarred ?? this.isStarred,
+        name: name ?? this.name,
+        phones: phones ?? this.phones,
+        emails: emails ?? this.emails,
+        addresses: addresses ?? this.addresses,
+        organizations: organizations ?? this.organizations,
+        websites: websites ?? this.websites,
+        socialMedias: socialMedias ?? this.socialMedias,
+        events: events ?? this.events,
+        notes: notes ?? this.notes,
+        accounts: accounts ?? this.accounts,
+        groups: groups ?? this.groups);
+  }
+
   @override
   int get hashCode =>
       id.hashCode ^
