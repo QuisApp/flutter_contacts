@@ -237,10 +237,6 @@ class Contact {
     List<Note>? notes,
     List<Account>? accounts,
     List<Group>? groups,
-    bool? thumbnailFetched,
-    bool? photoFetched,
-    bool? isUnified,
-    bool? propertiesFetched,
   }) {
     return Contact(
         id: id ?? this.id,
