@@ -332,13 +332,14 @@ class FlutterContacts {
       contacts.sort(_compareDisplayNames);
     }
     if (deduplicateProperties) {
-      contacts.forEach((c) => c.deduplicateProperties());
+      contacts.forEach((c) => c = c.deduplicateProperties());
     }
-    contacts.forEach((c) => c
-      ..propertiesFetched = withProperties
-      ..thumbnailFetched = withThumbnail
-      ..photoFetched = withPhoto
-      ..isUnified = config.returnUnifiedContacts);
+    contacts.forEach((c) => c = c.copyWith(
+        propertiesFetched: withProperties,
+        thumbnailFetched: withThumbnail,
+        photoFetched: withPhoto,
+        isUnified: config.returnUnifiedContacts));
+
     return contacts;
   }
 

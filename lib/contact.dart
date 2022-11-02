@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/vcard.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -65,69 +66,70 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 ///     [Address.neighborhood] is not available on iOS, so if you save a contact
 ///     with data for [Address.neighborhood] on iOS, that data will be lost
 ///   - [accounts] represent raw accounts on Android and containers on iOS
+@immutable
 class Contact {
   /// The unique identifier of the contact.
-  String id;
+  final String id;
 
   /// The contact display name.
-  String displayName;
+  final String displayName;
 
   /// A low-resolution version of the [photo].
-  Uint8List? thumbnail;
+  final Uint8List? thumbnail;
 
   /// The full-resolution contact picture.
-  Uint8List? photo;
+  final Uint8List? photo;
 
   /// Returns the full-resolution photo if available, the thumbnail otherwise.
   Uint8List? get photoOrThumbnail => photo ?? thumbnail;
 
   /// Whether the contact is starred (Android only).
-  bool isStarred;
+  final bool isStarred;
 
   /// Structured name.
-  Name name;
+  final Name name;
 
   /// Phone numbers.
-  List<Phone> phones;
+  final List<Phone> phones;
 
   /// Email addresses.
-  List<Email> emails;
+  final List<Email> emails;
 
   /// Postal addresses.
-  List<Address> addresses;
+  final List<Address> addresses;
 
   /// Organizations / jobs.
-  List<Organization> organizations;
+  final List<Organization> organizations;
 
   /// Websites.
-  List<Website> websites;
+  final List<Website> websites;
 
   /// Social media / instant messaging profiles.
-  List<SocialMedia> socialMedias;
+  final List<SocialMedia> socialMedias;
 
   /// Events / birthdays.
-  List<Event> events;
+  final List<Event> events;
 
   /// Notes.
-  List<Note> notes;
+  final List<Note> notes;
 
   /// Raw accounts (Android only).
-  List<Account> accounts;
+  final List<Account> accounts;
 
   /// Groups.
-  List<Group> groups;
+  final List<Group> groups;
 
   /// Whether the low-resolution thumbnail was fetched.
-  bool thumbnailFetched = true;
+  final bool thumbnailFetched;
 
   /// Whether the high-resolution photo was fetched.
-  bool photoFetched = true;
+  final bool photoFetched;
 
   /// Whether this is a unified contact (and not a raw contact).
-  bool isUnified = true;
+  final bool isUnified;
 
   /// Whether properties (name, phones, emails, etc).
-  bool propertiesFetched = true;
+  final bool propertiesFetched;
 
   Contact({
     this.id = '',
@@ -146,6 +148,12 @@ class Contact {
     List<Note>? notes,
     List<Account>? accounts,
     List<Group>? groups,
+
+    ///Setting default as true as previous versions
+    bool thumbnailFetched = true,
+    bool photoFetched = true,
+    bool isUnified = true,
+    bool propertiesFetched = true,
   })  : name = name ?? Name(),
         phones = phones ?? <Phone>[],
         emails = emails ?? <Email>[],
@@ -156,7 +164,11 @@ class Contact {
         events = events ?? <Event>[],
         notes = notes ?? <Note>[],
         accounts = accounts ?? <Account>[],
-        groups = groups ?? <Group>[];
+        groups = groups ?? <Group>[],
+        thumbnailFetched = thumbnailFetched,
+        photoFetched = photoFetched,
+        isUnified = isUnified,
+        propertiesFetched = propertiesFetched;
 
   factory Contact.fromJson(Map<String, dynamic> json) => Contact(
         id: (json['id'] as String?) ?? '',
@@ -237,24 +249,33 @@ class Contact {
     List<Note>? notes,
     List<Account>? accounts,
     List<Group>? groups,
+    bool? thumbnailFetched,
+    bool? photoFetched,
+    bool? isUnified,
+    bool? propertiesFetched,
   }) {
     return Contact(
-        id: id ?? this.id,
-        displayName: displayName ?? this.displayName,
-        thumbnail: thumbnail ?? this.thumbnail,
-        photo: photo ?? this.photo,
-        isStarred: isStarred ?? this.isStarred,
-        name: name ?? this.name,
-        phones: phones ?? this.phones,
-        emails: emails ?? this.emails,
-        addresses: addresses ?? this.addresses,
-        organizations: organizations ?? this.organizations,
-        websites: websites ?? this.websites,
-        socialMedias: socialMedias ?? this.socialMedias,
-        events: events ?? this.events,
-        notes: notes ?? this.notes,
-        accounts: accounts ?? this.accounts,
-        groups: groups ?? this.groups);
+      id: id ?? this.id,
+      displayName: displayName ?? this.displayName,
+      thumbnail: thumbnail ?? this.thumbnail,
+      photo: photo ?? this.photo,
+      isStarred: isStarred ?? this.isStarred,
+      name: name ?? this.name,
+      phones: phones ?? this.phones,
+      emails: emails ?? this.emails,
+      addresses: addresses ?? this.addresses,
+      organizations: organizations ?? this.organizations,
+      websites: websites ?? this.websites,
+      socialMedias: socialMedias ?? this.socialMedias,
+      events: events ?? this.events,
+      notes: notes ?? this.notes,
+      accounts: accounts ?? this.accounts,
+      groups: groups ?? this.groups,
+      thumbnailFetched: thumbnailFetched ?? this.thumbnailFetched,
+      photoFetched: photoFetched ?? this.photoFetched,
+      isUnified: isUnified ?? this.isUnified,
+      propertiesFetched: propertiesFetched ?? this.propertiesFetched,
+    );
   }
 
   @override
@@ -272,7 +293,11 @@ class Contact {
       _listHashCode(websites) ^
       _listHashCode(socialMedias) ^
       _listHashCode(events) ^
-      _listHashCode(notes);
+      _listHashCode(notes) ^
+      thumbnailFetched.hashCode ^
+      photoFetched.hashCode ^
+      isUnified.hashCode ^
+      propertiesFetched.hashCode;
 
   @override
   bool operator ==(Object o) =>
@@ -290,7 +315,11 @@ class Contact {
       _listEqual(o.websites, websites) &&
       _listEqual(o.socialMedias, socialMedias) &&
       _listEqual(o.events, events) &&
-      _listEqual(o.notes, notes);
+      _listEqual(o.notes, notes) &&
+      o.thumbnailFetched == thumbnailFetched &&
+      o.photoFetched == photoFetched &&
+      o.isUnified == isUnified &&
+      o.propertiesFetched == propertiesFetched;
 
   @override
   String toString() =>
@@ -298,7 +327,8 @@ class Contact {
       'photo=$photo, isStarred=$isStarred, name=$name, phones=$phones, '
       'emails=$emails, addresses=$addresses, organizations=$organizations, '
       'websites=$websites, socialMedias=$socialMedias, events=$events, '
-      'notes=$notes, accounts=$accounts, groups=$groups)';
+      'notes=$notes, accounts=$accounts, groups=$groups, thumbnailFetched=$thumbnailFetched,'
+      'photoFetched:$photoFetched, isUnified:$isUnified, propertiesFetched:$propertiesFetched)';
 
   /// Inserts the contact into the database.
   Future<Contact> insert() => FlutterContacts.insertContact(this);
@@ -376,8 +406,7 @@ class Contact {
   }
 
   factory Contact.fromVCard(String vCard) {
-    var c = Contact();
-    VCardParser().parse(vCard, c);
+    var c = VCardParser().parse(vCard);
     return c;
   }
 
@@ -387,18 +416,20 @@ class Contact {
   /// For phones we compare them using the normalized number phone number if
   /// availalbe, falling back to the raw phone number. For emails we use the
   /// email address. By default we use the property hash code.
-  void deduplicateProperties() {
-    phones = _depuplicateProperty(
-        phones,
-        (x) => (x.normalizedNumber.isNotEmpty ? x.normalizedNumber : x.number)
-            .hashCode);
-    emails = _depuplicateProperty(emails, (x) => x.address.hashCode);
-    addresses = _depuplicateProperty(addresses);
-    organizations = _depuplicateProperty(organizations);
-    websites = _depuplicateProperty(websites);
-    socialMedias = _depuplicateProperty(socialMedias);
-    events = _depuplicateProperty(events);
-    notes = _depuplicateProperty(notes);
+  Contact deduplicateProperties() {
+    return this.copyWith(
+      phones: _depuplicateProperty(
+          phones,
+          (x) => (x.normalizedNumber.isNotEmpty ? x.normalizedNumber : x.number)
+              .hashCode),
+      emails: _depuplicateProperty(emails, (x) => x.address.hashCode),
+      addresses: _depuplicateProperty(addresses),
+      organizations: _depuplicateProperty(organizations),
+      websites: _depuplicateProperty(websites),
+      socialMedias: _depuplicateProperty(socialMedias),
+      events: _depuplicateProperty(events),
+      notes: _depuplicateProperty(notes),
+    );
   }
 
   static List<T> _depuplicateProperty<T>(List<T> list,

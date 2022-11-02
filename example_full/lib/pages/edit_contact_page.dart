@@ -121,7 +121,7 @@ class _EditContactPageState extends State<EditContactPage>
     if (photo != null) {
       final bytes = await photo.readAsBytes();
       setState(() {
-        _contact.photo = bytes;
+        _contact = _contact.copyWith(photo: bytes);
       });
     }
   }
@@ -141,7 +141,7 @@ class _EditContactPageState extends State<EditContactPage>
                     PopupMenuItem(value: 'Delete', child: Text('Delete photo'))
                   ],
                   onSelected: (_) => setState(() {
-                    _contact.photo = null;
+                    _contact = _contact.copyWith(photo: null);
                   }),
                 ),
               ),
@@ -216,89 +216,92 @@ class _EditContactPageState extends State<EditContactPage>
         null,
         (int i, dynamic n) => NameForm(
           n,
-          onUpdate: (name) => _contact.name = name,
+          onUpdate: (name) => _contact = _contact.copyWith(name: name),
           key: UniqueKey(),
         ),
         null,
       );
 
   Card _phoneCard() => _fieldCard(
-        'Phones',
-        _contact.phones,
-        () => _contact.phones = _contact.phones + [Phone('')],
-        (int i, dynamic p) => PhoneForm(
-          p,
-          onUpdate: (phone) => _contact.phones[i] = phone,
-          onDelete: () => setState(() => _contact.phones.removeAt(i)),
-          key: UniqueKey(),
-        ),
-        () => _contact.phones = [],
-      );
+      'Phones',
+      _contact.phones,
+      () => _contact = _contact.copyWith(phones: _contact.phones + [Phone('')]),
+      (int i, dynamic p) => PhoneForm(
+            p,
+            onUpdate: (phone) => _contact.phones[i] = phone,
+            onDelete: () => setState(() => _contact.phones.removeAt(i)),
+            key: UniqueKey(),
+          ),
+      () => _contact = _contact.copyWith(phones: []));
 
   Card _emailCard() => _fieldCard(
         'Emails',
         _contact.emails,
-        () => _contact.emails = _contact.emails + [Email('')],
+        () =>
+            _contact = _contact.copyWith(emails: _contact.emails + [Email('')]),
         (int i, dynamic e) => EmailForm(
           e,
           onUpdate: (email) => _contact.emails[i] = email,
           onDelete: () => setState(() => _contact.emails.removeAt(i)),
           key: UniqueKey(),
         ),
-        () => _contact.emails = [],
+        () => _contact = _contact.copyWith(emails: []),
       );
 
   Card _addressCard() => _fieldCard(
         'Addresses',
         _contact.addresses,
-        () => _contact.addresses = _contact.addresses + [Address('')],
+        () => _contact =
+            _contact.copyWith(addresses: _contact.addresses + [Address('')]),
         (int i, dynamic a) => AddressForm(
           a,
           onUpdate: (address) => _contact.addresses[i] = address,
           onDelete: () => setState(() => _contact.addresses.removeAt(i)),
           key: UniqueKey(),
         ),
-        () => _contact.addresses = [],
+        () => _contact = _contact.copyWith(addresses: []),
       );
 
   Card _organizationCard() => _fieldCard(
         'Organizations',
         _contact.organizations,
-        () =>
-            _contact.organizations = _contact.organizations + [Organization()],
+        () => _contact = _contact.copyWith(
+            organizations: _contact.organizations + [Organization()]),
         (int i, dynamic o) => OrganizationForm(
           o,
           onUpdate: (organization) => _contact.organizations[i] = organization,
           onDelete: () => setState(() => _contact.organizations.removeAt(i)),
           key: UniqueKey(),
         ),
-        () => _contact.organizations = [],
+        () => _contact = _contact.copyWith(organizations: []),
       );
 
   Card _websiteCard() => _fieldCard(
         'Websites',
         _contact.websites,
-        () => _contact.websites = _contact.websites + [Website('')],
+        () => _contact =
+            _contact.copyWith(websites: _contact.websites + [Website('')]),
         (int i, dynamic w) => WebsiteForm(
           w,
           onUpdate: (website) => _contact.websites[i] = website,
           onDelete: () => setState(() => _contact.websites.removeAt(i)),
           key: UniqueKey(),
         ),
-        () => _contact.websites = [],
+        () => _contact = _contact.copyWith(websites: []),
       );
 
   Card _socialMediaCard() => _fieldCard(
         'Social medias',
         _contact.socialMedias,
-        () => _contact.socialMedias = _contact.socialMedias + [SocialMedia('')],
+        () => _contact = _contact.copyWith(
+            socialMedias: _contact.socialMedias + [SocialMedia('')]),
         (int i, dynamic w) => SocialMediaForm(
           w,
           onUpdate: (socialMedia) => _contact.socialMedias[i] = socialMedia,
           onDelete: () => setState(() => _contact.socialMedias.removeAt(i)),
           key: UniqueKey(),
         ),
-        () => _contact.socialMedias = [],
+        () => _contact = _contact.copyWith(socialMedias: []),
       );
 
   Future<DateTime> _selectDate(BuildContext context) async => showDatePicker(
@@ -313,8 +316,9 @@ class _EditContactPageState extends State<EditContactPage>
         () async {
           final date = await _selectDate(context);
           if (date != null) {
-            _contact.events = _contact.events +
-                [Event(year: date.year, month: date.month, day: date.day)];
+            _contact = _contact.copyWith(
+                events: _contact.events +
+                    [Event(year: date.year, month: date.month, day: date.day)]);
           }
         },
         (int i, dynamic w) => EventForm(
@@ -323,21 +327,21 @@ class _EditContactPageState extends State<EditContactPage>
           onDelete: () => setState(() => _contact.events.removeAt(i)),
           key: UniqueKey(),
         ),
-        () => _contact.events = [],
+        () => _contact = _contact.copyWith(events: []),
         createAsync: true,
       );
 
   Card _noteCard() => _fieldCard(
         'Notes',
         _contact.notes,
-        () => _contact.notes = _contact.notes + [Note('')],
+        () => _contact = _contact.copyWith(notes: _contact.notes + [Note('')]),
         (int i, dynamic w) => NoteForm(
           w,
           onUpdate: null,
           onDelete: () => setState(() => _contact.groups.removeAt(i)),
           key: UniqueKey(),
         ),
-        () => _contact.notes = [],
+        () => _contact = _contact.copyWith(notes: []),
       );
 
   Card _groupCard() => _fieldCard(
@@ -346,7 +350,8 @@ class _EditContactPageState extends State<EditContactPage>
         () async {
           final group = await _promptGroup(exclude: _contact.groups);
           if (group != null) {
-            setState(() => _contact.groups = _contact.groups + [group]);
+            setState(() => _contact =
+                _contact.copyWith(groups: _contact.groups + [group]));
           }
         },
         (int i, dynamic w) => ListTile(
@@ -356,7 +361,7 @@ class _EditContactPageState extends State<EditContactPage>
             icon: Icon(Icons.delete),
           ),
         ),
-        () => setState(() => _contact.groups = []),
+        () => setState(() => _contact = _contact.copyWith(groups: [])),
       );
 
   Card _starredField() => Card(
@@ -368,8 +373,8 @@ class _EditContactPageState extends State<EditContactPage>
             SizedBox(width: 24.0),
             Checkbox(
               value: _contact.isStarred,
-              onChanged: (bool isStarred) =>
-                  setState(() => _contact.isStarred = isStarred),
+              onChanged: (bool isStarred) => setState(
+                  () => _contact = _contact.copyWith(isStarred: isStarred)),
             ),
           ],
         ),
