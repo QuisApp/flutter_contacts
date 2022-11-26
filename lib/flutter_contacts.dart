@@ -243,7 +243,7 @@ class FlutterContacts {
   /// it's not possible to tell which kind of change happened and on which
   /// contacts. It only notifies that something changed in the contacts
   /// database.
-  static void addListener(void Function() listener) {
+  static StreamSubscription? addListener(void Function() listener) {
     if (_eventSubscription != null) {
       _eventSubscription!.cancel();
     }
@@ -251,6 +251,7 @@ class FlutterContacts {
     final runAllListeners = (event) => _eventSubscribers.forEach((f) => f());
     _eventSubscription =
         _eventChannel.receiveBroadcastStream().listen(runAllListeners);
+    return _eventSubscription;
   }
 
   /// Removes a listener to contact database changes.
