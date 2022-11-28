@@ -232,11 +232,14 @@ class Contact {
         'groups': groups.map((x) => x.toJson()).toList(),
       });
 
+  ///Undefined represents that no value was passed and object state will be used,
+  ///passing null forces that attribute to become null
+  static const undefined = Object();
   Contact copyWith({
     String? id,
     String? displayName,
-    Uint8List? thumbnail,
-    Uint8List? photo,
+    dynamic thumbnail = undefined,
+    dynamic photo = undefined,
     bool? isStarred,
     Name? name,
     List<Phone>? phones,
@@ -257,8 +260,9 @@ class Contact {
     return Contact(
       id: id ?? this.id,
       displayName: displayName ?? this.displayName,
-      thumbnail: thumbnail ?? this.thumbnail,
-      photo: photo ?? this.photo,
+      thumbnail:
+          thumbnail == undefined ? this.thumbnail : thumbnail as Uint8List?,
+      photo: photo == undefined ? this.photo : photo as Uint8List?,
       isStarred: isStarred ?? this.isStarred,
       name: name ?? this.name,
       phones: phones ?? this.phones,
