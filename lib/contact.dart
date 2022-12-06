@@ -84,6 +84,9 @@ class Contact {
   /// Returns the full-resolution photo if available, the thumbnail otherwise.
   Uint8List? get photoOrThumbnail => photo ?? thumbnail;
 
+  /// The GEO element
+  List<double>? geo;
+
   /// Whether the contact is starred (Android only).
   bool isStarred;
 
@@ -295,6 +298,7 @@ class Contact {
   /// "-//Apple Inc.//Mac OS X 10.15.7//EN"
   String toVCard({
     bool withPhoto = true,
+    bool withLogo = true,
     String? productId,
     bool includeDate = false,
   }) {
@@ -331,6 +335,17 @@ class Contact {
       final prefix =
           v4 ? 'PHOTO:data:image/jpeg;base64,' : 'PHOTO;ENCODING=b;TYPE=JPEG:';
       lines.add(prefix + encoding);
+    }
+    if (withLogo && logo != null) {
+      final encoding = vCardEncode(base64.encode(logo!));
+      final prefix =
+          v4 ? 'LOGO:data:image/jpeg;base64,' : 'LOGO;ENCODING=b;TYPE=JPEG:';
+      lines.add(prefix + encoding);
+    }
+    if (geo != null && geo!.length == 2) {
+      final encoding = vCardEncode(
+          '${geo![0].toStringAsFixed(5)};${geo![1].toStringAsFixed(5)}');
+      lines.add('GEO:$encoding');
     }
     lines.addAll([
       name.toVCard(),
