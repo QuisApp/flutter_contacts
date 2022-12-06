@@ -78,6 +78,9 @@ class Contact {
   /// The full-resolution contact picture.
   Uint8List? photo;
 
+  /// The Logo element
+  Uint8List? logo;
+
   /// Returns the full-resolution photo if available, the thumbnail otherwise.
   Uint8List? get photoOrThumbnail => photo ?? thumbnail;
 
@@ -134,6 +137,7 @@ class Contact {
     this.displayName = '',
     this.thumbnail,
     this.photo,
+    this.logo,
     this.isStarred = false,
     Name? name,
     List<Phone>? phones,
@@ -163,6 +167,7 @@ class Contact {
         displayName: (json['displayName'] as String?) ?? '',
         thumbnail: json['thumbnail'] as Uint8List?,
         photo: json['photo'] as Uint8List?,
+        logo: json['logo'] as Uint8List?,
         isStarred: (json['isStarred'] as bool?) ?? false,
         name: Name.fromJson(Map<String, dynamic>.from(json['name'] ?? {})),
         phones: ((json['phones'] as List?) ?? [])
@@ -200,12 +205,14 @@ class Contact {
   Map<String, dynamic> toJson({
     bool withThumbnail = true,
     bool withPhoto = true,
+    bool withLogo = true,
   }) =>
       Map<String, dynamic>.from({
         'id': id,
         'displayName': displayName,
         'thumbnail': withThumbnail ? thumbnail : null,
         'photo': withPhoto ? photo : null,
+        'logo': withLogo ? logo : null,
         'isStarred': isStarred,
         'name': name.toJson(),
         'phones': phones.map((x) => x.toJson()).toList(),
@@ -226,6 +233,7 @@ class Contact {
       displayName.hashCode ^
       thumbnail.hashCode ^
       photo.hashCode ^
+      logo.hashCode ^
       isStarred.hashCode ^
       name.hashCode ^
       _listHashCode(phones) ^
@@ -244,6 +252,7 @@ class Contact {
       o.displayName == displayName &&
       o.thumbnail == thumbnail &&
       o.photo == photo &&
+      o.logo == logo &&
       o.isStarred == isStarred &&
       o.name == name &&
       _listEqual(o.phones, phones) &&
@@ -258,7 +267,7 @@ class Contact {
   @override
   String toString() =>
       'Contact(id=$id, displayName=$displayName, thumbnail=$thumbnail, '
-      'photo=$photo, isStarred=$isStarred, name=$name, phones=$phones, '
+      'photo=$photo, logo=$logo, isStarred=$isStarred, name=$name, phones=$phones, '
       'emails=$emails, addresses=$addresses, organizations=$organizations, '
       'websites=$websites, socialMedias=$socialMedias, events=$events, '
       'notes=$notes, accounts=$accounts, groups=$groups)';
