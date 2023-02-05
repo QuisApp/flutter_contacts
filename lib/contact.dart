@@ -421,7 +421,7 @@ class Contact {
   /// availalbe, falling back to the raw phone number. For emails we use the
   /// email address. By default we use the property hash code.
   Contact deduplicateProperties() {
-    return this.copyWith(
+    return copyWith(
       phones: _depuplicateProperty(
           phones,
           (x) => (x.normalizedNumber.isNotEmpty ? x.normalizedNumber : x.number)
