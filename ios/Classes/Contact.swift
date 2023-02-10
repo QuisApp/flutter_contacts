@@ -74,11 +74,9 @@ struct Contact {
                 events = [Event(fromContact: c)]
             }
             events += c.dates.map { Event(fromDate: $0) }
-            // Notes need approval now!
-            // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
-            if #available(iOS 13, *) {} else {
-                notes = [Note(fromContact: c)]
-            }
+        }
+        if c.isKeyAvailable(CNContactNoteKey) {
+            notes = [Note(fromContact: c)]
         }
         if c.isKeyAvailable(CNContactThumbnailImageDataKey) {
             thumbnail = c.thumbnailImageData
