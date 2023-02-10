@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../../static-assets/github.css?v1">
   <link rel="stylesheet" href="../../static-assets/styles.css?v1">
@@ -21,13 +21,12 @@
 </head>
 
 
-<body data-base-href="../../"
-      data-using-base-href="false">
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
 
 <div id="overlay-under-drawer"></div>
 
 <header id="title">
-  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">flutter_contacts</a></li>
     <li><a href="../../properties_website/properties_website-library.html">website</a></li>
@@ -38,10 +37,16 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span class="material-symbols-outlined">
+        brightness_4
+      </span>
+    </label>
+  </div>
 </header>
-
 <main>
-
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
@@ -92,28 +97,28 @@
     <h5>Website class</h5>
     <ol>
 
-    <li class="section-title"><a href="../../properties_website/Website-class.html#constructors">Constructors</a></li>
-    <li><a href="../../properties_website/Website/Website.html">Website</a></li>
-    <li><a href="../../properties_website/Website/Website.fromJson.html">fromJson</a></li>
+        <li class="section-title"><a href="../../properties_website/Website-class.html#constructors">Constructors</a></li>
+          <li><a href="../../properties_website/Website/Website.html">Website</a></li>
+          <li><a href="../../properties_website/Website/Website.fromJson.html">fromJson</a></li>
 
 
-    <li class="section-title">
-      <a href="../../properties_website/Website-class.html#instance-properties">Properties</a>
-    </li>
-    <li><a href="../../properties_website/Website/customLabel.html">customLabel</a></li>
-    <li><a href="../../properties_website/Website/hashCode.html">hashCode</a></li>
-    <li><a href="../../properties_website/Website/label.html">label</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-    <li><a href="../../properties_website/Website/url.html">url</a></li>
+        <li class="section-title">
+          <a href="../../properties_website/Website-class.html#instance-properties">Properties</a>
+        </li>
+          <li><a href="../../properties_website/Website/customLabel.html">customLabel</a></li>
+          <li><a href="../../properties_website/Website/hashCode.html">hashCode</a></li>
+          <li><a href="../../properties_website/Website/label.html">label</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+          <li><a href="../../properties_website/Website/url.html">url</a></li>
 
-    <li class="section-title"><a href="../../properties_website/Website-class.html#instance-methods">Methods</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-    <li><a href="../../properties_website/Website/toJson.html">toJson</a></li>
-    <li><a href="../../properties_website/Website/toString.html">toString</a></li>
-    <li><a href="../../properties_website/Website/toVCard.html">toVCard</a></li>
+        <li class="section-title"><a href="../../properties_website/Website-class.html#instance-methods">Methods</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+          <li><a href="../../properties_website/Website/toJson.html">toJson</a></li>
+          <li><a href="../../properties_website/Website/toString.html">toString</a></li>
+          <li><a href="../../properties_website/Website/toVCard.html">toVCard</a></li>
 
-    <li class="section-title"><a href="../../properties_website/Website-class.html#operators">Operators</a></li>
-    <li><a href="../../properties_website/Website/operator_equals.html">operator ==</a></li>
+        <li class="section-title"><a href="../../properties_website/Website-class.html#operators">Operators</a></li>
+          <li><a href="../../properties_website/Website/operator_equals.html">operator ==</a></li>
 
 
 
@@ -130,7 +135,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.5+1
+      1.1.6
   </span>
 
   
@@ -139,7 +144,7 @@
 
 
 <script src="../../static-assets/highlight.pack.js?v1"></script>
-<script src="../../static-assets/script.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
 
 
 

@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../static-assets/github.css?v1">
   <link rel="stylesheet" href="../static-assets/styles.css?v1">
@@ -21,13 +21,12 @@
 </head>
 
 
-<body data-base-href="../"
-      data-using-base-href="false">
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
 
 <div id="overlay-under-drawer"></div>
 
 <header id="title">
-  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">flutter_contacts</a></li>
     <li class="self-crumb">flutter_contacts library</li>
@@ -36,12 +35,19 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span class="material-symbols-outlined">
+        brightness_4
+      </span>
+    </label>
+  </div>
 </header>
-
 <main>
 
-
   <div id="dartdoc-main-content" class="main-content">
+    
       <div>
 <h1><span class="kind-library">flutter_contacts</span> library 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
@@ -61,7 +67,7 @@
 </dt>
 <dd>
   Account information, which is exposed for information and debugging purposes
-and should be ignored in most cases. <a href="../properties_account/Account-class.html">[...]</a>
+and should be ignored in most cases.
 </dd>
 
         <dt id="Address">
@@ -69,7 +75,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Labeled postal address. <a href="../properties_address/Address-class.html">[...]</a>
+  Labeled postal address.
 </dd>
 
         <dt id="Contact">
@@ -77,7 +83,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  A contact. <a href="../contact/Contact-class.html">[...]</a>
+  A contact.
 </dd>
 
         <dt id="Email">
@@ -85,7 +91,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Labeled email. 
+  Labeled email.
 </dd>
 
         <dt id="Event">
@@ -93,7 +99,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Labeled event / birthday. <a href="../properties_event/Event-class.html">[...]</a>
+  Labeled event / birthday.
 </dd>
 
         <dt id="FlutterContacts">
@@ -101,7 +107,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-   
+  
 </dd>
 
         <dt id="Group">
@@ -109,7 +115,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Group (called label on Android and group on iOS). <a href="../properties_group/Group-class.html">[...]</a>
+  Group (called label on Android and group on iOS).
 </dd>
 
         <dt id="Name">
@@ -117,7 +123,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Structured name. <a href="../properties_name/Name-class.html">[...]</a>
+  Structured name.
 </dd>
 
         <dt id="Note">
@@ -125,7 +131,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Note, i.e. a free-form string about the contact. <a href="../properties_note/Note-class.html">[...]</a>
+  Note, i.e. a free-form string about the contact.
 </dd>
 
         <dt id="Organization">
@@ -133,7 +139,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Organization / job. 
+  Organization / job.
 </dd>
 
         <dt id="Phone">
@@ -141,7 +147,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Labeled phone. 
+  Labeled phone.
 </dd>
 
         <dt id="SocialMedia">
@@ -149,7 +155,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Social media / instant messaging profile. <a href="../properties_social_media/SocialMedia-class.html">[...]</a>
+  Social media / instant messaging profile.
 </dd>
 
         <dt id="Website">
@@ -157,7 +163,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Labeled website. 
+  Labeled website.
 </dd>
 
       </dl>
@@ -176,8 +182,8 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-   
-  <div class="features">final</div>
+  
+  <div class="features"><span class="feature">final</span></div>
 
 </dd>
 
@@ -194,7 +200,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Address labels. <a href="../properties_address/AddressLabel.html">[...]</a>
+  Address labels.
 </dd>
 
         <dt id="EmailLabel">
@@ -202,7 +208,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Email labels. <a href="../properties_email/EmailLabel.html">[...]</a>
+  Email labels.
 </dd>
 
         <dt id="EventLabel">
@@ -210,7 +216,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Event labels. <a href="../properties_event/EventLabel.html">[...]</a>
+  Event labels.
 </dd>
 
         <dt id="PhoneLabel">
@@ -218,7 +224,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Phone labels. <a href="../properties_phone/PhoneLabel.html">[...]</a>
+  Phone labels.
 </dd>
 
         <dt id="SocialMediaLabel">
@@ -226,7 +232,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Social media labels. <a href="../properties_social_media/SocialMediaLabel.html">[...]</a>
+  Social media labels.
 </dd>
 
         <dt id="WebsiteLabel">
@@ -234,7 +240,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 </dt>
 <dd>
-  Website labels. <a href="../properties_website/WebsiteLabel.html">[...]</a>
+  Website labels.
 </dd>
 
       </dl>
@@ -283,35 +289,35 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
     <h5>flutter_contacts library</h5>
     <ol>
-  <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#classes">Classes</a></li>
-  <li><a href="../properties_account/Account-class.html">Account</a></li>
-  <li><a href="../properties_address/Address-class.html">Address</a></li>
-  <li><a href="../contact/Contact-class.html">Contact</a></li>
-  <li><a href="../properties_email/Email-class.html">Email</a></li>
-  <li><a href="../properties_event/Event-class.html">Event</a></li>
-  <li><a href="../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
-  <li><a href="../properties_group/Group-class.html">Group</a></li>
-  <li><a href="../properties_name/Name-class.html">Name</a></li>
-  <li><a href="../properties_note/Note-class.html">Note</a></li>
-  <li><a href="../properties_organization/Organization-class.html">Organization</a></li>
-  <li><a href="../properties_phone/Phone-class.html">Phone</a></li>
-  <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
-  <li><a href="../properties_website/Website-class.html">Website</a></li>
+      <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#classes">Classes</a></li>
+        <li><a href="../properties_account/Account-class.html">Account</a></li>
+        <li><a href="../properties_address/Address-class.html">Address</a></li>
+        <li><a href="../contact/Contact-class.html">Contact</a></li>
+        <li><a href="../properties_email/Email-class.html">Email</a></li>
+        <li><a href="../properties_event/Event-class.html">Event</a></li>
+        <li><a href="../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
+        <li><a href="../properties_group/Group-class.html">Group</a></li>
+        <li><a href="../properties_name/Name-class.html">Name</a></li>
+        <li><a href="../properties_note/Note-class.html">Note</a></li>
+        <li><a href="../properties_organization/Organization-class.html">Organization</a></li>
+        <li><a href="../properties_phone/Phone-class.html">Phone</a></li>
+        <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
+        <li><a href="../properties_website/Website-class.html">Website</a></li>
 
 
 
 
-  <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#properties">Properties</a></li>
-  <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
+      <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#properties">Properties</a></li>
+        <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
 
 
-  <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#enums">Enums</a></li>
-  <li><a href="../properties_address/AddressLabel.html">AddressLabel</a></li>
-  <li><a href="../properties_email/EmailLabel.html">EmailLabel</a></li>
-  <li><a href="../properties_event/EventLabel.html">EventLabel</a></li>
-  <li><a href="../properties_phone/PhoneLabel.html">PhoneLabel</a></li>
-  <li><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></li>
-  <li><a href="../properties_website/WebsiteLabel.html">WebsiteLabel</a></li>
+      <li class="section-title"><a href="../flutter_contacts/flutter_contacts-library.html#enums">Enums</a></li>
+        <li><a href="../properties_address/AddressLabel.html">AddressLabel</a></li>
+        <li><a href="../properties_email/EmailLabel.html">EmailLabel</a></li>
+        <li><a href="../properties_event/EventLabel.html">EventLabel</a></li>
+        <li><a href="../properties_phone/PhoneLabel.html">PhoneLabel</a></li>
+        <li><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></li>
+        <li><a href="../properties_website/WebsiteLabel.html">WebsiteLabel</a></li>
 
 
 </ol>
@@ -323,7 +329,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.5+1
+      1.1.6
   </span>
 
   
@@ -332,7 +338,7 @@ and should be ignored in most cases. <a href="../properties_account/Account-clas
 
 
 <script src="../static-assets/highlight.pack.js?v1"></script>
-<script src="../static-assets/script.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
 
 
 

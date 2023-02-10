@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../static-assets/github.css?v1">
   <link rel="stylesheet" href="../static-assets/styles.css?v1">
@@ -21,13 +21,12 @@
 </head>
 
 
-<body data-base-href="../"
-      data-using-base-href="false">
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
 
 <div id="overlay-under-drawer"></div>
 
 <header id="title">
-  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">flutter_contacts</a></li>
     <li><a href="../properties_note/properties_note-library.html">note</a></li>
@@ -37,10 +36,16 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span class="material-symbols-outlined">
+        brightness_4
+      </span>
+    </label>
+  </div>
 </header>
-
 <main>
-
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
@@ -60,25 +65,26 @@ from Apple to use it in your app. See:
 
 
 
-    <section class="summary offset-anchor" id="constructors">
-      <h2>Constructors</h2>
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
 
-      <dl class="constructor-summary-list">
+    <dl class="constructor-summary-list">
         <dt id="Note" class="callable">
           <span class="name"><a href="../properties_note/Note/Note.html">Note</a></span><span class="signature">(<span class="parameter" id="-param-note"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">note</span></span>)</span>
         </dt>
         <dd>
-           
+          
         </dd>
         <dt id="Note.fromJson" class="callable">
           <span class="name"><a href="../properties_note/Note/Note.fromJson.html">Note.fromJson</a></span><span class="signature">(<span class="parameter" id="fromJson-param-json"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">json</span></span>)</span>
         </dt>
         <dd>
-           
-          <div class="constructor-modifier features">factory</div>
+          
+            <div class="constructor-modifier features">factory</div>
         </dd>
-      </dl>
-    </section>
+    </dl>
+  </section>
 
     <section class="summary offset-anchor" id="instance-properties">
       <h2>Properties</h2>
@@ -90,8 +96,8 @@ from Apple to use it in your app. See:
 
 </dt>
 <dd>
-  The hash code for this object. <a href="../properties_note/Note/hashCode.html">[...]</a>
-  <div class="features">read-only, override</div>
+  The hash code for this object.
+  <div class="features"><span class="feature">read-only</span><span class="feature">override</span></div>
 
 </dd>
 
@@ -101,8 +107,8 @@ from Apple to use it in your app. See:
 
 </dt>
 <dd>
-  Note content. 
-  <div class="features">read / write</div>
+  Note content.
+  <div class="features"><span class="feature">read / write</span></div>
 
 </dd>
 
@@ -112,17 +118,20 @@ from Apple to use it in your app. See:
 
 </dt>
 <dd class="inherited">
-  A representation of the runtime type of the object. 
-  <div class="features">read-only, inherited</div>
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">read-only</span><span class="feature">inherited</span></div>
 
 </dd>
 
       </dl>
     </section>
 
-    <section class="summary offset-anchor" id="instance-methods">
-      <h2>Methods</h2>
-      <dl class="callables">
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
         <dt id="noSuchMethod" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
     <span class="returntype parameter">&#8594; dynamic</span>
@@ -131,8 +140,8 @@ from Apple to use it in your app. See:
 
 </dt>
 <dd class="inherited">
-  Invoked when a non-existent method or property is accessed. <a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">[...]</a>
-  <div class="features">inherited</div>
+  Invoked when a non-existent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -144,7 +153,7 @@ from Apple to use it in your app. See:
 
 </dt>
 <dd>
-   
+  
   
 
 </dd>
@@ -157,8 +166,8 @@ from Apple to use it in your app. See:
 
 </dt>
 <dd>
-  A string representation of this object. <a href="../properties_note/Note/toString.html">[...]</a>
-  <div class="features">override</div>
+  A string representation of this object.
+  <div class="features"><span class="feature">override</span></div>
 
 </dd>
 
@@ -170,17 +179,19 @@ from Apple to use it in your app. See:
 
 </dt>
 <dd>
-   
+  
   
 
 </dd>
 
-      </dl>
-    </section>
-
-    <section class="summary offset-anchor" id="operators">
-      <h2>Operators</h2>
-      <dl class="callables">
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
         <dt id="operator ==" class="callable">
   <span class="name"><a href="../properties_note/Note/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-o"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">o</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -189,15 +200,16 @@ from Apple to use it in your app. See:
 
 </dt>
 <dd>
-  The equality operator. <a href="../properties_note/Note/operator_equals.html">[...]</a>
-  <div class="features">override</div>
+  The equality operator.
+  <div class="features"><span class="feature">override</span></div>
 
 </dd>
 
-      </dl>
-    </section>
-
-
+    </dl>
+  </section>
+    
+    
+    
 
 
   </div> <!-- /.main-content -->
@@ -218,8 +230,8 @@ from Apple to use it in your app. See:
 
     <h5>note library</h5>
     <ol>
-  <li class="section-title"><a href="../properties_note/properties_note-library.html#classes">Classes</a></li>
-  <li><a href="../properties_note/Note-class.html">Note</a></li>
+      <li class="section-title"><a href="../properties_note/properties_note-library.html#classes">Classes</a></li>
+        <li><a href="../properties_note/Note-class.html">Note</a></li>
 
 
 
@@ -235,26 +247,26 @@ from Apple to use it in your app. See:
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
     <ol>
 
-    <li class="section-title"><a href="../properties_note/Note-class.html#constructors">Constructors</a></li>
-    <li><a href="../properties_note/Note/Note.html">Note</a></li>
-    <li><a href="../properties_note/Note/Note.fromJson.html">fromJson</a></li>
+        <li class="section-title"><a href="../properties_note/Note-class.html#constructors">Constructors</a></li>
+          <li><a href="../properties_note/Note/Note.html">Note</a></li>
+          <li><a href="../properties_note/Note/Note.fromJson.html">fromJson</a></li>
 
 
-    <li class="section-title">
-      <a href="../properties_note/Note-class.html#instance-properties">Properties</a>
-    </li>
-    <li><a href="../properties_note/Note/hashCode.html">hashCode</a></li>
-    <li><a href="../properties_note/Note/note.html">note</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+        <li class="section-title">
+          <a href="../properties_note/Note-class.html#instance-properties">Properties</a>
+        </li>
+          <li><a href="../properties_note/Note/hashCode.html">hashCode</a></li>
+          <li><a href="../properties_note/Note/note.html">note</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
-    <li class="section-title"><a href="../properties_note/Note-class.html#instance-methods">Methods</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-    <li><a href="../properties_note/Note/toJson.html">toJson</a></li>
-    <li><a href="../properties_note/Note/toString.html">toString</a></li>
-    <li><a href="../properties_note/Note/toVCard.html">toVCard</a></li>
+        <li class="section-title"><a href="../properties_note/Note-class.html#instance-methods">Methods</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+          <li><a href="../properties_note/Note/toJson.html">toJson</a></li>
+          <li><a href="../properties_note/Note/toString.html">toString</a></li>
+          <li><a href="../properties_note/Note/toVCard.html">toVCard</a></li>
 
-    <li class="section-title"><a href="../properties_note/Note-class.html#operators">Operators</a></li>
-    <li><a href="../properties_note/Note/operator_equals.html">operator ==</a></li>
+        <li class="section-title"><a href="../properties_note/Note-class.html#operators">Operators</a></li>
+          <li><a href="../properties_note/Note/operator_equals.html">operator ==</a></li>
 
 
 
@@ -268,7 +280,7 @@ from Apple to use it in your app. See:
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.5+1
+      1.1.6
   </span>
 
   
@@ -277,7 +289,7 @@ from Apple to use it in your app. See:
 
 
 <script src="../static-assets/highlight.pack.js?v1"></script>
-<script src="../static-assets/script.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
 
 
 

@@ -1,3 +1,7 @@
+## 1.1.6
+
+* Update kotlin/gradle versions (https://github.com/QuisApp/flutter_contacts/issues/69)
+
 ## 1.1.5+1
 
 * Fix null pointer error (https://github.com/QuisApp/flutter_contacts/pull/71 - thanks anggrayudi)
