@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../static-assets/github.css?v1">
   <link rel="stylesheet" href="../static-assets/styles.css?v1">
@@ -21,13 +21,12 @@
 </head>
 
 
-<body data-base-href="../"
-      data-using-base-href="false">
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
 
 <div id="overlay-under-drawer"></div>
 
 <header id="title">
-  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">flutter_contacts</a></li>
     <li><a href="../properties_social_media/properties_social_media-library.html">social_media</a></li>
@@ -37,17 +36,28 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span class="material-symbols-outlined">
+        brightness_4
+      </span>
+    </label>
+  </div>
 </header>
-
 <main>
-
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-enum">SocialMediaLabel</span> enum 
+
+        <h1>
+          <span class="kind-enum">SocialMediaLabel</span>
+          enum 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
-</h1></div>
+
+        </h1>
+      </div>
 
     
 <section class="desc markdown">
@@ -58,624 +68,519 @@
 
     <section>
       <dl class="dl-horizontal">
-        <dt>Inheritance</dt>
-        <dd><ul class="gt-separated dark eNum-relationships">
-          <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
-          <li><a href="https://api.flutter.dev/flutter/dart-core/Enum-class.html">Enum</a></li>
-          <li>SocialMediaLabel</li>
-        </ul></dd>
+        
+  <dt>Inheritance</dt>
+  <dd>
+    <ul class="gt-separated dark eNum-relationships">
+      <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
+        <li><a href="https://api.flutter.dev/flutter/dart-core/Enum-class.html">Enum</a></li>
+      <li>SocialMediaLabel</li>
+    </ul>
+  </dd>
+
+        
+        
+        
+
 
       </dl>
     </section>
 
-    <section class="summary offset-anchor" id="constants">
-      <h2>Constants</h2>
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+
+    <dl class="constructor-summary-list">
+        <dt id="SocialMediaLabel" class="callable">
+          <span class="name"><a href="../properties_social_media/SocialMediaLabel/SocialMediaLabel.html">SocialMediaLabel</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          
+            <div class="constructor-modifier features">const</div>
+        </dd>
+    </dl>
+  </section>
+
+    <section class="summary offset-anchor" id="values">
+      <h2>Values</h2>
 
       <dl class="properties">
-        <dt id="aim" class="constant">
-  <span class="name ">aim</span>
+          <dt id="aim" class="constant">
+    <span class="name ">aim</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(0)</code></span>
-  </div>
 </dd>
 
-        <dt id="baiduTieba" class="constant">
-  <span class="name ">baiduTieba</span>
+          <dt id="baiduTieba" class="constant">
+    <span class="name ">baiduTieba</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(1)</code></span>
-  </div>
 </dd>
 
-        <dt id="custom" class="constant">
-  <span class="name ">custom</span>
+          <dt id="discord" class="constant">
+    <span class="name ">discord</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(38)</code></span>
-  </div>
 </dd>
 
-        <dt id="discord" class="constant">
-  <span class="name ">discord</span>
+          <dt id="facebook" class="constant">
+    <span class="name ">facebook</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(2)</code></span>
-  </div>
 </dd>
 
-        <dt id="facebook" class="constant">
-  <span class="name ">facebook</span>
+          <dt id="flickr" class="constant">
+    <span class="name ">flickr</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(3)</code></span>
-  </div>
 </dd>
 
-        <dt id="flickr" class="constant">
-  <span class="name ">flickr</span>
+          <dt id="gaduGadu" class="constant">
+    <span class="name ">gaduGadu</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(4)</code></span>
-  </div>
 </dd>
 
-        <dt id="gaduGadu" class="constant">
-  <span class="name ">gaduGadu</span>
+          <dt id="gameCenter" class="constant">
+    <span class="name ">gameCenter</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(5)</code></span>
-  </div>
 </dd>
 
-        <dt id="gameCenter" class="constant">
-  <span class="name ">gameCenter</span>
+          <dt id="googleTalk" class="constant">
+    <span class="name ">googleTalk</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(6)</code></span>
-  </div>
 </dd>
 
-        <dt id="googleTalk" class="constant">
-  <span class="name ">googleTalk</span>
+          <dt id="icq" class="constant">
+    <span class="name ">icq</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(7)</code></span>
-  </div>
 </dd>
 
-        <dt id="icq" class="constant">
-  <span class="name ">icq</span>
+          <dt id="instagram" class="constant">
+    <span class="name ">instagram</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(8)</code></span>
-  </div>
 </dd>
 
-        <dt id="instagram" class="constant">
-  <span class="name ">instagram</span>
+          <dt id="jabber" class="constant">
+    <span class="name ">jabber</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(9)</code></span>
-  </div>
 </dd>
 
-        <dt id="jabber" class="constant">
-  <span class="name ">jabber</span>
+          <dt id="line" class="constant">
+    <span class="name ">line</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(10)</code></span>
-  </div>
 </dd>
 
-        <dt id="line" class="constant">
-  <span class="name ">line</span>
+          <dt id="linkedIn" class="constant">
+    <span class="name ">linkedIn</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(11)</code></span>
-  </div>
 </dd>
 
-        <dt id="linkedIn" class="constant">
-  <span class="name ">linkedIn</span>
+          <dt id="medium" class="constant">
+    <span class="name ">medium</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(12)</code></span>
-  </div>
 </dd>
 
-        <dt id="medium" class="constant">
-  <span class="name ">medium</span>
+          <dt id="messenger" class="constant">
+    <span class="name ">messenger</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(13)</code></span>
-  </div>
 </dd>
 
-        <dt id="messenger" class="constant">
-  <span class="name ">messenger</span>
+          <dt id="msn" class="constant">
+    <span class="name ">msn</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(14)</code></span>
-  </div>
 </dd>
 
-        <dt id="msn" class="constant">
-  <span class="name ">msn</span>
+          <dt id="mySpace" class="constant">
+    <span class="name ">mySpace</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(15)</code></span>
-  </div>
 </dd>
 
-        <dt id="mySpace" class="constant">
-  <span class="name ">mySpace</span>
+          <dt id="netmeeting" class="constant">
+    <span class="name ">netmeeting</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(16)</code></span>
-  </div>
 </dd>
 
-        <dt id="netmeeting" class="constant">
-  <span class="name ">netmeeting</span>
+          <dt id="pinterest" class="constant">
+    <span class="name ">pinterest</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(17)</code></span>
-  </div>
 </dd>
 
-        <dt id="other" class="constant">
-  <span class="name ">other</span>
+          <dt id="qqchat" class="constant">
+    <span class="name ">qqchat</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(37)</code></span>
-  </div>
 </dd>
 
-        <dt id="pinterest" class="constant">
-  <span class="name ">pinterest</span>
+          <dt id="qzone" class="constant">
+    <span class="name ">qzone</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(18)</code></span>
-  </div>
 </dd>
 
-        <dt id="qqchat" class="constant">
-  <span class="name ">qqchat</span>
+          <dt id="reddit" class="constant">
+    <span class="name ">reddit</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(19)</code></span>
-  </div>
 </dd>
 
-        <dt id="qzone" class="constant">
-  <span class="name ">qzone</span>
+          <dt id="sinaWeibo" class="constant">
+    <span class="name ">sinaWeibo</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(20)</code></span>
-  </div>
 </dd>
 
-        <dt id="reddit" class="constant">
-  <span class="name ">reddit</span>
+          <dt id="skype" class="constant">
+    <span class="name ">skype</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(21)</code></span>
-  </div>
 </dd>
 
-        <dt id="sinaWeibo" class="constant">
-  <span class="name ">sinaWeibo</span>
+          <dt id="snapchat" class="constant">
+    <span class="name ">snapchat</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(22)</code></span>
-  </div>
 </dd>
 
-        <dt id="skype" class="constant">
-  <span class="name ">skype</span>
+          <dt id="telegram" class="constant">
+    <span class="name ">telegram</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(23)</code></span>
-  </div>
 </dd>
 
-        <dt id="snapchat" class="constant">
-  <span class="name ">snapchat</span>
+          <dt id="tencentWeibo" class="constant">
+    <span class="name ">tencentWeibo</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(24)</code></span>
-  </div>
 </dd>
 
-        <dt id="telegram" class="constant">
-  <span class="name ">telegram</span>
+          <dt id="tikTok" class="constant">
+    <span class="name ">tikTok</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(25)</code></span>
-  </div>
 </dd>
 
-        <dt id="tencentWeibo" class="constant">
-  <span class="name ">tencentWeibo</span>
+          <dt id="tumblr" class="constant">
+    <span class="name ">tumblr</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(26)</code></span>
-  </div>
 </dd>
 
-        <dt id="tikTok" class="constant">
-  <span class="name ">tikTok</span>
+          <dt id="twitter" class="constant">
+    <span class="name ">twitter</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(27)</code></span>
-  </div>
 </dd>
 
-        <dt id="tumblr" class="constant">
-  <span class="name ">tumblr</span>
+          <dt id="viber" class="constant">
+    <span class="name ">viber</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(28)</code></span>
-  </div>
 </dd>
 
-        <dt id="twitter" class="constant">
-  <span class="name ">twitter</span>
+          <dt id="wechat" class="constant">
+    <span class="name ">wechat</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(29)</code></span>
-  </div>
 </dd>
 
-        <dt id="values" class="constant">
-  <span class="name ">values</span>
-  <span class="signature">&#8594; const <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>&gt;</span></span>
-  
-
-</dt>
-<dd>
-  <p>A constant List of the values in this enum, in order of their declaration.</p> 
-  
-
-  <div>
-    <span class="signature"><code>const List&lt;<wbr><span class="type-parameter">SocialMediaLabel</span>&gt;</code></span>
-  </div>
-</dd>
-
-        <dt id="viber" class="constant">
-  <span class="name ">viber</span>
+          <dt id="whatsapp" class="constant">
+    <span class="name ">whatsapp</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(30)</code></span>
-  </div>
 </dd>
 
-        <dt id="wechat" class="constant">
-  <span class="name ">wechat</span>
+          <dt id="yahoo" class="constant">
+    <span class="name ">yahoo</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(31)</code></span>
-  </div>
 </dd>
 
-        <dt id="whatsapp" class="constant">
-  <span class="name ">whatsapp</span>
+          <dt id="yelp" class="constant">
+    <span class="name ">yelp</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(32)</code></span>
-  </div>
 </dd>
 
-        <dt id="yahoo" class="constant">
-  <span class="name ">yahoo</span>
+          <dt id="youtube" class="constant">
+    <span class="name ">youtube</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(33)</code></span>
-  </div>
 </dd>
 
-        <dt id="yelp" class="constant">
-  <span class="name ">yelp</span>
+          <dt id="zoom" class="constant">
+    <span class="name ">zoom</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(34)</code></span>
-  </div>
 </dd>
 
-        <dt id="youtube" class="constant">
-  <span class="name ">youtube</span>
+          <dt id="other" class="constant">
+    <span class="name ">other</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(35)</code></span>
-  </div>
 </dd>
 
-        <dt id="zoom" class="constant">
-  <span class="name ">zoom</span>
+          <dt id="custom" class="constant">
+    <span class="name ">custom</span>
   <span class="signature">&#8594; const <a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>
   
 
 </dt>
 <dd>
-   
+  
   
 
-  <div>
-    <span class="signature"><code>const SocialMediaLabel(36)</code></span>
-  </div>
 </dd>
 
       </dl>
     </section>
 
-    <section class="summary offset-anchor inherited" id="instance-properties">
+    <section
+        class="
+          summary
+          offset-anchorinherited"
+        id="instance-properties">
       <h2>Properties</h2>
 
       <dl class="properties">
@@ -685,8 +590,8 @@
 
 </dt>
 <dd class="inherited">
-  The hash code for this object. <a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">[...]</a>
-  <div class="features">read-only, inherited</div>
+  The hash code for this object.
+  <div class="features"><span class="feature">read-only</span><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -696,8 +601,8 @@
 
 </dt>
 <dd class="inherited">
-  A numeric identifier for the enumerated value. <a href="https://api.flutter.dev/flutter/dart-core/Enum/index.html">[...]</a>
-  <div class="features">read-only, inherited</div>
+  A numeric identifier for the enumerated value.
+  <div class="features"><span class="feature">read-only</span><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -707,17 +612,20 @@
 
 </dt>
 <dd class="inherited">
-  A representation of the runtime type of the object. 
-  <div class="features">read-only, inherited</div>
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">read-only</span><span class="feature">inherited</span></div>
 
 </dd>
 
       </dl>
     </section>
 
-    <section class="summary offset-anchor inherited" id="instance-methods">
-      <h2>Methods</h2>
-      <dl class="callables">
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
         <dt id="noSuchMethod" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
     <span class="returntype parameter">&#8594; dynamic</span>
@@ -726,8 +634,8 @@
 
 </dt>
 <dd class="inherited">
-  Invoked when a non-existent method or property is accessed. <a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">[...]</a>
-  <div class="features">inherited</div>
+  Invoked when a non-existent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -739,17 +647,19 @@
 
 </dt>
 <dd class="inherited">
-  A string representation of this object. <a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">[...]</a>
-  <div class="features">inherited</div>
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
-      </dl>
-    </section>
-
-    <section class="summary offset-anchor inherited" id="operators">
-      <h2>Operators</h2>
-      <dl class="callables">
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
         <dt id="operator ==" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -758,16 +668,39 @@
 
 </dt>
 <dd class="inherited">
-  The equality operator. <a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">[...]</a>
-  <div class="features">inherited</div>
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
-      </dl>
-    </section>
+    </dl>
+  </section>
+    
+    
+    
 
+  <section class="summary offset-anchor" id="constants">
+    <h2>Constants</h2>
 
-  </div> <!-- /.main-content -->
+    <dl class="properties">
+        <dt id="values" class="constant">
+    <span class="name "><a href="../properties_social_media/SocialMediaLabel/values-constant.html">values</a></span>
+  <span class="signature">&#8594; const <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  A constant List of the values in this enum, in order of their declaration.
+  
+
+    <div>
+      <span class="signature"><code>[aim, baiduTieba, discord, facebook, flickr, gaduGadu, gameCenter, googleTalk, icq, instagram, jabber, line, linkedIn, medium, messenger, msn, mySpace, netmeeting, pinterest, qqchat, qzone, reddit, si…</code></span>
+    </div>
+</dd>
+
+    </dl>
+  </section>
+  </div><!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
     <header id="header-search-sidebar" class="hidden-l">
@@ -785,18 +718,18 @@
 
     <h5>social_media library</h5>
     <ol>
-  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#classes">Classes</a></li>
-  <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
+      <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#classes">Classes</a></li>
+        <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
 
 
 
 
-  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#properties">Properties</a></li>
-  <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
+      <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#properties">Properties</a></li>
+        <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
 
 
-  <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#enums">Enums</a></li>
-  <li><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></li>
+      <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#enums">Enums</a></li>
+        <li><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></li>
 
 
 </ol>
@@ -806,74 +739,79 @@
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
     <ol>
 
+        <li class="section-title"><a href="../properties_social_media/SocialMediaLabel.html#constructors">Constructors</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel/SocialMediaLabel.html">SocialMediaLabel</a></li>
 
-    <li class="section-title"><a href="../properties_social_media/SocialMediaLabel.html#constants">Constants</a></li>
-    <li>aim</li>
-    <li>baiduTieba</li>
-    <li>custom</li>
-    <li>discord</li>
-    <li>facebook</li>
-    <li>flickr</li>
-    <li>gaduGadu</li>
-    <li>gameCenter</li>
-    <li>googleTalk</li>
-    <li>icq</li>
-    <li>instagram</li>
-    <li>jabber</li>
-    <li>line</li>
-    <li>linkedIn</li>
-    <li>medium</li>
-    <li>messenger</li>
-    <li>msn</li>
-    <li>mySpace</li>
-    <li>netmeeting</li>
-    <li>other</li>
-    <li>pinterest</li>
-    <li>qqchat</li>
-    <li>qzone</li>
-    <li>reddit</li>
-    <li>sinaWeibo</li>
-    <li>skype</li>
-    <li>snapchat</li>
-    <li>telegram</li>
-    <li>tencentWeibo</li>
-    <li>tikTok</li>
-    <li>tumblr</li>
-    <li>twitter</li>
-    <li>values</li>
-    <li>viber</li>
-    <li>wechat</li>
-    <li>whatsapp</li>
-    <li>yahoo</li>
-    <li>yelp</li>
-    <li>youtube</li>
-    <li>zoom</li>
+        <li class="section-title"><a href="../properties_social_media/SocialMediaLabel.html#values">Values</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#aim">aim</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#baiduTieba">baiduTieba</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#discord">discord</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#facebook">facebook</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#flickr">flickr</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#gaduGadu">gaduGadu</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#gameCenter">gameCenter</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#googleTalk">googleTalk</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#icq">icq</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#instagram">instagram</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#jabber">jabber</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#line">line</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#linkedIn">linkedIn</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#medium">medium</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#messenger">messenger</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#msn">msn</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#mySpace">mySpace</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#netmeeting">netmeeting</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#pinterest">pinterest</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#qqchat">qqchat</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#qzone">qzone</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#reddit">reddit</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#sinaWeibo">sinaWeibo</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#skype">skype</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#snapchat">snapchat</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#telegram">telegram</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#tencentWeibo">tencentWeibo</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#tikTok">tikTok</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#tumblr">tumblr</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#twitter">twitter</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#viber">viber</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#wechat">wechat</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#whatsapp">whatsapp</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#yahoo">yahoo</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#yelp">yelp</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#youtube">youtube</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#zoom">zoom</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#other">other</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel.html#custom">custom</a></li>
 
-    <li class="section-title inherited">
-      <a href="../properties_social_media/SocialMediaLabel.html#instance-properties">Properties</a>
-    </li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Enum/index.html">index</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+        <li class="section-title inherited">
+          <a href="../properties_social_media/SocialMediaLabel.html#instance-properties">Properties</a>
+        </li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Enum/index.html">index</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
-    <li class="section-title inherited"><a href="../properties_social_media/SocialMediaLabel.html#instance-methods">Methods</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+        <li class="section-title inherited"><a href="../properties_social_media/SocialMediaLabel.html#instance-methods">Methods</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
 
-    <li class="section-title inherited"><a href="../properties_social_media/SocialMediaLabel.html#operators">Operators</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+        <li class="section-title inherited"><a href="../properties_social_media/SocialMediaLabel.html#operators">Operators</a></li>
+          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
 
 
+
+
+        <li class="section-title"><a href="../properties_social_media/SocialMediaLabel.html#constants">Constants</a></li>
+          <li><a href="../properties_social_media/SocialMediaLabel/values-constant.html">values</a></li>
 </ol>
 
-  </div><!--/.sidebar-offcanvas-->
+  </div><!-- /.sidebar-offcanvas -->
 
 </main>
 
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.5+1
+      1.1.6
   </span>
 
   
@@ -882,7 +820,7 @@
 
 
 <script src="../static-assets/highlight.pack.js?v1"></script>
-<script src="../static-assets/script.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
 
 
 
