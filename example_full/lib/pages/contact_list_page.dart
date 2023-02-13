@@ -41,7 +41,7 @@ class _ContactListPageState extends State<ContactListPage>
 
     // Listen to DB changes
     FlutterContacts.addListener(() async {
-      print('Contacts DB changed, refecthing contacts');
+      print('Contacts DB changed, re-fetching contacts');
       await _refetchContacts();
     });
   }

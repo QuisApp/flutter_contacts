@@ -49,7 +49,10 @@ class VCardParser {
       // starting with '='.
       .replaceAll(RegExp(r'=\n='), '=');
 
-  void parse(String content, Contact contact) {
+  Contact parse(
+    String content,
+  ) {
+    var contact = Contact();
     var lines = encode(unfold(content)).split('\n').map((String x) => x.trim());
     for (final line in lines) {
       // In general, a vCard line is of the form
@@ -111,7 +114,7 @@ class VCardParser {
           // The content can be base64-encoded or a URL. Try to decode it, and
           // ignore the line if it fails.
           try {
-            contact.photo = base64.decode(decode(content));
+            contact = contact.copyWith(photo: base64.decode(decode(content)));
           } on FormatException {
             // Pass.
           }
@@ -127,7 +130,7 @@ class VCardParser {
           if (n >= 5) contact.name.suffix = decode(parts[4]);
           break;
         case 'FN':
-          contact.displayName = decode(content);
+          contact = contact.copyWith(displayName: decode(content));
           break;
         case 'NICKNAME':
           // Format is NICKNAME:<nickname 1>[,<nickname 2>[,...]]
@@ -188,7 +191,7 @@ class VCardParser {
         case 'ORG':
           // Format is ORG:<company>[;<division>[:<subdivision>...]]
           if (contact.organizations.isEmpty) {
-            contact.organizations = [Organization()];
+            contact = contact.copyWith(organizations: [Organization()]);
           }
           final orgParts = content.split(';');
           final n = orgParts.length;
@@ -201,13 +204,13 @@ class VCardParser {
           break;
         case 'TITLE':
           if (contact.organizations.isEmpty) {
-            contact.organizations = [Organization()];
+            contact = contact.copyWith(organizations: [Organization()]);
           }
           contact.organizations.first.title = decode(content);
           break;
         case 'ROLE':
           if (contact.organizations.isEmpty) {
-            contact.organizations = [Organization()];
+            contact = contact.copyWith(organizations: [Organization()]);
           }
           contact.organizations.first.jobDescription = decode(content);
           break;
@@ -351,7 +354,7 @@ class VCardParser {
           break;
         case 'X-PHONETIC-ORG':
           if (contact.organizations.isEmpty) {
-            contact.organizations = [Organization()];
+            contact = contact.copyWith(organizations: [Organization()]);
           }
           contact.organizations.first.phoneticName = decode(content);
           break;
@@ -369,7 +372,8 @@ class VCardParser {
     }
     // Deduplicate properties, mostly because of iOS duplicating social profiles
     // and instant messaging.
-    contact.deduplicateProperties();
+    contact = contact.deduplicateProperties();
+    return contact;
   }
 }
 

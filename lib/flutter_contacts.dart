@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/contact.dart';
@@ -243,7 +244,7 @@ class FlutterContacts {
   /// it's not possible to tell which kind of change happened and on which
   /// contacts. It only notifies that something changed in the contacts
   /// database.
-  static void addListener(void Function() listener) {
+  static StreamSubscription? addListener(void Function() listener) {
     if (_eventSubscription != null) {
       _eventSubscription!.cancel();
     }
@@ -251,6 +252,7 @@ class FlutterContacts {
     final runAllListeners = (event) => _eventSubscribers.forEach((f) => f());
     _eventSubscription =
         _eventChannel.receiveBroadcastStream().listen(runAllListeners);
+    return _eventSubscription;
   }
 
   /// Removes a listener to contact database changes.
@@ -332,13 +334,14 @@ class FlutterContacts {
       contacts.sort(_compareDisplayNames);
     }
     if (deduplicateProperties) {
-      contacts.forEach((c) => c.deduplicateProperties());
+      contacts.forEach((c) => c = c.deduplicateProperties());
     }
-    contacts.forEach((c) => c
-      ..propertiesFetched = withProperties
-      ..thumbnailFetched = withThumbnail
-      ..photoFetched = withPhoto
-      ..isUnified = config.returnUnifiedContacts);
+    contacts.forEach((c) => c = c.copyWith(
+        propertiesFetched: withProperties,
+        thumbnailFetched: withThumbnail,
+        photoFetched: withPhoto,
+        isUnified: config.returnUnifiedContacts));
+
     return contacts;
   }
 
