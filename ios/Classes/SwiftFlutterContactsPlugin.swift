@@ -251,6 +251,7 @@ public enum FlutterContacts {
         // Mutate the contact
         if let firstContact = contacts.first {
             let contact = firstContact.mutableCopy() as! CNMutableContact
+            clearFields(contact, includeNotesOnIos13AndAbove)
             addFieldsToContact(args, contact, includeNotesOnIos13AndAbove)
 
             let saveRequest = CNSaveRequest()
@@ -361,23 +362,23 @@ public enum FlutterContacts {
         }
     }
 
-//     private static func clearFields(
-//         _ contact: CNMutableContact,
-//         _ includeNotesOnIos13AndAbove: Bool
-//     ) {
-//         contact.imageData = nil
-//         contact.phoneNumbers = []
-//         contact.emailAddresses = []
-//         contact.postalAddresses = []
-//         contact.urlAddresses = []
-//         contact.socialProfiles = []
-//         contact.instantMessageAddresses = []
-//         contact.dates = []
-//         contact.birthday = nil
-//         if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
-//             contact.note = ""
-//         }
-//     }
+    private static func clearFields(
+        _ contact: CNMutableContact,
+        _ includeNotesOnIos13AndAbove: Bool
+    ) {
+        contact.imageData = nil
+        contact.phoneNumbers = []
+        contact.emailAddresses = []
+        contact.postalAddresses = []
+        contact.urlAddresses = []
+        contact.socialProfiles = []
+        contact.instantMessageAddresses = []
+        contact.dates = []
+        contact.birthday = nil
+        if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
+            contact.note = ""
+        }
+    }
 
     private static func addFieldsToContact(
         _ args: [String: Any?],
@@ -386,21 +387,17 @@ public enum FlutterContacts {
     ) {
         Name(fromMap: args["name"] as! [String: Any]).addTo(contact)
 
-
          if let phones = args["phones"] as? [[String: Any]], !phones.isEmpty {
-                contact.phoneNumbers = []
                 phones.forEach {
                      Phone(fromMap: $0).addTo(contact)
                 }
          }
          if let emails = args["emails"] as? [[String: Any]], !emails.isEmpty {
-                 contact.emailAddresses = []
                  emails.forEach {
                        Email(fromMap: $0).addTo(contact)
                  }
          }
          if let addresses = args["addresses"] as? [[String: Any]], !addresses.isEmpty {
-                 contact.postalAddresses = []
                  addresses.forEach {
                    Address(fromMap: $0).addTo(contact)
                  }
@@ -410,19 +407,16 @@ public enum FlutterContacts {
                 Organization(fromMap: firstOrganization).addTo(contact)
             }
         if let websites = args["websites"] as? [[String: Any]], !websites.isEmpty {
-            contact.urlAddresses = []
             websites.forEach {
                 Website(fromMap: $0).addTo(contact)
             }
         }
         if let socialMedias = args["socialMedias"] as? [[String: Any]], !socialMedias.isEmpty {
-                    contact.socialProfiles = []
                     socialMedias.forEach {
                         SocialMedia(fromMap: $0).addTo(contact)
                     }
                 }
         if let events = args["events"] as? [[String: Any]], !events.isEmpty {
-                     contact.dates = []
                      events.forEach {
                          Event(fromMap: $0).addTo(contact)
                      }
@@ -437,7 +431,7 @@ public enum FlutterContacts {
         if let photo = args["photo"] as? FlutterStandardTypedData {
             contact.imageData = photo.data
         }
-    }
+  }
 }
 
 @available(iOS 9.0, *)
