@@ -380,7 +380,7 @@ public enum FlutterContacts {
         }
     }
 
-    private static func addFieldsToContact(
+    static func addFieldsToContact(
         _ args: [String: Any?],
         _ contact: CNMutableContact,
         _ includeNotesOnIos13AndAbove: Bool
@@ -620,7 +620,16 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
             }
         case "openExternalInsert":
             DispatchQueue.main.async {
-                let contactView = CNContactViewController(forNewContact: CNContact())
+                let contact = CNMutableContact()
+                let args = call.arguments as? [Any?]
+                // Check if we have contact data to insert
+                if args?.count ?? 0 > 0 {
+                    let contactData = args![0] as? [String: Any?]
+                    if(!(contactData?.isEmpty ?? true)) {
+                        FlutterContacts.addFieldsToContact(contactData!, contact, false)
+                    }
+                }
+                let contactView = CNContactViewController(forNewContact: contact)
                 contactView.navigationItem.backBarButtonItem = UIBarButtonItem(
                     title: "Cancel",
                     style: .plain,
