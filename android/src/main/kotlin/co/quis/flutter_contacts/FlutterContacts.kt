@@ -671,9 +671,15 @@ class FlutterContacts {
             }
         }
 
-        fun openExternalPickOrInsert(activity: Activity?, context: Context?, insert: Boolean) {
+        fun openExternalPickOrInsert(activity: Activity?, context: Context?, insert: Boolean, contact: Map<String, Any?>?) {
             if (activity == null && context == null) return
             var intent = Intent(if (insert) Intent.ACTION_INSERT else Intent.ACTION_PICK, Contacts.CONTENT_URI)
+            if(contact != null) {
+                val parsedContact = Contact.fromMap(contact)
+                val fullName = parsedContact.name.first + " " + parsedContact.name.last;
+                intent.putExtra(ContactsContract.Intents.Insert.NAME, fullName)
+                intent.putExtra(ContactsContract.Intents.Insert.PHONE, parsedContact.phones.first().number)
+            }
             // https://developer.android.com/training/contacts-provider/modify-data#add-the-navigation-flag
             intent.putExtra("finishActivityOnSaveCompleted", true)
             if (activity != null) {
@@ -682,6 +688,10 @@ class FlutterContacts {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context!!.startActivity(intent)
             }
+        }
+
+        fun openExternalPickOrInsert(activity: Activity?, context: Context?, insert: Boolean) {
+            openExternalPickOrInsert(activity, context, insert, null)
         }
 
         // getQuick is like `select(id = null, withProperties = false,
