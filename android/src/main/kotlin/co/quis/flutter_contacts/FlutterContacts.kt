@@ -279,9 +279,10 @@ class FlutterContacts {
                             val label: String = getPhoneLabel(cursor)
                             val customLabel: String =
                                 if (label == "custom") getPhoneCustomLabel(cursor) else ""
+                            val normalizedNumber: String = getString(Phone.NUMBER).replace("(","").replace(")","").replace("-","")
                             val phone = PPhone(
                                 getString(Phone.NUMBER),
-                                getString(Phone.NORMALIZED_NUMBER),
+                                normalizedNumber,
                                 label,
                                 customLabel,
                                 getInt(Phone.IS_PRIMARY) == 1
