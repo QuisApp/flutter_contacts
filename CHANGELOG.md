@@ -1,3 +1,11 @@
+## 1.1.7
+
+* Add feature to pre-populate fields in openExternalInsert() - thanks sakchhams
+* Fix openExternalView and openExternalEdit on iOS (https://github.com/QuisApp/flutter_contacts/issues/91, https://github.com/QuisApp/flutter_contacts/issues/70)
+* Support Gradle 8 (https://github.com/QuisApp/flutter_contacts/issues/123)
+* Fix fetching notes on iOS - thanks starshipcoder and yassinsameh
+* Fix bug with address label default on iOS - thanks MohamedAl-Kainai and yassinsameh
+
 ## 1.1.6
 
 * Update kotlin/gradle versions (https://github.com/QuisApp/flutter_contacts/issues/69)
