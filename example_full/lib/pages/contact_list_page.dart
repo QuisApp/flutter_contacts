@@ -74,8 +74,9 @@ class _ContactListPageState extends State<ContactListPage>
               onSelected: _handleOverflowSelected,
               itemBuilder: (_) => [
                 'Groups',
-                'Insert External',
-              ].map(_ContactListPageState._menuItemBuilder).toList(),
+                'Insert external',
+                'Insert external (prepopulated)',
+              ].map(_menuItemBuilder).toList(),
             ),
           ],
         ),
@@ -114,11 +115,20 @@ class _ContactListPageState extends State<ContactListPage>
       case 'Groups':
         Navigator.of(context).pushNamed('/groups');
         break;
-      case 'Insert External':
+      case 'Insert external':
+        FlutterContacts.openExternalInsert();
+        break;
+      case 'Insert external (prepopulated)':
         FlutterContacts.openExternalInsert(
           Contact(
-            name: Name(first: 'Leonel', last: 'Hayes'),
-            phones: [Phone('+13682314635')],
+            name: Name(first: 'John', last: 'Doe'),
+            phones: [Phone('+1 555-123-4567')],
+            emails: [Email('john.doe@gmail.com')],
+            addresses: [Address('123 Main St')],
+            websites: [Website('https://flutter.dev')],
+            organizations: [
+              Organization(company: 'Flutter', title: 'Developer')
+            ],
           ),
         );
         break;
