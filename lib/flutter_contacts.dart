@@ -296,8 +296,16 @@ class FlutterContacts {
   }
 
   /// Opens external contact app to insert a new contact.
-  static Future<Contact?> openExternalInsert() async {
-    final id = await _channel.invokeMethod('openExternalInsert');
+  /// 
+  /// Optionally specify a [Contact] to pre-fill the data from.
+  /// 
+  /// #### Note: On Android only name, and 1 phone number is supported currently.
+  static Future<Contact?> openExternalInsert([Contact? contact]) async {
+    final args = contact != null ? [contact.toJson()] : [];
+    final id = await _channel.invokeMethod(
+      'openExternalInsert',
+      args,
+    );
     return id == null ? null : getContact(id);
   }
 

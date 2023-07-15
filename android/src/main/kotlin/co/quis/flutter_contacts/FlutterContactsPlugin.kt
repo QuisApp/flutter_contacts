@@ -321,7 +321,11 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
             // Opens external contact app to insert a new contact.
             "openExternalInsert" ->
                 GlobalScope.launch(Dispatchers.IO) {
-                    FlutterContacts.openExternalPickOrInsert(activity, context, true)
+                    var args = call.arguments as List<Any>
+                    val contact = args.getOrNull(0)?.let { it as? Map<String, Any?> } ?: run {
+                        null
+                    }
+                    FlutterContacts.openExternalPickOrInsert(activity, context, true, contact)
                     insertResult = result
                 }
             else -> result.notImplemented()
