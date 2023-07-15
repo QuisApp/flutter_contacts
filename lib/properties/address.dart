@@ -80,8 +80,7 @@ class Address {
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
         (json['address'] as String?) ?? '',
-        label: _stringToAddressLabel[json['label'] as String? ?? ''] ??
-            '' as AddressLabel,
+        label: _stringToAddressLabel[json['label'] as String? ?? ''] ?? AddressLabel.home,
         customLabel: (json['customLabel'] as String?) ?? '',
         street: (json['street'] as String?) ?? '',
         pobox: (json['pobox'] as String?) ?? '',
