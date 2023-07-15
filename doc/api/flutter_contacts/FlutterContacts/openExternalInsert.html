@@ -40,8 +40,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -51,14 +54,14 @@
   <div id="dartdoc-main-content" class="main-content">
       <div>
 <h1><span class="kind-method">openExternalInsert</span> static method 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
     <section class="multi-line-signature">
       
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../contact/Contact-class.html">Contact</a>?</span>&gt;</span></span>
-<span class="name ">openExternalInsert</span>(<wbr>)
+<span class="name ">openExternalInsert</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="openExternalInsert-param-contact">[<span class="type-annotation"><a href="../../contact/Contact-class.html">Contact</a>?</span> <span class="parameter-name">contact</span>]</span></li>
+</ol>)
 
       
 
@@ -66,14 +69,19 @@
     
 <section class="desc markdown">
   <p>Opens external contact app to insert a new contact.</p>
+<p>Optionally specify a <code>Contact</code> to pre-fill the data from.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">static Future&lt;Contact?&gt; openExternalInsert() async {
-  final id = await _channel.invokeMethod(&#39;openExternalInsert&#39;);
+  <pre class="language-dart"><code class="language-dart">static Future&lt;Contact?&gt; openExternalInsert([Contact? contact]) async {
+  final args = contact != null ? [contact.toJson()] : [];
+  final id = await _channel.invokeMethod(
+    &#39;openExternalInsert&#39;,
+    args,
+  );
   return id == null ? null : getContact(id);
 }</code></pre>
 </section>
@@ -151,7 +159,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

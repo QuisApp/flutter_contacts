@@ -39,8 +39,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -53,7 +56,6 @@
         <h1>
           <span class="kind-enum">SocialMediaLabel</span>
           enum 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
 
         </h1>
@@ -62,7 +64,212 @@
     
 <section class="desc markdown">
   <p>Social media labels.</p>
-<table><thead><tr><th>Label</th><th style="text-align: center;">Android</th><th style="text-align: center;">iOS</th></tr></thead><tbody><tr><td>aim</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>baiduTieba</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>discord</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>facebook</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>flickr</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>gaduGadu</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>gameCenter</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>googleTalk</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>icq</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>instagram</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>jabber</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>line</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>linkedIn</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>medium</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>messenger</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>msn</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>myspace</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>netmeeting</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>pinterest</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>qqchat</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>qzone</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>reddit</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>sinaWeibo</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>skype</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>snapchat</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>telegram</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>tencentWeibo</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>tikTok</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>tumblr</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>twitter</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>viber</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>wechat</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>whatsapp</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>yahoo</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>yelp</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>youtube</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>zoom</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>other</td><td style="text-align: center;">⨯</td><td style="text-align: center;">⨯</td></tr><tr><td>custom</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th align="center">Android</th>
+<th align="center">iOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>aim</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>baiduTieba</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>discord</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>facebook</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>flickr</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>gaduGadu</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>gameCenter</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>googleTalk</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>icq</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>instagram</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>jabber</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>line</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>linkedIn</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>medium</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>messenger</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>msn</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>myspace</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>netmeeting</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>pinterest</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>qqchat</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>qzone</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>reddit</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>sinaWeibo</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>skype</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>snapchat</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>telegram</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>tencentWeibo</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>tikTok</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>tumblr</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>twitter</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>viber</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>wechat</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>whatsapp</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>yahoo</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>yelp</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>youtube</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>zoom</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>other</td>
+<td align="center">⨯</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>custom</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+</tbody>
+</table>
 </section>
 
 
@@ -811,7 +1018,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

@@ -39,8 +39,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -50,7 +53,6 @@
   <div id="dartdoc-main-content" class="main-content">
       <div>
 <h1><span class="kind-class">Name</span> class 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
 </h1></div>
 
@@ -58,7 +60,7 @@
 <section class="desc markdown">
   <p>Structured name.</p>
 <p>Name structure varies widely by country. See:
-<a href="https://en.wikipedia.org/wiki/Personal_name#Structure">https://en.wikipedia.org/wiki/Personal_name#Structure</a></p>
+https://en.wikipedia.org/wiki/Personal_name#Structure</p>
 <p>Data models such as those from Android and iOS are typically US-centric and
 include middle name, prefix, suffix, etc. They also always include a
 formatted displayed, which we recommend to use instead. That said, other
@@ -78,7 +80,62 @@ can also have distinct labels to indicate what type of nickname they are
 (maiden name, short name, initials, default, other or any custom label). To
 simplify, we only consider nickname as just another name field, and
 disregard nickname labels.</p>
-<table><thead><tr><th>Field</th><th style="text-align: center;">Android</th><th style="text-align: center;">iOS</th></tr></thead><tbody><tr><td>first</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>last</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>middle</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>prefix</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>suffix</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>nickname</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>firstPhonetic</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>lastPhonetic</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>middlePhonetic</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th align="center">Android</th>
+<th align="center">iOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>first</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>last</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>middle</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>prefix</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>suffix</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>nickname</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>firstPhonetic</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>lastPhonetic</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>middlePhonetic</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+</tbody>
+</table>
 </section>
 
 
@@ -394,7 +451,7 @@ disregard nickname labels.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

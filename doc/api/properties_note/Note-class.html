@@ -39,8 +39,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -50,7 +53,6 @@
   <div id="dartdoc-main-content" class="main-content">
       <div>
 <h1><span class="kind-class">Note</span> class 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
 </h1></div>
 
@@ -60,7 +62,7 @@
 <p>Android allows multiple notes per contact, while iOS supports only one.</p>
 <p>On iOS13+ notes are no longer supported, as you need to request entitlement
 from Apple to use it in your app. See:
-<a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes">https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes</a></p>
+https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes</p>
 </section>
 
 
@@ -280,7 +282,7 @@ from Apple to use it in your app. See:
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

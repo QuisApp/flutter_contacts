@@ -39,8 +39,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -50,7 +53,6 @@
   <div id="dartdoc-main-content" class="main-content">
       <div>
 <h1><span class="kind-class">Contact</span> class 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
 </h1></div>
 
@@ -100,7 +102,7 @@ label enums. The exceptions are as follows:</p>
 <ul>
 <li>iOS only supports one note</li>
 <li>on iOS13+ the app needs to be explicitly approved by Apple (see
-<a href="https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);">https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);</a>
+https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes);
 if your app is entitled, you can use
 <code>FlutterContacts.config.includeNotesOnIos13AndAbove = true</code> to include
 them in the properties when fetching/inserting/updating contacts</li>
@@ -639,7 +641,7 @@ with data for <a href="../properties_address/Address/neighborhood.html">Address.
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

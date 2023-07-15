@@ -39,8 +39,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -50,7 +53,6 @@
   <div id="dartdoc-main-content" class="main-content">
       <div>
 <h1><span class="kind-class">Address</span> class 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
 </h1></div>
 
@@ -62,7 +64,67 @@ iOS, it is recommended to use only the formatted <a href="../properties_address/
 native contact only has structured components (e.g. <a href="../properties_address/Address/street.html">street</a> and <a href="../properties_address/Address/city.html">city</a>),
 the <a href="../properties_address/Address/address.html">address</a> is reconstructed from them, so it is guaranteed to always be
 present.</p>
-<table><thead><tr><th>Field</th><th style="text-align: center;">Android</th><th style="text-align: center;">iOS</th></tr></thead><tbody><tr><td>street</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>pobox</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>neighborhood</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>city</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>state</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>postalCode</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>country</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>isoCountry</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>subAdminArea</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>subLocality</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th align="center">Android</th>
+<th align="center">iOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>street</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>pobox</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>neighborhood</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>city</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>state</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>postalCode</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>country</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>isoCountry</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>subAdminArea</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>subLocality</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+</tbody>
+</table>
 </section>
 
 
@@ -428,7 +490,7 @@ present.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

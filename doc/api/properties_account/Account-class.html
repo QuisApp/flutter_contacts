@@ -39,8 +39,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -50,7 +53,6 @@
   <div id="dartdoc-main-content" class="main-content">
       <div>
 <h1><span class="kind-class">Account</span> class 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
 </h1></div>
 
@@ -119,7 +121,7 @@ container per contact.</p>
 
 </dt>
 <dd>
-  Account name, e.g. john.doe@gmail.com.
+  Account name, e.g. <a href="mailto:john.doe@gmail.com">john.doe@gmail.com</a>.
   <div class="features"><span class="feature">read / write</span></div>
 
 </dd>
@@ -303,7 +305,7 @@ container per contact.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

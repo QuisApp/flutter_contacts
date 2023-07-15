@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="generator" content="made with love by dartdoc 6.1.5">
+  <meta name="generator" content="made with love by dartdoc 6.2.2">
   <meta name="description" content="flutter_contacts API docs, for the Dart programming language.">
   <title>flutter_contacts - Dart API docs</title>
 
@@ -38,8 +38,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -143,22 +146,22 @@ class Group { String id; String name; }
 <h2 id="installation">Installation</h2>
 <ol>
 <li>Add the following key/value pair to your app's <code>Info.plist</code> (for iOS):
-<pre class="language-xml"><code class="language-xml"> &lt;plist version="1.0"&gt;
- &lt;dict&gt;
-     ...
-     &lt;key&gt;NSContactsUsageDescription&lt;/key&gt;
-     &lt;string&gt;Reason we need access to the contact list&lt;/string&gt;
- &lt;/dict&gt;
- &lt;/plist&gt;
+<pre class="language-xml"><code class="language-xml">&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    ...
+    &lt;key&gt;NSContactsUsageDescription&lt;/key&gt;
+    &lt;string&gt;Reason we need access to the contact list&lt;/string&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
 </code></pre>
 </li>
 <li>Add the following <code>&lt;uses-permissions&gt;</code> tags to your app's <code>AndroidManifest.xml</code> (for
 Android):
-<pre class="language-xml"><code class="language-xml"> &lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" ...&gt;
-     &lt;uses-permission android:name="android.permission.READ_CONTACTS"/&gt;
-     &lt;uses-permission android:name="android.permission.WRITE_CONTACTS"/&gt;
-     &lt;application ...&gt;
-     ...
+<pre class="language-xml"><code class="language-xml">&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" ...&gt;
+    &lt;uses-permission android:name="android.permission.READ_CONTACTS"/&gt;
+    &lt;uses-permission android:name="android.permission.WRITE_CONTACTS"/&gt;
+    &lt;application ...&gt;
+    ...
 </code></pre>
 </li>
 </ol>
@@ -176,7 +179,8 @@ will be merged into a single view called a unified contact. In a contact app you
 typically want unified contacts, so this is what's returned by default. You can get
 raw contacts instead via
 <pre class="language-dart"><code class="language-dart">FlutterContacts.config.returnUnifiedContacts = false;
-</code></pre>However, for now, raw contacts cannot be inserted, updated or deleted.</li>
+</code></pre>
+However, for now, raw contacts cannot be inserted, updated or deleted.</li>
 </ul>
 <h2 id="feature-requests">Feature requests</h2>
 <p>These features have been requested and will be available soon.</p>
@@ -352,7 +356,7 @@ raw contacts instead via
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

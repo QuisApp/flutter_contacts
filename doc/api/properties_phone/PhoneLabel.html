@@ -39,8 +39,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -53,7 +56,6 @@
         <h1>
           <span class="kind-enum">PhoneLabel</span>
           enum 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
 
         </h1>
@@ -62,7 +64,132 @@
     
 <section class="desc markdown">
   <p>Phone labels.</p>
-<table><thead><tr><th>Label</th><th style="text-align: center;">Android</th><th style="text-align: center;">iOS</th></tr></thead><tbody><tr><td>assistant</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>callback</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>car</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>companyMain</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>faxHome</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>faxOther</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>faxWork</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>home</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>iPhone</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>isdn</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>main</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>mms</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>mobile</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>pager</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>radio</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>school</td><td style="text-align: center;">⨯</td><td style="text-align: center;">✔</td></tr><tr><td>telex</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>ttyTtd</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>work</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>workMobile</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>workPager</td><td style="text-align: center;">✔</td><td style="text-align: center;">⨯</td></tr><tr><td>other</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr><tr><td>custom</td><td style="text-align: center;">✔</td><td style="text-align: center;">✔</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th align="center">Android</th>
+<th align="center">iOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>assistant</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>callback</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>car</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>companyMain</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>faxHome</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>faxOther</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>faxWork</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>home</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>iPhone</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>isdn</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>main</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>mms</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>mobile</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>pager</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>radio</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>school</td>
+<td align="center">⨯</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>telex</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>ttyTtd</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>work</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>workMobile</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>workPager</td>
+<td align="center">✔</td>
+<td align="center">⨯</td>
+</tr>
+<tr>
+<td>other</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+<tr>
+<td>custom</td>
+<td align="center">✔</td>
+<td align="center">✔</td>
+</tr>
+</tbody>
+</table>
 </section>
 
 
@@ -601,7 +728,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   

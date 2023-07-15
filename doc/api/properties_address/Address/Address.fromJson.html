@@ -40,8 +40,11 @@
   <div class="toggle" id="theme-button">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
-      <span class="material-symbols-outlined">
+      <span id="dark-theme-button" class="material-symbols-outlined">
         brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
       </span>
     </label>
   </div>
@@ -51,7 +54,6 @@
   <div id="dartdoc-main-content" class="main-content">
       <div>
 <h1><span class="kind-constructor">Address.fromJson</span> constructor 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
     <section class="multi-line-signature">
@@ -69,7 +71,7 @@
   <pre class="language-dart"><code class="language-dart">factory Address.fromJson(Map&lt;String, dynamic&gt; json) =&gt; Address(
       (json[&#39;address&#39;] as String?) ?? &#39;&#39;,
       label: _stringToAddressLabel[json[&#39;label&#39;] as String? ?? &#39;&#39;] ??
-          &#39;&#39; as AddressLabel,
+          AddressLabel.home,
       customLabel: (json[&#39;customLabel&#39;] as String?) ?? &#39;&#39;,
       street: (json[&#39;street&#39;] as String?) ?? &#39;&#39;,
       pobox: (json[&#39;pobox&#39;] as String?) ?? &#39;&#39;,
@@ -153,7 +155,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.6
+      1.1.7
   </span>
 
   
