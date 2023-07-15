@@ -73,12 +73,16 @@ class _ContactPageState extends State<ContactPage>
               );
             },
           ),
-          PopupMenuButton(
-            itemBuilder: (context) =>
-                [PopupMenuItem(value: _contact, child: Text('Delete contact'))],
-            onSelected: (contact) async {
-              await contact.delete();
-              Navigator.of(context).pop();
+          PopupMenuButton<String>(
+            onSelected: _handleOverflowSelected,
+            itemBuilder: (BuildContext context) {
+              return ['Delete contact', 'External view', 'External edit']
+                  .map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
             },
           ),
         ],
@@ -275,5 +279,16 @@ class _ContactPageState extends State<ContactPage>
         ),
       ),
     );
+  }
+
+  Future<void> _handleOverflowSelected(String choice) async {
+    if (choice == 'Delete contact') {
+      await _contact.delete();
+      Navigator.of(context).pop();
+    } else if (choice == 'External view') {
+      await FlutterContacts.openExternalView(_contact.id);
+    } else if (choice == 'External edit') {
+      await FlutterContacts.openExternalEdit(_contact.id);
+    }
   }
 }

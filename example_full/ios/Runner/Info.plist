@@ -49,5 +49,9 @@
 	<!-- Camera permission -->
 	<key>NSCameraUsageDescription</key>
 	<string>Access camera to add contact pictures</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>
