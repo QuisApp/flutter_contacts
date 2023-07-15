@@ -74,9 +74,9 @@ struct Contact {
                 events = [Event(fromContact: c)]
             }
             events += c.dates.map { Event(fromDate: $0) }
-            // Notes need approval now!
+            // Notes need entitlements to be accessed in iOS 13+.
             // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
-            if #available(iOS 13, *) {} else {
+            if c.isKeyAvailable(CNContactNoteKey) {
                 notes = [Note(fromContact: c)]
             }
         }
