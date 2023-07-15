@@ -625,7 +625,7 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                 // Check if we have contact data to insert
                 if args?.count ?? 0 > 0 {
                     let contactData = args![0] as? [String: Any?]
-                    if(!(contactData?.isEmpty ?? true)) {
+                    if !(contactData?.isEmpty ?? true) {
                         FlutterContacts.addFieldsToContact(contactData!, contact, false)
                     }
                 }
@@ -675,7 +675,7 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
 
     @objc func contactViewControllerDidCancel() {
         if let result = externalResult {
-            let viewController : UIViewController? = UIApplication.shared.delegate?.window??.rootViewController
+            let viewController: UIViewController? = UIApplication.shared.delegate?.window??.rootViewController
             viewController?.dismiss(animated: true, completion: nil)
             result(nil)
             externalResult = nil

@@ -2,7 +2,7 @@
 
 set -ex
 
-flutter format .
+dart format .
 
 swiftformat --swiftversion 5.2 .
 

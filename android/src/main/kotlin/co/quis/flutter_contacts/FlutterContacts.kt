@@ -674,11 +674,11 @@ class FlutterContacts {
         fun openExternalPickOrInsert(activity: Activity?, context: Context?, insert: Boolean, contact: Map<String, Any?>?) {
             if (activity == null && context == null) return
             var intent = Intent(if (insert) Intent.ACTION_INSERT else Intent.ACTION_PICK, Contacts.CONTENT_URI)
-            
+
             // Prepopulate fields if contact is provided
-            if(contact != null) {
+            if (contact != null) {
                 val parsedContact = Contact.fromMap(contact)
-                
+
                 var fullName = parsedContact.displayName
                 if (fullName.isEmpty()) {
                     fullName = (parsedContact.name.first + " " + parsedContact.name.last).trim()
@@ -708,7 +708,7 @@ class FlutterContacts {
                     intent.putExtra(ContactsContract.Intents.Insert.NOTES, parsedContact.notes.first().note)
                 }
             }
-            
+
             // https://developer.android.com/training/contacts-provider/modify-data#add-the-navigation-flag
             intent.putExtra("finishActivityOnSaveCompleted", true)
             if (activity != null) {
