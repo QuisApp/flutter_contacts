@@ -1,3 +1,7 @@
+## 1.1.7+1
+
+* Fix for AGP <4.2 (https://github.com/QuisApp/flutter_contacts/issues/127) - thanks trfiladelfo
+
 ## 1.1.7
 
 * Add feature to pre-populate fields in openExternalInsert() - thanks sakchhams

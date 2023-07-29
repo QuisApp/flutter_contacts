@@ -29,7 +29,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 31
-    
+
     if (!project.hasProperty("namespace")) {
         namespace 'co.quis.flutter_contacts'
     }
