@@ -21,8 +21,9 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.cancel
 
 class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
     companion object {
@@ -38,6 +39,8 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
         private var insertResult: Result? = null
     }
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     // --- FlutterPlugin implementation ---
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -49,7 +52,9 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
         resolver = context!!.contentResolver
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {}
+    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+        coroutineScope.cancel()
+    }
 
     // --- ActivityAware implementation ---
 
@@ -143,7 +148,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
             permissionReadWriteCode -> {
                 val granted = grantResults.size == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED
                 if (permissionResult != null) {
-                    GlobalScope.launch(Dispatchers.Main) {
+                    coroutineScope.launch(Dispatchers.Main) {
                         permissionResult?.success(granted)
                         permissionResult = null
                     }
@@ -153,7 +158,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
             permissionReadOnlyCode -> {
                 val granted = grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 if (permissionResult != null) {
-                    GlobalScope.launch(Dispatchers.Main) {
+                    coroutineScope.launch(Dispatchers.Main) {
                         permissionResult?.success(granted)
                         permissionResult = null
                     }
@@ -170,9 +175,9 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
         when (call.method) {
             // Requests permission to read/write contacts.
             "requestPermission" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     if (context == null) {
-                        GlobalScope.launch(Dispatchers.Main) { result.success(false); }
+                        coroutineScope.launch(Dispatchers.Main) { result.success(false); }
                     } else {
                         val readonly = call.arguments as Boolean
                         val readPermission = Manifest.permission.READ_CONTACTS
@@ -180,7 +185,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                         if (ContextCompat.checkSelfPermission(context!!, readPermission) == PackageManager.PERMISSION_GRANTED &&
                             (readonly || ContextCompat.checkSelfPermission(context!!, writePermission) == PackageManager.PERMISSION_GRANTED)
                         ) {
-                            GlobalScope.launch(Dispatchers.Main) { result.success(true) }
+                            coroutineScope.launch(Dispatchers.Main) { result.success(true) }
                         } else if (activity != null) {
                             permissionResult = result
                             if (readonly) {
@@ -193,7 +198,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 }
             // Selects fields for request contact, or for all contacts.
             "select" ->
-                GlobalScope.launch(Dispatchers.IO) { // runs in a background thread
+                coroutineScope.launch(Dispatchers.IO) { // runs in a background thread
                     val args = call.arguments as List<Any>
                     val id = args[0] as String?
                     val withProperties = args[1] as Boolean
@@ -218,16 +223,16 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                             returnUnifiedContacts,
                             includeNonVisible
                         )
-                    GlobalScope.launch(Dispatchers.Main) { result.success(contacts) }
+                    coroutineScope.launch(Dispatchers.Main) { result.success(contacts) }
                 }
             // Inserts a new contact and return it.
             "insert" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val contact = args[0] as Map<String, Any>
                     val insertedContact: Map<String, Any?>? =
                         FlutterContacts.insert(resolver!!, contact)
-                    GlobalScope.launch(Dispatchers.Main) {
+                    coroutineScope.launch(Dispatchers.Main) {
                         if (insertedContact != null) {
                             result.success(insertedContact)
                         } else {
@@ -237,13 +242,13 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 }
             // Updates an existing contact and returns it.
             "update" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val contact = args[0] as Map<String, Any>
                     val withGroups = args[1] as Boolean
                     val updatedContact: Map<String, Any?>? =
                         FlutterContacts.update(resolver!!, contact, withGroups)
-                    GlobalScope.launch(Dispatchers.Main) {
+                    coroutineScope.launch(Dispatchers.Main) {
                         if (updatedContact != null) {
                             result.success(updatedContact)
                         } else {
@@ -253,52 +258,52 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 }
             // Deletes contacts with given IDs.
             "delete" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     FlutterContacts.delete(resolver!!, call.arguments as List<String>)
-                    GlobalScope.launch(Dispatchers.Main) { result.success(null) }
+                    coroutineScope.launch(Dispatchers.Main) { result.success(null) }
                 }
             // Fetches all groups.
             "getGroups" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     val groups: List<Map<String, Any?>> =
                         FlutterContacts.getGroups(resolver!!)
-                    GlobalScope.launch(Dispatchers.Main) { result.success(groups) }
+                    coroutineScope.launch(Dispatchers.Main) { result.success(groups) }
                 }
             // Insert a new group and returns it.
             "insertGroup" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val group = args[0] as Map<String, Any>
                     val insertedGroup: Map<String, Any?>? =
                         FlutterContacts.insertGroup(resolver!!, group)
-                    GlobalScope.launch(Dispatchers.Main) {
+                    coroutineScope.launch(Dispatchers.Main) {
                         result.success(insertedGroup)
                     }
                 }
             // Updates a group and returns it.
             "updateGroup" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val group = args[0] as Map<String, Any>
                     val updatedGroup: Map<String, Any?>? =
                         FlutterContacts.updateGroup(resolver!!, group)
-                    GlobalScope.launch(Dispatchers.Main) {
+                    coroutineScope.launch(Dispatchers.Main) {
                         result.success(updatedGroup)
                     }
                 }
             // Deletes a group.
             "deleteGroup" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val group = args[0] as Map<String, Any>
                     FlutterContacts.deleteGroup(resolver!!, group)
-                    GlobalScope.launch(Dispatchers.Main) {
+                    coroutineScope.launch(Dispatchers.Main) {
                         result.success(null)
                     }
                 }
             // Opens external contact app to view existing contact.
             "openExternalView" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val id = args[0] as String
                     FlutterContacts.openExternalViewOrEdit(activity, context, id, false)
@@ -306,7 +311,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 }
             // Opens external contact app to edit existing contact.
             "openExternalEdit" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val id = args[0] as String
                     FlutterContacts.openExternalViewOrEdit(activity, context, id, true)
@@ -314,13 +319,13 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 }
             // Opens external contact app to pick an existing contact.
             "openExternalPick" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     FlutterContacts.openExternalPickOrInsert(activity, context, false)
                     pickResult = result
                 }
             // Opens external contact app to insert a new contact.
             "openExternalInsert" ->
-                GlobalScope.launch(Dispatchers.IO) {
+                coroutineScope.launch(Dispatchers.IO) {
                     var args = call.arguments as List<Any>
                     val contact = args.getOrNull(0)?.let { it as? Map<String, Any?> } ?: run {
                         null
