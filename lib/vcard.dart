@@ -116,6 +116,28 @@ class VCardParser {
             // Pass.
           }
           break;
+        case 'LOGO':
+          // The content can be base64-encoded or a URL. Try to decode it, and
+          // ignore the line if it fails.
+          try {
+            contact.logo = base64.decode(decode(content));
+          } on FormatException {
+            // Pass.
+          }
+          break;
+        case 'GEO':
+          if (content.isNotEmpty && content.contains(';')) {
+            final split = content.split(';');
+            try {
+              contact.geo = <double>[
+                double.parse(split[0]),
+                double.parse(split[1])
+              ];
+            } on FormatException {
+              //pass
+            }
+          }
+          break;
         case 'N':
           // Format is N:<last>;<first>;<middle>;<prefix>;<suffix>
           final parts = content.split(';');
