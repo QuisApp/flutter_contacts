@@ -671,6 +671,13 @@ class FlutterContacts {
             }
         }
 
+        fun emptyToNull(s: String): String? = if (s.isEmpty()) "" else s
+
+        fun eventToDate(e: PEvent): String =
+                (if (e.year == null) "--" else "${e.year.toString().padStart(4, '0')}-") +
+                        "${e.month.toString().padStart(2, '0')}-" +
+                        "${e.day.toString().padStart(2, '0')}"
+
         fun openExternalPickOrInsert(activity: Activity?, context: Context?, insert: Boolean, contact: Map<String, Any?>?) {
             if (activity == null && context == null) return
             var intent = Intent(if (insert) Intent.ACTION_INSERT else Intent.ACTION_PICK, Contacts.CONTENT_URI)
@@ -678,6 +685,8 @@ class FlutterContacts {
             // Prepopulate fields if contact is provided
             if (contact != null) {
                 val parsedContact = Contact.fromMap(contact)
+
+                var extraData = ArrayList<ContentValues>()
 
                 var fullName = parsedContact.displayName
                 if (fullName.isEmpty()) {
@@ -688,24 +697,123 @@ class FlutterContacts {
                 }
 
                 if (parsedContact.phones.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.PHONE, parsedContact.phones.first().number)
+                    for (phone in parsedContact.phones) {
+                        val labelPair: PhoneLabelPair = getPhoneLabelInv(phone.label, phone.customLabel);
+                        var row = ContentValues();
+                        row.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+                        row.put(Phone.NUMBER, emptyToNull(phone.number));
+                        row.put(Phone.TYPE, labelPair.label);
+                        row.put(Phone.LABEL, emptyToNull(labelPair.customLabel));
+                        row.put(Data.IS_PRIMARY, if (phone.isPrimary) 1 else 0);
+                        extraData.add(row);
+                    }
                 }
 
                 if (parsedContact.emails.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.EMAIL, parsedContact.emails.first().address)
+                    for (email in parsedContact.emails) {
+                        val labelPair: EmailLabelPair = getEmailLabelInv(email.label, email.customLabel)
+                        var row = ContentValues();
+                        row.put(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE);
+                        row.put(Email.ADDRESS, emptyToNull(email.address));
+                        row.put(Email.TYPE, labelPair.label);
+                        row.put(Data.IS_PRIMARY, if (email.isPrimary) 1 else 0);
+                        extraData.add(row);
+                    }
                 }
 
                 if (parsedContact.addresses.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.POSTAL, parsedContact.addresses.first().address)
+                    for (address in parsedContact.addresses) {
+                        val labelPair: AddressLabelPair = getAddressLabelInv(address.label, address.customLabel)
+                        var row = ContentValues();
+                        row.put(Data.MIMETYPE, StructuredPostal.CONTENT_ITEM_TYPE);
+                        row.put(StructuredPostal.FORMATTED_ADDRESS, emptyToNull(address.address));
+                        row.put(StructuredPostal.TYPE, labelPair.label);
+                        row.put(StructuredPostal.LABEL, emptyToNull(labelPair.customLabel));
+                        row.put(StructuredPostal.STREET, emptyToNull(address.street));
+                        row.put(StructuredPostal.POBOX, emptyToNull(address.pobox));
+                        row.put(StructuredPostal.NEIGHBORHOOD, emptyToNull(address.neighborhood));
+                        row.put(StructuredPostal.CITY, emptyToNull(address.city));
+                        row.put(StructuredPostal.REGION, emptyToNull(address.state));
+                        row.put(StructuredPostal.POSTCODE, emptyToNull(address.postalCode));
+                        row.put(StructuredPostal.COUNTRY, emptyToNull(address.country));
+                        extraData.add(row);
+                    }
                 }
 
                 if (parsedContact.organizations.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.COMPANY, parsedContact.organizations.first().company)
-                    intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, parsedContact.organizations.first().title)
+                    for (organization in parsedContact.organizations) {
+                        var row = ContentValues();
+
+                        row.put(Data.MIMETYPE, Organization.CONTENT_ITEM_TYPE);
+                        row.put(Organization.COMPANY, emptyToNull(organization.company));
+                        row.put(Organization.TITLE, emptyToNull(organization.title));
+                        row.put(Organization.DEPARTMENT, emptyToNull(organization.department));
+                        row.put(Organization.JOB_DESCRIPTION, emptyToNull(organization.jobDescription));
+                        row.put(Organization.SYMBOL, emptyToNull(organization.symbol));
+                        row.put(Organization.PHONETIC_NAME, emptyToNull(organization.phoneticName));
+                        row.put(Organization.OFFICE_LOCATION, emptyToNull(organization.officeLocation));
+                        extraData.add(row);
+                    }
+                }
+
+                if (parsedContact.websites.isNotEmpty()) {
+                    for (website in parsedContact.websites) {
+                        var row = ContentValues();
+                        val labelPair: WebsiteLabelPair = getWebsiteLabelInv(website.label, website.customLabel)
+                        row.put(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
+                        row.put(Website.URL, emptyToNull(website.url))
+                        row.put(Website.TYPE, labelPair.label)
+                        row.put(Website.LABEL, emptyToNull(labelPair.customLabel))
+                        extraData.add(row);
+                    }
+                }
+
+                if (parsedContact.socialMedias.isNotEmpty()) {
+                    for (socialMedia in parsedContact.socialMedias) {
+                        var row = ContentValues();
+                        val labelPair: SocialMediaLabelPair = getSocialMediaLabelInv(socialMedia.label, socialMedia.customLabel)
+                        row.put(Data.MIMETYPE, Im.CONTENT_ITEM_TYPE)
+                        row.put(Im.DATA, emptyToNull(socialMedia.userName))
+                        row.put(Im.PROTOCOL, labelPair.label)
+                        row.put(Im.CUSTOM_PROTOCOL, emptyToNull(labelPair.customLabel))
+                        extraData.add(row);
+                    }
+                }
+
+                if (parsedContact.events.isNotEmpty()) {
+                    for (event in parsedContact.events) {
+                        var row = ContentValues();
+                        val labelPair: EventLabelPair = getEventLabelInv(event.label, event.customLabel)
+                        row.put(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
+                        row.put(Event.START_DATE, eventToDate(event))
+                        row.put(Event.TYPE, labelPair.label)
+                        row.put(Event.LABEL, emptyToNull(labelPair.customLabel))
+                        extraData.add(row);
+                    }
                 }
 
                 if (parsedContact.notes.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.NOTES, parsedContact.notes.first().note)
+                    for (note in parsedContact.notes) {
+                        if (!note.note.isEmpty()) {
+                            var row = ContentValues();
+                            row.put(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
+                            row.put(Note.NOTE, note.note)
+                            extraData.add(row);
+                        }
+                    }
+                }
+
+                if(parsedContact.groups.isNotEmpty()) {
+                    for (group in parsedContact.groups) {
+                        var row = ContentValues();
+                        row.put(Data.MIMETYPE, GroupMembership.CONTENT_ITEM_TYPE)
+                        row.put(GroupMembership.GROUP_ROW_ID, group.id)
+                        extraData.add(row);
+                    }
+                }
+
+                if(extraData.isNotEmpty()) {
+                    intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, extraData);
                 }
             }
 
