@@ -53,91 +53,91 @@ class FlutterContacts {
         val REQUEST_CODE_INSERT = 77884
 
         fun select(
-            resolver: ContentResolver,
-            id: String?,
-            withProperties: Boolean,
-            withThumbnail: Boolean,
-            withPhoto: Boolean,
-            withGroups: Boolean,
-            withAccounts: Boolean,
-            returnUnifiedContacts: Boolean,
-            includeNonVisible: Boolean,
-            idIsRawContactId: Boolean = false
+                resolver: ContentResolver,
+                id: String?,
+                withProperties: Boolean,
+                withThumbnail: Boolean,
+                withPhoto: Boolean,
+                withGroups: Boolean,
+                withAccounts: Boolean,
+                returnUnifiedContacts: Boolean,
+                includeNonVisible: Boolean,
+                idIsRawContactId: Boolean = false
         ): List<Map<String, Any?>> {
             if (id == null && !withProperties && !withThumbnail && !withPhoto &&
-                returnUnifiedContacts
+                    returnUnifiedContacts
             ) {
                 return getQuick(resolver, includeNonVisible)
             }
 
             // All fields we care about – ID and display name are always included.
             var projection = mutableListOf(
-                Data.CONTACT_ID,
-                Data.MIMETYPE,
-                Contacts.DISPLAY_NAME_PRIMARY,
-                Contacts.STARRED
+                    Data.CONTACT_ID,
+                    Data.MIMETYPE,
+                    Contacts.DISPLAY_NAME_PRIMARY,
+                    Contacts.STARRED
             )
             if (withThumbnail) {
                 projection.add(Photo.PHOTO)
             }
             if (withProperties) {
                 projection.addAll(
-                    listOf(
-                        StructuredName.PREFIX,
-                        StructuredName.GIVEN_NAME,
-                        StructuredName.MIDDLE_NAME,
-                        StructuredName.FAMILY_NAME,
-                        StructuredName.SUFFIX,
-                        Nickname.NAME,
-                        StructuredName.PHONETIC_GIVEN_NAME,
-                        StructuredName.PHONETIC_FAMILY_NAME,
-                        StructuredName.PHONETIC_MIDDLE_NAME,
-                        Phone.NUMBER,
-                        Phone.NORMALIZED_NUMBER,
-                        Phone.TYPE,
-                        Phone.LABEL,
-                        Phone.IS_PRIMARY,
-                        Email.ADDRESS,
-                        Email.TYPE,
-                        Email.LABEL,
-                        Email.IS_PRIMARY,
-                        StructuredPostal.FORMATTED_ADDRESS,
-                        StructuredPostal.STREET,
-                        StructuredPostal.POBOX,
-                        StructuredPostal.NEIGHBORHOOD,
-                        StructuredPostal.CITY,
-                        StructuredPostal.REGION,
-                        StructuredPostal.POSTCODE,
-                        StructuredPostal.COUNTRY,
-                        StructuredPostal.TYPE,
-                        StructuredPostal.LABEL,
-                        Organization.COMPANY,
-                        Organization.TITLE,
-                        Organization.DEPARTMENT,
-                        Organization.JOB_DESCRIPTION,
-                        Organization.SYMBOL,
-                        Organization.PHONETIC_NAME,
-                        Organization.OFFICE_LOCATION,
-                        Website.URL,
-                        Website.TYPE,
-                        Website.LABEL,
-                        Im.DATA,
-                        Im.PROTOCOL,
-                        Im.CUSTOM_PROTOCOL,
-                        Event.START_DATE,
-                        Event.TYPE,
-                        Event.LABEL,
-                        Note.NOTE
-                    )
+                        listOf(
+                                StructuredName.PREFIX,
+                                StructuredName.GIVEN_NAME,
+                                StructuredName.MIDDLE_NAME,
+                                StructuredName.FAMILY_NAME,
+                                StructuredName.SUFFIX,
+                                Nickname.NAME,
+                                StructuredName.PHONETIC_GIVEN_NAME,
+                                StructuredName.PHONETIC_FAMILY_NAME,
+                                StructuredName.PHONETIC_MIDDLE_NAME,
+                                Phone.NUMBER,
+                                Phone.NORMALIZED_NUMBER,
+                                Phone.TYPE,
+                                Phone.LABEL,
+                                Phone.IS_PRIMARY,
+                                Email.ADDRESS,
+                                Email.TYPE,
+                                Email.LABEL,
+                                Email.IS_PRIMARY,
+                                StructuredPostal.FORMATTED_ADDRESS,
+                                StructuredPostal.STREET,
+                                StructuredPostal.POBOX,
+                                StructuredPostal.NEIGHBORHOOD,
+                                StructuredPostal.CITY,
+                                StructuredPostal.REGION,
+                                StructuredPostal.POSTCODE,
+                                StructuredPostal.COUNTRY,
+                                StructuredPostal.TYPE,
+                                StructuredPostal.LABEL,
+                                Organization.COMPANY,
+                                Organization.TITLE,
+                                Organization.DEPARTMENT,
+                                Organization.JOB_DESCRIPTION,
+                                Organization.SYMBOL,
+                                Organization.PHONETIC_NAME,
+                                Organization.OFFICE_LOCATION,
+                                Website.URL,
+                                Website.TYPE,
+                                Website.LABEL,
+                                Im.DATA,
+                                Im.PROTOCOL,
+                                Im.CUSTOM_PROTOCOL,
+                                Event.START_DATE,
+                                Event.TYPE,
+                                Event.LABEL,
+                                Note.NOTE
+                        )
                 )
             }
             if (withAccounts || !returnUnifiedContacts) {
                 projection.addAll(
-                    listOf(
-                        Data.RAW_CONTACT_ID,
-                        RawContacts.ACCOUNT_TYPE,
-                        RawContacts.ACCOUNT_NAME
-                    )
+                        listOf(
+                                Data.RAW_CONTACT_ID,
+                                RawContacts.ACCOUNT_TYPE,
+                                RawContacts.ACCOUNT_NAME
+                        )
                 )
             }
             if (withGroups) {
@@ -171,11 +171,11 @@ class FlutterContacts {
 
             // Query contact database.
             val cursor = resolver.query(
-                Data.CONTENT_URI,
-                projection.toTypedArray(),
-                selection,
-                selectionArgs,
-                /*sortOrder=*/null
+                    Data.CONTENT_URI,
+                    projection.toTypedArray(),
+                    selection,
+                    selectionArgs,
+                    /*sortOrder=*/null
             )
 
             // List of all contacts.
@@ -196,17 +196,17 @@ class FlutterContacts {
                 val id = if (returnUnifiedContacts) getString(Data.CONTACT_ID) else getString(Data.RAW_CONTACT_ID)
                 if (id !in index) {
                     var contact = Contact(
-                        /*id=*/id,
-                        /*displayName=*/getString(Contacts.DISPLAY_NAME_PRIMARY),
-                        isStarred = getBool(Contacts.STARRED)
+                            /*id=*/id,
+                            /*displayName=*/getString(Contacts.DISPLAY_NAME_PRIMARY),
+                            isStarred = getBool(Contacts.STARRED)
                     )
 
                     // Fetch high-resolution photo if requested.
                     if (withPhoto) {
                         val contactUri: Uri =
-                            ContentUris.withAppendedId(Contacts.CONTENT_URI, id.toLong())
+                                ContentUris.withAppendedId(Contacts.CONTENT_URI, id.toLong())
                         val displayPhotoUri: Uri =
-                            Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO)
+                                Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO)
                         try {
                             var fis: InputStream? = resolver.openInputStream(displayPhotoUri)
                             contact.photo = fis?.readBytes()
@@ -243,15 +243,15 @@ class FlutterContacts {
                             if (account.rawId == rawId) {
                                 accountSeen = true
                                 account.mimetypes =
-                                    (account.mimetypes + mimetype).toSortedSet().toList()
+                                        (account.mimetypes + mimetype).toSortedSet().toList()
                             }
                         }
                         if (!accountSeen) {
                             val account = PAccount(
-                                rawId,
-                                accountType,
-                                accountName,
-                                listOf(mimetype)
+                                    rawId,
+                                    accountType,
+                                    accountName,
+                                    listOf(mimetype)
                             )
                             contact.accounts += account
                         }
@@ -262,15 +262,15 @@ class FlutterContacts {
                             // Save nickname in case it was there already.
                             val nickname: String = contact.name.nickname
                             contact.name = PName(
-                                getString(StructuredName.GIVEN_NAME),
-                                getString(StructuredName.FAMILY_NAME),
-                                getString(StructuredName.MIDDLE_NAME),
-                                getString(StructuredName.PREFIX),
-                                getString(StructuredName.SUFFIX),
-                                nickname,
-                                getString(StructuredName.PHONETIC_GIVEN_NAME),
-                                getString(StructuredName.PHONETIC_FAMILY_NAME),
-                                getString(StructuredName.PHONETIC_MIDDLE_NAME)
+                                    getString(StructuredName.GIVEN_NAME),
+                                    getString(StructuredName.FAMILY_NAME),
+                                    getString(StructuredName.MIDDLE_NAME),
+                                    getString(StructuredName.PREFIX),
+                                    getString(StructuredName.SUFFIX),
+                                    nickname,
+                                    getString(StructuredName.PHONETIC_GIVEN_NAME),
+                                    getString(StructuredName.PHONETIC_FAMILY_NAME),
+                                    getString(StructuredName.PHONETIC_MIDDLE_NAME)
                             )
                         }
                         Nickname.CONTENT_ITEM_TYPE ->
@@ -278,80 +278,80 @@ class FlutterContacts {
                         Phone.CONTENT_ITEM_TYPE -> {
                             val label: String = getPhoneLabel(cursor)
                             val customLabel: String =
-                                if (label == "custom") getPhoneCustomLabel(cursor) else ""
+                                    if (label == "custom") getPhoneCustomLabel(cursor) else ""
                             val phone = PPhone(
-                                getString(Phone.NUMBER),
-                                getString(Phone.NORMALIZED_NUMBER),
-                                label,
-                                customLabel,
-                                getInt(Phone.IS_PRIMARY) == 1
+                                    getString(Phone.NUMBER),
+                                    getString(Phone.NORMALIZED_NUMBER),
+                                    label,
+                                    customLabel,
+                                    getInt(Phone.IS_PRIMARY) == 1
                             )
                             contact.phones += phone
                         }
                         Email.CONTENT_ITEM_TYPE -> {
                             val label: String = getEmailLabel(cursor)
                             val customLabel: String =
-                                if (label == "custom") getEmailCustomLabel(cursor) else ""
+                                    if (label == "custom") getEmailCustomLabel(cursor) else ""
                             val email = PEmail(
-                                getString(Email.ADDRESS),
-                                label,
-                                customLabel,
-                                getInt(Email.IS_PRIMARY) == 1
+                                    getString(Email.ADDRESS),
+                                    label,
+                                    customLabel,
+                                    getInt(Email.IS_PRIMARY) == 1
                             )
                             contact.emails += email
                         }
                         StructuredPostal.CONTENT_ITEM_TYPE -> {
                             val label: String = getAddressLabel(cursor)
                             val customLabel: String =
-                                if (label == "custom") getAddressCustomLabel(cursor) else ""
+                                    if (label == "custom") getAddressCustomLabel(cursor) else ""
                             val address = PAddress(
-                                getString(StructuredPostal.FORMATTED_ADDRESS),
-                                label,
-                                customLabel,
-                                getString(StructuredPostal.STREET),
-                                getString(StructuredPostal.POBOX),
-                                getString(StructuredPostal.NEIGHBORHOOD),
-                                getString(StructuredPostal.CITY),
-                                getString(StructuredPostal.REGION),
-                                getString(StructuredPostal.POSTCODE),
-                                getString(StructuredPostal.COUNTRY),
-                                "",
-                                "",
-                                ""
+                                    getString(StructuredPostal.FORMATTED_ADDRESS),
+                                    label,
+                                    customLabel,
+                                    getString(StructuredPostal.STREET),
+                                    getString(StructuredPostal.POBOX),
+                                    getString(StructuredPostal.NEIGHBORHOOD),
+                                    getString(StructuredPostal.CITY),
+                                    getString(StructuredPostal.REGION),
+                                    getString(StructuredPostal.POSTCODE),
+                                    getString(StructuredPostal.COUNTRY),
+                                    "",
+                                    "",
+                                    ""
                             )
                             contact.addresses += address
                         }
                         Organization.CONTENT_ITEM_TYPE -> {
                             val organization = POrganization(
-                                getString(Organization.COMPANY),
-                                getString(Organization.TITLE),
-                                getString(Organization.DEPARTMENT),
-                                getString(Organization.JOB_DESCRIPTION),
-                                getString(Organization.SYMBOL),
-                                getString(Organization.PHONETIC_NAME),
-                                getString(Organization.OFFICE_LOCATION)
+                                    getString(Organization.COMPANY),
+                                    getString(Organization.TITLE),
+                                    getString(Organization.DEPARTMENT),
+                                    getString(Organization.JOB_DESCRIPTION),
+                                    getString(Organization.SYMBOL),
+                                    getString(Organization.PHONETIC_NAME),
+                                    getString(Organization.OFFICE_LOCATION)
                             )
                             contact.organizations += organization
                         }
                         Website.CONTENT_ITEM_TYPE -> {
                             val label: String = getWebsiteLabel(cursor)
                             val customLabel: String =
-                                if (label == "custom") getWebsiteCustomLabel(cursor) else ""
+                                    if (label == "custom") getWebsiteCustomLabel(cursor) else ""
                             val website = PWebsite(
-                                getString(Website.URL),
-                                label,
-                                customLabel
+                                    getString(Website.URL),
+                                    label,
+                                    customLabel
                             )
                             contact.websites += website
                         }
                         Im.CONTENT_ITEM_TYPE -> {
                             val label: String = getSocialMediaLabel(cursor)
                             val customLabel: String =
-                                if (label == "custom") getSocialMediaCustomLabel(cursor) else ""
+                                    if (label == "custom") getSocialMediaCustomLabel(cursor) else ""
                             val socialMedia = PSocialMedia(
-                                getString(Im.DATA),
-                                label,
-                                customLabel
+                                    getString(Im.DATA),
+                                    label,
+                                    customLabel
                             )
                             contact.socialMedias += socialMedia
                         }
@@ -371,13 +371,13 @@ class FlutterContacts {
                             if (month != null && day != null) {
                                 val label: String = getEventLabel(cursor)
                                 val customLabel: String =
-                                    if (label == "custom") getEventCustomLabel(cursor) else ""
+                                        if (label == "custom") getEventCustomLabel(cursor) else ""
                                 val event = PEvent(
-                                    year,
-                                    month!!,
-                                    day!!,
-                                    label,
-                                    customLabel
+                                        year,
+                                        month!!,
+                                        day!!,
+                                        label,
+                                        customLabel
                                 )
                                 contact.events += event
                             }
@@ -409,8 +409,8 @@ class FlutterContacts {
         }
 
         fun insert(
-            resolver: ContentResolver,
-            contactMap: Map<String, Any?>
+                resolver: ContentResolver,
+                contactMap: Map<String, Any?>
         ): Map<String, Any?>? {
             val ops = mutableListOf<ContentProviderOperation>()
 
@@ -426,17 +426,17 @@ class FlutterContacts {
             // If an account is provided, use it explicitly instead.
             if (contact.accounts.isEmpty()) {
                 ops.add(
-                    ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-                        .withValue(RawContacts.ACCOUNT_TYPE, null)
-                        .withValue(RawContacts.ACCOUNT_NAME, null)
-                        .build()
+                        ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
+                                .withValue(RawContacts.ACCOUNT_TYPE, null)
+                                .withValue(RawContacts.ACCOUNT_NAME, null)
+                                .build()
                 )
             } else {
                 ops.add(
-                    ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-                        .withValue(RawContacts.ACCOUNT_TYPE, contact.accounts.first().type)
-                        .withValue(RawContacts.ACCOUNT_NAME, contact.accounts.first().name)
-                        .build()
+                        ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
+                                .withValue(RawContacts.ACCOUNT_TYPE, contact.accounts.first().type)
+                                .withValue(RawContacts.ACCOUNT_NAME, contact.accounts.first().name)
+                                .build()
                 )
             }
 
@@ -445,7 +445,7 @@ class FlutterContacts {
 
             // Save.
             val addContactResults =
-                resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+                    resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
             val rawId: Long = ContentUris.parseId(addContactResults[0].uri!!)
 
             // Add photo if provided (needs to be after saving the contact so we know
@@ -458,25 +458,25 @@ class FlutterContacts {
             val contentValues = ContentValues()
             contentValues.put(ContactsContract.RawContacts.STARRED, if (contact.isStarred) 1 else 0)
             resolver.update(
-                ContactsContract.RawContacts.CONTENT_URI,
-                contentValues,
-                ContactsContract.RawContacts._ID + "=?",
-                /*selectionArgs=*/arrayOf(rawId.toString())
+                    ContactsContract.RawContacts.CONTENT_URI,
+                    contentValues,
+                    ContactsContract.RawContacts._ID + "=?",
+                    /*selectionArgs=*/arrayOf(rawId.toString())
             )
 
             // Load contacts with that raw ID, which will give us the full contact as it
             // was saved.
             val insertedContacts: List<Map<String, Any?>> = select(
-                resolver,
-                rawId.toString(),
-                /*withProperties=*/ true,
-                /*withThumbnail=*/true,
-                /*withPhoto=*/true,
-                /*withGroups=*/false, // slower, usually not needed
-                /*withAccounts=*/true,
-                /*returnUnifiedContacts=*/true,
-                /*includeNonVisible=*/true,
-                /*idIsRawContactId=*/true
+                    resolver,
+                    rawId.toString(),
+                    /*withProperties=*/ true,
+                    /*withThumbnail=*/true,
+                    /*withPhoto=*/true,
+                    /*withGroups=*/false, // slower, usually not needed
+                    /*withAccounts=*/true,
+                    /*returnUnifiedContacts=*/true,
+                    /*includeNonVisible=*/true,
+                    /*idIsRawContactId=*/true
             )
 
             if (insertedContacts.isEmpty()) {
@@ -486,9 +486,9 @@ class FlutterContacts {
         }
 
         fun update(
-            resolver: ContentResolver,
-            contactMap: Map<String, Any?>,
-            withGroups: Boolean
+                resolver: ContentResolver,
+                contactMap: Map<String, Any?>,
+                withGroups: Boolean
         ): Map<String, Any?>? {
             val ops = mutableListOf<ContentProviderOperation>()
 
@@ -502,49 +502,49 @@ class FlutterContacts {
             // Update name and other properties, by deleting existing ones and creating
             // new ones.
             ops.add(
-                ContentProviderOperation.newDelete(Data.CONTENT_URI)
-                    .withSelection(
-                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE} in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        arrayOf(
-                            contactId,
-                            StructuredName.CONTENT_ITEM_TYPE,
-                            Nickname.CONTENT_ITEM_TYPE,
-                            Phone.CONTENT_ITEM_TYPE,
-                            Email.CONTENT_ITEM_TYPE,
-                            StructuredPostal.CONTENT_ITEM_TYPE,
-                            Organization.CONTENT_ITEM_TYPE,
-                            Website.CONTENT_ITEM_TYPE,
-                            Im.CONTENT_ITEM_TYPE,
-                            Event.CONTENT_ITEM_TYPE,
-                            Note.CONTENT_ITEM_TYPE
-                        )
-                    )
-                    .build()
+                    ContentProviderOperation.newDelete(Data.CONTENT_URI)
+                            .withSelection(
+                                    "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE} in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                    arrayOf(
+                                            contactId,
+                                            StructuredName.CONTENT_ITEM_TYPE,
+                                            Nickname.CONTENT_ITEM_TYPE,
+                                            Phone.CONTENT_ITEM_TYPE,
+                                            Email.CONTENT_ITEM_TYPE,
+                                            StructuredPostal.CONTENT_ITEM_TYPE,
+                                            Organization.CONTENT_ITEM_TYPE,
+                                            Website.CONTENT_ITEM_TYPE,
+                                            Im.CONTENT_ITEM_TYPE,
+                                            Event.CONTENT_ITEM_TYPE,
+                                            Note.CONTENT_ITEM_TYPE
+                                    )
+                            )
+                            .build()
             )
             if (contact.photo == null && contact.thumbnail == null) {
                 ops.add(
-                    ContentProviderOperation.newDelete(Data.CONTENT_URI)
-                        .withSelection(
-                            "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
-                            arrayOf(
-                                contactId,
-                                Photo.CONTENT_ITEM_TYPE
-                            )
-                        )
-                        .build()
+                        ContentProviderOperation.newDelete(Data.CONTENT_URI)
+                                .withSelection(
+                                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
+                                        arrayOf(
+                                                contactId,
+                                                Photo.CONTENT_ITEM_TYPE
+                                        )
+                                )
+                                .build()
                 )
             }
             if (withGroups) {
                 ops.add(
-                    ContentProviderOperation.newDelete(Data.CONTENT_URI)
-                        .withSelection(
-                            "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
-                            arrayOf(
-                                contactId,
-                                GroupMembership.CONTENT_ITEM_TYPE
-                            )
-                        )
-                        .build()
+                        ContentProviderOperation.newDelete(Data.CONTENT_URI)
+                                .withSelection(
+                                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE}=?",
+                                        arrayOf(
+                                                contactId,
+                                                GroupMembership.CONTENT_ITEM_TYPE
+                                        )
+                                )
+                                .build()
                 )
             }
 
@@ -560,25 +560,25 @@ class FlutterContacts {
             val contentValues = ContentValues()
             contentValues.put(ContactsContract.Contacts.STARRED, if (contact.isStarred) 1 else 0)
             resolver.update(
-                ContactsContract.Contacts.CONTENT_URI,
-                contentValues,
-                ContactsContract.Contacts._ID + "=?",
-                /*selectionArgs=*/arrayOf(contactId)
+                    ContactsContract.Contacts.CONTENT_URI,
+                    contentValues,
+                    ContactsContract.Contacts._ID + "=?",
+                    /*selectionArgs=*/arrayOf(contactId)
             )
 
             // Load contacts with that raw ID, which will give us the full contact as it
             // was saved.
             val updatedContacts: List<Map<String, Any?>> = select(
-                resolver,
-                rawContactId,
-                /*withProperties=*/ true,
-                /*withThumbnail=*/true,
-                /*withPhoto=*/true,
-                /*withGroups=*/false, // slower, usually not needed
-                /*withAccounts=*/true,
-                /*returnUnifiedContacts=*/true,
-                /*includeNonVisible=*/true,
-                /*idIsRawContactId=*/true
+                    resolver,
+                    rawContactId,
+                    /*withProperties=*/ true,
+                    /*withThumbnail=*/true,
+                    /*withPhoto=*/true,
+                    /*withGroups=*/false, // slower, usually not needed
+                    /*withAccounts=*/true,
+                    /*returnUnifiedContacts=*/true,
+                    /*includeNonVisible=*/true,
+                    /*idIsRawContactId=*/true
             )
 
             if (updatedContacts.isEmpty()) {
@@ -592,9 +592,9 @@ class FlutterContacts {
 
             for (contactId in contactIds) {
                 ops.add(
-                    ContentProviderOperation.newDelete(RawContacts.CONTENT_URI)
-                        .withSelection("${RawContacts.CONTACT_ID}=?", arrayOf(contactId))
-                        .build()
+                        ContentProviderOperation.newDelete(RawContacts.CONTENT_URI)
+                                .withSelection("${RawContacts.CONTACT_ID}=?", arrayOf(contactId))
+                                .build()
                 )
             }
 
@@ -612,13 +612,13 @@ class FlutterContacts {
             var group = PGroup.fromMap(groupMap)
 
             ops.add(
-                ContentProviderOperation.newInsert(Groups.CONTENT_URI)
-                    .withValue(Groups.TITLE, group.name)
-                    .build()
+                    ContentProviderOperation.newInsert(Groups.CONTENT_URI)
+                            .withValue(Groups.TITLE, group.name)
+                            .build()
             )
 
             val addGroupResults =
-                resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
+                    resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
             val id: Long = ContentUris.parseId(addGroupResults[0].uri!!)
 
             group.id = id.toString()
@@ -631,10 +631,10 @@ class FlutterContacts {
             val group = PGroup.fromMap(groupMap)
 
             ops.add(
-                ContentProviderOperation.newUpdate(Groups.CONTENT_URI)
-                    .withSelection("${Groups._ID}=?", arrayOf(group.id))
-                    .withValue(Groups.TITLE, group.name)
-                    .build()
+                    ContentProviderOperation.newUpdate(Groups.CONTENT_URI)
+                            .withSelection("${Groups._ID}=?", arrayOf(group.id))
+                            .withValue(Groups.TITLE, group.name)
+                            .build()
             )
             resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
 
@@ -647,11 +647,11 @@ class FlutterContacts {
             val group = PGroup.fromMap(groupMap)
 
             ops.add(
-                ContentProviderOperation.newDelete(
-                    Groups.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build()
-                )
-                    .withSelection("${Groups._ID}=?", arrayOf(group.id))
-                    .build()
+                    ContentProviderOperation.newDelete(
+                            Groups.CONTENT_URI.buildUpon().appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true").build()
+                    )
+                            .withSelection("${Groups._ID}=?", arrayOf(group.id))
+                            .build()
             )
             val results = resolver.applyBatch(ContactsContract.AUTHORITY, ArrayList(ops))
         }
@@ -671,6 +671,13 @@ class FlutterContacts {
             }
         }
 
+        fun emptyToNull(s: String): String? = if (s.isEmpty()) "" else s
+
+        fun eventToDate(e: PEvent): String =
+                (if (e.year == null) "--" else "${e.year.toString().padStart(4, '0')}-") +
+                        "${e.month.toString().padStart(2, '0')}-" +
+                        "${e.day.toString().padStart(2, '0')}"
+
         fun openExternalPickOrInsert(activity: Activity?, context: Context?, insert: Boolean, contact: Map<String, Any?>?) {
             if (activity == null && context == null) return
             var intent = Intent(if (insert) Intent.ACTION_INSERT else Intent.ACTION_PICK, Contacts.CONTENT_URI)
@@ -678,6 +685,8 @@ class FlutterContacts {
             // Prepopulate fields if contact is provided
             if (contact != null) {
                 val parsedContact = Contact.fromMap(contact)
+
+                var extraData = ArrayList<ContentValues>()
 
                 var fullName = parsedContact.displayName
                 if (fullName.isEmpty()) {
@@ -688,24 +697,123 @@ class FlutterContacts {
                 }
 
                 if (parsedContact.phones.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.PHONE, parsedContact.phones.first().number)
+                    for (phone in parsedContact.phones) {
+                        val labelPair: PhoneLabelPair = getPhoneLabelInv(phone.label, phone.customLabel);
+                        var row = ContentValues();
+                        row.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+                        row.put(Phone.NUMBER, emptyToNull(phone.number));
+                        row.put(Phone.TYPE, labelPair.label);
+                        row.put(Phone.LABEL, emptyToNull(labelPair.customLabel));
+                        row.put(Data.IS_PRIMARY, if (phone.isPrimary) 1 else 0);
+                        extraData.add(row);
+                    }
                 }
 
                 if (parsedContact.emails.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.EMAIL, parsedContact.emails.first().address)
+                    for (email in parsedContact.emails) {
+                        val labelPair: EmailLabelPair = getEmailLabelInv(email.label, email.customLabel)
+                        var row = ContentValues();
+                        row.put(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE);
+                        row.put(Email.ADDRESS, emptyToNull(email.address));
+                        row.put(Email.TYPE, labelPair.label);
+                        row.put(Data.IS_PRIMARY, if (email.isPrimary) 1 else 0);
+                        extraData.add(row);
+                    }
                 }
 
                 if (parsedContact.addresses.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.POSTAL, parsedContact.addresses.first().address)
+                    for (address in parsedContact.addresses) {
+                        val labelPair: AddressLabelPair = getAddressLabelInv(address.label, address.customLabel)
+                        var row = ContentValues();
+                        row.put(Data.MIMETYPE, StructuredPostal.CONTENT_ITEM_TYPE);
+                        row.put(StructuredPostal.FORMATTED_ADDRESS, emptyToNull(address.address));
+                        row.put(StructuredPostal.TYPE, labelPair.label);
+                        row.put(StructuredPostal.LABEL, emptyToNull(labelPair.customLabel));
+                        row.put(StructuredPostal.STREET, emptyToNull(address.street));
+                        row.put(StructuredPostal.POBOX, emptyToNull(address.pobox));
+                        row.put(StructuredPostal.NEIGHBORHOOD, emptyToNull(address.neighborhood));
+                        row.put(StructuredPostal.CITY, emptyToNull(address.city));
+                        row.put(StructuredPostal.REGION, emptyToNull(address.state));
+                        row.put(StructuredPostal.POSTCODE, emptyToNull(address.postalCode));
+                        row.put(StructuredPostal.COUNTRY, emptyToNull(address.country));
+                        extraData.add(row);
+                    }
                 }
 
                 if (parsedContact.organizations.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.COMPANY, parsedContact.organizations.first().company)
-                    intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, parsedContact.organizations.first().title)
+                    for (organization in parsedContact.organizations) {
+                        var row = ContentValues();
+
+                        row.put(Data.MIMETYPE, Organization.CONTENT_ITEM_TYPE);
+                        row.put(Organization.COMPANY, emptyToNull(organization.company));
+                        row.put(Organization.TITLE, emptyToNull(organization.title));
+                        row.put(Organization.DEPARTMENT, emptyToNull(organization.department));
+                        row.put(Organization.JOB_DESCRIPTION, emptyToNull(organization.jobDescription));
+                        row.put(Organization.SYMBOL, emptyToNull(organization.symbol));
+                        row.put(Organization.PHONETIC_NAME, emptyToNull(organization.phoneticName));
+                        row.put(Organization.OFFICE_LOCATION, emptyToNull(organization.officeLocation));
+                        extraData.add(row);
+                    }
+                }
+
+                if (parsedContact.websites.isNotEmpty()) {
+                    for (website in parsedContact.websites) {
+                        var row = ContentValues();
+                        val labelPair: WebsiteLabelPair = getWebsiteLabelInv(website.label, website.customLabel)
+                        row.put(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
+                        row.put(Website.URL, emptyToNull(website.url))
+                        row.put(Website.TYPE, labelPair.label)
+                        row.put(Website.LABEL, emptyToNull(labelPair.customLabel))
+                        extraData.add(row);
+                    }
+                }
+
+                if (parsedContact.socialMedias.isNotEmpty()) {
+                    for (socialMedia in parsedContact.socialMedias) {
+                        var row = ContentValues();
+                        val labelPair: SocialMediaLabelPair = getSocialMediaLabelInv(socialMedia.label, socialMedia.customLabel)
+                        row.put(Data.MIMETYPE, Im.CONTENT_ITEM_TYPE)
+                        row.put(Im.DATA, emptyToNull(socialMedia.userName))
+                        row.put(Im.PROTOCOL, labelPair.label)
+                        row.put(Im.CUSTOM_PROTOCOL, emptyToNull(labelPair.customLabel))
+                        extraData.add(row);
+                    }
+                }
+
+                if (parsedContact.events.isNotEmpty()) {
+                    for (event in parsedContact.events) {
+                        var row = ContentValues();
+                        val labelPair: EventLabelPair = getEventLabelInv(event.label, event.customLabel)
+                        row.put(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
+                        row.put(Event.START_DATE, eventToDate(event))
+                        row.put(Event.TYPE, labelPair.label)
+                        row.put(Event.LABEL, emptyToNull(labelPair.customLabel))
+                        extraData.add(row);
+                    }
                 }
 
                 if (parsedContact.notes.isNotEmpty()) {
-                    intent.putExtra(ContactsContract.Intents.Insert.NOTES, parsedContact.notes.first().note)
+                    for (note in parsedContact.notes) {
+                        if (!note.note.isEmpty()) {
+                            var row = ContentValues();
+                            row.put(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
+                            row.put(Note.NOTE, note.note)
+                            extraData.add(row);
+                        }
+                    }
+                }
+
+                if(parsedContact.groups.isNotEmpty()) {
+                    for (group in parsedContact.groups) {
+                        var row = ContentValues();
+                        row.put(Data.MIMETYPE, GroupMembership.CONTENT_ITEM_TYPE)
+                        row.put(GroupMembership.GROUP_ROW_ID, group.id)
+                        extraData.add(row);
+                    }
+                }
+
+                if(extraData.isNotEmpty()) {
+                    intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, extraData);
                 }
             }
 
@@ -733,11 +841,11 @@ class FlutterContacts {
 
             // Query contact database.
             val cursor = resolver.query(
-                Contacts.CONTENT_URI,
-                /*projection=*/null,
-                selection,
-                /*selectionArgs=*/null,
-                /*sortOrder=*/null
+                    Contacts.CONTENT_URI,
+                    /*projection=*/null,
+                    selection,
+                    /*selectionArgs=*/null,
+                    /*sortOrder=*/null
             )
 
             // List of all contacts.
@@ -748,11 +856,11 @@ class FlutterContacts {
 
             while (cursor.moveToNext()) {
                 contacts.add(
-                    Contact(
-                        /*id=*/(cursor.getString(cursor.getColumnIndex(Contacts._ID)) ?: ""),
-                        /*displayName=*/(cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: ""),
-                        isStarred = (cursor.getInt(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: 0) == 0
-                    )
+                        Contact(
+                                /*id=*/(cursor.getString(cursor.getColumnIndex(Contacts._ID)) ?: ""),
+                                /*displayName=*/(cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: ""),
+                                isStarred = (cursor.getInt(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: 0) == 0
+                        )
                 )
             }
 
@@ -790,15 +898,15 @@ class FlutterContacts {
 
         private fun fetchGroups(resolver: ContentResolver): Map<String, PGroup> {
             val projection = listOf(
-                Groups._ID,
-                Groups.TITLE
+                    Groups._ID,
+                    Groups.TITLE
             )
             val cursor = resolver.query(
-                Groups.CONTENT_URI,
-                projection.toTypedArray(),
-                /*selection=*/null,
-                /*selectionArgs=*/null,
-                /*sortOrder=*/null
+                    Groups.CONTENT_URI,
+                    projection.toTypedArray(),
+                    /*selection=*/null,
+                    /*selectionArgs=*/null,
+                    /*sortOrder=*/null
             )
             if (cursor == null) {
                 return mapOf()
@@ -997,169 +1105,169 @@ class FlutterContacts {
         }
 
         private fun buildOpsForContact(
-            contact: Contact,
-            ops: MutableList<ContentProviderOperation>,
-            rawContactId: String? = null
+                contact: Contact,
+                ops: MutableList<ContentProviderOperation>,
+                rawContactId: String? = null
         ) {
             fun emptyToNull(s: String): String? = if (s.isEmpty()) "" else s
             fun eventToDate(e: PEvent): String =
-                (if (e.year == null) "--" else "${e.year.toString().padStart(4, '0')}-") +
-                    "${e.month.toString().padStart(2, '0')}-" +
-                    "${e.day.toString().padStart(2, '0')}"
+                    (if (e.year == null) "--" else "${e.year.toString().padStart(4, '0')}-") +
+                            "${e.month.toString().padStart(2, '0')}-" +
+                            "${e.day.toString().padStart(2, '0')}"
             fun newInsert(): ContentProviderOperation.Builder =
-                if (rawContactId != null)
-                    ContentProviderOperation
-                        .newInsert(Data.CONTENT_URI)
-                        .withValue(Data.RAW_CONTACT_ID, rawContactId)
-                else
-                    ContentProviderOperation
-                        .newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, 0)
+                    if (rawContactId != null)
+                        ContentProviderOperation
+                                .newInsert(Data.CONTENT_URI)
+                                .withValue(Data.RAW_CONTACT_ID, rawContactId)
+                    else
+                        ContentProviderOperation
+                                .newInsert(Data.CONTENT_URI)
+                                .withValueBackReference(Data.RAW_CONTACT_ID, 0)
 
             val name: PName = contact.name
             ops.add(
-                newInsert()
-                    .withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
-                    .withValue(StructuredName.GIVEN_NAME, emptyToNull(name.first))
-                    .withValue(StructuredName.MIDDLE_NAME, emptyToNull(name.middle))
-                    .withValue(StructuredName.FAMILY_NAME, emptyToNull(name.last))
-                    .withValue(StructuredName.PREFIX, emptyToNull(name.prefix))
-                    .withValue(StructuredName.SUFFIX, emptyToNull(name.suffix))
-                    .withValue(StructuredName.PHONETIC_GIVEN_NAME, emptyToNull(name.firstPhonetic))
-                    .withValue(StructuredName.PHONETIC_MIDDLE_NAME, emptyToNull(name.middlePhonetic))
-                    .withValue(StructuredName.PHONETIC_FAMILY_NAME, emptyToNull(name.lastPhonetic))
-                    .build()
+                    newInsert()
+                            .withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
+                            .withValue(StructuredName.GIVEN_NAME, emptyToNull(name.first))
+                            .withValue(StructuredName.MIDDLE_NAME, emptyToNull(name.middle))
+                            .withValue(StructuredName.FAMILY_NAME, emptyToNull(name.last))
+                            .withValue(StructuredName.PREFIX, emptyToNull(name.prefix))
+                            .withValue(StructuredName.SUFFIX, emptyToNull(name.suffix))
+                            .withValue(StructuredName.PHONETIC_GIVEN_NAME, emptyToNull(name.firstPhonetic))
+                            .withValue(StructuredName.PHONETIC_MIDDLE_NAME, emptyToNull(name.middlePhonetic))
+                            .withValue(StructuredName.PHONETIC_FAMILY_NAME, emptyToNull(name.lastPhonetic))
+                            .build()
             )
             if (!name.nickname.isEmpty()) {
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, Nickname.CONTENT_ITEM_TYPE)
-                        .withValue(Nickname.NAME, name.nickname)
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, Nickname.CONTENT_ITEM_TYPE)
+                                .withValue(Nickname.NAME, name.nickname)
+                                .build()
                 )
             }
             for ((i, phone) in contact.phones.withIndex()) {
                 val labelPair: PhoneLabelPair = getPhoneLabelInv(phone.label, phone.customLabel)
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                        .withValue(Phone.NUMBER, emptyToNull(phone.number))
-                        .withValue(Phone.TYPE, labelPair.label)
-                        .withValue(Phone.LABEL, emptyToNull(labelPair.customLabel))
-                        .withValue(Data.IS_PRIMARY, if (phone.isPrimary) 1 else 0)
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                                .withValue(Phone.NUMBER, emptyToNull(phone.number))
+                                .withValue(Phone.TYPE, labelPair.label)
+                                .withValue(Phone.LABEL, emptyToNull(labelPair.customLabel))
+                                .withValue(Data.IS_PRIMARY, if (phone.isPrimary) 1 else 0)
+                                .build()
                 )
             }
             for ((i, email) in contact.emails.withIndex()) {
                 val labelPair: EmailLabelPair = getEmailLabelInv(email.label, email.customLabel)
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE)
-                        .withValue(Email.ADDRESS, emptyToNull(email.address))
-                        .withValue(Email.TYPE, labelPair.label)
-                        .withValue(Email.LABEL, emptyToNull(labelPair.customLabel))
-                        .withValue(Data.IS_PRIMARY, if (email.isPrimary) 1 else 0)
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE)
+                                .withValue(Email.ADDRESS, emptyToNull(email.address))
+                                .withValue(Email.TYPE, labelPair.label)
+                                .withValue(Email.LABEL, emptyToNull(labelPair.customLabel))
+                                .withValue(Data.IS_PRIMARY, if (email.isPrimary) 1 else 0)
+                                .build()
                 )
             }
             for (address in contact.addresses) {
                 val labelPair: AddressLabelPair =
-                    getAddressLabelInv(address.label, address.customLabel)
+                        getAddressLabelInv(address.label, address.customLabel)
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, StructuredPostal.CONTENT_ITEM_TYPE)
-                        .withValue(StructuredPostal.FORMATTED_ADDRESS, emptyToNull(address.address))
-                        .withValue(StructuredPostal.TYPE, labelPair.label)
-                        .withValue(StructuredPostal.LABEL, emptyToNull(labelPair.customLabel))
-                        .withValue(StructuredPostal.STREET, emptyToNull(address.street))
-                        .withValue(StructuredPostal.POBOX, emptyToNull(address.pobox))
-                        .withValue(StructuredPostal.NEIGHBORHOOD, emptyToNull(address.neighborhood))
-                        .withValue(StructuredPostal.CITY, emptyToNull(address.city))
-                        .withValue(StructuredPostal.REGION, emptyToNull(address.state))
-                        .withValue(StructuredPostal.POSTCODE, emptyToNull(address.postalCode))
-                        .withValue(StructuredPostal.COUNTRY, emptyToNull(address.country))
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, StructuredPostal.CONTENT_ITEM_TYPE)
+                                .withValue(StructuredPostal.FORMATTED_ADDRESS, emptyToNull(address.address))
+                                .withValue(StructuredPostal.TYPE, labelPair.label)
+                                .withValue(StructuredPostal.LABEL, emptyToNull(labelPair.customLabel))
+                                .withValue(StructuredPostal.STREET, emptyToNull(address.street))
+                                .withValue(StructuredPostal.POBOX, emptyToNull(address.pobox))
+                                .withValue(StructuredPostal.NEIGHBORHOOD, emptyToNull(address.neighborhood))
+                                .withValue(StructuredPostal.CITY, emptyToNull(address.city))
+                                .withValue(StructuredPostal.REGION, emptyToNull(address.state))
+                                .withValue(StructuredPostal.POSTCODE, emptyToNull(address.postalCode))
+                                .withValue(StructuredPostal.COUNTRY, emptyToNull(address.country))
+                                .build()
                 )
             }
             for (organization in contact.organizations) {
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, Organization.CONTENT_ITEM_TYPE)
-                        .withValue(Organization.COMPANY, emptyToNull(organization.company))
-                        .withValue(Organization.TITLE, emptyToNull(organization.title))
-                        .withValue(Organization.DEPARTMENT, emptyToNull(organization.department))
-                        .withValue(Organization.JOB_DESCRIPTION, emptyToNull(organization.jobDescription))
-                        .withValue(Organization.SYMBOL, emptyToNull(organization.symbol))
-                        .withValue(Organization.PHONETIC_NAME, emptyToNull(organization.phoneticName))
-                        .withValue(Organization.OFFICE_LOCATION, emptyToNull(organization.officeLocation))
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, Organization.CONTENT_ITEM_TYPE)
+                                .withValue(Organization.COMPANY, emptyToNull(organization.company))
+                                .withValue(Organization.TITLE, emptyToNull(organization.title))
+                                .withValue(Organization.DEPARTMENT, emptyToNull(organization.department))
+                                .withValue(Organization.JOB_DESCRIPTION, emptyToNull(organization.jobDescription))
+                                .withValue(Organization.SYMBOL, emptyToNull(organization.symbol))
+                                .withValue(Organization.PHONETIC_NAME, emptyToNull(organization.phoneticName))
+                                .withValue(Organization.OFFICE_LOCATION, emptyToNull(organization.officeLocation))
+                                .build()
                 )
             }
             for (website in contact.websites) {
                 val labelPair: WebsiteLabelPair =
-                    getWebsiteLabelInv(website.label, website.customLabel)
+                        getWebsiteLabelInv(website.label, website.customLabel)
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
-                        .withValue(Website.URL, emptyToNull(website.url))
-                        .withValue(Website.TYPE, labelPair.label)
-                        .withValue(Website.LABEL, emptyToNull(labelPair.customLabel))
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
+                                .withValue(Website.URL, emptyToNull(website.url))
+                                .withValue(Website.TYPE, labelPair.label)
+                                .withValue(Website.LABEL, emptyToNull(labelPair.customLabel))
+                                .build()
                 )
             }
             for (socialMedia in contact.socialMedias) {
                 val labelPair: SocialMediaLabelPair =
-                    getSocialMediaLabelInv(socialMedia.label, socialMedia.customLabel)
+                        getSocialMediaLabelInv(socialMedia.label, socialMedia.customLabel)
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, Im.CONTENT_ITEM_TYPE)
-                        .withValue(Im.DATA, emptyToNull(socialMedia.userName))
-                        .withValue(Im.PROTOCOL, labelPair.label)
-                        .withValue(Im.CUSTOM_PROTOCOL, emptyToNull(labelPair.customLabel))
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, Im.CONTENT_ITEM_TYPE)
+                                .withValue(Im.DATA, emptyToNull(socialMedia.userName))
+                                .withValue(Im.PROTOCOL, labelPair.label)
+                                .withValue(Im.CUSTOM_PROTOCOL, emptyToNull(labelPair.customLabel))
+                                .build()
                 )
             }
             for (event in contact.events) {
                 val labelPair: EventLabelPair =
-                    getEventLabelInv(event.label, event.customLabel)
+                        getEventLabelInv(event.label, event.customLabel)
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
-                        .withValue(Event.START_DATE, eventToDate(event))
-                        .withValue(Event.TYPE, labelPair.label)
-                        .withValue(Event.LABEL, emptyToNull(labelPair.customLabel))
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, Event.CONTENT_ITEM_TYPE)
+                                .withValue(Event.START_DATE, eventToDate(event))
+                                .withValue(Event.TYPE, labelPair.label)
+                                .withValue(Event.LABEL, emptyToNull(labelPair.customLabel))
+                                .build()
                 )
             }
             for (note in contact.notes) {
                 if (!note.note.isEmpty()) {
                     ops.add(
-                        newInsert()
-                            .withValue(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
-                            .withValue(Note.NOTE, note.note)
-                            .build()
+                            newInsert()
+                                    .withValue(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
+                                    .withValue(Note.NOTE, note.note)
+                                    .build()
                     )
                 }
             }
             for (group in contact.groups) {
                 ops.add(
-                    newInsert()
-                        .withValue(Data.MIMETYPE, GroupMembership.CONTENT_ITEM_TYPE)
-                        .withValue(GroupMembership.GROUP_ROW_ID, group.id)
-                        .build()
+                        newInsert()
+                                .withValue(Data.MIMETYPE, GroupMembership.CONTENT_ITEM_TYPE)
+                                .withValue(GroupMembership.GROUP_ROW_ID, group.id)
+                                .build()
                 )
             }
         }
 
         private fun buildOpsForPhoto(
-            resolver: ContentResolver,
-            photo: ByteArray,
-            ops: MutableList<ContentProviderOperation>,
-            rawContactId: Long
+                resolver: ContentResolver,
+                photo: ByteArray,
+                ops: MutableList<ContentProviderOperation>,
+                rawContactId: Long
         ) {
             val photoUri: Uri = Uri.withAppendedPath(
-                ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
-                RawContacts.DisplayPhoto.CONTENT_DIRECTORY
+                    ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
+                    RawContacts.DisplayPhoto.CONTENT_DIRECTORY
             )
             var fd: AssetFileDescriptor? = resolver.openAssetFileDescriptor(photoUri, "rw")
             if (fd != null) {
