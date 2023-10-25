@@ -44,10 +44,10 @@ class VCardParser {
 
   String unfold(String s) => s
       // https://tools.ietf.org/html/rfc2425#section-5.8.1
-      .replaceAll(RegExp(r'\n[ \t]'), '')
+      .replaceAll(RegExp(r'(\r\n|\n)[ \t]'), '')
       // Quoted-encoded contents are sometimes split on multiple lines ending and
       // starting with '='.
-      .replaceAll(RegExp(r'=\n='), '=');
+      .replaceAll(RegExp(r'=(\r\n|\n)='), '=');
 
   void parse(String content, Contact contact) {
     var lines = encode(unfold(content)).split('\n').map((String x) => x.trim());
