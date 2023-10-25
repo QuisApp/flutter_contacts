@@ -8,9 +8,9 @@ class EventForm extends StatefulWidget {
 
   EventForm(
     this.event, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -21,16 +21,16 @@ class _EventFormState extends State<EventForm> {
   final _formKey = GlobalKey<FormState>();
   static final _validLabels = EventLabel.values;
 
-  TextEditingController _dateController;
-  EventLabel _label;
-  TextEditingController _customLabelController;
-  int _year;
-  int _month;
-  int _day;
-  bool _noYear;
+  late TextEditingController _dateController;
+  EventLabel? _label;
+  late TextEditingController _customLabelController;
+  int? _year;
+  int? _month;
+  int? _day;
+  bool? _noYear;
 
   String _formatDate() =>
-      '${_noYear ? '--' : _year.toString().padLeft(4, '0')}/'
+      '${_noYear ?? false ? '--' : _year.toString().padLeft(4, '0')}/'
       '${_month.toString().padLeft(2, '0')}/'
       '${_day.toString().padLeft(2, '0')}';
 
@@ -49,10 +49,10 @@ class _EventFormState extends State<EventForm> {
 
   void _onChanged() {
     final event = Event(
-      year: _noYear ? null : _year,
-      month: _month,
-      day: _day,
-      label: _label,
+      year: _noYear ?? false ? null : _year,
+      month: _month ?? 0,
+      day: _day ?? 0,
+      label: _label ?? EventLabel.other,
       customLabel:
           _label == EventLabel.custom ? _customLabelController.text : '',
     );

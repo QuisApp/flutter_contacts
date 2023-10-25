@@ -8,9 +8,9 @@ class SocialMediaForm extends StatefulWidget {
 
   SocialMediaForm(
     this.socialMedia, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -21,9 +21,9 @@ class _SocialMediaFormState extends State<SocialMediaForm> {
   final _formKey = GlobalKey<FormState>();
   static final _validLabels = SocialMediaLabel.values;
 
-  TextEditingController _userNameController;
-  SocialMediaLabel _label;
-  TextEditingController _customLabelController;
+  late TextEditingController _userNameController;
+  SocialMediaLabel? _label;
+  late TextEditingController _customLabelController;
 
   @override
   void initState() {
@@ -36,13 +36,16 @@ class _SocialMediaFormState extends State<SocialMediaForm> {
   }
 
   void _onChanged() {
-    final socialMedia = SocialMedia(
-      _userNameController.text,
-      label: _label,
-      customLabel:
-          _label == SocialMediaLabel.custom ? _customLabelController.text : '',
-    );
-    widget.onUpdate(socialMedia);
+    if (_label != null) {
+      final socialMedia = SocialMedia(
+        _userNameController.text,
+        label: _label!,
+        customLabel: _label == SocialMediaLabel.custom
+            ? _customLabelController.text
+            : '',
+      );
+      widget.onUpdate(socialMedia);
+    }
   }
 
   @override

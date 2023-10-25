@@ -6,7 +6,6 @@ buildscript {
     ext.kotlin_coroutines_version = '1.6.4'
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 
@@ -19,7 +18,6 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 }
@@ -28,7 +26,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 34
 
     if (!project.hasProperty("namespace")) {
         namespace 'co.quis.flutter_contacts'

@@ -12,7 +12,7 @@ class ContactListPage extends StatefulWidget {
 
 class _ContactListPageState extends State<ContactListPage>
     with AfterLayoutMixin<ContactListPage> {
-  List<Contact> _contacts;
+  List<Contact> _contacts = [];
   bool _permissionDenied = false;
 
   @override
@@ -33,7 +33,7 @@ class _ContactListPageState extends State<ContactListPage>
   Future _fetchContacts() async {
     if (!await FlutterContacts.requestPermission()) {
       setState(() {
-        _contacts = null;
+        _contacts.clear();
         _permissionDenied = true;
       });
       return;
@@ -50,7 +50,7 @@ class _ContactListPageState extends State<ContactListPage>
 
   Future _refetchContacts() async {
     // First load all contacts without photo
-    await _loadContacts(false);
+    // await _loadContacts(false);
 
     // Next with photo
     await _loadContacts(true);

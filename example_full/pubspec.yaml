@@ -3,7 +3,7 @@ description: Demonstrates how to use the flutter_contacts plugin.
 publish_to: "none"
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -11,8 +11,8 @@ dependencies:
   after_layout: ^1.0.7+2
   flutter_contacts:
     path: ../
-  image_picker: ^0.6.7+22
-  pretty_json: ^1.1.0
+  image_picker: ^1.0.4
+  pretty_json: ^2.0.0
   prompt_dialog: ^1.0.9
 
 dev_dependencies:

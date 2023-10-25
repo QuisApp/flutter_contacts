@@ -8,9 +8,9 @@ class AddressForm extends StatefulWidget {
 
   AddressForm(
     this.address, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -21,19 +21,19 @@ class _AddressFormState extends State<AddressForm> {
   final _formKey = GlobalKey<FormState>();
   static final _validLabels = AddressLabel.values;
 
-  TextEditingController _addressController;
-  AddressLabel _label;
-  TextEditingController _customLabelController;
-  TextEditingController _streetController;
-  TextEditingController _poboxController;
-  TextEditingController _neighborhoodController;
-  TextEditingController _cityController;
-  TextEditingController _stateController;
-  TextEditingController _postalCodeController;
-  TextEditingController _countryController;
-  TextEditingController _isoCountryController;
-  TextEditingController _subAdminAreaController;
-  TextEditingController _subLocalityController;
+  late TextEditingController _addressController;
+  AddressLabel? _label;
+  late TextEditingController _customLabelController;
+  late TextEditingController _streetController;
+  late TextEditingController _poboxController;
+  late TextEditingController _neighborhoodController;
+  late TextEditingController _cityController;
+  late TextEditingController _stateController;
+  late TextEditingController _postalCodeController;
+  late TextEditingController _countryController;
+  late TextEditingController _isoCountryController;
+  late TextEditingController _subAdminAreaController;
+  late TextEditingController _subLocalityController;
 
   @override
   void initState() {
@@ -60,23 +60,25 @@ class _AddressFormState extends State<AddressForm> {
   }
 
   void _onChanged() {
-    final address = Address(
-      _addressController.text,
-      label: _label,
-      customLabel:
-          _label == AddressLabel.custom ? _customLabelController.text : '',
-      street: _streetController.text,
-      pobox: _poboxController.text,
-      neighborhood: _neighborhoodController.text,
-      city: _cityController.text,
-      state: _stateController.text,
-      postalCode: _postalCodeController.text,
-      country: _countryController.text,
-      isoCountry: _isoCountryController.text,
-      subAdminArea: _subAdminAreaController.text,
-      subLocality: _subLocalityController.text,
-    );
-    widget.onUpdate(address);
+    if (_label != null) {
+      final address = Address(
+        _addressController.text,
+        label: _label!,
+        customLabel:
+            _label == AddressLabel.custom ? _customLabelController.text : '',
+        street: _streetController.text,
+        pobox: _poboxController.text,
+        neighborhood: _neighborhoodController.text,
+        city: _cityController.text,
+        state: _stateController.text,
+        postalCode: _postalCodeController.text,
+        country: _countryController.text,
+        isoCountry: _isoCountryController.text,
+        subAdminArea: _subAdminAreaController.text,
+        subLocality: _subLocalityController.text,
+      );
+      widget.onUpdate(address);
+    }
   }
 
   @override
