@@ -766,6 +766,7 @@
             "customLabel": "Custom Event Date"
         }
     ],
+    "relations": [],
     "notes": [
         {
             "note": "Some notes 1\nSome notes 2"

@@ -57,8 +57,10 @@ class _ContactPageState extends State<ContactPage>
               await showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  content: Text(prettyJson(_contact?.toJson(
-                      withPhoto: false, withThumbnail: false))),
+                  content: SingleChildScrollView(
+                    child: Text(prettyJson(_contact?.toJson(
+                        withPhoto: false, withThumbnail: false))),
+                  ),
                 ),
               );
             },
@@ -219,6 +221,15 @@ class _ContactPageState extends State<ContactPage>
                     Text('Custom label: ${x.customLabel}'),
                   ]),
           _makeCard(
+              'Relations',
+              contact.relations,
+              (x) => [
+                    Divider(),
+                    Text('Name: ${x.name}'),
+                    Text('Label: ${x.label}'),
+                    Text('Custom label: ${x.customLabel}'),
+                  ]),
+          _makeCard(
               'Notes',
               contact.notes,
               (x) => [
@@ -257,7 +268,7 @@ class _ContactPageState extends State<ContactPage>
   }
 
   String _formatDate(Event e) =>
-      '${e.year?.toString()?.padLeft(4, '0') ?? '--'}/'
+      '${e.year?.toString().padLeft(4, '0') ?? '--'}/'
       '${e.month.toString().padLeft(2, '0')}/'
       '${e.day.toString().padLeft(2, '0')}';
 

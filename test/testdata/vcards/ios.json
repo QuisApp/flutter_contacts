@@ -766,6 +766,7 @@
             "customLabel": "Custom Event Date"
         }
     ],
+    "relations": [],
     "notes": [],
     "accounts": [],
     "groups": []

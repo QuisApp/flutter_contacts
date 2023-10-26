@@ -7,6 +7,7 @@ import 'package:flutter_contacts/properties/event.dart';
 import 'package:flutter_contacts/properties/note.dart';
 import 'package:flutter_contacts/properties/organization.dart';
 import 'package:flutter_contacts/properties/phone.dart';
+import 'package:flutter_contacts/properties/relation.dart';
 import 'package:flutter_contacts/properties/social_media.dart';
 import 'package:flutter_contacts/properties/website.dart';
 
@@ -162,6 +163,11 @@ class VCardParser {
           var email = Email(decode(content));
           _parseLabel(params, labelOverride, _parseEmailLabel, email);
           contact.emails.add(email);
+          break;
+        case 'RELATED':
+          var relation = Relation(decode(content));
+          _parseLabel(params, labelOverride, _parseRelationLabel, relation);
+          contact.relations.add(relation);
           break;
         case 'ADR':
           // Format is ADR:<pobox>;<extended address>;<street>;<locality (city)>;
@@ -507,6 +513,33 @@ void _parseEmailLabel(String label, Email email, bool defaultToCustom) {
       if (defaultToCustom) {
         email.label = EmailLabel.custom;
         email.customLabel = label;
+      }
+  }
+}
+
+/// Note that this is not a symmetric mapping
+/// with `Relation.toVCard()`, e.g. you could say
+/// that a brother is a sibling, but not all
+/// siblings are brothers
+void _parseRelationLabel(
+    String label, Relation relation, bool defaultToCustom) {
+  switch (label.toUpperCase()) {
+    case 'FRIEND':
+      relation.label = RelationLabel.friend;
+      break;
+    case 'CHILD':
+      relation.label = RelationLabel.child;
+      break;
+    case 'PARENT':
+      relation.label = RelationLabel.parent;
+      break;
+    case 'SPOUSE':
+      relation.label = RelationLabel.spouse;
+      break;
+    default:
+      if (defaultToCustom) {
+        relation.label = RelationLabel.custom;
+        relation.customLabel = label;
       }
   }
 }

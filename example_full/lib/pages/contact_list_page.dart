@@ -91,7 +91,7 @@ class _ContactListPageState extends State<ContactListPage>
     if (_permissionDenied) {
       return Center(child: Text('Permission denied'));
     }
-    if (_contacts == null) {
+    if (_contacts.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(

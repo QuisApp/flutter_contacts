@@ -1,6 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/properties/relation.dart';
 import 'package:flutter_contacts_example/pages/form_components/address_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/email_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/event_form.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_contacts_example/pages/form_components/name_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/note_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/organization_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/phone_form.dart';
+import 'package:flutter_contacts_example/pages/form_components/relation_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/social_media_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/website_form.dart';
 import 'package:flutter_contacts_example/util/avatar.dart';
@@ -112,6 +114,7 @@ class _EditContactPageState extends State<EditContactPage>
         _websiteCard(),
         _socialMediaCard(),
         _eventCard(),
+        _relationCard(),
         _noteCard(),
         _groupCard(),
       ];
@@ -325,6 +328,19 @@ class _EditContactPageState extends State<EditContactPage>
         ),
         () => _contact.events = [],
         createAsync: true,
+      );
+
+  Card _relationCard() => _fieldCard(
+        'Relations',
+        _contact.relations,
+        () => _contact.relations = _contact.relations + [Relation('')],
+        (int i, dynamic e) => RelationForm(
+          e,
+          onUpdate: (relation) => _contact.relations[i] = relation,
+          onDelete: () => setState(() => _contact.relations.removeAt(i)),
+          key: UniqueKey(),
+        ),
+        () => _contact.relations = [],
       );
 
   Card _noteCard() => _fieldCard(
