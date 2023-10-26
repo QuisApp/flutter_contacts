@@ -2351,7 +2351,9 @@
     "relations": [
       {"name": "Tony Maloney", "label": "friend", "customLabel": ""},
       {"name": "Arnold Scwartz", "label": "relative", "customLabel": ""},
-      {"name": "Dr John Jøhñ Smith, Jr.", "label": "relative", "customLabel":""}
+      {"name": "Dr John Jøhñ Smith, Jr.", "label": "relative", "customLabel":""},
+      {"name": "Monk", "label": "custom", "customLabel": "Not a relation"},
+      {"name": "Good Sister", "label": "sister", "customLabel": ""}    
     ],
     "notes": [
         {

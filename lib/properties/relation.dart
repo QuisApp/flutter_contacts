@@ -52,6 +52,9 @@ class Relation {
 
     if (FlutterContacts.config.vCardVersion != VCardVersion.v4) {
       // Not supported in v3
+      // TODO could possibly support the ABRELATEDNAMES, e.g.
+      //  item8.X-ABRELATEDNAMES:ABABA
+      //  item8.X-ABLabel:ZZZZZ
       return [];
     }
 
