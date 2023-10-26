@@ -1,6 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/properties/relation.dart';
 import 'package:flutter_contacts_example/pages/form_components/address_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/email_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/event_form.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_contacts_example/pages/form_components/name_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/note_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/organization_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/phone_form.dart';
+import 'package:flutter_contacts_example/pages/form_components/relation_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/social_media_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/website_form.dart';
 import 'package:flutter_contacts_example/util/avatar.dart';
@@ -23,14 +25,14 @@ class _EditContactPageState extends State<EditContactPage>
     with AfterLayoutMixin<EditContactPage> {
   var _contact = Contact();
   bool _isEdit = false;
-  void Function() _onUpdate;
+  void Function()? _onUpdate;
 
   final _imagePicker = ImagePicker();
 
   @override
   void afterFirstLayout(BuildContext context) {
     final args =
-        ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null) {
       setState(() {
         _contact = args['contact'];
@@ -78,7 +80,7 @@ class _EditContactPageState extends State<EditContactPage>
               } else {
                 await _contact.insert();
               }
-              if (_onUpdate != null) _onUpdate();
+              if (_onUpdate != null) _onUpdate!();
               Navigator.of(context).pop();
             },
           ),
@@ -112,12 +114,13 @@ class _EditContactPageState extends State<EditContactPage>
         _websiteCard(),
         _socialMediaCard(),
         _eventCard(),
+        _relationCard(),
         _noteCard(),
         _groupCard(),
       ];
 
   Future _pickPhoto() async {
-    final photo = await _imagePicker.getImage(source: ImageSource.camera);
+    final photo = await _imagePicker.pickImage(source: ImageSource.camera);
     if (photo != null) {
       final bytes = await photo.readAsBytes();
       setState(() {
@@ -150,9 +153,9 @@ class _EditContactPageState extends State<EditContactPage>
   Card _fieldCard(
     String fieldName,
     List<dynamic> fields,
-    /* void | Future<void> */ Function() addField,
+    Function()? addField,
     Widget Function(int, dynamic) formWidget,
-    void Function() clearAllFields, {
+    void Function()? clearAllFields, {
     bool createAsync = false,
   }) {
     var forms = <Widget>[
@@ -162,12 +165,12 @@ class _EditContactPageState extends State<EditContactPage>
     void Function() onPressed;
     if (createAsync) {
       onPressed = () async {
-        await addField();
+        await addField?.call();
         setState(() {});
       };
     } else {
       onPressed = () => setState(() {
-            addField();
+            addField?.call();
           });
     }
     var buttons = <ElevatedButton>[];
@@ -301,7 +304,7 @@ class _EditContactPageState extends State<EditContactPage>
         () => _contact.socialMedias = [],
       );
 
-  Future<DateTime> _selectDate(BuildContext context) async => showDatePicker(
+  Future<DateTime?> _selectDate(BuildContext context) async => showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
@@ -325,6 +328,19 @@ class _EditContactPageState extends State<EditContactPage>
         ),
         () => _contact.events = [],
         createAsync: true,
+      );
+
+  Card _relationCard() => _fieldCard(
+        'Relations',
+        _contact.relations,
+        () => _contact.relations = _contact.relations + [Relation('')],
+        (int i, dynamic e) => RelationForm(
+          e,
+          onUpdate: (relation) => _contact.relations[i] = relation,
+          onDelete: () => setState(() => _contact.relations.removeAt(i)),
+          key: UniqueKey(),
+        ),
+        () => _contact.relations = [],
       );
 
   Card _noteCard() => _fieldCard(
@@ -368,19 +384,19 @@ class _EditContactPageState extends State<EditContactPage>
             SizedBox(width: 24.0),
             Checkbox(
               value: _contact.isStarred,
-              onChanged: (bool isStarred) =>
-                  setState(() => _contact.isStarred = isStarred),
+              onChanged: (isStarred) =>
+                  setState(() => _contact.isStarred = isStarred ?? false),
             ),
           ],
         ),
       );
 
-  Future<Group> _promptGroup({@required List<Group> exclude}) async {
+  Future<Group?> _promptGroup({required List<Group> exclude}) async {
     final excludeIds = exclude.map((x) => x.id).toSet();
     final groups = (await FlutterContacts.getGroups())
         .where((g) => !excludeIds.contains(g.id))
         .toList();
-    Group selectedGroup;
+    Group? selectedGroup;
     await showDialog(
       context: context,
       builder: (BuildContext ctx) => AlertDialog(

@@ -20,6 +20,7 @@ import android.provider.ContactsContract.CommonDataKinds.Note
 import android.provider.ContactsContract.CommonDataKinds.Organization
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.Photo
+import android.provider.ContactsContract.CommonDataKinds.Relation
 import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import android.provider.ContactsContract.CommonDataKinds.Website
@@ -39,6 +40,7 @@ import co.quis.flutter_contacts.properties.Name as PName
 import co.quis.flutter_contacts.properties.Note as PNote
 import co.quis.flutter_contacts.properties.Organization as POrganization
 import co.quis.flutter_contacts.properties.Phone as PPhone
+import co.quis.flutter_contacts.properties.Relation as PRelation
 import co.quis.flutter_contacts.properties.SocialMedia as PSocialMedia
 import co.quis.flutter_contacts.properties.Website as PWebsite
 
@@ -127,6 +129,8 @@ class FlutterContacts {
                         Event.START_DATE,
                         Event.TYPE,
                         Event.LABEL,
+                        Relation.TYPE,
+                        Relation.LABEL,
                         Note.NOTE
                     )
                 )
@@ -382,6 +386,17 @@ class FlutterContacts {
                                 contact.events += event
                             }
                         }
+                        Relation.CONTENT_ITEM_TYPE -> {
+                            val label: String = getRelationLabel(cursor)
+                            val customLabel: String =
+                                if (label == "custom") getRelationCustomLabel(cursor) else ""
+                            val relation = PRelation(
+                                getString(Relation.NAME),
+                                label,
+                                customLabel
+                            )
+                            contact.relations += relation
+                        }
                         Note.CONTENT_ITEM_TYPE -> {
                             val note: String = getString(Note.NOTE)
                             // It seems that every contact has an empty note by default;
@@ -504,7 +519,7 @@ class FlutterContacts {
             ops.add(
                 ContentProviderOperation.newDelete(Data.CONTENT_URI)
                     .withSelection(
-                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE} in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE} in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         arrayOf(
                             contactId,
                             StructuredName.CONTENT_ITEM_TYPE,
@@ -516,6 +531,7 @@ class FlutterContacts {
                             Website.CONTENT_ITEM_TYPE,
                             Im.CONTENT_ITEM_TYPE,
                             Event.CONTENT_ITEM_TYPE,
+                            Relation.CONTENT_ITEM_TYPE,
                             Note.CONTENT_ITEM_TYPE
                         )
                     )
@@ -996,6 +1012,54 @@ class FlutterContacts {
             }
         }
 
+        private fun getRelationLabel(cursor: Cursor): String {
+            val type = cursor.getInt(cursor.getColumnIndex(Relation.TYPE))
+            return when (type) {
+                Relation.TYPE_CUSTOM -> "custom"
+                Relation.TYPE_ASSISTANT -> "assistant"
+                Relation.TYPE_BROTHER -> "brother"
+                Relation.TYPE_CHILD -> "child"
+                Relation.TYPE_DOMESTIC_PARTNER -> "domestic-partner"
+                Relation.TYPE_FATHER -> "father"
+                Relation.TYPE_FRIEND -> "friend"
+                Relation.TYPE_MANAGER -> "manager"
+                Relation.TYPE_MOTHER -> "mother"
+                Relation.TYPE_PARENT -> "parent"
+                Relation.TYPE_PARTNER -> "partner"
+                Relation.TYPE_REFERRED_BY -> "referred-by"
+                Relation.TYPE_RELATIVE -> "relative"
+                Relation.TYPE_SISTER -> "sister"
+                Relation.TYPE_SPOUSE -> "spouse"
+                else -> "relation"
+            }
+        }
+
+        private fun getRelationCustomLabel(cursor: Cursor): String {
+            return cursor.getString(cursor.getColumnIndex(Relation.LABEL)) ?: ""
+        }
+
+        private data class RelationLabelPair(val label: Int, val customLabel: String)
+        private fun getRelationLabelInv(label: String, customLabel: String): RelationLabelPair {
+            return when (label) {
+                 "custom" -> RelationLabelPair(Relation.TYPE_CUSTOM, customLabel)
+                 "assistant" -> RelationLabelPair(Relation.TYPE_ASSISTANT, "")
+                 "brother" -> RelationLabelPair(Relation.TYPE_BROTHER, "")
+                 "child" -> RelationLabelPair(Relation.TYPE_CHILD, "")
+                 "domestic-partner" -> RelationLabelPair(Relation.TYPE_DOMESTIC_PARTNER, "")
+                 "father" -> RelationLabelPair(Relation.TYPE_FATHER, "")
+                 "friend" -> RelationLabelPair(Relation.TYPE_FRIEND, "")
+                 "manager" -> RelationLabelPair(Relation.TYPE_MANAGER, "")
+                 "mother" -> RelationLabelPair(Relation.TYPE_MOTHER, "")
+                 "parent" -> RelationLabelPair(Relation.TYPE_PARENT, "")
+                 "partner" -> RelationLabelPair(Relation.TYPE_PARTNER, "")
+                 "referred-by" -> RelationLabelPair(Relation.TYPE_REFERRED_BY, "")
+                 "relative" -> RelationLabelPair(Relation.TYPE_RELATIVE, "")
+                 "sister" -> RelationLabelPair(Relation.TYPE_SISTER, "")
+                 "spouse" -> RelationLabelPair(Relation.TYPE_SPOUSE, "")
+                else -> RelationLabelPair(Email.TYPE_CUSTOM, label)
+            }
+        }
+
         private fun buildOpsForContact(
             contact: Contact,
             ops: MutableList<ContentProviderOperation>,
@@ -1128,6 +1192,17 @@ class FlutterContacts {
                         .withValue(Event.START_DATE, eventToDate(event))
                         .withValue(Event.TYPE, labelPair.label)
                         .withValue(Event.LABEL, emptyToNull(labelPair.customLabel))
+                        .build()
+                )
+            }
+            for ((i, relation) in contact.relations.withIndex()) {
+                val labelPair: RelationLabelPair = getRelationLabelInv(relation.label, relation.customLabel)
+                ops.add(
+                    newInsert()
+                        .withValue(Data.MIMETYPE, Relation.CONTENT_ITEM_TYPE)
+                        .withValue(Relation.NAME, emptyToNull(relation.name))
+                        .withValue(Relation.TYPE, labelPair.label)
+                        .withValue(Relation.LABEL, emptyToNull(labelPair.customLabel))
                         .build()
                 )
             }

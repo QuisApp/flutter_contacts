@@ -6,7 +6,6 @@ buildscript {
     ext.kotlin_coroutines_version = '1.6.4'
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 
@@ -19,7 +18,6 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 }

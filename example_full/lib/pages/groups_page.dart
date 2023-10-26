@@ -10,7 +10,7 @@ class GroupsPage extends StatefulWidget {
 
 class _GroupsPageState extends State<GroupsPage>
     with AfterLayoutMixin<GroupsPage> {
-  List<Group> _groups;
+  List<Group> _groups = [];
 
   @override
   void afterFirstLayout(BuildContext context) {
@@ -35,7 +35,7 @@ class _GroupsPageState extends State<GroupsPage>
       );
 
   Widget _body() {
-    if (_groups == null) {
+    if (_groups.isEmpty) {
       return Center(child: CircularProgressIndicator());
     }
     return ListView.builder(
@@ -64,8 +64,8 @@ class _GroupsPageState extends State<GroupsPage>
 
   Future<void> _newGroup() async {
     final name = await prompt(context);
-    if (name.isNotEmpty) {
-      final group = await FlutterContacts.insertGroup(Group('', name));
+    if (name?.isNotEmpty == true) {
+      final group = await FlutterContacts.insertGroup(Group('', name!));
       print('Inserted group $group');
       await _fetchGroups();
     }
@@ -73,9 +73,9 @@ class _GroupsPageState extends State<GroupsPage>
 
   Future<void> _renameGroup(Group group) async {
     final name = await prompt(context, initialValue: group.name);
-    if (name.isNotEmpty) {
+    if (name?.isNotEmpty == true) {
       final updatedGroup =
-          await FlutterContacts.updateGroup(Group(group.id, name));
+          await FlutterContacts.updateGroup(Group(group.id, name!));
       print('Updated group $updatedGroup');
       await _fetchGroups();
     }

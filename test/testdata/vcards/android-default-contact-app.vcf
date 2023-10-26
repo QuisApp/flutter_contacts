@@ -70,4 +70,10 @@ X-QQ:@qq
 X-GOOGLE-TALK:@hangouts
 X-ICQ:@icq
 X-JABBER:@jabber
+RELATED;TYPE=friend;VALUE=text:Tony Maloney
+RELATED:Arnold Scwartz
+RELATED;TYPE=me;ENCODING=QUOTED-PRINTABLE:=44=72=20=4A=6F=68=6E=20=4A=C3=B8=68=C3=B1=20=53=6D=69=74=68=2C=20=4A=
+=72=2E
+X-ANDROID-CUSTOM:vnd.android.cursor.item/relation;Monk;0;Not a relation;;;;;;;;;;;;
+X-ANDROID-CUSTOM:vnd.android.cursor.item/relation;Good Sister;13;;;;;;;;;;;;;
 END:VCARD

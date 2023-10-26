@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_contacts/config.dart';
+import 'package:flutter_contacts/properties/relation.dart';
 import 'package:flutter_contacts/vcard.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
@@ -111,6 +112,9 @@ class Contact {
   /// Notes.
   List<Note> notes;
 
+  /// Relations.
+  List<Relation> relations;
+
   /// Raw accounts (Android only).
   List<Account> accounts;
 
@@ -143,6 +147,7 @@ class Contact {
     List<Website>? websites,
     List<SocialMedia>? socialMedias,
     List<Event>? events,
+    List<Relation>? relations,
     List<Note>? notes,
     List<Account>? accounts,
     List<Group>? groups,
@@ -154,6 +159,7 @@ class Contact {
         websites = websites ?? <Website>[],
         socialMedias = socialMedias ?? <SocialMedia>[],
         events = events ?? <Event>[],
+        relations = relations ?? <Relation>[],
         notes = notes ?? <Note>[],
         accounts = accounts ?? <Account>[],
         groups = groups ?? <Group>[];
@@ -186,6 +192,9 @@ class Contact {
         events: ((json['events'] as List?) ?? [])
             .map((x) => Event.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
+        relations: ((json['relations'] as List?) ?? [])
+            .map((x) => Relation.fromJson(Map<String, dynamic>.from(x)))
+            .toList(),
         notes: ((json['notes'] as List?) ?? [])
             .map((x) => Note.fromJson(Map<String, dynamic>.from(x)))
             .toList(),
@@ -215,6 +224,7 @@ class Contact {
         'websites': websites.map((x) => x.toJson()).toList(),
         'socialMedias': socialMedias.map((x) => x.toJson()).toList(),
         'events': events.map((x) => x.toJson()).toList(),
+        'relations': relations.map((x) => x.toJson()).toList(),
         'notes': notes.map((x) => x.toJson()).toList(),
         'accounts': accounts.map((x) => x.toJson()).toList(),
         'groups': groups.map((x) => x.toJson()).toList(),
@@ -235,6 +245,7 @@ class Contact {
       _listHashCode(websites) ^
       _listHashCode(socialMedias) ^
       _listHashCode(events) ^
+      _listHashCode(relations) ^
       _listHashCode(notes);
 
   @override
@@ -253,6 +264,7 @@ class Contact {
       _listEqual(o.websites, websites) &&
       _listEqual(o.socialMedias, socialMedias) &&
       _listEqual(o.events, events) &&
+      _listEqual(o.relations, relations) &&
       _listEqual(o.notes, notes);
 
   @override
@@ -261,7 +273,7 @@ class Contact {
       'photo=$photo, isStarred=$isStarred, name=$name, phones=$phones, '
       'emails=$emails, addresses=$addresses, organizations=$organizations, '
       'websites=$websites, socialMedias=$socialMedias, events=$events, '
-      'notes=$notes, accounts=$accounts, groups=$groups)';
+      'relations=$relations, notes=$notes, accounts=$accounts, groups=$groups)';
 
   /// Inserts the contact into the database.
   Future<Contact> insert() => FlutterContacts.insertContact(this);
@@ -332,6 +344,7 @@ class Contact {
       websites.map((x) => x.toVCard()).expand((x) => x),
       socialMedias.map((x) => x.toVCard()).expand((x) => x),
       events.map((x) => x.toVCard()).expand((x) => x),
+      relations.map((x) => x.toVCard()).expand((x) => x),
       notes.map((x) => x.toVCard()).expand((x) => x),
     ].expand((x) => x));
     lines.add('END:VCARD');
@@ -361,6 +374,7 @@ class Contact {
     websites = _depuplicateProperty(websites);
     socialMedias = _depuplicateProperty(socialMedias);
     events = _depuplicateProperty(events);
+    relations = _depuplicateProperty(relations);
     notes = _depuplicateProperty(notes);
   }
 

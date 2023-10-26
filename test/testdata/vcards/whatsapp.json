@@ -2317,6 +2317,18 @@
             "customLabel": ""
         }
     ],
+    "relations": [
+        {
+            "name": "Curly",
+            "label": "custom",
+            "customLabel": "Father"
+        },
+        {
+            "name": "Carlita",
+            "label": "spouse",
+            "customLabel": ""
+        }
+    ],
     "notes": [],
     "accounts": [],
     "groups": []

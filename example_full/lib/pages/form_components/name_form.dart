@@ -7,8 +7,8 @@ class NameForm extends StatefulWidget {
 
   NameForm(
     this.name, {
-    @required this.onUpdate,
-    Key key,
+    required this.onUpdate,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -18,15 +18,15 @@ class NameForm extends StatefulWidget {
 class _NameFormState extends State<NameForm> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController _firstController;
-  TextEditingController _lastController;
-  TextEditingController _middleController;
-  TextEditingController _prefixController;
-  TextEditingController _suffixController;
-  TextEditingController _nicknameController;
-  TextEditingController _firstPhoneticController;
-  TextEditingController _lastPhoneticController;
-  TextEditingController _middlePhoneticController;
+  late TextEditingController _firstController;
+  late TextEditingController _lastController;
+  late TextEditingController _middleController;
+  late TextEditingController _prefixController;
+  late TextEditingController _suffixController;
+  late TextEditingController _nicknameController;
+  late TextEditingController _firstPhoneticController;
+  late TextEditingController _lastPhoneticController;
+  late TextEditingController _middlePhoneticController;
 
   @override
   void initState() {

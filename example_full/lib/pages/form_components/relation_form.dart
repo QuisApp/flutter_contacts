@@ -1,50 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/properties/social_media.dart';
+import 'package:flutter_contacts/properties/relation.dart';
 
-class SocialMediaForm extends StatefulWidget {
-  final SocialMedia socialMedia;
-  final void Function(SocialMedia) onUpdate;
+class RelationForm extends StatefulWidget {
+  final Relation relation;
+  final void Function(Relation) onUpdate;
   final void Function() onDelete;
 
-  SocialMediaForm(
-    this.socialMedia, {
+  RelationForm(
+    this.relation, {
     required this.onUpdate,
     required this.onDelete,
     Key? key,
   }) : super(key: key);
 
   @override
-  _SocialMediaFormState createState() => _SocialMediaFormState();
+  _RelationFormState createState() => _RelationFormState();
 }
 
-class _SocialMediaFormState extends State<SocialMediaForm> {
+class _RelationFormState extends State<RelationForm> {
   final _formKey = GlobalKey<FormState>();
-  static final _validLabels = SocialMediaLabel.values;
+  static final _validLabels = RelationLabel.values;
 
-  late TextEditingController _userNameController;
-  SocialMediaLabel? _label;
+  late TextEditingController _nameController;
+  RelationLabel? _label;
   late TextEditingController _customLabelController;
 
   @override
   void initState() {
     super.initState();
-    _userNameController =
-        TextEditingController(text: widget.socialMedia.userName);
-    _label = widget.socialMedia.label;
+    _nameController = TextEditingController(text: widget.relation.name);
+    _label = widget.relation.label;
     _customLabelController =
-        TextEditingController(text: widget.socialMedia.customLabel);
+        TextEditingController(text: widget.relation.customLabel);
   }
 
   void _onChanged() {
     if (_label != null) {
-      final socialMedia = SocialMedia(
-        _userNameController.text,
+      final email = Relation(
+        _nameController.text,
         label: _label!,
-        customLabel: _label == SocialMediaLabel.custom
-            ? _customLabelController.text
-            : '',
+        customLabel:
+            _label == RelationLabel.custom ? _customLabelController.text : '',
       );
-      widget.onUpdate(socialMedia);
+      widget.onUpdate(email);
     }
   }
 
@@ -64,14 +62,14 @@ class _SocialMediaFormState extends State<SocialMediaForm> {
           child: Column(
             children: [
               TextFormField(
-                controller: _userNameController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(hintText: 'User name'),
+                controller: _nameController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(hintText: 'Name'),
               ),
               DropdownButtonFormField(
                 isExpanded: true, // to avoid overflow
                 items: _validLabels
-                    .map((e) => DropdownMenuItem<SocialMediaLabel>(
+                    .map((e) => DropdownMenuItem<RelationLabel>(
                         value: e, child: Text(e.toString())))
                     .toList(),
                 value: _label,
@@ -86,7 +84,7 @@ class _SocialMediaFormState extends State<SocialMediaForm> {
                   _onChanged();
                 },
               ),
-              _label == SocialMediaLabel.custom
+              _label == RelationLabel.custom
                   ? TextFormField(
                       controller: _customLabelController,
                       textCapitalization: TextCapitalization.sentences,
