@@ -15,6 +15,7 @@ struct Contact {
     var websites: [Website] = []
     var socialMedias: [SocialMedia] = []
     var events: [Event] = []
+    var relations: [Relation] = []
     var notes: [Note] = []
     var accounts: [Account] = []
     var groups: [Group] = []
@@ -36,6 +37,7 @@ struct Contact {
             SocialMedia(fromMap: $0)
         }
         events = (m["events"] as! [[String: Any?]]).map { Event(fromMap: $0) }
+        relations = (m["relations"] as! [[String: Any]]).map { Relation(fromMap: $0) }
         notes = (m["notes"] as! [[String: Any]]).map { Note(fromMap: $0) }
         accounts = (m["accounts"] as! [[String: Any]]).map { Account(fromMap: $0) }
         groups = (m["groups"] as! [[String: Any]]).map { Group(fromMap: $0) }
@@ -74,6 +76,7 @@ struct Contact {
                 events = [Event(fromContact: c)]
             }
             events += c.dates.map { Event(fromDate: $0) }
+            relations += c.contactRelations.map { Relation(fromRelation: $0) }
             // Notes need entitlements to be accessed in iOS 13+.
             // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
             if c.isKeyAvailable(CNContactNoteKey) {
@@ -102,6 +105,7 @@ struct Contact {
         "websites": websites.map { $0.toMap() },
         "socialMedias": socialMedias.map { $0.toMap() },
         "events": events.map { $0.toMap() },
+        "relations": relations.map { $0.toMap() },
         "notes": notes.map { $0.toMap() },
         "accounts": accounts.map { $0.toMap() },
         "groups": groups.map { $0.toMap() },
