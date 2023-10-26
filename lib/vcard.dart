@@ -165,6 +165,7 @@ class VCardParser {
           contact.emails.add(email);
           break;
         case 'RELATED':
+        case 'X-ABRELATEDNAMES':
           var relation = Relation(decode(content));
           _parseLabel(params, labelOverride, _parseRelationLabel, relation);
           contact.relations.add(relation);

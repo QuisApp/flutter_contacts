@@ -20,6 +20,10 @@ item6.ADR;type=Home:;;123 Main St;Portland;TN;37148;USA
 item6.X-ABADR:
 item7.ADR;type=Work:;;1600 Amphitheatre Pkwy Mountain View CA 94043 USA;;;;
 item7.X-ABADR:ac
+item8.X-ABRELATEDNAMES:Curly
+item8.X-ABLabel:_$!<Father>!$_
+item9.X-ABRELATEDNAMES:Carlita
+item9.X-ABLabel:_$!<spouse>!$_
 BDAY;value=date:1983-02-23
 X-JABBER;type=CUSTOM:@jabber
 X-YAHOO;type=WORK:@yahoo
