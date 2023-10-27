@@ -428,7 +428,7 @@ class FlutterContacts {
                                 getString(RawContactsEntity.DATA2))
                         }
                         else -> {
-                            Log.d("CONTACTS", "MIMETYPE: " + mimetype
+                            Log.d("FLUTTER_CONTACTS", "Unhandled MIMETYPE: " + mimetype
                                     + ", DATA1: " + getString(RawContactsEntity.DATA1)
                                     + ", DATA2: " + getString(RawContactsEntity.DATA2)
                             )
