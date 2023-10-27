@@ -29,7 +29,6 @@ import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.Groups
 import android.provider.ContactsContract.RawContacts
 import android.provider.ContactsContract.RawContactsEntity
-import android.util.Log
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.io.OutputStream
@@ -426,12 +425,6 @@ class FlutterContacts {
                             contact.customFields += PCustomField(
                                 getString(RawContactsEntity.DATA1),
                                 getString(RawContactsEntity.DATA2))
-                        }
-                        else -> {
-                            Log.d("FLUTTER_CONTACTS", "Unhandled MIMETYPE: " + mimetype
-                                    + ", DATA1: " + getString(RawContactsEntity.DATA1)
-                                    + ", DATA2: " + getString(RawContactsEntity.DATA2)
-                            )
                         }
                     }
                 }
