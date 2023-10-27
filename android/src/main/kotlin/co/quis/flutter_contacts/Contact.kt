@@ -2,6 +2,7 @@ package co.quis.flutter_contacts
 
 import co.quis.flutter_contacts.properties.Account
 import co.quis.flutter_contacts.properties.Address
+import co.quis.flutter_contacts.properties.CustomField
 import co.quis.flutter_contacts.properties.Email
 import co.quis.flutter_contacts.properties.Event
 import co.quis.flutter_contacts.properties.Group
@@ -9,6 +10,7 @@ import co.quis.flutter_contacts.properties.Name
 import co.quis.flutter_contacts.properties.Note
 import co.quis.flutter_contacts.properties.Organization
 import co.quis.flutter_contacts.properties.Phone
+import co.quis.flutter_contacts.properties.Relation
 import co.quis.flutter_contacts.properties.SocialMedia
 import co.quis.flutter_contacts.properties.Website
 
@@ -26,9 +28,11 @@ data class Contact(
     var websites: List<Website> = listOf(),
     var socialMedias: List<SocialMedia> = listOf(),
     var events: List<Event> = listOf(),
+    var relations: List<Relation> = listOf(),
     var notes: List<Note> = listOf(),
     var accounts: List<Account> = listOf(),
-    var groups: List<Group> = listOf()
+    var groups: List<Group> = listOf(),
+    var customFields: List<CustomField> = listOf()
 ) {
     companion object {
         fun fromMap(m: Map<String, Any?>): Contact {
@@ -46,9 +50,11 @@ data class Contact(
                 (m["websites"] as List<Map<String, Any>>).map { Website.fromMap(it) },
                 (m["socialMedias"] as List<Map<String, Any>>).map { SocialMedia.fromMap(it) },
                 (m["events"] as List<Map<String, Any?>>).map { Event.fromMap(it) },
+                (m["relations"] as List<Map<String, Any>>).map { Relation.fromMap(it) },
                 (m["notes"] as List<Map<String, Any>>).map { Note.fromMap(it) },
                 (m["accounts"] as List<Map<String, Any>>).map { Account.fromMap(it) },
-                (m["groups"] as List<Map<String, Any>>).map { Group.fromMap(it) }
+                (m["groups"] as List<Map<String, Any>>).map { Group.fromMap(it) },
+                (m["customFields"] as List<Map<String, Any>>).map { CustomField.fromMap(it) }
             )
         }
     }
@@ -67,8 +73,10 @@ data class Contact(
         "websites" to websites.map { it.toMap() },
         "socialMedias" to socialMedias.map { it.toMap() },
         "events" to events.map { it.toMap() },
+        "relations" to relations.map { it.toMap() },
         "notes" to notes.map { it.toMap() },
         "accounts" to accounts.map { it.toMap() },
-        "groups" to groups.map { it.toMap() }
+        "groups" to groups.map { it.toMap() },
+        "customFields" to customFields.map { it.toMap() }
     )
 }

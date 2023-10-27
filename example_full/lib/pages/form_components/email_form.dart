@@ -8,9 +8,9 @@ class EmailForm extends StatefulWidget {
 
   EmailForm(
     this.email, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -21,9 +21,9 @@ class _EmailFormState extends State<EmailForm> {
   final _formKey = GlobalKey<FormState>();
   static final _validLabels = EmailLabel.values;
 
-  TextEditingController _addressController;
-  EmailLabel _label;
-  TextEditingController _customLabelController;
+  late TextEditingController _addressController;
+  EmailLabel? _label;
+  late TextEditingController _customLabelController;
 
   @override
   void initState() {
@@ -35,13 +35,15 @@ class _EmailFormState extends State<EmailForm> {
   }
 
   void _onChanged() {
-    final email = Email(
-      _addressController.text,
-      label: _label,
-      customLabel:
-          _label == EmailLabel.custom ? _customLabelController.text : '',
-    );
-    widget.onUpdate(email);
+    if (_label != null) {
+      final email = Email(
+        _addressController.text,
+        label: _label!,
+        customLabel:
+            _label == EmailLabel.custom ? _customLabelController.text : '',
+      );
+      widget.onUpdate(email);
+    }
   }
 
   @override

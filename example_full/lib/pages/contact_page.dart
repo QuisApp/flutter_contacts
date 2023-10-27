@@ -11,11 +11,11 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage>
     with AfterLayoutMixin<ContactPage> {
-  Contact _contact;
+  Contact? _contact;
 
   @override
   void afterFirstLayout(BuildContext context) {
-    final contact = ModalRoute.of(context).settings.arguments as Contact;
+    final contact = ModalRoute.of(context)?.settings.arguments as Contact?;
     setState(() {
       _contact = contact;
     });
@@ -30,17 +30,19 @@ class _ContactPageState extends State<ContactPage>
     await _fetchContactWith(highRes: true);
   }
 
-  Future _fetchContactWith({@required bool highRes}) async {
-    final contact = await FlutterContacts.getContact(
-      _contact.id,
-      withThumbnail: !highRes,
-      withPhoto: highRes,
-      withGroups: true,
-      withAccounts: true,
-    );
-    setState(() {
-      _contact = contact;
-    });
+  Future _fetchContactWith({required bool highRes}) async {
+    if (_contact != null) {
+      final contact = await FlutterContacts.getContact(
+        _contact!.id,
+        withThumbnail: !highRes,
+        withPhoto: highRes,
+        withGroups: true,
+        withAccounts: true,
+      );
+      setState(() {
+        _contact = contact;
+      });
+    }
   }
 
   @override
@@ -55,8 +57,10 @@ class _ContactPageState extends State<ContactPage>
               await showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  content: Text(prettyJson(
-                      _contact.toJson(withPhoto: false, withThumbnail: false))),
+                  content: SingleChildScrollView(
+                    child: Text(prettyJson(_contact?.toJson(
+                        withPhoto: false, withThumbnail: false))),
+                  ),
                 ),
               );
             },
@@ -68,7 +72,9 @@ class _ContactPageState extends State<ContactPage>
                 context: context,
                 builder: (_) => AlertDialog(
                   content: Text(
-                      _contact.toVCard(withPhoto: false, includeDate: true)),
+                    _contact?.toVCard(withPhoto: false, includeDate: true) ??
+                        '',
+                  ),
                 ),
               );
             },
@@ -101,8 +107,8 @@ class _ContactPageState extends State<ContactPage>
     );
   }
 
-  Widget _body(Contact contact) {
-    if (_contact?.name == null) {
+  Widget _body(Contact? contact) {
+    if (contact == null) {
       return Center(child: CircularProgressIndicator());
     }
     return SingleChildScrollView(
@@ -215,6 +221,23 @@ class _ContactPageState extends State<ContactPage>
                     Text('Custom label: ${x.customLabel}'),
                   ]),
           _makeCard(
+              'Relations',
+              contact.relations,
+              (x) => [
+                    Divider(),
+                    Text('Name: ${x.name}'),
+                    Text('Label: ${x.label}'),
+                    Text('Custom label: ${x.customLabel}'),
+                  ]),
+          _makeCard(
+              'Custom Fields',
+              contact.customFields,
+              (x) => [
+                    Divider(),
+                    Text('Name: ${x.name}'),
+                    Text('Label: ${x.label}'),
+                  ]),
+          _makeCard(
               'Notes',
               contact.notes,
               (x) => [
@@ -253,7 +276,7 @@ class _ContactPageState extends State<ContactPage>
   }
 
   String _formatDate(Event e) =>
-      '${e.year?.toString()?.padLeft(4, '0') ?? '--'}/'
+      '${e.year?.toString().padLeft(4, '0') ?? '--'}/'
       '${e.month.toString().padLeft(2, '0')}/'
       '${e.day.toString().padLeft(2, '0')}';
 
@@ -266,7 +289,7 @@ class _ContactPageState extends State<ContactPage>
   Card _makeCard(
       String title, List fields, List<Widget> Function(dynamic) mapper) {
     var elements = <Widget>[];
-    fields?.forEach((field) => elements.addAll(mapper(field)));
+    fields.forEach((field) => elements.addAll(mapper(field)));
     return Card(
       child: Padding(
         padding: EdgeInsets.all(8),
@@ -282,13 +305,15 @@ class _ContactPageState extends State<ContactPage>
   }
 
   Future<void> _handleOverflowSelected(String choice) async {
-    if (choice == 'Delete contact') {
-      await _contact.delete();
-      Navigator.of(context).pop();
-    } else if (choice == 'External view') {
-      await FlutterContacts.openExternalView(_contact.id);
-    } else if (choice == 'External edit') {
-      await FlutterContacts.openExternalEdit(_contact.id);
+    if (_contact != null) {
+      if (choice == 'Delete contact') {
+        await _contact!.delete();
+        Navigator.of(context).pop();
+      } else if (choice == 'External view') {
+        await FlutterContacts.openExternalView(_contact!.id);
+      } else if (choice == 'External edit') {
+        await FlutterContacts.openExternalEdit(_contact!.id);
+      }
     }
   }
 }

@@ -594,6 +594,8 @@
             "customLabel": ""
         }
     ],
+    "relations": [],
+    "customFields": [],
     "notes": [
         {
             "note": "Some notes"

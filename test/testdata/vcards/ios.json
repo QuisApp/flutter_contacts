@@ -766,6 +766,13 @@
             "customLabel": "Custom Event Date"
         }
     ],
+    "relations": [
+        {
+            "name": "Mom",
+            "label": "custom", "customLabel": "Mother"
+        }
+    ],
+    "customFields": [],
     "notes": [],
     "accounts": [],
     "groups": []

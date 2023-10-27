@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/config.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 import 'pages/contact_list_page.dart';
 import 'pages/contact_page.dart';
 import 'pages/edit_contact_page.dart';
 import 'pages/groups_page.dart';
 
-void main() => runApp(FlutterContactsExample());
+void main() {
+  FlutterContacts.config.vCardVersion = VCardVersion.v4;
+  runApp(FlutterContactsExample());
+}
 
 class FlutterContactsExample extends StatelessWidget {
   @override

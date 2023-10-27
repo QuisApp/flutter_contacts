@@ -8,9 +8,9 @@ class PhoneForm extends StatefulWidget {
 
   PhoneForm(
     this.phone, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -21,9 +21,9 @@ class _PhoneFormState extends State<PhoneForm> {
   final _formKey = GlobalKey<FormState>();
   static final _validLabels = PhoneLabel.values;
 
-  TextEditingController _numberController;
-  PhoneLabel _label;
-  TextEditingController _customLabelController;
+  late TextEditingController _numberController;
+  PhoneLabel? _label;
+  late TextEditingController _customLabelController;
 
   @override
   void initState() {
@@ -35,11 +35,13 @@ class _PhoneFormState extends State<PhoneForm> {
   }
 
   void _onChanged() {
-    final phone = Phone(_numberController.text,
-        label: _label,
-        customLabel:
-            _label == PhoneLabel.custom ? _customLabelController.text : '');
-    widget.onUpdate(phone);
+    if (_label != null) {
+      final phone = Phone(_numberController.text,
+          label: _label!,
+          customLabel:
+              _label == PhoneLabel.custom ? _customLabelController.text : '');
+      widget.onUpdate(phone);
+    }
   }
 
   @override

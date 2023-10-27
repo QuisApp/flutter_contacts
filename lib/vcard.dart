@@ -7,6 +7,7 @@ import 'package:flutter_contacts/properties/event.dart';
 import 'package:flutter_contacts/properties/note.dart';
 import 'package:flutter_contacts/properties/organization.dart';
 import 'package:flutter_contacts/properties/phone.dart';
+import 'package:flutter_contacts/properties/relation.dart';
 import 'package:flutter_contacts/properties/social_media.dart';
 import 'package:flutter_contacts/properties/website.dart';
 
@@ -44,10 +45,10 @@ class VCardParser {
 
   String unfold(String s) => s
       // https://tools.ietf.org/html/rfc2425#section-5.8.1
-      .replaceAll(RegExp(r'\n[ \t]'), '')
+      .replaceAll(RegExp(r'(\r\n|\n)[ \t]'), '')
       // Quoted-encoded contents are sometimes split on multiple lines ending and
       // starting with '='.
-      .replaceAll(RegExp(r'=\n='), '=');
+      .replaceAll(RegExp(r'=(\r\n|\n)='), '=');
 
   void parse(String content, Contact contact) {
     var lines = encode(unfold(content)).split('\n').map((String x) => x.trim());
@@ -162,6 +163,12 @@ class VCardParser {
           var email = Email(decode(content));
           _parseLabel(params, labelOverride, _parseEmailLabel, email);
           contact.emails.add(email);
+          break;
+        case 'RELATED':
+        case 'X-ABRELATEDNAMES':
+          var relation = Relation(decode(content));
+          _parseLabel(params, labelOverride, _parseRelationLabel, relation);
+          contact.relations.add(relation);
           break;
         case 'ADR':
           // Format is ADR:<pobox>;<extended address>;<street>;<locality (city)>;
@@ -286,6 +293,8 @@ class VCardParser {
           // X-ANDROID-CUSTOM:vnd.android.cursor.item/contact_event;2017-09-23;0;Custom;;;;;;;;;;;;
           // and nicknames as
           // X-ANDROID-CUSTOM:vnd.android.cursor.item/nickname;Nick;1;;;;;;;;;;;;;
+          // and relations as
+          // X-ANDROID-CUSTOM:vnd.android.cursor.item/relation;Monk;0;Not a relation;;;;;;;;;;;;
           final contentParts = content.split(';');
           final n = contentParts.length;
           if (n < 2) {
@@ -308,6 +317,16 @@ class VCardParser {
               break;
             case 'vnd.android.cursor.item/nickname':
               contact.name.nickname = decode(contentParts[1]);
+              break;
+            case 'vnd.android.cursor.item/relation':
+              final name = decode(contentParts[1]);
+              final labelStr = n >= 3 ? contentParts[2] : '';
+              final customLabelStr = n >= 4 ? contentParts[3] : '';
+              contact.relations.add(_parseAndroidRelation(
+                name,
+                labelStr,
+                customLabelStr,
+              ));
               break;
           }
           break;
@@ -511,6 +530,33 @@ void _parseEmailLabel(String label, Email email, bool defaultToCustom) {
   }
 }
 
+/// Note that this is not a symmetric mapping
+/// with `Relation.toVCard()`, e.g. you could say
+/// that a brother is a sibling, but not all
+/// siblings are brothers
+void _parseRelationLabel(
+    String label, Relation relation, bool defaultToCustom) {
+  switch (label.toUpperCase()) {
+    case 'FRIEND':
+      relation.label = RelationLabel.friend;
+      break;
+    case 'CHILD':
+      relation.label = RelationLabel.child;
+      break;
+    case 'PARENT':
+      relation.label = RelationLabel.parent;
+      break;
+    case 'SPOUSE':
+      relation.label = RelationLabel.spouse;
+      break;
+    default:
+      if (defaultToCustom) {
+        relation.label = RelationLabel.custom;
+        relation.customLabel = label;
+      }
+  }
+}
+
 void _parseAddressLabel(String label, Address address, bool defaultToCustom) {
   switch (label.toUpperCase()) {
     case 'HOME':
@@ -595,4 +641,61 @@ void _parseLabel<T>(
       }
     }
   }
+}
+
+Relation _parseAndroidRelation(
+  String name,
+  String labelStr,
+  String customLabelStr,
+) {
+  late final RelationLabel label;
+  switch (labelStr) {
+    case '1':
+      label = RelationLabel.assistant;
+      break;
+    case '2':
+      label = RelationLabel.brother;
+      break;
+    case '3':
+      label = RelationLabel.child;
+      break;
+    case '4':
+      label = RelationLabel.domesticPartner;
+      break;
+    case '5':
+      label = RelationLabel.father;
+      break;
+    case '6':
+      label = RelationLabel.friend;
+      break;
+    case '7':
+      label = RelationLabel.manager;
+      break;
+    case '8':
+      label = RelationLabel.mother;
+      break;
+    case '9':
+      label = RelationLabel.parent;
+      break;
+    case '10':
+      label = RelationLabel.partner;
+      break;
+    case '11':
+      label = RelationLabel.referredBy;
+      break;
+    case '12':
+      label = RelationLabel.relative;
+      break;
+    case '13':
+      label = RelationLabel.sister;
+      break;
+    case '14':
+      label = RelationLabel.spouse;
+      break;
+    default:
+      label = RelationLabel.custom;
+      break;
+  }
+
+  return Relation(name, label: label, customLabel: customLabelStr);
 }

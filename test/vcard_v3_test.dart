@@ -102,6 +102,12 @@ final _complexContact = {
       'customLabel': '',
     },
   ],
+  'customFields': [
+    {
+      'name': 'A name',
+      'label': 'A label',
+    }
+  ],
   'notes': [
     {
       'note': 'Some notes about the contact',
@@ -159,6 +165,7 @@ void main() {
           'URL:http://www.example.com/contact',
           'IMPP:twitter:@contact',
           'BDAY:0000-07-23',
+          'NOTE:A label: A name',
           'NOTE:Some notes about the contact',
           'END:VCARD',
         ].join('\n'));

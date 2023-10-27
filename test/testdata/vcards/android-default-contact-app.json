@@ -2348,6 +2348,14 @@
             "customLabel": ""
         }
     ],
+    "relations": [
+      {"name": "Tony Maloney", "label": "friend", "customLabel": ""},
+      {"name": "Arnold Scwartz", "label": "relative", "customLabel": ""},
+      {"name": "Dr John Jøhñ Smith, Jr.", "label": "relative", "customLabel":""},
+      {"name": "Monk", "label": "custom", "customLabel": "Not a relation"},
+      {"name": "Good Sister", "label": "sister", "customLabel": ""}    
+    ],
+    "customFields": [],
     "notes": [
         {
             "note": "Notes line 1\nNotes line 2\nNotes line 3"
