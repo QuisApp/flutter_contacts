@@ -2355,6 +2355,7 @@
       {"name": "Monk", "label": "custom", "customLabel": "Not a relation"},
       {"name": "Good Sister", "label": "sister", "customLabel": ""}    
     ],
+    "customFields": [],
     "notes": [
         {
             "note": "Notes line 1\nNotes line 2\nNotes line 3"

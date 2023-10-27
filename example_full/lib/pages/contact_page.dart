@@ -230,6 +230,14 @@ class _ContactPageState extends State<ContactPage>
                     Text('Custom label: ${x.customLabel}'),
                   ]),
           _makeCard(
+              'Custom Fields',
+              contact.customFields,
+              (x) => [
+                    Divider(),
+                    Text('Name: ${x.name}'),
+                    Text('Label: ${x.label}'),
+                  ]),
+          _makeCard(
               'Notes',
               contact.notes,
               (x) => [

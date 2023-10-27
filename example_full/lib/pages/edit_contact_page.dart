@@ -1,8 +1,8 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:flutter_contacts/properties/relation.dart';
 import 'package:flutter_contacts_example/pages/form_components/address_form.dart';
+import 'package:flutter_contacts_example/pages/form_components/custom_field_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/email_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/event_form.dart';
 import 'package:flutter_contacts_example/pages/form_components/name_form.dart';
@@ -54,8 +54,10 @@ class _EditContactPageState extends State<EditContactPage>
               await showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  content: Text(prettyJson(
-                      _contact.toJson(withPhoto: false, withThumbnail: false))),
+                  content: SingleChildScrollView(
+                    child: Text(prettyJson(_contact.toJson(
+                        withPhoto: false, withThumbnail: false))),
+                  ),
                 ),
               );
             },
@@ -115,6 +117,7 @@ class _EditContactPageState extends State<EditContactPage>
         _socialMediaCard(),
         _eventCard(),
         _relationCard(),
+        _customFieldCard(),
         _noteCard(),
         _groupCard(),
       ];
@@ -341,6 +344,20 @@ class _EditContactPageState extends State<EditContactPage>
           key: UniqueKey(),
         ),
         () => _contact.relations = [],
+      );
+
+  Card _customFieldCard() => _fieldCard(
+        'Custom Fields',
+        _contact.customFields,
+        () => _contact.customFields =
+            _contact.customFields + [CustomField('', '')],
+        (int i, dynamic e) => CustomFieldForm(
+          e,
+          onUpdate: (customField) => _contact.customFields[i] = customField,
+          onDelete: () => setState(() => _contact.customFields.removeAt(i)),
+          key: UniqueKey(),
+        ),
+        () => _contact.customFields = [],
       );
 
   Card _noteCard() => _fieldCard(

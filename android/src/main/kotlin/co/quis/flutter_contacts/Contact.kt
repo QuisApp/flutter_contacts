@@ -2,6 +2,7 @@ package co.quis.flutter_contacts
 
 import co.quis.flutter_contacts.properties.Account
 import co.quis.flutter_contacts.properties.Address
+import co.quis.flutter_contacts.properties.CustomField
 import co.quis.flutter_contacts.properties.Email
 import co.quis.flutter_contacts.properties.Event
 import co.quis.flutter_contacts.properties.Group
@@ -30,7 +31,8 @@ data class Contact(
     var relations: List<Relation> = listOf(),
     var notes: List<Note> = listOf(),
     var accounts: List<Account> = listOf(),
-    var groups: List<Group> = listOf()
+    var groups: List<Group> = listOf(),
+    var customFields: List<CustomField> = listOf()
 ) {
     companion object {
         fun fromMap(m: Map<String, Any?>): Contact {
@@ -51,7 +53,8 @@ data class Contact(
                 (m["relations"] as List<Map<String, Any>>).map { Relation.fromMap(it) },
                 (m["notes"] as List<Map<String, Any>>).map { Note.fromMap(it) },
                 (m["accounts"] as List<Map<String, Any>>).map { Account.fromMap(it) },
-                (m["groups"] as List<Map<String, Any>>).map { Group.fromMap(it) }
+                (m["groups"] as List<Map<String, Any>>).map { Group.fromMap(it) },
+                (m["customFields"] as List<Map<String, Any>>).map { CustomField.fromMap(it) }
             )
         }
     }
@@ -73,6 +76,7 @@ data class Contact(
         "relations" to relations.map { it.toMap() },
         "notes" to notes.map { it.toMap() },
         "accounts" to accounts.map { it.toMap() },
-        "groups" to groups.map { it.toMap() }
+        "groups" to groups.map { it.toMap() },
+        "customFields" to customFields.map { it.toMap() }
     )
 }

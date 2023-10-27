@@ -772,6 +772,7 @@
             "label": "custom", "customLabel": "Mother"
         }
     ],
+    "customFields": [],
     "notes": [
         {
             "note": "Some notes 1\nSome notes 2"

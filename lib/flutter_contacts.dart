@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/config.dart';
 import 'package:flutter_contacts/contact.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_contacts/properties/group.dart';
 export 'contact.dart';
 export 'properties/account.dart';
 export 'properties/address.dart';
+export 'properties/custom_field.dart';
 export 'properties/email.dart';
 export 'properties/event.dart';
 export 'properties/group.dart';
@@ -17,6 +19,7 @@ export 'properties/name.dart';
 export 'properties/note.dart';
 export 'properties/organization.dart';
 export 'properties/phone.dart';
+export 'properties/relation.dart';
 export 'properties/social_media.dart';
 export 'properties/website.dart';
 
@@ -137,6 +140,8 @@ class FlutterContacts {
   /// operations on the contact after creation, you should perform them on the
   /// output rather than on the input.
   static Future<Contact> insertContact(Contact contact) async {
+    _warnUnsupported(contact);
+
     // This avoids the accidental case where we want to update a contact but
     // insert it instead, which would result in two identical contacts.
     if (contact.id.isNotEmpty) {
@@ -161,6 +166,8 @@ class FlutterContacts {
     Contact contact, {
     bool withGroups = false,
   }) async {
+    _warnUnsupported(contact);
+
     // This avoids the accidental case where we want to insert a contact but
     // update it instead, which won't work.
     if (contact.id.isEmpty) {
@@ -305,6 +312,17 @@ class FlutterContacts {
       args,
     );
     return id == null ? null : getContact(id);
+  }
+
+  /// Logs a debug message if we are using unsupported features
+  static void _warnUnsupported(Contact contact, {bool isWrite = true}) {
+    if (Platform.isAndroid) {
+      return;
+    }
+    if (isWrite && contact.customFields.isNotEmpty) {
+      debugPrint(
+          'WARNING: Attempting to change a contact with Custom Fields on an unsupported platform. These fields will be ignored.');
+    }
   }
 
   static Future<List<Contact>> _select({

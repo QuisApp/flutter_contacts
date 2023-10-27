@@ -28,11 +28,14 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.Groups
 import android.provider.ContactsContract.RawContacts
+import android.provider.ContactsContract.RawContactsEntity
+import android.util.Log
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.io.OutputStream
 import co.quis.flutter_contacts.properties.Account as PAccount
 import co.quis.flutter_contacts.properties.Address as PAddress
+import co.quis.flutter_contacts.properties.CustomField as PCustomField
 import co.quis.flutter_contacts.properties.Email as PEmail
 import co.quis.flutter_contacts.properties.Event as PEvent
 import co.quis.flutter_contacts.properties.Group as PGroup
@@ -53,6 +56,8 @@ class FlutterContacts {
         val REQUEST_CODE_EDIT = 77882
         val REQUEST_CODE_PICK = 77883
         val REQUEST_CODE_INSERT = 77884
+
+        private const val CUSTOM_FIELD_MIMETYPE = "vnd.com.google.cursor.item/contact_user_defined_field";
 
         fun select(
             resolver: ContentResolver,
@@ -131,7 +136,9 @@ class FlutterContacts {
                         Event.LABEL,
                         Relation.TYPE,
                         Relation.LABEL,
-                        Note.NOTE
+                        Note.NOTE,
+                        RawContactsEntity.DATA1,
+                        RawContactsEntity.DATA2,
                     )
                 )
             }
@@ -196,6 +203,7 @@ class FlutterContacts {
             fun getBool(col: String): Boolean = getInt(col) == 1
 
             while (cursor.moveToNext()) {
+
                 // ID and display name.
                 val id = if (returnUnifiedContacts) getString(Data.CONTACT_ID) else getString(Data.RAW_CONTACT_ID)
                 if (id !in index) {
@@ -414,6 +422,17 @@ class FlutterContacts {
                                 }
                             }
                         }
+                        CUSTOM_FIELD_MIMETYPE -> {
+                            contact.customFields += PCustomField(
+                                getString(RawContactsEntity.DATA1),
+                                getString(RawContactsEntity.DATA2))
+                        }
+                        else -> {
+                            Log.d("CONTACTS", "MIMETYPE: " + mimetype
+                                    + ", DATA1: " + getString(RawContactsEntity.DATA1)
+                                    + ", DATA2: " + getString(RawContactsEntity.DATA2)
+                            )
+                        }
                     }
                 }
             }
@@ -519,7 +538,7 @@ class FlutterContacts {
             ops.add(
                 ContentProviderOperation.newDelete(Data.CONTENT_URI)
                     .withSelection(
-                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE} in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "${RawContacts.CONTACT_ID}=? and ${Data.MIMETYPE} in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         arrayOf(
                             contactId,
                             StructuredName.CONTENT_ITEM_TYPE,
@@ -532,7 +551,8 @@ class FlutterContacts {
                             Im.CONTENT_ITEM_TYPE,
                             Event.CONTENT_ITEM_TYPE,
                             Relation.CONTENT_ITEM_TYPE,
-                            Note.CONTENT_ITEM_TYPE
+                            Note.CONTENT_ITEM_TYPE,
+                            CUSTOM_FIELD_MIMETYPE,
                         )
                     )
                     .build()
@@ -1203,6 +1223,15 @@ class FlutterContacts {
                         .withValue(Relation.NAME, emptyToNull(relation.name))
                         .withValue(Relation.TYPE, labelPair.label)
                         .withValue(Relation.LABEL, emptyToNull(labelPair.customLabel))
+                        .build()
+                )
+            }
+            for ((i, customField) in contact.customFields.withIndex()) {
+                ops.add(
+                    newInsert()
+                        .withValue(Data.MIMETYPE, CUSTOM_FIELD_MIMETYPE)
+                        .withValue(RawContactsEntity.DATA1, emptyToNull(customField.name))
+                        .withValue(RawContactsEntity.DATA2, emptyToNull(customField.label))
                         .build()
                 )
             }
