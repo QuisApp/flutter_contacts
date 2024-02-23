@@ -28,10 +28,8 @@ if (await FlutterContacts.requestPermission()) {
   Contact contact = await FlutterContacts.getContact(contacts.first.id);
 
   // Insert new contact
-  final newContact = Contact()
-    ..name.first = 'John'
-    ..name.last = 'Smith'
-    ..phones = [Phone('555-123-4567')];
+  final newContact = Contact(name: Name(first:'John', last:'Smith'), phones: [Phone('555-123-4567')]);
+
   await newContact.insert();
 
   // Update contact
