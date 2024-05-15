@@ -386,30 +386,46 @@ public enum FlutterContacts {
         _ includeNotesOnIos13AndAbove: Bool
     ) {
         Name(fromMap: args["name"] as! [String: Any]).addTo(contact)
-        (args["phones"] as! [[String: Any]]).forEach {
-            Phone(fromMap: $0).addTo(contact)
+
+         if let phones = args["phones"] as? [[String: Any]], !phones.isEmpty {
+                phones.forEach {
+                     Phone(fromMap: $0).addTo(contact)
+                }
+         }
+         if let emails = args["emails"] as? [[String: Any]], !emails.isEmpty {
+                 emails.forEach {
+                       Email(fromMap: $0).addTo(contact)
+                 }
+         }
+         if let addresses = args["addresses"] as? [[String: Any]], !addresses.isEmpty {
+                 addresses.forEach {
+                   Address(fromMap: $0).addTo(contact)
+                 }
+         }
+        if let organizations = args["organizations"] as? [[String: Any]],!organizations.isEmpty,
+            let firstOrganization = organizations.first {
+                Organization(fromMap: firstOrganization).addTo(contact)
+            }
+        if let websites = args["websites"] as? [[String: Any]], !websites.isEmpty {
+            websites.forEach {
+                Website(fromMap: $0).addTo(contact)
+            }
         }
-        (args["emails"] as! [[String: Any]]).forEach {
-            Email(fromMap: $0).addTo(contact)
-        }
-        (args["addresses"] as! [[String: Any]]).forEach {
-            Address(fromMap: $0).addTo(contact)
-        }
-        if let organization = (args["organizations"] as! [[String: Any]]).first {
-            Organization(fromMap: organization).addTo(contact)
-        }
-        (args["websites"] as! [[String: Any]]).forEach {
-            Website(fromMap: $0).addTo(contact)
-        }
-        (args["socialMedias"] as! [[String: Any]]).forEach {
-            SocialMedia(fromMap: $0).addTo(contact)
-        }
-        (args["events"] as! [[String: Any]]).forEach {
-            Event(fromMap: $0).addTo(contact)
+        if let socialMedias = args["socialMedias"] as? [[String: Any]], !socialMedias.isEmpty {
+                    socialMedias.forEach {
+                        SocialMedia(fromMap: $0).addTo(contact)
+                    }
+                }
+        if let events = args["events"] as? [[String: Any]], !events.isEmpty {
+                     events.forEach {
+                         Event(fromMap: $0).addTo(contact)
+                     }
         }
         if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
-            if let note = (args["notes"] as! [[String: Any]]).first {
-                Note(fromMap: note).addTo(contact)
+            if let notes = args["notes"] as? [[String: Any]], !notes.isEmpty{
+              notes.forEach {
+                        Note(fromMap: $0).addTo(contact)
+              }
             }
         }
         if let photo = args["photo"] as? FlutterStandardTypedData {

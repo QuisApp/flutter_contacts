@@ -80,6 +80,9 @@ struct Contact {
                 notes = [Note(fromContact: c)]
             }
         }
+        if c.isKeyAvailable(CNContactNoteKey) {
+           notes = [Note(fromContact: c)]
+        }
         if c.isKeyAvailable(CNContactThumbnailImageDataKey) {
             thumbnail = c.thumbnailImageData
         }
