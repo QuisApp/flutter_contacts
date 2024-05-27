@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../static-assets/github.css?v1">
   <link rel="stylesheet" href="../static-assets/styles.css?v1">
@@ -29,29 +29,33 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">flutter_contacts</a></li>
-    <li><a href="../properties_name/properties_name-library.html">name</a></li>
+    <li><a href="../properties_name/properties_name-library.html">properties&#47;name.dart</a></li>
     <li class="self-crumb">Name class</li>
   </ol>
   <div class="self-name">Name</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button">
+  <div class="toggle" id="theme-button" title="Toggle brightness">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
       <span id="dark-theme-button" class="material-symbols-outlined">
-        brightness_4
+        dark_mode
       </span>
       <span id="light-theme-button" class="material-symbols-outlined">
-        brightness_5
+        light_mode
       </span>
     </label>
   </div>
 </header>
 <main>
 
-  <div id="dartdoc-main-content" class="main-content">
-      <div>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="properties_name&#47;properties_name-library-sidebar.html"
+    data-below-sidebar="properties_name&#47;Name-class-sidebar.html">
+    <div>
 <h1><span class="kind-class">Name</span> class 
  
 </h1></div>
@@ -60,7 +64,7 @@
 <section class="desc markdown">
   <p>Structured name.</p>
 <p>Name structure varies widely by country. See:
-https://en.wikipedia.org/wiki/Personal_name#Structure</p>
+<a href="https://en.wikipedia.org/wiki/Personal_name#Structure">https://en.wikipedia.org/wiki/Personal_name#Structure</a></p>
 <p>Data models such as those from Android and iOS are typically US-centric and
 include middle name, prefix, suffix, etc. They also always include a
 formatted displayed, which we recommend to use instead. That said, other
@@ -146,7 +150,7 @@ disregard nickname labels.</p>
 
     <dl class="constructor-summary-list">
         <dt id="Name" class="callable">
-          <span class="name"><a href="../properties_name/Name/Name.html">Name</a></span><span class="signature">(<span class="parameter" id="-param-first">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">first</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-last"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">last</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-middle"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">middle</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-prefix"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">prefix</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-suffix"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">suffix</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-nickname"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">nickname</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-firstPhonetic"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">firstPhonetic</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-lastPhonetic"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">lastPhonetic</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-middlePhonetic"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">middlePhonetic</span> = <span class="default-value">&#39;&#39;</span>}</span>)</span>
+          <span class="name"><a href="../properties_name/Name/Name.html">Name</a></span><span class="signature">({<span class="parameter" id="-param-first"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">first</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-last"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">last</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-middle"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">middle</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-prefix"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">prefix</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-suffix"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">suffix</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-nickname"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">nickname</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-firstPhonetic"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">firstPhonetic</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-lastPhonetic"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">lastPhonetic</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-middlePhonetic"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">middlePhonetic</span> = <span class="default-value">&#39;&#39;</span></span>})</span>
         </dt>
         <dd>
           
@@ -160,135 +164,146 @@ disregard nickname labels.</p>
         </dd>
     </dl>
   </section>
-
-    <section class="summary offset-anchor" id="instance-properties">
-      <h2>Properties</h2>
-
-      <dl class="properties">
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
         <dt id="first" class="property">
   <span class="name"><a href="../properties_name/Name/first.html">first</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   First name / given name.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
         <dt id="firstPhonetic" class="property">
   <span class="name"><a href="../properties_name/Name/firstPhonetic.html">firstPhonetic</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   Phonetic first name.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
         <dt id="hashCode" class="property">
   <span class="name"><a href="../properties_name/Name/hashCode.html">hashCode</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> 
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
+  
 
 </dt>
 <dd>
   The hash code for this object.
-  <div class="features"><span class="feature">read-only</span><span class="feature">override</span></div>
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
 
 </dd>
 
         <dt id="last" class="property">
   <span class="name"><a href="../properties_name/Name/last.html">last</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   Last name / family name.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
         <dt id="lastPhonetic" class="property">
   <span class="name"><a href="../properties_name/Name/lastPhonetic.html">lastPhonetic</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   Phonetic last name.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
         <dt id="middle" class="property">
   <span class="name"><a href="../properties_name/Name/middle.html">middle</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   Middle name.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
         <dt id="middlePhonetic" class="property">
   <span class="name"><a href="../properties_name/Name/middlePhonetic.html">middlePhonetic</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   Phonetic middle name.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
         <dt id="nickname" class="property">
   <span class="name"><a href="../properties_name/Name/nickname.html">nickname</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   Nickname / short name.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
         <dt id="prefix" class="property">
   <span class="name"><a href="../properties_name/Name/prefix.html">prefix</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   Prefix / title, e.g. "Dr" in American names.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
         <dt id="runtimeType" class="property inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span> 
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
+  
 
 </dt>
 <dd class="inherited">
   A representation of the runtime type of the object.
-  <div class="features"><span class="feature">read-only</span><span class="feature">inherited</span></div>
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
 
 </dd>
 
         <dt id="suffix" class="property">
   <span class="name"><a href="../properties_name/Name/suffix.html">suffix</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> 
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+  
 
 </dt>
 <dd>
   Suffix, e.g. "Jr" in American names.
-  <div class="features"><span class="feature">read / write</span></div>
+  <div class="features"><span class="feature">getter/setter pair</span></div>
 
 </dd>
 
-      </dl>
-    </section>
-
+    </dl>
+  </section>
     
   <section
       class="summary offset-anchor"
@@ -303,7 +318,7 @@ disregard nickname labels.</p>
 
 </dt>
 <dd class="inherited">
-  Invoked when a non-existent method or property is accessed.
+  Invoked when a nonexistent method or property is accessed.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -378,72 +393,25 @@ disregard nickname labels.</p>
   </div> <!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../index.html">flutter_contacts</a></li>
-  <li><a href="../properties_name/properties_name-library.html">name</a></li>
-  <li class="self-crumb">Name class</li>
+    <li><a href="../index.html">flutter_contacts</a></li>
+    <li><a href="../properties_name/properties_name-library.html">name</a></li>
+    <li class="self-crumb">Name class</li>
 </ol>
 
 
     <h5>name library</h5>
-    <ol>
-      <li class="section-title"><a href="../properties_name/properties_name-library.html#classes">Classes</a></li>
-        <li><a href="../properties_name/Name-class.html">Name</a></li>
-
-
-
-
-
-
-
-
-</ol>
-
+    <div id="dartdoc-sidebar-left-content"></div>
   </div>
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
-    <ol>
-
-        <li class="section-title"><a href="../properties_name/Name-class.html#constructors">Constructors</a></li>
-          <li><a href="../properties_name/Name/Name.html">Name</a></li>
-          <li><a href="../properties_name/Name/Name.fromJson.html">fromJson</a></li>
-
-
-        <li class="section-title">
-          <a href="../properties_name/Name-class.html#instance-properties">Properties</a>
-        </li>
-          <li><a href="../properties_name/Name/first.html">first</a></li>
-          <li><a href="../properties_name/Name/firstPhonetic.html">firstPhonetic</a></li>
-          <li><a href="../properties_name/Name/hashCode.html">hashCode</a></li>
-          <li><a href="../properties_name/Name/last.html">last</a></li>
-          <li><a href="../properties_name/Name/lastPhonetic.html">lastPhonetic</a></li>
-          <li><a href="../properties_name/Name/middle.html">middle</a></li>
-          <li><a href="../properties_name/Name/middlePhonetic.html">middlePhonetic</a></li>
-          <li><a href="../properties_name/Name/nickname.html">nickname</a></li>
-          <li><a href="../properties_name/Name/prefix.html">prefix</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-          <li><a href="../properties_name/Name/suffix.html">suffix</a></li>
-
-        <li class="section-title"><a href="../properties_name/Name-class.html#instance-methods">Methods</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-          <li><a href="../properties_name/Name/toJson.html">toJson</a></li>
-          <li><a href="../properties_name/Name/toString.html">toString</a></li>
-          <li><a href="../properties_name/Name/toVCard.html">toVCard</a></li>
-
-        <li class="section-title"><a href="../properties_name/Name-class.html#operators">Operators</a></li>
-          <li><a href="../properties_name/Name/operator_equals.html">operator ==</a></li>
-
-
-
-
-</ol>
-
   </div><!--/.sidebar-offcanvas-->
 
 </main>
@@ -451,7 +419,7 @@ disregard nickname labels.</p>
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.7+1
+      1.1.8
   </span>
 
   
