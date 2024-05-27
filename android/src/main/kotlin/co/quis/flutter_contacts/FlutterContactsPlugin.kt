@@ -109,7 +109,14 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                     // content://com.android.contacts/raw_contacts/<raw_id>
                     // So we need to get the ID from the raw ID.
                     val rawId = intent?.getData()?.getLastPathSegment()
-                    if (rawId != null) {
+                    val readPermission = Manifest.permission.READ_CONTACTS
+                    val hasContactsReadPermission = ContextCompat.checkSelfPermission(
+                        context!!, readPermission
+                    ) == PackageManager.PERMISSION_GRANTED
+                    if (rawId != null && hasContactsReadPermission) {
+                        // Check the contacts read permission since 'open external insert' can be
+                        // called even without contacts permission. So while selecting contacts, be sure
+                        // that we have read permission.
                         val contacts: List<Map<String, Any?>> =
                             FlutterContacts.select(
                                 resolver!!,
