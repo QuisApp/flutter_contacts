@@ -219,6 +219,15 @@ class FlutterContacts {
     return groups;
   }
 
+  static Future<List<Group>> getGroupsForAccount(String accountId) async {
+    List untypedGroups = await _channel.invokeMethod('getGroupsForAccount', [accountId]);
+    // ignore: omit_local_variable_types
+    List<Group> groups = untypedGroups
+        .map((x) => Group.fromJson(Map<String, dynamic>.from(x)))
+        .toList();
+    return groups;
+  }
+
   /// Inserts a new group (or label on Android).
   static Future<Group> insertGroup(Group group) async {
     return Group.fromJson(Map<String, dynamic>.from(
