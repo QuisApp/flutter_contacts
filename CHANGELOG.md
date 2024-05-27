@@ -1,3 +1,7 @@
+## 1.1.8
+
+* Upgrade gradle, add null-safety in example_full.
+
 ## 1.1.7+1
 
 * Fix for AGP <4.2 (https://github.com/QuisApp/flutter_contacts/issues/127) - thanks trfiladelfo
