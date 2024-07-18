@@ -32,6 +32,11 @@ android {
         namespace 'co.quis.flutter_contacts'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -41,7 +46,6 @@ android {
     }
 
     defaultConfig {
-        targetSdkVersion 34
         minSdkVersion 16
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
