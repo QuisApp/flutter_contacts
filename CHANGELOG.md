@@ -1,3 +1,8 @@
+## 1.1.9
+
+* Fix incompatibility in android compile versions (https://github.com/QuisApp/flutter_contacts/issues/142) - thanks Valent1
+* Fix openExternalInsert (https://github.com/QuisApp/flutter_contacts/issues/156) - thanks rahulraj-idt
+
 ## 1.1.8
 
 * Upgrade gradle, add null-safety in example_full.
