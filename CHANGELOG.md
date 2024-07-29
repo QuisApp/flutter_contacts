@@ -1,3 +1,8 @@
+## 1.1.9
+
+* Fix kotlin/android incompability issues with java 1.8 and java 17 (https://github.com/QuisApp/flutter_contacts/issues/142, https://github.com/QuisApp/flutter_contacts/issues/147, https://github.com/QuisApp/flutter_contacts/issues/158, https://github.com/QuisApp/flutter_contacts/issues/169, https://github.com/QuisApp/flutter_contacts/pull/170) - thanks to Valent1, Hirohumi, himsarevenus, PcolBP, and other contributors
+* Fix openExternalInsert() crash - thanks rahulraj-idt
+
 ## 1.1.8
 
 * Upgrade gradle, add null-safety in example_full.
