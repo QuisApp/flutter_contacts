@@ -2,16 +2,14 @@ group 'co.quis.flutter_contacts'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.21'
-    ext.kotlin_coroutines_version = '1.6.4'
+    ext.kotlin_version = '1.7.22'
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath 'com.android.tools.build:gradle:8.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -19,7 +17,6 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 }
@@ -28,27 +25,28 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdk 34
 
-    if (!project.hasProperty("namespace")) {
-        namespace 'co.quis.flutter_contacts'
+    namespace 'dev.fluttercommunity.plus.sensors'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+    kotlinOptions {
+        jvmTarget = 17
     }
+
     defaultConfig {
-        minSdkVersion 16
+        minSdk 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
         disable 'InvalidPackage'
     }
-}
 
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.0")
+    dependencies {
+      implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    }
 }
