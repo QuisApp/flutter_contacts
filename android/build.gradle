@@ -2,7 +2,7 @@ group 'co.quis.flutter_contacts'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.21'
+    ext.kotlin_version = '1.9.0'
     ext.kotlin_coroutines_version = '1.6.4'
     repositories {
         google()
@@ -11,7 +11,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath 'com.android.tools.build:gradle:8.1.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -29,6 +29,12 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 31
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of(8))
+        }
+    }
 
     if (!project.hasProperty("namespace")) {
         namespace 'co.quis.flutter_contacts'
