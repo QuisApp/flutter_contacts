@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts_example/util/avatar.dart';
@@ -110,16 +111,19 @@ class _ContactListPageState extends State<ContactListPage>
     );
   }
 
-  void _handleOverflowSelected(String value) {
+  Future<void> _handleOverflowSelected(String value) async {
     switch (value) {
       case 'Groups':
         Navigator.of(context).pushNamed('/groups');
         break;
       case 'Insert external':
-        FlutterContacts.openExternalInsert();
+        final contact = await FlutterContacts.openExternalInsert();
+        if (kDebugMode) {
+          print('Contact added: ${contact?.id}');
+        }
         break;
       case 'Insert external (prepopulated)':
-        FlutterContacts.openExternalInsert(
+        final contact = await FlutterContacts.openExternalInsert(
           Contact(
             name: Name(first: 'John', last: 'Doe'),
             phones: [Phone('+1 555-123-4567')],
@@ -131,6 +135,9 @@ class _ContactListPageState extends State<ContactListPage>
             ],
           ),
         );
+        if (kDebugMode) {
+          print('Contact added: ${contact?.id}');
+        }
         break;
       default:
         log('Unknown overflow menu item: $value');
