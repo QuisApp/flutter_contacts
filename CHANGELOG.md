@@ -1,3 +1,7 @@
+## 1.1.9+2
+
+* Fix wrong namespace on android (https://github.com/QuisApp/flutter_contacts/issues/171) - thanks mattmapadmi
+
 ## 1.1.9+1
 
 * Fix openExternalInsert returning null on android (https://github.com/QuisApp/flutter_contacts/issues/100, https://github.com/QuisApp/flutter_contacts/issues/161)
