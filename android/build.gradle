@@ -27,7 +27,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdk 34
 
-    namespace 'dev.fluttercommunity.plus.sensors'
+    namespace 'co.quis.flutter_contacts'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
