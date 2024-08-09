@@ -1,3 +1,5 @@
+import 'dart:io';
+
 /// Account information, which is exposed for information and debugging purposes
 /// and should be ignored in most cases.
 ///
@@ -17,6 +19,16 @@ class Account {
 
   /// Android mimetypes provided by this account.
   List<String> mimetypes;
+
+
+  /// On Android, the rawId isn't uniq
+  String getAccountId() {
+    if (Platform.isAndroid) {
+      return '$name|$type';
+    } else {
+      return rawId;
+    }
+  }
 
   Account(this.rawId, this.type, this.name, this.mimetypes);
 
