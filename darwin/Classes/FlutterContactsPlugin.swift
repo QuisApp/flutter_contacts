@@ -1,9 +1,15 @@
+#if os(macOS)
+    import Cocoa
+    import FlutterMacOS
+#endif
+#if os(iOS)
+    import Flutter
+    import UIKit
+#endif
 import Contacts
 import ContactsUI
-import Flutter
-import UIKit
 
-@available(iOS 9.0, *)
+@available(iOS 9.0, macOS 10.11, *)
 public enum FlutterContacts {
     // Fetches contact(s).
     static func selectInternal(
@@ -44,12 +50,12 @@ public enum FlutterContacts {
                 CNContactBirthdayKey,
                 CNContactDatesKey,
             ]
-            if #available(iOS 10, *) {
+            if #available(iOS 10, macOS 10.12, *) {
                 keys.append(CNContactPhoneticOrganizationNameKey)
             }
             // Notes need explicit entitlement from Apple starting with iOS13.
             // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
-            if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
+            if #available(iOS 13, macOS 10.11, *), !includeNotesOnIos13AndAbove {} else {
                 keys.append(CNContactNoteKey)
             }
             if externalIntent {
@@ -234,13 +240,13 @@ public enum FlutterContacts {
             CNContactThumbnailImageDataKey,
             CNContactImageDataKey,
         ]
-        if #available(iOS 10, *) { keys.append(CNContactPhoneticOrganizationNameKey) }
-        if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
+        if #available(iOS 10, macOS 10.12,*) { keys.append(CNContactPhoneticOrganizationNameKey) }
+        if #available(iOS 13, macOS 10.11, *), !includeNotesOnIos13AndAbove {} else {
             keys.append(CNContactNoteKey)
         }
 
         let request = CNContactFetchRequest(keysToFetch: keys as! [CNKeyDescriptor])
-        if #available(iOS 10, *) { request.mutableObjects = true }
+        if #available(iOS 10, macOS 10.12, *) { request.mutableObjects = true }
         request.predicate = CNContact.predicateForContacts(withIdentifiers: [id])
         let store = CNContactStore()
         var contacts: [CNContact] = []
@@ -407,7 +413,7 @@ public enum FlutterContacts {
         (args["events"] as! [[String: Any]]).forEach {
             Event(fromMap: $0).addTo(contact)
         }
-        if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
+        if #available(iOS 13, macOS 10.11, *), !includeNotesOnIos13AndAbove {} else {
             if let note = (args["notes"] as! [[String: Any]]).first {
                 Note(fromMap: note).addTo(contact)
             }
@@ -418,29 +424,52 @@ public enum FlutterContacts {
     }
 }
 
-@available(iOS 9.0, *)
-public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandler, CNContactViewControllerDelegate, CNContactPickerDelegate {
-    private let rootViewController: UIViewController
-    private var externalResult: FlutterResult?
+@available(iOS 9.0, macOS 10.11, *)
+public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandler, CNContactPickerDelegate {
+
+    #if os(iOS)
+        private let contactViewIOS: ContactViewIOS?
+    #endif
+    public var externalResult: FlutterResult?
 
     public static func register(with registrar: FlutterPluginRegistrar) {
+        #if os(macOS)
+            let channel = FlutterMethodChannel(
+                name: "github.com/QuisApp/flutter_contacts",
+                binaryMessenger: registrar.messenger
+            )
+            let eventChannel = FlutterEventChannel(
+                name: "github.com/QuisApp/flutter_contacts/events",
+                binaryMessenger: registrar.messenger
+            )
+            let instance = FlutterContactsPlugin()
+        #endif
+        #if os(iOS)
         let channel = FlutterMethodChannel(
-            name: "github.com/QuisApp/flutter_contacts",
-            binaryMessenger: registrar.messenger()
-        )
-        let eventChannel = FlutterEventChannel(
-            name: "github.com/QuisApp/flutter_contacts/events",
-            binaryMessenger: registrar.messenger()
-        )
-        let rootViewController = UIApplication.shared.delegate!.window!!.rootViewController!
-        let instance = SwiftFlutterContactsPlugin(rootViewController)
+                name: "github.com/QuisApp/flutter_contacts",
+                binaryMessenger: registrar.messenger
+            )
+            let eventChannel = FlutterEventChannel(
+                name: "github.com/QuisApp/flutter_contacts/events",
+                binaryMessenger: registrar.messenger
+            )
+            
+            let instance = FlutterContactsPlugin()
+            contactViewIOS = ContactViewIOS(instance)
+        #endif
+        
         registrar.addMethodCallDelegate(instance, channel: channel)
         eventChannel.setStreamHandler(instance)
     }
 
-    init(_ rootViewController: UIViewController) {
-        self.rootViewController = rootViewController
+    
+    #if os(iOS)
+    @available(iOS 9.0, *)
+    init(_ contactViewIOS: ContactViewIOS?) {
+        self.contactViewIOS = contactViewIOS
     }
+    #endif
+
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
@@ -583,6 +612,14 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                 }
             }
         case "openExternalViewOrEdit":
+            #if os(macOS)
+                result(FlutterError(
+                    code: "macos.notImplemented",
+                    message: "openExternalViewOrEdit is not implemented on MacOS",
+                    details: "openExternalViewOrEdit is not implemented on MacOS"
+                ))
+            #endif
+            #if os(iOS)
             DispatchQueue.main.async {
                 let args = call.arguments as! [Any?]
                 let id = args[0] as! String
@@ -611,14 +648,32 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                     self.externalResult = result
                 }
             }
+            #endif
         case "openExternalPick":
+            #if os(macOS)
+                result(FlutterError(
+                    code: "macos.notImplemented",
+                    message: "openExternalPick is not implemented on MacOS",
+                    details: "openExternalPick is not implemented on MacOS"
+                ))
+            #endif
+            #if os(iOS)
             DispatchQueue.main.async {
                 let contactPicker = CNContactPickerViewController()
                 contactPicker.delegate = self
                 self.rootViewController.present(contactPicker, animated: true, completion: nil)
                 self.externalResult = result
             }
+            #endif
         case "openExternalInsert":
+            #if os(macOS)
+                result(FlutterError(
+                    code: "macos.notImplemented",
+                    message: "openExternalInsert is not implemented on MacOS",
+                    details: "openExternalInsert is not implemented on MacOS"
+                ))
+            #endif
+            #if os(iOS)
             DispatchQueue.main.async {
                 let contact = CNMutableContact()
                 let args = call.arguments as? [Any?]
@@ -642,6 +697,7 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                 self.rootViewController.present(navigationController, animated: true, completion: nil)
                 self.externalResult = result
             }
+            #endif
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -665,14 +721,15 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
         return nil
     }
 
-    public func contactViewController(_ viewController: CNContactViewController, didCompleteWith contact: CNContact?) {
-        if let result = externalResult {
-            result(contact?.identifier)
-            externalResult = nil
-        }
-        viewController.dismiss(animated: true, completion: nil)
-    }
+    // public func contactViewController(_ viewController: CNContactViewController, didCompleteWith contact: CNContact?) {
+    //     if let result = externalResult {
+    //         result(contact?.identifier)
+    //         externalResult = nil
+    //     }
+    //     viewController.dismiss(animated: true, completion: nil)
+    // }
 
+    #if os(iOS)
     @objc func contactViewControllerDidCancel() {
         if let result = externalResult {
             let viewController: UIViewController? = UIApplication.shared.delegate?.window??.rootViewController
@@ -681,18 +738,41 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
             externalResult = nil
         }
     }
+    #endif
 
+    #if os(iOS)
     public func contactPicker(_: CNContactPickerViewController, didSelect contact: CNContact) {
         if let result = externalResult {
             result(contact.identifier)
             externalResult = nil
         }
     }
+    #endif
 
+    #if os(macOS)
+    public func contactPicker(_: CNContactPicker, didSelect contact: CNContact) {
+        if let result = externalResult {
+            result(contact.identifier)
+            externalResult = nil
+        }
+    }
+    #endif
+
+    #if os(iOS)
     public func contactPickerDidCancel(_: CNContactPickerViewController) {
         if let result = externalResult {
             result(nil)
             externalResult = nil
         }
     }
+    #endif
+
+    #if os(macOS)
+    public func contactPickerDidCancel(_: CNContactPicker) {
+        if let result = externalResult {
+            result(nil)
+            externalResult = nil
+        }
+    }
+    #endif
 }

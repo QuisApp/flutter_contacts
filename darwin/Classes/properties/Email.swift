@@ -1,43 +1,46 @@
 import Contacts
 
 @available(iOS 9.0, *)
-struct Website {
-    var url: String
-    // one of: blog, ftp, home, homepage, profile, school, work, other, custom
-    var label: String = "homepage"
+struct Email {
+    var address: String
+    // one of: home, iCloud, mobile, school, work, other, custom
+    var label: String = "home"
     var customLabel: String = ""
+    var isPrimary: Bool = false // not supported on iOS
 
     init(fromMap m: [String: Any]) {
-        url = m["url"] as! String
+        address = m["address"] as! String
         label = m["label"] as! String
         customLabel = m["customLabel"] as! String
+        isPrimary = m["isPrimary"] as! Bool
     }
 
-    init(fromWebsite w: CNLabeledValue<NSString>) {
-        url = w.value as String
-        switch w.label {
+    init(fromEmail e: CNLabeledValue<NSString>) {
+        address = e.value as String
+        switch e.label {
         case CNLabelHome:
             label = "home"
-        case CNLabelURLAddressHomePage:
-            label = "homepage"
+        case CNLabelEmailiCloud:
+            label = "iCloud"
         case CNLabelWork:
             label = "work"
         case CNLabelOther:
             label = "other"
         default:
-            if #available(iOS 13, *), w.label == CNLabelSchool {
+            if #available(iOS 13, macOS 15, *), e.label == CNLabelSchool {
                 label = "school"
             } else {
                 label = "custom"
-                customLabel = w.label ?? ""
+                customLabel = e.label ?? ""
             }
         }
     }
 
     func toMap() -> [String: Any] { [
-        "url": url,
+        "address": address,
         "label": label,
         "customLabel": customLabel,
+        "isPrimary": isPrimary,
     ]
     }
 
@@ -46,10 +49,10 @@ struct Website {
         switch label {
         case "home":
             labelInv = CNLabelHome
-        case "homepage":
-            labelInv = CNLabelURLAddressHomePage
+        case "iCloud":
+            labelInv = CNLabelEmailiCloud
         case "school":
-            if #available(iOS 13, *) {
+            if #available(iOS 13, macOS 15, *) {
                 labelInv = CNLabelSchool
             } else {
                 labelInv = "school"
@@ -63,10 +66,10 @@ struct Website {
         default:
             labelInv = label
         }
-        c.urlAddresses.append(
+        c.emailAddresses.append(
             CNLabeledValue<NSString>(
                 label: labelInv,
-                value: url as NSString
+                value: address as NSString
             )
         )
     }

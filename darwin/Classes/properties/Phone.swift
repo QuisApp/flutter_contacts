@@ -44,7 +44,7 @@ struct Phone {
         case CNLabelOther:
             label = "other"
         default:
-            if #available(iOS 13, *), p.label == CNLabelSchool {
+            if #available(iOS 13, macOS 15, *), p.label == CNLabelSchool {
                 label = "school"
             } else {
                 label = "custom"
@@ -82,7 +82,7 @@ struct Phone {
         case "pager":
             labelInv = CNLabelPhoneNumberPager
         case "school":
-            if #available(iOS 13, *) {
+            if #available(iOS 13, macOS 15, *) {
                 labelInv = CNLabelSchool
             } else {
                 labelInv = "school"

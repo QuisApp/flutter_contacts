@@ -45,7 +45,7 @@ struct Address {
         case CNLabelOther:
             label = "other"
         default:
-            if #available(iOS 13, *), a.label == CNLabelSchool {
+            if #available(iOS 13, macOS 15, *), a.label == CNLabelSchool {
                 label = "school"
             } else {
                 label = "custom"
@@ -59,7 +59,7 @@ struct Address {
         postalCode = a.value.postalCode
         country = a.value.country
         isoCountry = a.value.isoCountryCode
-        if #available(iOS 13, *) {
+        if #available(iOS 13, macOS 15, *) {
             subAdminArea = a.value.subAdministrativeArea
             subLocality = a.value.subLocality
         }
@@ -126,7 +126,7 @@ struct Address {
         case "home":
             labelInv = CNLabelHome
         case "school":
-            if #available(iOS 13, *) {
+            if #available(iOS 13, macOS 15, *) {
                 labelInv = CNLabelSchool
             } else {
                 labelInv = "school"

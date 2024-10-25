@@ -25,3 +25,8 @@ flutter:
         pluginClass: FlutterContactsPlugin
       ios:
         pluginClass: FlutterContactsPlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: FlutterContactsPlugin
+        sharedDarwinSource: true
+
