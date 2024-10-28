@@ -1,15 +1,15 @@
 #if os(iOS)
 import Flutter
 import UIKit
-
+import Contacts
+import ContactsUI
 
 @available(iOS 9.0, *)
 @available(macOS, unavailable)
-public class ContactViewIOS: CNContactViewControllerDelegate {
+public class ContactViewIOS: NSObject, CNContactViewControllerDelegate, CNContactPickerDelegate {
 
     private let flutterContactsPlugin: FlutterContactsPlugin
-    private let rootViewController: UIViewController
-    private let contactViewIOS: ContactViewIOS
+    public var rootViewController: UIViewController
 
     init(_ flutterContactsPlugin: FlutterContactsPlugin) {
         self.flutterContactsPlugin = flutterContactsPlugin;
@@ -23,5 +23,33 @@ public class ContactViewIOS: CNContactViewControllerDelegate {
         }
         viewController.dismiss(animated: true, completion: nil)
     }
+
+    public func contactPicker(_: CNContactPickerViewController, didSelect contact: CNContact) {
+        if let result = flutterContactsPlugin.externalResult {
+            result(contact.identifier)
+            flutterContactsPlugin.externalResult = nil
+        }
+    }
+
+    // public func contactPicker(_: CNContactPicker, didSelect contact: CNContact) {
+    //     if let result = flutterContactsPlugin.externalResult {
+    //         result(contact.identifier)
+    //         flutterContactsPlugin.externalResult = nil
+    //     }
+    // }
+
+    public func contactPickerDidCancel(_: CNContactPickerViewController) {
+        if let result = flutterContactsPlugin.externalResult {
+            result(nil)
+            flutterContactsPlugin.externalResult = nil
+        }
+    }
+
+    // public func contactPickerDidCancel(_: CNContactPicker) {
+    //     if let result = flutterContactsPlugin.externalResult {
+    //         result(nil)
+    //         flutterContactsPlugin.externalResult = nil
+    //     }
+    // }
 }
 #endif

@@ -425,10 +425,10 @@ public enum FlutterContacts {
 }
 
 @available(iOS 9.0, macOS 10.11, *)
-public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandler, CNContactPickerDelegate {
+public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
 
     #if os(iOS)
-        private let contactViewIOS: ContactViewIOS?
+        private var contactViewIOS: ContactViewIOS?
     #endif
     public var externalResult: FlutterResult?
 
@@ -445,30 +445,32 @@ public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandle
             let instance = FlutterContactsPlugin()
         #endif
         #if os(iOS)
-        let channel = FlutterMethodChannel(
+            let channel = FlutterMethodChannel(
                 name: "github.com/QuisApp/flutter_contacts",
-                binaryMessenger: registrar.messenger
+                binaryMessenger: registrar.messenger()
             )
             let eventChannel = FlutterEventChannel(
                 name: "github.com/QuisApp/flutter_contacts/events",
-                binaryMessenger: registrar.messenger
+                binaryMessenger: registrar.messenger()
             )
+        
+            //private let contactViewIOS: ContactViewIOS?
+            //contactViewIOS = ContactViewIOS(instance)
             
             let instance = FlutterContactsPlugin()
-            contactViewIOS = ContactViewIOS(instance)
+            instance.contactViewIOS = ContactViewIOS(instance)
         #endif
         
         registrar.addMethodCallDelegate(instance, channel: channel)
         eventChannel.setStreamHandler(instance)
     }
 
-    
-    #if os(iOS)
-    @available(iOS 9.0, *)
-    init(_ contactViewIOS: ContactViewIOS?) {
-        self.contactViewIOS = contactViewIOS
-    }
-    #endif
+    // #if os(iOS)
+    // @available(iOS 9.0, *)
+    // init(_ contactViewIOS: ContactViewIOS?) {
+    //    self.contactViewIOS = contactViewIOS
+    // }
+    // #endif
 
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -641,10 +643,10 @@ public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandle
                         target: self,
                         action: #selector(self.contactViewControllerDidCancel)
                     )
-                    contactView.delegate = self
+                    contactView.delegate = self.contactViewIOS!
                     // https://stackoverflow.com/a/39594589
                     let navigationController = UINavigationController(rootViewController: contactView)
-                    self.rootViewController.present(navigationController, animated: true, completion: nil)
+                    self.contactViewIOS!.rootViewController.present(navigationController, animated: true, completion: nil)
                     self.externalResult = result
                 }
             }
@@ -660,8 +662,8 @@ public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandle
             #if os(iOS)
             DispatchQueue.main.async {
                 let contactPicker = CNContactPickerViewController()
-                contactPicker.delegate = self
-                self.rootViewController.present(contactPicker, animated: true, completion: nil)
+                contactPicker.delegate = self.contactViewIOS!
+                self.contactViewIOS!.rootViewController.present(contactPicker, animated: true, completion: nil)
                 self.externalResult = result
             }
             #endif
@@ -691,10 +693,10 @@ public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandle
                     target: self,
                     action: #selector(self.contactViewControllerDidCancel)
                 )
-                contactView.delegate = self
+                contactView.delegate = self.contactViewIOS!
                 // https://stackoverflow.com/a/39594589
                 let navigationController = UINavigationController(rootViewController: contactView)
-                self.rootViewController.present(navigationController, animated: true, completion: nil)
+                self.contactViewIOS!.rootViewController.present(navigationController, animated: true, completion: nil)
                 self.externalResult = result
             }
             #endif
@@ -721,14 +723,6 @@ public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandle
         return nil
     }
 
-    // public func contactViewController(_ viewController: CNContactViewController, didCompleteWith contact: CNContact?) {
-    //     if let result = externalResult {
-    //         result(contact?.identifier)
-    //         externalResult = nil
-    //     }
-    //     viewController.dismiss(animated: true, completion: nil)
-    // }
-
     #if os(iOS)
     @objc func contactViewControllerDidCancel() {
         if let result = externalResult {
@@ -740,39 +734,5 @@ public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandle
     }
     #endif
 
-    #if os(iOS)
-    public func contactPicker(_: CNContactPickerViewController, didSelect contact: CNContact) {
-        if let result = externalResult {
-            result(contact.identifier)
-            externalResult = nil
-        }
-    }
-    #endif
-
-    #if os(macOS)
-    public func contactPicker(_: CNContactPicker, didSelect contact: CNContact) {
-        if let result = externalResult {
-            result(contact.identifier)
-            externalResult = nil
-        }
-    }
-    #endif
-
-    #if os(iOS)
-    public func contactPickerDidCancel(_: CNContactPickerViewController) {
-        if let result = externalResult {
-            result(nil)
-            externalResult = nil
-        }
-    }
-    #endif
-
-    #if os(macOS)
-    public func contactPickerDidCancel(_: CNContactPicker) {
-        if let result = externalResult {
-            result(nil)
-            externalResult = nil
-        }
-    }
-    #endif
+    
 }
