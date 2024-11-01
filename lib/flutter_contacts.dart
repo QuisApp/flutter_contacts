@@ -35,6 +35,17 @@ class FlutterContacts {
   /// Plugin configuration.
   static var config = FlutterContactsConfig();
 
+  /// Allows the checking of the current authorisation status of access to the 
+  /// contacts. Returns the enum raw value of notDetermined, restricted, denied,
+  /// authorized or limited.
+  static Future<String> authorisationStatus() async {
+      if (Platform.isIOS || Platform.isMacOS) {
+        String status = await _channel.invokeMethod('authorisationStatus');
+        return status;
+      }
+      throw Exception('authorisationStatus not implemented for this platform.');
+  }
+
   /// Requests permission to read or read/write contacts. Returns true if
   /// granted, false in any other case. Note: read-only mode is only applicable
   /// to Android.

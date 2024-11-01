@@ -475,6 +475,24 @@ public class FlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandle
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
+        case "authorisationStatus":
+            DispatchQueue.global(qos: .userInteractive).async {
+                let status = CNContactStore.authorizationStatus(for: .contacts)
+                switch status {
+                    case .notDetermined:
+                        result("notDetermined");
+                    case .restricted:
+                        result("restricted");
+                    case .denied:
+                        result("denied");
+                    case .authorized: 
+                        result("authorized");
+                    case .limited: 
+                        result("limited");
+                    default:
+                        result("unknown");
+                }
+            }
         case "requestPermission":
             DispatchQueue.global(qos: .userInteractive).async {
                 CNContactStore().requestAccess(for: .contacts, completionHandler: { (granted, _) -> Void in
