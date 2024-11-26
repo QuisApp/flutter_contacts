@@ -114,7 +114,7 @@ class _ContactListPageState extends State<ContactListPage>
   Future<void> _handleOverflowSelected(String value) async {
     switch (value) {
       case 'Groups':
-        Navigator.of(context).pushNamed('/groups');
+       await  Navigator.of(context).pushNamed('/groups');
         break;
       case 'Insert external':
         final contact = await FlutterContacts.openExternalInsert();
