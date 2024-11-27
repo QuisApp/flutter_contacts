@@ -91,7 +91,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 if (editResult != null) {
                     // Result is of the form:
                     // content://com.android.contacts/contacts/lookup/<hash>/<id>
-                    val id = intent?.getData()?.getLastPathSegment()
+                    val id = intent?.data?.lastPathSegment
                     editResult!!.success(id)
                     editResult = null
                 }
@@ -99,7 +99,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 if (pickResult != null) {
                     // Result is of the form:
                     // content://com.android.contacts/contacts/lookup/<hash>/<id>
-                    val id = intent?.getData()?.getLastPathSegment()
+                    val id = intent?.data?.lastPathSegment
                     pickResult!!.success(id)
                     pickResult = null
                 }
@@ -250,7 +250,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val group = args[0] as Map<String, Any>
-                    val insertedGroup: Map<String, Any?>? =
+                    val insertedGroup: Map<String, Any?> =
                         FlutterContacts.insertGroup(resolver!!, group)
                     coroutineScope.launch(Dispatchers.Main) {
                         result.success(insertedGroup)
@@ -261,7 +261,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 coroutineScope.launch(Dispatchers.IO) {
                     val args = call.arguments as List<Any>
                     val group = args[0] as Map<String, Any>
-                    val updatedGroup: Map<String, Any?>? =
+                    val updatedGroup: Map<String, Any?> =
                         FlutterContacts.updateGroup(resolver!!, group)
                     coroutineScope.launch(Dispatchers.Main) {
                         result.success(updatedGroup)
@@ -302,7 +302,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
             // Opens external contact app to insert a new contact.
             "openExternalInsert" ->
                 coroutineScope.launch(Dispatchers.IO) {
-                    var args = call.arguments as List<Any>
+                    val args = call.arguments as List<Any>
                     val contact = args.getOrNull(0)?.let { it as? Map<String, Any?> } ?: run {
                         null
                     }
@@ -318,10 +318,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
             return null
         }
 
-        val uri = intent.getData()?.getPath()
-        if (uri == null) {
-            return null
-        }
+        val uri = intent.data?.path ?: return null
 
         val hasContactsReadPermission = ContextCompat.checkSelfPermission(
             context!!, Manifest.permission.READ_CONTACTS
@@ -336,7 +333,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
         // Result can be of two forms:
         // content://com.android.contacts/<lookup_key>/<raw_id>
         // content://com.android.contacts/raw_contacts/<raw_id>
-        val segments = intent.getData()?.getPathSegments()
+        val segments = intent.data?.pathSegments
         if (segments == null || segments.size < 2) {
             return null
         }
