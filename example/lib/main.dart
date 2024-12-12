@@ -22,7 +22,12 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
     if (!await FlutterContacts.requestPermission(readonly: true)) {
       setState(() => _permissionDenied = true);
     } else {
-      final contacts = await FlutterContacts.getContacts();
+      final contacts = await FlutterContacts.getContacts(
+        withProperties: true,
+        withPhoto: true,
+        withThumbnail: true,
+        sorted: true
+      );
       setState(() => _contacts = contacts);
     }
   }
@@ -39,10 +44,14 @@ class _FlutterContactsExampleState extends State<FlutterContactsExample> {
     return ListView.builder(
         itemCount: _contacts!.length,
         itemBuilder: (context, i) => ListTile(
+            leading: _contacts![i].thumbnail != null
+                ? CircleAvatar(backgroundImage: MemoryImage(_contacts![i].thumbnail!))
+                : CircleAvatar(child: Text(_contacts![i].displayName[0])),
             title: Text(_contacts![i].displayName),
+            subtitle: Text(
+                _contacts![i].phones.isNotEmpty ? _contacts![i].phones.first.number : ''),
             onTap: () async {
-              final fullContact =
-                  await FlutterContacts.getContact(_contacts![i].id);
+              final fullContact = await FlutterContacts.getContact(_contacts![i].id);
               await Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => ContactPage(fullContact!)));
             }));
@@ -56,12 +65,33 @@ class ContactPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(title: Text(contact.displayName)),
-      body: Column(children: [
-        Text('First name: ${contact.name.first}'),
-        Text('Last name: ${contact.name.last}'),
-        Text(
-            'Phone number: ${contact.phones.isNotEmpty ? contact.phones.first.number : '(none)'}'),
-        Text(
-            'Email address: ${contact.emails.isNotEmpty ? contact.emails.first.address : '(none)'}'),
-      ]));
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (contact.photo != null)
+              Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  margin: EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: MemoryImage(contact.photo!),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            Text('First name: ${contact.name.first}'),
+            Text('Last name: ${contact.name.last}'),
+            Text(
+                'Phone number: ${contact.phones.isNotEmpty ? contact.phones.first.number : '(none)'}'),
+            Text(
+                'Email address: ${contact.emails.isNotEmpty ? contact.emails.first.address : '(none)'}'),
+          ],
+        ),
+      ));
 }
