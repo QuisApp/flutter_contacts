@@ -8,9 +8,9 @@ class OrganizationForm extends StatefulWidget {
 
   OrganizationForm(
     this.organization, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -20,13 +20,13 @@ class OrganizationForm extends StatefulWidget {
 class _OrganizationFormState extends State<OrganizationForm> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController _companyController;
-  TextEditingController _titleController;
-  TextEditingController _departmentController;
-  TextEditingController _jobDescriptionController;
-  TextEditingController _symbolController;
-  TextEditingController _phoneticNameController;
-  TextEditingController _officeLocationController;
+  late TextEditingController _companyController;
+  late TextEditingController _titleController;
+  late TextEditingController _departmentController;
+  late TextEditingController _jobDescriptionController;
+  late TextEditingController _symbolController;
+  late TextEditingController _phoneticNameController;
+  late TextEditingController _officeLocationController;
 
   @override
   void initState() {

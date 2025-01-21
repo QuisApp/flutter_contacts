@@ -8,9 +8,9 @@ class EventForm extends StatefulWidget {
 
   EventForm(
     this.event, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -21,13 +21,13 @@ class _EventFormState extends State<EventForm> {
   final _formKey = GlobalKey<FormState>();
   static final _validLabels = EventLabel.values;
 
-  TextEditingController _dateController;
-  EventLabel _label;
-  TextEditingController _customLabelController;
-  int _year;
-  int _month;
-  int _day;
-  bool _noYear;
+  late TextEditingController _dateController;
+  late EventLabel _label;
+  late TextEditingController _customLabelController;
+  late int _year;
+  late int _month;
+  late int _day;
+  late bool _noYear;
 
   String _formatDate() =>
       '${_noYear ? '--' : _year.toString().padLeft(4, '0')}/'
@@ -102,9 +102,9 @@ class _EventFormState extends State<EventForm> {
                         value: e, child: Text(e.toString())))
                     .toList(),
                 value: _label,
-                onChanged: (label) {
+                onChanged: (EventLabel? label) {
                   setState(() {
-                    _label = label;
+                    if (label != null) _label = label;
                   });
                   // Unfortunately, the form's `onChanged` gets triggered before
                   // the dropdown's `onChanged`, so it doesn't update the
@@ -123,9 +123,9 @@ class _EventFormState extends State<EventForm> {
               CheckboxListTile(
                 title: Text('No year'),
                 value: _noYear,
-                onChanged: (noYear) {
+                onChanged: (bool? noYear) {
                   setState(() {
-                    _noYear = noYear;
+                    _noYear = noYear ?? false;
                     _dateController.text = _formatDate();
                   });
                   _onChanged();

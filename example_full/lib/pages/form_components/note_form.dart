@@ -3,14 +3,14 @@ import 'package:flutter_contacts/properties/note.dart';
 
 class NoteForm extends StatefulWidget {
   final Note note;
-  final void Function(Note) onUpdate;
+  final void Function(Note)? onUpdate;
   final void Function() onDelete;
 
   NoteForm(
     this.note, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -20,7 +20,7 @@ class NoteForm extends StatefulWidget {
 class _NoteFormState extends State<NoteForm> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController _noteController;
+  late TextEditingController _noteController;
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _NoteFormState extends State<NoteForm> {
     final note = Note(
       _noteController.text,
     );
-    widget.onUpdate(note);
+    if (widget.onUpdate != null) widget.onUpdate!(note);
   }
 
   @override

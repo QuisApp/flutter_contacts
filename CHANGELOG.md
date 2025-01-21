@@ -1,3 +1,20 @@
+## 1.1.9+2
+
+* Fix wrong namespace on android (https://github.com/QuisApp/flutter_contacts/issues/171) - thanks mattmapadmi
+
+## 1.1.9+1
+
+* Fix openExternalInsert returning null on android (https://github.com/QuisApp/flutter_contacts/issues/100, https://github.com/QuisApp/flutter_contacts/issues/161)
+
+## 1.1.9
+
+* Fix kotlin/android incompability issues with java 1.8 and java 17 (https://github.com/QuisApp/flutter_contacts/issues/142, https://github.com/QuisApp/flutter_contacts/issues/147, https://github.com/QuisApp/flutter_contacts/issues/158, https://github.com/QuisApp/flutter_contacts/issues/169, https://github.com/QuisApp/flutter_contacts/pull/170) - thanks to Valent1, Hirohumi, himsarevenus, PcolBP, and other contributors
+* Fix openExternalInsert() crash - thanks rahulraj-idt
+
+## 1.1.8
+
+* Upgrade gradle, add null-safety in example_full.
+
 ## 1.1.7+1
 
 * Fix for AGP <4.2 (https://github.com/QuisApp/flutter_contacts/issues/127) - thanks trfiladelfo

@@ -6,17 +6,21 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('sorting', () async {
-    const MethodChannel('github.com/QuisApp/flutter_contacts')
-        .setMockMethodCallHandler((MethodCall methodCall) async {
-      if (methodCall.method == 'select') {
-        return [
-          {'displayName': 'ella fitzgerald'},
-          {'displayName': 'ezra koenig'},
-          {'displayName': 'Elon Musk'},
-          {'displayName': 'Édouart Manet'},
-        ];
-      }
-    });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('github.com/QuisApp/flutter_contacts'),
+      (MethodCall methodCall) async {
+        if (methodCall.method == 'select') {
+          return [
+            {'displayName': 'ella fitzgerald'},
+            {'displayName': 'ezra koenig'},
+            {'displayName': 'Elon Musk'},
+            {'displayName': 'Édouart Manet'},
+          ];
+        }
+        return null;
+      },
+    );
     final contacts = await FlutterContacts.getContacts();
     expect(contacts.map((x) => x.displayName).toList(), [
       'Édouart Manet',
@@ -27,12 +31,16 @@ void main() {
   });
 
   test('get contact', () async {
-    const MethodChannel('github.com/QuisApp/flutter_contacts')
-        .setMockMethodCallHandler((MethodCall methodCall) async {
-      if (methodCall.method == 'select') {
-        return [_complexContact];
-      }
-    });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('github.com/QuisApp/flutter_contacts'),
+      (MethodCall methodCall) async {
+        if (methodCall.method == 'select') {
+          return [_complexContact];
+        }
+        return null;
+      },
+    );
     final _ = await FlutterContacts.getContact('complex_contact');
   });
 }

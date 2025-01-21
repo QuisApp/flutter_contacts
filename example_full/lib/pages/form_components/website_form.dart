@@ -8,9 +8,9 @@ class WebsiteForm extends StatefulWidget {
 
   WebsiteForm(
     this.website, {
-    @required this.onUpdate,
-    @required this.onDelete,
-    Key key,
+    required this.onUpdate,
+    required this.onDelete,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -21,9 +21,9 @@ class _WebsiteFormState extends State<WebsiteForm> {
   final _formKey = GlobalKey<FormState>();
   static final _validLabels = WebsiteLabel.values;
 
-  TextEditingController _urlController;
-  WebsiteLabel _label;
-  TextEditingController _customLabelController;
+  late TextEditingController _urlController;
+  late WebsiteLabel _label;
+  late TextEditingController _customLabelController;
 
   @override
   void initState() {
@@ -71,9 +71,9 @@ class _WebsiteFormState extends State<WebsiteForm> {
                         value: e, child: Text(e.toString())))
                     .toList(),
                 value: _label,
-                onChanged: (label) {
+                onChanged: (WebsiteLabel? label) {
                   setState(() {
-                    _label = label;
+                    if (label != null) _label = label;
                   });
                   // Unfortunately, the form's `onChanged` gets triggered before
                   // the dropdown's `onChanged`, so it doesn't update the

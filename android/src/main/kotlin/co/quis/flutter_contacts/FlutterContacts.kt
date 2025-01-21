@@ -52,6 +52,32 @@ class FlutterContacts {
         val REQUEST_CODE_PICK = 77883
         val REQUEST_CODE_INSERT = 77884
 
+        fun findIdWithLookupKey(
+            resolver: ContentResolver,
+            lookupKey: String
+        ): String? {
+            val projection = listOf(Data.CONTACT_ID)
+            val selectionClause = "${Data.LOOKUP_KEY} = ?"
+            val selectionArgs = arrayOf(lookupKey)
+            val cursor = resolver.query(
+                Data.CONTENT_URI,
+                projection.toTypedArray(),
+                selectionClause,
+                selectionArgs,
+                /*sortOrder=*/null
+            )
+            if (cursor == null) {
+                return null
+            }
+            if (!cursor.moveToNext()) {
+                return null
+            }
+            fun getString(col: String): String = cursor.getString(cursor.getColumnIndex(col)) ?: ""
+            val id = getString(Data.CONTACT_ID)
+            cursor.close()
+            return id
+        }
+
         fun select(
             resolver: ContentResolver,
             id: String?,

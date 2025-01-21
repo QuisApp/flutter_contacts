@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../../static-assets/github.css?v1">
   <link rel="stylesheet" href="../../static-assets/styles.css?v1">
@@ -29,7 +29,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">flutter_contacts</a></li>
-    <li><a href="../../contact/contact-library.html">contact</a></li>
+    <li><a href="../../contact/contact-library.html">contact.dart</a></li>
     <li><a href="../../contact/Contact-class.html">Contact</a></li>
     <li class="self-crumb">notes property</li>
   </ol>
@@ -37,126 +37,79 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button">
+  <div class="toggle" id="theme-button" title="Toggle brightness">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
       <span id="dark-theme-button" class="material-symbols-outlined">
-        brightness_4
+        dark_mode
       </span>
       <span id="light-theme-button" class="material-symbols-outlined">
-        brightness_5
+        light_mode
       </span>
     </label>
   </div>
 </header>
 <main>
 
-  <div id="dartdoc-main-content" class="main-content">
-      <div>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="contact&#47;Contact-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
 <h1><span class="kind-property">notes</span> property 
 </h1></div>
 
-        <section class="multi-line-signature">
-          
-          <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_note/Note-class.html">Note</a></span>&gt;</span>
-          <span class="name ">notes</span>
-          <div class="features"><span class="feature">read / write</span></div>
-
-        </section>
+      <section class="multi-line-signature">
         
+        <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../properties_note/Note-class.html">Note</a></span>&gt;</span>
+        <span class="name ">notes</span>
+        <div class="features"><span class="feature">getter/setter pair</span></div>
+
+      </section>
+      
 <section class="desc markdown">
   <p>Notes.</p>
 </section>
 
-        
+      
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">List&lt;Note&gt; notes;</code></pre>
 </section>
 
 
-  </div> <!-- /.main-content -->
+</div> <!-- /.main-content -->
 
-  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../../index.html">flutter_contacts</a></li>
-  <li><a href="../../contact/contact-library.html">contact</a></li>
-  <li><a href="../../contact/Contact-class.html">Contact</a></li>
-  <li class="self-crumb">notes property</li>
+    <li><a href="../../index.html">flutter_contacts</a></li>
+    <li><a href="../../contact/contact-library.html">contact</a></li>
+    <li><a href="../../contact/Contact-class.html">Contact</a></li>
+    <li class="self-crumb">notes property</li>
 </ol>
 
 
-    <h5>Contact class</h5>
-    <ol>
+  <h5>Contact class</h5>
+  <div id="dartdoc-sidebar-left-content"></div>
+</div><!--/.sidebar-offcanvas-->
 
-        <li class="section-title"><a href="../../contact/Contact-class.html#constructors">Constructors</a></li>
-          <li><a href="../../contact/Contact/Contact.html">Contact</a></li>
-          <li><a href="../../contact/Contact/Contact.fromJson.html">fromJson</a></li>
-          <li><a href="../../contact/Contact/Contact.fromVCard.html">fromVCard</a></li>
-
-
-        <li class="section-title">
-          <a href="../../contact/Contact-class.html#instance-properties">Properties</a>
-        </li>
-          <li><a href="../../contact/Contact/accounts.html">accounts</a></li>
-          <li><a href="../../contact/Contact/addresses.html">addresses</a></li>
-          <li><a href="../../contact/Contact/displayName.html">displayName</a></li>
-          <li><a href="../../contact/Contact/emails.html">emails</a></li>
-          <li><a href="../../contact/Contact/events.html">events</a></li>
-          <li><a href="../../contact/Contact/groups.html">groups</a></li>
-          <li><a href="../../contact/Contact/hashCode.html">hashCode</a></li>
-          <li><a href="../../contact/Contact/id.html">id</a></li>
-          <li><a href="../../contact/Contact/isStarred.html">isStarred</a></li>
-          <li><a href="../../contact/Contact/isUnified.html">isUnified</a></li>
-          <li><a href="../../contact/Contact/name.html">name</a></li>
-          <li><a href="../../contact/Contact/notes.html">notes</a></li>
-          <li><a href="../../contact/Contact/organizations.html">organizations</a></li>
-          <li><a href="../../contact/Contact/phones.html">phones</a></li>
-          <li><a href="../../contact/Contact/photo.html">photo</a></li>
-          <li><a href="../../contact/Contact/photoFetched.html">photoFetched</a></li>
-          <li><a href="../../contact/Contact/photoOrThumbnail.html">photoOrThumbnail</a></li>
-          <li><a href="../../contact/Contact/propertiesFetched.html">propertiesFetched</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-          <li><a href="../../contact/Contact/socialMedias.html">socialMedias</a></li>
-          <li><a href="../../contact/Contact/thumbnail.html">thumbnail</a></li>
-          <li><a href="../../contact/Contact/thumbnailFetched.html">thumbnailFetched</a></li>
-          <li><a href="../../contact/Contact/websites.html">websites</a></li>
-
-        <li class="section-title"><a href="../../contact/Contact-class.html#instance-methods">Methods</a></li>
-          <li><a href="../../contact/Contact/deduplicateProperties.html">deduplicateProperties</a></li>
-          <li><a href="../../contact/Contact/delete.html">delete</a></li>
-          <li><a href="../../contact/Contact/insert.html">insert</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-          <li><a href="../../contact/Contact/toJson.html">toJson</a></li>
-          <li><a href="../../contact/Contact/toString.html">toString</a></li>
-          <li><a href="../../contact/Contact/toVCard.html">toVCard</a></li>
-          <li><a href="../../contact/Contact/update.html">update</a></li>
-
-        <li class="section-title"><a href="../../contact/Contact-class.html#operators">Operators</a></li>
-          <li><a href="../../contact/Contact/operator_equals.html">operator ==</a></li>
-
-
-
-
-</ol>
-
-  </div><!--/.sidebar-offcanvas-->
-
-  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
-  </div><!--/.sidebar-offcanvas-->
+<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
 
 </main>
 
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.7+1
+      1.1.9+2
   </span>
 
   

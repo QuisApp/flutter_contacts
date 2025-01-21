@@ -20,10 +20,10 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler, ActivityAware, ActivityResultListener, RequestPermissionsResultListener {
     companion object {
@@ -105,32 +105,8 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                 }
             FlutterContacts.REQUEST_CODE_INSERT ->
                 if (insertResult != null) {
-                    // Result is of the form:
-                    // content://com.android.contacts/raw_contacts/<raw_id>
-                    // So we need to get the ID from the raw ID.
-                    val rawId = intent?.getData()?.getLastPathSegment()
-                    if (rawId != null) {
-                        val contacts: List<Map<String, Any?>> =
-                            FlutterContacts.select(
-                                resolver!!,
-                                rawId,
-                                /*withProperties=*/false,
-                                /*withThumbnail=*/false,
-                                /*withPhoto=*/false,
-                                /*withGroups=*/false,
-                                /*withAccounts=*/false,
-                                /*returnUnifiedContacts=*/true,
-                                /*includeNonVisible=*/true,
-                                /*idIsRawContactId=*/true
-                            )
-                        if (contacts.isNotEmpty()) {
-                            insertResult!!.success(contacts[0]["id"])
-                        } else {
-                            insertResult!!.success(null)
-                        }
-                    } else {
-                        insertResult!!.success(null)
-                    }
+                    val contactId = getContactIdFromExternalInsertResult(intent)
+                    insertResult!!.success(contactId)
                     insertResult = null
                 }
         }
@@ -334,6 +310,64 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                     insertResult = result
                 }
             else -> result.notImplemented()
+        }
+    }
+
+    private fun getContactIdFromExternalInsertResult(intent: Intent?): String? {
+        if (intent == null) {
+            return null
+        }
+
+        val uri = intent.getData()?.getPath()
+        if (uri == null) {
+            return null
+        }
+
+        val hasContactsReadPermission = ContextCompat.checkSelfPermission(
+            context!!, Manifest.permission.READ_CONTACTS
+        ) == PackageManager.PERMISSION_GRANTED
+        if (!hasContactsReadPermission) {
+            // Check the contacts read permission since 'open external insert' can be
+            // called even without contacts permission. So while selecting contacts, be
+            // sure that we have read permission.
+            return null
+        }
+
+        // Result can be of two forms:
+        // content://com.android.contacts/<lookup_key>/<raw_id>
+        // content://com.android.contacts/raw_contacts/<raw_id>
+        val segments = intent.getData()?.getPathSegments()
+        if (segments == null || segments.size < 2) {
+            return null
+        }
+        val secondToLastSegment = segments[segments.size - 2]
+
+        if (secondToLastSegment == "raw_contacts") {
+            val rawId = segments.last()
+            val contacts: List<Map<String, Any?>> =
+                FlutterContacts.select(
+                    resolver!!,
+                    rawId,
+                    /*withProperties=*/false,
+                    /*withThumbnail=*/false,
+                    /*withPhoto=*/false,
+                    /*withGroups=*/false,
+                    /*withAccounts=*/false,
+                    /*returnUnifiedContacts=*/true,
+                    /*includeNonVisible=*/true,
+                    /*idIsRawContactId=*/true
+                )
+            if (contacts.isEmpty()) {
+                return null
+            }
+            return contacts[0]["id"] as String?
+        } else {
+            val lookupKey = secondToLastSegment
+            val contactId = FlutterContacts.findIdWithLookupKey(
+                resolver!!,
+                lookupKey
+            )
+            return contactId
         }
     }
 

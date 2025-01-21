@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../static-assets/github.css?v1">
   <link rel="stylesheet" href="../static-assets/styles.css?v1">
@@ -29,28 +29,32 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">flutter_contacts</a></li>
-    <li><a href="../properties_social_media/properties_social_media-library.html">social_media</a></li>
+    <li><a href="../properties_social_media/properties_social_media-library.html">properties&#47;social_media.dart</a></li>
     <li class="self-crumb">lowerCaseStringToSocialMediaLabel property</li>
   </ol>
   <div class="self-name">lowerCaseStringToSocialMediaLabel</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button">
+  <div class="toggle" id="theme-button" title="Toggle brightness">
     <label for="theme">
       <input type="checkbox" id="theme" value="light-theme">
       <span id="dark-theme-button" class="material-symbols-outlined">
-        brightness_4
+        dark_mode
       </span>
       <span id="light-theme-button" class="material-symbols-outlined">
-        brightness_5
+        light_mode
       </span>
     </label>
   </div>
 </header>
 <main>
 
-  <div id="dartdoc-main-content" class="main-content">
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="properties_social_media&#47;properties_social_media-library-sidebar.html"
+      data-below-sidebar="">
       <div>
 <h1><span class="kind-top-level-property">lowerCaseStringToSocialMediaLabel</span> top-level property 
  
@@ -120,37 +124,22 @@
   </div> <!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../index.html">flutter_contacts</a></li>
-  <li><a href="../properties_social_media/properties_social_media-library.html">social_media</a></li>
-  <li class="self-crumb">lowerCaseStringToSocialMediaLabel property</li>
+    <li><a href="../index.html">flutter_contacts</a></li>
+    <li><a href="../properties_social_media/properties_social_media-library.html">social_media</a></li>
+    <li class="self-crumb">lowerCaseStringToSocialMediaLabel property</li>
 </ol>
 
 
     <h5>social_media library</h5>
-    <ol>
-      <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#classes">Classes</a></li>
-        <li><a href="../properties_social_media/SocialMedia-class.html">SocialMedia</a></li>
-
-
-
-
-      <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#properties">Properties</a></li>
-        <li><a href="../properties_social_media/lowerCaseStringToSocialMediaLabel.html">lowerCaseStringToSocialMediaLabel</a></li>
-
-
-      <li class="section-title"><a href="../properties_social_media/properties_social_media-library.html#enums">Enums</a></li>
-        <li><a href="../properties_social_media/SocialMediaLabel.html">SocialMediaLabel</a></li>
-
-
-</ol>
-
+    <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
@@ -161,7 +150,7 @@
 <footer>
   <span class="no-break">
     flutter_contacts
-      1.1.7+1
+      1.1.9+2
   </span>
 
   
