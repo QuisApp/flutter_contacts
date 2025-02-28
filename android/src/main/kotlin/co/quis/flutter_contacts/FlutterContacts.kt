@@ -58,12 +58,21 @@ class FlutterContacts {
         }
         private fun getString(cursor: Cursor, col: String): String {
             val index = getColumnIndexOrNull(cursor, col) ?: return ""
-            return cursor.getString(index) ?: ""
+
+            return try {
+                cursor.getString(index) ?: ""
+            } catch (e: IllegalStateException) {
+                ""
+            }
         }
 
         private fun getInt(cursor: Cursor, col: String): Int {
             val index = getColumnIndexOrNull(cursor, col) ?: return 0
-            return cursor.getInt(index) ?: 0
+            return try {
+                cursor.getInt(index) ?: 0
+            } catch (e: IllegalStateException) {
+                0
+            }
         }
 
         private fun getBlob(cursor: Cursor, columnName: String): ByteArray? {
