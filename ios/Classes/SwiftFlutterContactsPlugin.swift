@@ -23,37 +23,37 @@ public enum FlutterContacts {
         ]
         if withProperties {
             keys += [
-                CNContactGivenNameKey,
-                CNContactFamilyNameKey,
-                CNContactMiddleNameKey,
-                CNContactNamePrefixKey,
-                CNContactNameSuffixKey,
-                CNContactNicknameKey,
-                CNContactPhoneticGivenNameKey,
-                CNContactPhoneticFamilyNameKey,
-                CNContactPhoneticMiddleNameKey,
+//                CNContactGivenNameKey,
+//                CNContactFamilyNameKey,
+//                CNContactMiddleNameKey,
+//                CNContactNamePrefixKey,
+//                CNContactNameSuffixKey,
+//                CNContactNicknameKey,
+//                CNContactPhoneticGivenNameKey,
+//                CNContactPhoneticFamilyNameKey,
+//                CNContactPhoneticMiddleNameKey,
                 CNContactPhoneNumbersKey,
-                CNContactEmailAddressesKey,
-                CNContactPostalAddressesKey,
-                CNContactOrganizationNameKey,
-                CNContactJobTitleKey,
-                CNContactDepartmentNameKey,
-                CNContactUrlAddressesKey,
-                CNContactSocialProfilesKey,
-                CNContactInstantMessageAddressesKey,
-                CNContactBirthdayKey,
-                CNContactDatesKey,
+//                CNContactEmailAddressesKey,
+//                CNContactPostalAddressesKey,
+//                CNContactOrganizationNameKey,
+//                CNContactJobTitleKey,
+//                CNContactDepartmentNameKey,
+//                CNContactUrlAddressesKey,
+//                CNContactSocialProfilesKey,
+//                CNContactInstantMessageAddressesKey,
+//                CNContactBirthdayKey,
+//                CNContactDatesKey,
             ]
             if #available(iOS 10, *) {
-                keys.append(CNContactPhoneticOrganizationNameKey)
+//                keys.append(CNContactPhoneticOrganizationNameKey)
             }
             // Notes need explicit entitlement from Apple starting with iOS13.
             // https://stackoverflow.com/questions/57442114/ios-13-cncontacts-no-longer-working-to-retrieve-all-contacts
             if #available(iOS 13, *), !includeNotesOnIos13AndAbove {} else {
-                keys.append(CNContactNoteKey)
+//                keys.append(CNContactNoteKey)
             }
             if externalIntent {
-                keys.append(CNContactViewController.descriptorForRequiredKeys())
+//                keys.append(CNContactViewController.descriptorForRequiredKeys())
             }
         }
         if withThumbnail { keys.append(CNContactThumbnailImageDataKey) }

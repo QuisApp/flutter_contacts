@@ -47,6 +47,10 @@ struct Contact {
             from: c,
             style: CNContactFormatterStyle.fullName
         ) ?? ""
+        
+        if c.isKeyAvailable(CNContactPhoneNumbersKey) {
+            phones = c.phoneNumbers.map { Phone(fromPhone: $0) }
+        }
 
         // Hack/shortcut: if this key is available, all others are too. (We could have
         // CNContactGivenNameKey instead but it seems to be included by default along
