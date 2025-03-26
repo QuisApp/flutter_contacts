@@ -72,7 +72,19 @@ class FlutterContacts {
             if (!cursor.moveToNext()) {
                 return null
             }
-            fun getString(col: String): String = cursor.getString(cursor.getColumnIndex(col)) ?: ""
+            fun getString(col: String): String {
+                val columnIndex = cursor.getColumnIndex(col)
+                if (columnIndex == -1) return ""
+                return try {
+                    if (cursor.getType(columnIndex) == Cursor.FIELD_TYPE_STRING) {
+                        cursor.getString(columnIndex) ?: ""
+                    } else {
+                        ""
+                    }
+                } catch (e: Exception) {
+                    ""
+                }
+            }
             val id = getString(Data.CONTACT_ID)
             cursor.close()
             return id
@@ -213,8 +225,32 @@ class FlutterContacts {
             // Maps contact ID to its index in `contacts`.
             var index = mutableMapOf<String, Int>()
 
-            fun getString(col: String): String = cursor.getString(cursor.getColumnIndex(col)) ?: ""
-            fun getInt(col: String): Int = cursor.getInt(cursor.getColumnIndex(col)) ?: 0
+            fun getString(col: String): String {
+                val columnIndex = cursor.getColumnIndex(col)
+                if (columnIndex == -1) return ""
+                return try {
+                    if (cursor.getType(columnIndex) == Cursor.FIELD_TYPE_STRING) {
+                        cursor.getString(columnIndex) ?: ""
+                    } else {
+                        ""
+                    }
+                } catch (e: Exception) {
+                    ""
+                }
+            }
+            fun getInt(col: String): Int {
+                val columnIndex = cursor.getColumnIndex(col)
+                if (columnIndex == -1) return 0
+                return try {
+                    if (cursor.getType(columnIndex) == Cursor.FIELD_TYPE_INTEGER) {
+                        cursor.getInt(columnIndex) ?: 0
+                    } else {
+                        0
+                    }
+                } catch (e: Exception) {
+                    0
+                }
+            }
             fun getBool(col: String): Boolean = getInt(col) == 1
 
             while (cursor.moveToNext()) {
@@ -773,11 +809,27 @@ class FlutterContacts {
             }
 
             while (cursor.moveToNext()) {
+                val idIndex = cursor.getColumnIndex(Contacts._ID)
+                val displayNameIndex = cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)
+                val starredIndex = cursor.getColumnIndex(Contacts.STARRED)
+                
+                val id = if (idIndex != -1 && cursor.getType(idIndex) == Cursor.FIELD_TYPE_STRING) {
+                    cursor.getString(idIndex) ?: ""
+                } else { "" }
+                
+                val displayName = if (displayNameIndex != -1 && cursor.getType(displayNameIndex) == Cursor.FIELD_TYPE_STRING) {
+                    cursor.getString(displayNameIndex) ?: ""
+                } else { "" }
+                
+                val isStarred = if (starredIndex != -1 && cursor.getType(starredIndex) == Cursor.FIELD_TYPE_INTEGER) {
+                    cursor.getInt(starredIndex) == 1
+                } else { false }
+                
                 contacts.add(
                     Contact(
-                        /*id=*/(cursor.getString(cursor.getColumnIndex(Contacts._ID)) ?: ""),
-                        /*displayName=*/(cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: ""),
-                        isStarred = (cursor.getInt(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY)) ?: 0) == 0
+                        /*id=*/id,
+                        /*displayName=*/displayName,
+                        isStarred = isStarred
                     )
                 )
             }
@@ -831,8 +883,17 @@ class FlutterContacts {
             }
             var groups = mutableMapOf<String, PGroup>()
             while (cursor.moveToNext()) {
-                val groupId = cursor.getString(cursor.getColumnIndex(Groups._ID)) ?: ""
-                val groupName = cursor.getString(cursor.getColumnIndex(Groups.TITLE)) ?: ""
+                val idIndex = cursor.getColumnIndex(Groups._ID)
+                val titleIndex = cursor.getColumnIndex(Groups.TITLE)
+                
+                val groupId = if (idIndex != -1 && cursor.getType(idIndex) == Cursor.FIELD_TYPE_STRING) {
+                    cursor.getString(idIndex) ?: ""
+                } else { "" }
+                
+                val groupName = if (titleIndex != -1 && cursor.getType(titleIndex) == Cursor.FIELD_TYPE_STRING) {
+                    cursor.getString(titleIndex) ?: ""
+                } else { "" }
+                
                 groups[groupId] = PGroup(id = groupId, name = groupName)
             }
             return groups
