@@ -185,6 +185,9 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                     val returnUnifiedContacts = args[6] as Boolean
                     val includeNonVisible = args[7] as Boolean
                     // args[8] = includeNotesOnIos13AndAbove
+                    var searchQuery = args[9] as String?
+                    var page = args[10] as Int?
+                    var pageSize = args[11] as Int?
                     val contacts: List<Map<String, Any?>> =
                         FlutterContacts.select(
                             resolver!!,
@@ -197,7 +200,11 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                             withGroups,
                             withAccounts,
                             returnUnifiedContacts,
-                            includeNonVisible
+                            includeNonVisible,
+                            false,
+                            searchQuery,
+                            page,
+                            pageSize,
                         )
                     coroutineScope.launch(Dispatchers.Main) { result.success(contacts) }
                 }
@@ -355,7 +362,8 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                     /*withAccounts=*/false,
                     /*returnUnifiedContacts=*/true,
                     /*includeNonVisible=*/true,
-                    /*idIsRawContactId=*/true
+                    /*idIsRawContactId=*/true,
+                    null, null, null,
                 )
             if (contacts.isEmpty()) {
                 return null

@@ -22,8 +22,7 @@ export 'properties/website.dart';
 
 class FlutterContacts {
   static const _channel = MethodChannel('github.com/QuisApp/flutter_contacts');
-  static const _eventChannel =
-      EventChannel('github.com/QuisApp/flutter_contacts/events');
+  static const _eventChannel = EventChannel('github.com/QuisApp/flutter_contacts/events');
   // The linter is confused by this. It's the caller's responsibility to call
   // removeListener when appropriate.
   // ignore: cancel_subscriptions
@@ -38,8 +37,7 @@ class FlutterContacts {
   /// Requests permission to read or read/write contacts. Returns true if
   /// granted, false in any other case. Note: read-only mode is only applicable
   /// to Android.
-  static Future<bool> requestPermission({bool readonly = false}) async =>
-      await _channel.invokeMethod('requestPermission', readonly) ?? false;
+  static Future<bool> requestPermission({bool readonly = false}) async => await _channel.invokeMethod('requestPermission', readonly) ?? false;
 
   /// Fetches all contacts.
   ///
@@ -74,6 +72,9 @@ class FlutterContacts {
     bool withAccounts = false,
     bool sorted = true,
     bool deduplicateProperties = true,
+    String? searchQuery,
+    int? page,
+    int? pageSize,
   }) async =>
       _select(
         withProperties: withProperties,
@@ -83,6 +84,9 @@ class FlutterContacts {
         withAccounts: withAccounts,
         sorted: sorted,
         deduplicateProperties: deduplicateProperties,
+        searchQuery: searchQuery,
+        page: page,
+        pageSize: pageSize,
       );
 
   /// Fetches one contact.
@@ -167,18 +171,15 @@ class FlutterContacts {
       throw Exception('Cannot update contact without ID');
     }
     // In addition, on Android we need a raw contact ID.
-    if (Platform.isAndroid &&
-        !contact.accounts.any((x) => x.rawId.isNotEmpty)) {
-      throw Exception(
-          'Cannot update contact without raw ID on Android, make sure to '
+    if (Platform.isAndroid && !contact.accounts.any((x) => x.rawId.isNotEmpty)) {
+      throw Exception('Cannot update contact without raw ID on Android, make sure to '
           'specify `withAccounts: true` when fetching contacts');
     }
     // This avoids the accidental case where we try to update a contact before
     // fetching all their properties or photos, which would erase the existing
     // properties or photos.
     if (!contact.propertiesFetched || !contact.photoFetched) {
-      throw Exception(
-          'Cannot update contact without properties and photo, make sure to '
+      throw Exception('Cannot update contact without properties and photo, make sure to '
           'specify `withProperties: true` and `withPhoto: true` when fetching '
           'contacts');
     }
@@ -206,29 +207,24 @@ class FlutterContacts {
   }
 
   /// Deletes one contact from the database.
-  static Future<void> deleteContact(Contact contact) async =>
-      deleteContacts([contact]);
+  static Future<void> deleteContact(Contact contact) async => deleteContacts([contact]);
 
   /// Fetches all groups (or labels on Android).
   static Future<List<Group>> getGroups() async {
     List untypedGroups = await _channel.invokeMethod('getGroups');
     // ignore: omit_local_variable_types
-    List<Group> groups = untypedGroups
-        .map((x) => Group.fromJson(Map<String, dynamic>.from(x)))
-        .toList();
+    List<Group> groups = untypedGroups.map((x) => Group.fromJson(Map<String, dynamic>.from(x))).toList();
     return groups;
   }
 
   /// Inserts a new group (or label on Android).
   static Future<Group> insertGroup(Group group) async {
-    return Group.fromJson(Map<String, dynamic>.from(
-        await _channel.invokeMethod('insertGroup', [group.toJson()])));
+    return Group.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('insertGroup', [group.toJson()])));
   }
 
   /// Updates a group (or label on Android).
   static Future<Group> updateGroup(Group group) async {
-    return Group.fromJson(Map<String, dynamic>.from(
-        await _channel.invokeMethod('updateGroup', [group.toJson()])));
+    return Group.fromJson(Map<String, dynamic>.from(await _channel.invokeMethod('updateGroup', [group.toJson()])));
   }
 
   /// Deletes a group (or label on Android).
@@ -249,8 +245,7 @@ class FlutterContacts {
     }
     _eventSubscribers.add(listener);
     final runAllListeners = (event) => _eventSubscribers.forEach((f) => f());
-    _eventSubscription =
-        _eventChannel.receiveBroadcastStream().listen(runAllListeners);
+    _eventSubscription = _eventChannel.receiveBroadcastStream().listen(runAllListeners);
   }
 
   /// Removes a listener to contact database changes.
@@ -269,23 +264,18 @@ class FlutterContacts {
       _eventSubscription = null;
     } else {
       final runAllListeners = (event) => _eventSubscribers.forEach((f) => f());
-      _eventSubscription =
-          _eventChannel.receiveBroadcastStream().listen(runAllListeners);
+      _eventSubscription = _eventChannel.receiveBroadcastStream().listen(runAllListeners);
     }
   }
 
   /// Opens external contact app to view an existing contact.
   static Future<void> openExternalView(String id) async =>
-      await _channel.invokeMethod(
-          Platform.isAndroid ? 'openExternalView' : 'openExternalViewOrEdit',
-          [id]);
+      await _channel.invokeMethod(Platform.isAndroid ? 'openExternalView' : 'openExternalViewOrEdit', [id]);
 
   /// Opens external contact app to edit an existing contact.
   static Future<Contact?> openExternalEdit(String id) async {
     // New ID should be the same as original ID, but just to be safe.
-    final newId = await _channel.invokeMethod(
-        Platform.isAndroid ? 'openExternalEdit' : 'openExternalViewOrEdit',
-        [id]);
+    final newId = await _channel.invokeMethod(Platform.isAndroid ? 'openExternalEdit' : 'openExternalViewOrEdit', [id]);
     return newId == null ? null : getContact(newId);
   }
 
@@ -316,6 +306,9 @@ class FlutterContacts {
     bool withAccounts = false,
     bool sorted = true,
     bool deduplicateProperties = true,
+    String? searchQuery,
+    int? page,
+    int? pageSize,
   }) async {
     // removing the types makes it crash at runtime
     // ignore: omit_local_variable_types
@@ -329,11 +322,12 @@ class FlutterContacts {
       config.returnUnifiedContacts,
       config.includeNonVisibleOnAndroid,
       config.includeNotesOnIos13AndAbove,
+      searchQuery,
+      page,
+      pageSize,
     ]);
     // ignore: omit_local_variable_types
-    List<Contact> contacts = untypedContacts
-        .map((x) => Contact.fromJson(Map<String, dynamic>.from(x)))
-        .toList();
+    List<Contact> contacts = untypedContacts.map((x) => Contact.fromJson(Map<String, dynamic>.from(x))).toList();
     if (sorted) {
       contacts.sort(_compareDisplayNames);
     }
@@ -370,6 +364,5 @@ class FlutterContacts {
   }
 
   /// Returns normalized display name, which ignores case, space and diacritics.
-  static String _normalizeName(String name) =>
-      removeDiacritics(name.trim().toLowerCase());
+  static String _normalizeName(String name) => removeDiacritics(name.trim().toLowerCase());
 }
