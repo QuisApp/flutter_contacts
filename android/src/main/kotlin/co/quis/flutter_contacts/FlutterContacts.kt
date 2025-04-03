@@ -27,6 +27,7 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.Groups
 import android.provider.ContactsContract.RawContacts
+import android.util.Log
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.io.OutputStream
@@ -120,7 +121,11 @@ class FlutterContacts {
             withAccounts: Boolean,
             returnUnifiedContacts: Boolean,
             includeNonVisible: Boolean,
-            idIsRawContactId: Boolean = false
+            idIsRawContactId: Boolean = false,
+            searchQuery: String?,
+            page: Int?,
+            pageSize: Int?
+
         ): List<Map<String, Any?>> {
             if (id == null && !withProperties && !withThumbnail && !withPhoto &&
                 returnUnifiedContacts
@@ -205,22 +210,38 @@ class FlutterContacts {
             val groups = if (withGroups) fetchGroups(resolver) else mapOf<String, PGroup>()
 
             var selectionClauses = mutableListOf<String>()
-            if (!includeNonVisible) {
-                // This drops contacts not part of any group.
-                // See: https://stackoverflow.com/questions/28665587/what-does-contactscontract-contacts-in-visible-group-mean-in-android
-                selectionClauses.add("${Data.IN_VISIBLE_GROUP} = 1")
-            }
+//            if (!includeNonVisible) {
+//                // This drops contacts not part of any group.
+//                // See: https://stackoverflow.com/questions/28665587/what-does-contactscontract-contacts-in-visible-group-mean-in-android
+//                selectionClauses.add("${Data.IN_VISIBLE_GROUP} = 1")
+//            }
             var selectionArgs = arrayOf<String>()
 
             if (id != null) {
-                if (idIsRawContactId || !returnUnifiedContacts) {
-                    selectionClauses.add("${Data.RAW_CONTACT_ID} = ?")
-                } else {
-                    selectionClauses.add("${Data.CONTACT_ID} = ?")
-                }
+//                if (idIsRawContactId || !returnUnifiedContacts) {
+//                    selectionClauses.add("${Data.RAW_CONTACT_ID} = ?")
+//                } else {
+//                    selectionClauses.add("${Data.CONTACT_ID} = ?")
+//                }
+                selectionClauses.add("${Contacts._ID} = ?")
                 selectionArgs = arrayOf(id)
             }
+
+            Log.d("Flutter_Contacts", "Search query: ${searchQuery}, page: ${page}, pageSize: $pageSize")
+
+            if (searchQuery != null) {
+                selectionClauses.add("${Contacts.DISPLAY_NAME} LIKE ?")
+                selectionArgs = arrayOf("%$searchQuery%")
+            }
+
             val selection: String? = if (selectionClauses.isEmpty()) null else selectionClauses.joinToString(separator = " AND ")
+
+            var sortOrder: String? = null
+
+            if(page != null && pageSize != null) {
+                val offset = page * pageSize
+                sortOrder = "${Contacts.DISPLAY_NAME} ASC LIMIT $pageSize OFFSET $offset"
+            }
 
             // NOTE: The projection filters columns, and the selection filters rows. We
             // could filter rows to those with requested MIME types, but it introduces a
@@ -229,12 +250,14 @@ class FlutterContacts {
 
             // Query contact database.
             val cursor = resolver.query(
-                Data.CONTENT_URI,
-                projection.toTypedArray(),
+                Contacts.CONTENT_URI,
+                null,// projection.toTypedArray(),
                 selection,
                 selectionArgs,
-                /*sortOrder=*/null
+                sortOrder,
             )
+
+            Log.d("Flutter_Contacts", "cursor count: ${cursor?.count}");
 
             // List of all contacts.
             var contacts = mutableListOf<Contact>()
@@ -251,39 +274,87 @@ class FlutterContacts {
 
             while (cursor.moveToNext()) {
                 // ID and display name.
-                val id = if (returnUnifiedContacts) getString(Data.CONTACT_ID) else getString(Data.RAW_CONTACT_ID)
-                if (id !in index) {
-                    var contact = Contact(
-                        /*id=*/id,
-                        /*displayName=*/getString(Contacts.DISPLAY_NAME_PRIMARY),
-                        isStarred = getBool(Contacts.STARRED)
+                val id = if (returnUnifiedContacts) getString(Contacts._ID) else getString(Data.RAW_CONTACT_ID)
+
+                val hasPhone = getBool(Contacts.HAS_PHONE_NUMBER)
+
+                val contact = Contact(
+                    /*id=*/id,
+                    /*displayName=*/getString(Contacts.DISPLAY_NAME),
+                    isStarred = false//getBool(Contacts.STARRED)
+                )
+
+                val phoneNumbers = mutableListOf<co.quis.flutter_contacts.properties.Phone>()
+
+                if(hasPhone) {
+                    val phoneCursor = resolver.query(
+                        Phone.CONTENT_URI,
+                        null,
+                        "${Phone.CONTACT_ID} = ?",
+                        arrayOf(id),
+                        null
                     )
 
-                    // Fetch high-resolution photo if requested.
-                    if (withPhoto) {
-                        val contactUri: Uri =
-                            ContentUris.withAppendedId(Contacts.CONTENT_URI, id.toLong())
-                        val displayPhotoUri: Uri =
-                            Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO)
-                        try {
-                            var fis: InputStream? = resolver.openInputStream(displayPhotoUri)
-                            contact.photo = fis?.readBytes()
-                        } catch (e: FileNotFoundException) {
-                            // This happens when no high-resolution photo exists, and is
-                            // a common situation.
-                        }
-                    }
+                    if (phoneCursor != null) {
 
-                    index[id] = contacts.size
-                    contacts.add(contact)
+                        fun getString(col: String): String = getString(phoneCursor, col)
+                        fun getInt(col: String): Int = getInt(phoneCursor,col)
+
+                        while (phoneCursor.moveToNext()) {
+                            val label: String = getPhoneLabel(phoneCursor)
+                            val customLabel: String =
+                                if (label == "custom") getPhoneCustomLabel(phoneCursor) else ""
+                            phoneNumbers.add(co.quis.flutter_contacts.properties.Phone(
+                                getString(Phone.NUMBER),
+                                getString(Phone.NORMALIZED_NUMBER),
+                                label, customLabel,
+                                getInt(Phone.IS_PRIMARY) == 1
+                            ))
+
+                        }
+
+                        phoneCursor.close()
+                    }
                 }
-                var contact: Contact = contacts[index[id]!!]
+
+                contact.phones = phoneNumbers
+
+                contacts.add(contact)
+
+//                if (id !in index) {
+//                    var contact = Contact(
+//                        /*id=*/id,
+//                        /*displayName=*/getString(Contacts.DISPLAY_NAME),
+//                        isStarred = false//getBool(Contacts.STARRED)
+//                    )
+//
+//                    // Fetch high-resolution photo if requested.
+//                    /*if (withPhoto) {
+//                        val contactUri: Uri =
+//                            ContentUris.withAppendedId(Contacts.CONTENT_URI, id.toLong())
+//                        val displayPhotoUri: Uri =
+//                            Uri.withAppendedPath(contactUri, Contacts.Photo.DISPLAY_PHOTO)
+//                        try {
+//                            var fis: InputStream? = resolver.openInputStream(displayPhotoUri)
+//                            contact.photo = fis?.readBytes()
+//                        } catch (e: FileNotFoundException) {
+//                            // This happens when no high-resolution photo exists, and is
+//                            // a common situation.
+//                        }
+//                    }*/
+//
+//                    index[id] = contacts.size
+//                    contacts.add(contact)
+//                }
+//                var contact: Contact = contacts[index[id]!!]
 
                 // The MIME type of the data in current row (e.g. phone, email, etc).
-                val mimetype = getString(Data.MIMETYPE)
+//                val mimetype = getString(Data.MIMETYPE)
+
+//                Log.d("Flutter_Contacts", "${contact.displayName} id: $id mimetype:$mimetype" )
 
                 // Thumbnails.
-                if (withThumbnail && mimetype == Photo.CONTENT_ITEM_TYPE) {
+                /*if (withThumbnail && mimetype == Photo.CONTENT_ITEM_TYPE) {
                     contact.thumbnail = getBlob(cursor,Photo.PHOTO)
                 }
 
@@ -458,7 +529,7 @@ class FlutterContacts {
                             }
                         }
                     }
-                }
+                }*/
             }
 
             cursor.close()
@@ -534,7 +605,10 @@ class FlutterContacts {
                 /*withAccounts=*/true,
                 /*returnUnifiedContacts=*/true,
                 /*includeNonVisible=*/true,
-                /*idIsRawContactId=*/true
+                /*idIsRawContactId=*/true,
+                null,
+                null,
+                null,
             )
 
             if (insertedContacts.isEmpty()) {
@@ -636,7 +710,10 @@ class FlutterContacts {
                 /*withAccounts=*/true,
                 /*returnUnifiedContacts=*/true,
                 /*includeNonVisible=*/true,
-                /*idIsRawContactId=*/true
+                /*idIsRawContactId=*/true,
+                null,
+                null,
+                null,
             )
 
             if (updatedContacts.isEmpty()) {
