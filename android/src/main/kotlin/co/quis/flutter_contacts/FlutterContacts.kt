@@ -240,7 +240,7 @@ class FlutterContacts {
 
             if(page != null && pageSize != null) {
                 val offset = page * pageSize
-                sortOrder = "${Contacts.DISPLAY_NAME} ASC LIMIT $pageSize OFFSET $offset"
+                sortOrder = "${Contacts.DISPLAY_NAME} COLLATE NOCASE ASC LIMIT $pageSize OFFSET $offset"
             }
 
             // NOTE: The projection filters columns, and the selection filters rows. We
