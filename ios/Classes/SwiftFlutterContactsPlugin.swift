@@ -14,7 +14,9 @@ public enum FlutterContacts {
         withPhoto: Bool,
         returnUnifiedContacts: Bool,
         includeNotesOnIos13AndAbove: Bool,
-        externalIntent: Bool = false
+        externalIntent: Bool = false,
+        page: Int = 0,
+        pageSize: Int = 20
     ) -> [CNContact] {
         var contacts: [CNContact] = []
         var keys: [Any] = [
@@ -65,12 +67,19 @@ public enum FlutterContacts {
             // Request for a specific contact.
             request.predicate = CNContact.predicateForContacts(withIdentifiers: [id!])
         }
+        
+        let offset = page * pageSize
+        var currentIndex = 0
         do {
-            try store.enumerateContacts(
-                with: request, usingBlock: { (contact, _) -> Void in
+            try store.enumerateContacts(with: request) { (contact, _) -> Void in
+                if currentIndex >= offset && (pageSize == 0 || contacts.count < pageSize) {
                     contacts.append(contact)
                 }
-            )
+                currentIndex += 1
+                if pageSize > 0 && contacts.count >= pageSize {
+                    return
+                }
+            }
         } catch {
             print("Unexpected error: \(error)")
             return []
@@ -87,7 +96,9 @@ public enum FlutterContacts {
         withGroups: Bool,
         withAccounts: Bool,
         returnUnifiedContacts: Bool,
-        includeNotesOnIos13AndAbove: Bool
+        includeNotesOnIos13AndAbove: Bool,
+        page: Int,
+        pageSize: Int
     ) -> [[String: Any?]] {
         let store = CNContactStore()
         let contactsInternal = selectInternal(
@@ -97,7 +108,9 @@ public enum FlutterContacts {
             withThumbnail: withThumbnail,
             withPhoto: withPhoto,
             returnUnifiedContacts: returnUnifiedContacts,
-            includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
+            includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove,
+            page: page,
+            pageSize: pageSize
         )
         var contacts = contactsInternal.map { Contact(fromContact: $0) }
         if withGroups {
@@ -462,6 +475,8 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                 let returnUnifiedContacts = args[6] as! Bool
                 // args[7] = includeNonVisibleOnAndroid
                 let includeNotesOnIos13AndAbove = args[8] as! Bool
+                let page = args[10] as? Int ?? 0
+                let pageSize = args[11] as? Int ?? 0
                 let contacts = FlutterContacts.select(
                     id: id,
                     withProperties: withProperties,
@@ -470,7 +485,9 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
                     withGroups: withGroups,
                     withAccounts: withAccounts,
                     returnUnifiedContacts: returnUnifiedContacts,
-                    includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
+                    includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove,
+                    page: page,
+                    pageSize: pageSize
                 )
                 result(contacts)
             }
