@@ -5,6 +5,10 @@ import UIKit
 
 @available(iOS 9.0, *)
 public enum FlutterContacts {
+
+    static var cachedContacts: [CNContact] = []
+    static var isCachePopulated = false
+
     // Fetches contact(s).
     static func selectInternal(
         store: CNContactStore,
@@ -14,9 +18,7 @@ public enum FlutterContacts {
         withPhoto: Bool,
         returnUnifiedContacts: Bool,
         includeNotesOnIos13AndAbove: Bool,
-        externalIntent: Bool = false,
-        page: Int = 0,
-        pageSize: Int = 20
+        externalIntent: Bool = false
     ) -> [CNContact] {
         var contacts: [CNContact] = []
         var keys: [Any] = [
@@ -67,19 +69,12 @@ public enum FlutterContacts {
             // Request for a specific contact.
             request.predicate = CNContact.predicateForContacts(withIdentifiers: [id!])
         }
-        
-        let offset = page * pageSize
-        var currentIndex = 0
         do {
-            try store.enumerateContacts(with: request) { (contact, _) -> Void in
-                if currentIndex >= offset && (pageSize == 0 || contacts.count < pageSize) {
+            try store.enumerateContacts(
+                with: request, usingBlock: { (contact, _) -> Void in
                     contacts.append(contact)
                 }
-                currentIndex += 1
-                if pageSize > 0 && contacts.count >= pageSize {
-                    return
-                }
-            }
+            )
         } catch {
             print("Unexpected error: \(error)")
             return []
@@ -101,18 +96,49 @@ public enum FlutterContacts {
         pageSize: Int
     ) -> [[String: Any?]] {
         let store = CNContactStore()
-        let contactsInternal = selectInternal(
-            store: store,
-            id: id,
-            withProperties: withProperties,
-            withThumbnail: withThumbnail,
-            withPhoto: withPhoto,
-            returnUnifiedContacts: returnUnifiedContacts,
-            includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove,
-            page: page,
-            pageSize: pageSize
-        )
-        var contacts = contactsInternal.map { Contact(fromContact: $0) }
+
+        // Populate cache if not already populated
+        if !isCachePopulated {
+            cachedContacts = selectInternal(
+                store: store,
+                id: nil, // Fetch all contacts for caching
+                withProperties: withProperties,
+                withThumbnail: withThumbnail,
+                withPhoto: withPhoto,
+                returnUnifiedContacts: returnUnifiedContacts,
+                includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
+            )
+
+            // Sort cached contacts by display name
+            cachedContacts.sort {
+                let name1 = CNContactFormatter.string(from: $0, style: .fullName) ?? ""
+                let name2 = CNContactFormatter.string(from: $1, style: .fullName) ?? ""
+                return name1 < name2
+            }
+
+            isCachePopulated = true
+        }
+
+        // If a specific contact ID is requested, bypass cache
+        if let id = id {
+            let specificContact = selectInternal(
+                store: store,
+                id: id,
+                withProperties: withProperties,
+                withThumbnail: withThumbnail,
+                withPhoto: withPhoto,
+                returnUnifiedContacts: returnUnifiedContacts,
+                includeNotesOnIos13AndAbove: includeNotesOnIos13AndAbove
+            )
+            return specificContact.map { Contact(fromContact: $0).toMap() }
+        }
+
+        // Perform pagination on cached contacts
+        let offset = page * pageSize
+        let paginatedContacts = cachedContacts.dropFirst(offset).prefix(pageSize)
+
+        var contacts = paginatedContacts.map { Contact(fromContact: $0) }
+
         if withGroups {
             let groups = fetchGroups(store)
             let groupMemberships = fetchGroupMemberships(store, groups)
