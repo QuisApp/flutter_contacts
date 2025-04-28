@@ -94,9 +94,11 @@ class Phone {
         types.add(v4 ? 'text' : 'msg');
         break;
       case PhoneLabel.mms:
-      case PhoneLabel.mobile:
         types.add('cell');
         types.add(v4 ? 'text' : 'msg');
+        break;
+      case PhoneLabel.mobile:
+        types.add('mobile');
         break;
       case PhoneLabel.workMobile:
         types.add('cell');
