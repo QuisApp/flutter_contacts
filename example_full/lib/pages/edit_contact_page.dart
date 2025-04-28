@@ -331,8 +331,8 @@ class _EditContactPageState extends State<EditContactPage>
         () => _contact.notes = _contact.notes + [Note('')],
         (int i, dynamic w) => NoteForm(
           w,
-          onUpdate: null,
-          onDelete: () => setState(() => _contact.groups.removeAt(i)),
+          onUpdate: (note) = _contacts.notes[i] = note,
+          onDelete: () => setState(() => _contact.notes.removeAt(i)),
           key: UniqueKey(),
         ),
         () => _contact.notes = [],
