@@ -207,7 +207,7 @@ class FlutterContactsPlugin : FlutterPlugin, MethodCallHandler, EventChannel.Str
                     val args = call.arguments as List<Any>
                     val contact = args[0] as Map<String, Any>
                     val insertedContact: Map<String, Any?>? =
-                        FlutterContacts.insert(resolver!!, contact)
+                        FlutterContacts.insert(resolver!!, context!!, contact)
                     coroutineScope.launch(Dispatchers.Main) {
                         if (insertedContact != null) {
                             result.success(insertedContact)
