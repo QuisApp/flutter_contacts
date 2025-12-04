@@ -420,7 +420,24 @@ public enum FlutterContacts {
 
 @available(iOS 9.0, *)
 public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamHandler, CNContactViewControllerDelegate, CNContactPickerDelegate {
-    private let rootViewController: UIViewController
+		private var keyWindow: UIWindow? {
+				if #available(iOS 13, *) {
+						// Get key window from currently active scene
+						return UIApplication.shared.connectedScenes
+								.filter { $0.activationState == .foregroundActive }
+								.compactMap { $0 as? UIWindowScene }
+								.flatMap { $0.windows }
+								.first { $0.isKeyWindow }
+				} else {
+						// Fallback to old way from application delgate
+						return UIApplication.shared.delegate!.window!
+				}
+		}
+    private var rootViewController: UIViewController {
+				let window = keyWindow
+				assert(window != nil)
+				return window!.rootViewController!
+		}
     private var externalResult: FlutterResult?
 
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -432,14 +449,9 @@ public class SwiftFlutterContactsPlugin: NSObject, FlutterPlugin, FlutterStreamH
             name: "github.com/QuisApp/flutter_contacts/events",
             binaryMessenger: registrar.messenger()
         )
-        let rootViewController = UIApplication.shared.delegate!.window!!.rootViewController!
-        let instance = SwiftFlutterContactsPlugin(rootViewController)
+        let instance = SwiftFlutterContactsPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         eventChannel.setStreamHandler(instance)
-    }
-
-    init(_ rootViewController: UIViewController) {
-        self.rootViewController = rootViewController
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
