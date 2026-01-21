@@ -1,0 +1,5 @@
+root = true
+
+# silences warnings about underscore in 'package co.quis.flutter_contacts'
+[*.{kt,kts}]
+ktlint_standard_package-name = disabled

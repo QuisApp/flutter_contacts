@@ -1,0 +1,28 @@
+name: flutter_contacts
+description: "Fast, complete contact management for Android, iOS & macOS — all fields, groups, accounts, vCards, native dialogs, listeners, SIM contacts, and number blocking."
+version: 2.0.0-beta.1
+repository: https://github.com/QuisApp/flutter_contacts
+
+environment:
+  sdk: ^3.10.4
+  flutter: ">=3.3.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: co.quis.flutter_contacts
+        pluginClass: FlutterContactsPlugin
+      ios:
+        pluginClass: FlutterContactsPlugin
+      macos:
+        pluginClass: FlutterContactsPlugin

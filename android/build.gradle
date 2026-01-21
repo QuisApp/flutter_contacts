@@ -1,0 +1,77 @@
+group = 'co.quis.flutter_contacts'
+version = '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '2.2.20'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath('com.android.tools.build:gradle:8.11.1')
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url = 'https://storage.googleapis.com/download.flutter.io'
+        }
+    }
+}
+
+def flutterRoot = System.getenv('FLUTTER_ROOT') ?: '/opt/homebrew/Caskroom/flutter/3.32.4/flutter'
+def engineVersion = new File(flutterRoot, 'bin/cache/engine.stamp').text.trim()
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    namespace = 'co.quis.flutter_contacts'
+    compileSdk = 36
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        minSdk = 24
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
+    packaging {
+        resources {
+            excludes += [
+                'META-INF/LICENSE.md',
+                'META-INF/LICENSE-notice.md',
+                'META-INF/LICENSE',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.md',
+            ]
+        }
+    }
+}
+
+dependencies {
+    compileOnly "io.flutter:flutter_embedding_release:1.0.0-${engineVersion}"
+    testImplementation "io.flutter:flutter_embedding_release:1.0.0-${engineVersion}"
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.16'
+    testImplementation 'io.mockk:mockk:1.14.6'
+}
