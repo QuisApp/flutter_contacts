@@ -1,6 +1,6 @@
 name: flutter_contacts
 description: "Fast, complete contact management for Android, iOS & macOS — all fields, groups, accounts, vCards, native dialogs, listeners, SIM contacts, and number blocking."
-version: 2.0.0-beta.1
+version: 2.0.0-beta.2
 repository: https://github.com/QuisApp/flutter_contacts
 
 environment:

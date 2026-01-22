@@ -16,21 +16,12 @@ class ContactMetadata {
   /// Accounts this contact belongs to.
   final List<Account> accounts;
 
-  /// Last update timestamp in milliseconds since epoch (Android only).
-  final int? lastUpdatedTimestamp;
-
-  const ContactMetadata({
-    required this.properties,
-    required this.accounts,
-    this.lastUpdatedTimestamp,
-  });
+  const ContactMetadata({required this.properties, required this.accounts});
 
   Map<String, dynamic> toJson() {
     return {
       'properties': properties.toJson(),
       'accounts': accounts.map((e) => e.toJson()).toList(),
-      if (lastUpdatedTimestamp != null)
-        'lastUpdatedTimestamp': lastUpdatedTimestamp,
     };
   }
 
@@ -41,7 +32,6 @@ class ContactMetadata {
         json['accounts'] as List?,
         Account.fromJson,
       ),
-      lastUpdatedTimestamp: json['lastUpdatedTimestamp'] as int?,
     );
   }
 
@@ -53,19 +43,16 @@ class ContactMetadata {
       identical(this, other) ||
       (other is ContactMetadata &&
           properties == other.properties &&
-          accounts == other.accounts &&
-          lastUpdatedTimestamp == other.lastUpdatedTimestamp);
+          accounts == other.accounts);
 
   @override
-  int get hashCode => Object.hash(properties, accounts, lastUpdatedTimestamp);
+  int get hashCode => Object.hash(properties, accounts);
 
   ContactMetadata copyWith({
     Set<ContactProperty>? properties,
     List<Account>? accounts,
-    int? lastUpdatedTimestamp,
   }) => ContactMetadata(
     properties: properties ?? this.properties,
     accounts: accounts ?? this.accounts,
-    lastUpdatedTimestamp: lastUpdatedTimestamp ?? this.lastUpdatedTimestamp,
   );
 }

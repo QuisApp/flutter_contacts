@@ -2,18 +2,22 @@ package co.quis.flutter_contacts.crud.utils
 
 import android.content.ContentResolver
 import android.database.Cursor
+import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
+import android.provider.ContactsContract.RawContacts
 import android.util.Base64
 import co.quis.flutter_contacts.accounts.models.Account
 import co.quis.flutter_contacts.common.BatchHelper
 import co.quis.flutter_contacts.common.CursorHelpers.forEachRow
+import co.quis.flutter_contacts.common.CursorHelpers.getLongOrNull
 import co.quis.flutter_contacts.common.CursorHelpers.getString
 import co.quis.flutter_contacts.common.CursorHelpers.getStringOrNull
 import co.quis.flutter_contacts.common.CursorHelpers.queryAndProcess
 import co.quis.flutter_contacts.crud.models.MutableContact
 import co.quis.flutter_contacts.crud.models.contact.Contact
+import co.quis.flutter_contacts.crud.models.contact.RawContactInfo
 import co.quis.flutter_contacts.crud.models.properties.Photo
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -188,23 +192,37 @@ object ContactFetcher {
         properties: Set<String>,
         account: Account?,
         rawContactIds: List<Long>?,
+        lookup: Boolean = false,
     ): Contact? {
+        val contactId =
+            if (lookup) {
+                val lookupUri =
+                    Uri.withAppendedPath(
+                        Contacts.CONTENT_LOOKUP_URI,
+                        id,
+                    )
+                Contacts.lookupContact(contentResolver, lookupUri)?.let { contactUri ->
+                    contactUri.lastPathSegment
+                } ?: return null
+            } else {
+                id
+            }
         val dataMimeTypes = PropertyUtils.dataMimeTypesFor(properties)
         val loadPhotoThumbnailViaContacts = shouldLoadPhotoThumbnailViaContacts(dataMimeTypes)
         val contactsMap =
             fetchContactLevelFields(
                 contentResolver,
-                contactIds = listOf(id),
+                contactIds = listOf(contactId),
                 properties = properties,
                 loadPhotoThumbnail = loadPhotoThumbnailViaContacts,
             )
-        val contactData = contactsMap[id] ?: return null
+        val contactData = contactsMap[contactId] ?: return null
         val projection = PropertyUtils.buildDataProjection(properties)
 
         if (dataMimeTypes.isNotEmpty() && !loadPhotoThumbnailViaContacts) {
             queryDataForSelection(
                 contentResolver = contentResolver,
-                contactId = id,
+                contactId = contactId,
                 contactIds = null,
                 rawContactIds = rawContactIds,
                 account = account,
@@ -215,7 +233,10 @@ object ContactFetcher {
             )
         }
 
-        contactData.accounts = AccountUtils.getAccountsForContact(contentResolver, id)
+        contactData.accounts = AccountUtils.getAccountsForContact(contentResolver, contactId)
+        if (properties.contains("identifiers")) {
+            fetchRawContactIdentifiers(contentResolver, listOf(contactId), contactsMap)
+        }
         return contactData.toContact(properties, contentResolver)
     }
 
@@ -257,6 +278,9 @@ object ContactFetcher {
             val accountsMap = AccountUtils.getAccountsForContacts(contentResolver, batchIds)
             batchIds.forEach { contactId ->
                 contactsMap[contactId]?.accounts = accountsMap[contactId] ?: emptyList()
+            }
+            if (properties.contains("identifiers")) {
+                fetchRawContactIdentifiers(contentResolver, batchIds, contactsMap)
             }
             batchIds.forEach { contactId ->
                 contactsMap[contactId]?.let {
@@ -355,6 +379,10 @@ object ContactFetcher {
                 contactsMap[contactId]?.accounts = accountsMap[contactId] ?: emptyList()
             }
 
+            if (properties.contains("identifiers")) {
+                fetchRawContactIdentifiers(contentResolver, batchIds, contactsMap)
+            }
+
             results.addAll(
                 batchIds.mapNotNull { contactId ->
                     contactsMap[contactId]?.toContact(properties, contentResolver)
@@ -421,6 +449,9 @@ object ContactFetcher {
         val contactData = contactsMap[profileContactId!!] ?: return null
         contactData.accounts =
             AccountUtils.getAccountsForContact(contentResolver, profileContactId!!)
+        if (properties.contains("identifiers")) {
+            fetchRawContactIdentifiers(contentResolver, listOf(profileContactId!!), contactsMap)
+        }
         return contactData.toContact(properties, contentResolver)
     }
 
@@ -473,5 +504,50 @@ object ContactFetcher {
                 }
             }
         return debugDataMap.takeIf { it.isNotEmpty() }
+    }
+
+    private fun fetchRawContactIdentifiers(
+        contentResolver: ContentResolver,
+        contactIds: List<String>,
+        contactsMap: MutableMap<String, MutableContact>,
+    ) {
+        if (contactIds.isEmpty()) return
+        contentResolver.queryAndProcess(
+            RawContacts.CONTENT_URI,
+            projection =
+                arrayOf(
+                    RawContacts.CONTACT_ID,
+                    RawContacts._ID,
+                    RawContacts.SOURCE_ID,
+                    RawContacts.ACCOUNT_TYPE,
+                    RawContacts.ACCOUNT_NAME,
+                ),
+            selection = "${RawContacts.CONTACT_ID} IN (${contactIds.joinToString(",") { "?" }})",
+            selectionArgs = contactIds.toTypedArray(),
+        ) { cursor ->
+            cursor.forEachRow { row ->
+                val contactId = row.getStringOrNull(RawContacts.CONTACT_ID) ?: return@forEachRow
+                val contactData = contactsMap[contactId] ?: return@forEachRow
+                val rawContactId = row.getLongOrNull(RawContacts._ID)?.toString()
+                val sourceId = row.getStringOrNull(RawContacts.SOURCE_ID)
+                val accountType = row.getStringOrNull(RawContacts.ACCOUNT_TYPE)
+                val accountName = row.getStringOrNull(RawContacts.ACCOUNT_NAME)
+                val account =
+                    if (!accountType.isNullOrEmpty() && !accountName.isNullOrEmpty()) {
+                        Account(accountType, accountName)
+                    } else {
+                        null
+                    }
+                if (rawContactId != null || sourceId != null || account != null) {
+                    contactData.rawContactInfos.add(
+                        RawContactInfo(
+                            rawContactId = rawContactId,
+                            sourceId = sourceId,
+                            account = account,
+                        ),
+                    )
+                }
+            }
+        }
     }
 }

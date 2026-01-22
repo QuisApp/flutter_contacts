@@ -1,4 +1,5 @@
 import '../../../models/contact/contact.dart';
+import '../../../models/android/android_data.dart';
 import '../../../models/properties/name.dart';
 import '../../../models/properties/phone.dart';
 import '../../../models/properties/email.dart';
@@ -77,8 +78,15 @@ class ContactBuilder {
     relations: relations,
     notes: notes,
     photo: photo,
-    isFavorite: isFavorite,
-    customRingtone: customRingtone,
-    sendToVoicemail: sendToVoicemail,
+    android:
+        (isFavorite != null ||
+            customRingtone != null ||
+            sendToVoicemail != null)
+        ? AndroidData(
+            isFavorite: isFavorite,
+            customRingtone: customRingtone,
+            sendToVoicemail: sendToVoicemail,
+          )
+        : null,
   );
 }

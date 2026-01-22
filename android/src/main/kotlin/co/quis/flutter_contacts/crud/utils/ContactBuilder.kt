@@ -193,12 +193,12 @@ object ContactBuilder {
             }
         }
 
-        updateFlag("favorite", newContact.isFavorite, existingContact.isFavorite, Contacts.STARRED)
-        updateString("ringtone", newContact.customRingtone, existingContact.customRingtone, Contacts.CUSTOM_RINGTONE)
+        updateFlag("favorite", newContact.android?.isFavorite, existingContact.android?.isFavorite, Contacts.STARRED)
+        updateString("ringtone", newContact.android?.customRingtone, existingContact.android?.customRingtone, Contacts.CUSTOM_RINGTONE)
         updateFlag(
             "sendToVoicemail",
-            newContact.sendToVoicemail,
-            existingContact.sendToVoicemail,
+            newContact.android?.sendToVoicemail,
+            existingContact.android?.sendToVoicemail,
             Contacts.SEND_TO_VOICEMAIL,
         )
         if (needsUpdate) ops.add(updateOp.build())
@@ -236,9 +236,9 @@ object ContactBuilder {
             }
         }
 
-        putFlag(contact.isFavorite, Contacts.STARRED)
-        putString(contact.customRingtone, Contacts.CUSTOM_RINGTONE)
-        putFlag(contact.sendToVoicemail, Contacts.SEND_TO_VOICEMAIL)
+        putFlag(contact.android?.isFavorite, Contacts.STARRED)
+        putString(contact.android?.customRingtone, Contacts.CUSTOM_RINGTONE)
+        putFlag(contact.android?.sendToVoicemail, Contacts.SEND_TO_VOICEMAIL)
 
         return if (needsUpdate) updateOp.build() else null
     }

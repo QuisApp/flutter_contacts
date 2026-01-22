@@ -3,7 +3,6 @@ package co.quis.flutter_contacts.crud.models.contact
 data class ContactMetadata(
     val properties: Set<String>,
     val accounts: List<Map<String, String>> = emptyList(),
-    val lastUpdatedTimestamp: Long? = null,
 ) {
     companion object {
         fun fromJson(json: Map<String, Any?>): ContactMetadata {
@@ -22,24 +21,18 @@ data class ContactMetadata(
                         }
                     }
                 }
-            val lastUpdatedTimestamp = (json["lastUpdatedTimestamp"] as? Number)?.toLong()
-            return ContactMetadata(properties = properties, accounts = accounts, lastUpdatedTimestamp = lastUpdatedTimestamp)
+            return ContactMetadata(properties = properties, accounts = accounts)
         }
 
         fun fromPropertiesSet(
             properties: Set<String>,
             accounts: List<Map<String, String>> = emptyList(),
-            lastUpdatedTimestamp: Long? = null,
-        ): ContactMetadata = ContactMetadata(properties = properties, accounts = accounts, lastUpdatedTimestamp = lastUpdatedTimestamp)
+        ): ContactMetadata = ContactMetadata(properties = properties, accounts = accounts)
     }
 
-    fun toJson(): Map<String, Any?> {
-        val result =
-            mutableMapOf<String, Any?>(
-                "properties" to properties.sorted().toList(),
-                "accounts" to accounts,
-            )
-        lastUpdatedTimestamp?.let { result["lastUpdatedTimestamp"] = it }
-        return result
-    }
+    fun toJson(): Map<String, Any?> =
+        mapOf(
+            "properties" to properties.sorted().toList(),
+            "accounts" to accounts,
+        )
 }

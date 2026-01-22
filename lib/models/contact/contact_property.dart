@@ -48,6 +48,8 @@
 /// | sendToVoicemail  | ✔       | ⨯   |
 /// | photoThumbnail   | ✔       | ✔   |
 /// | photoFullRes     | ✔       | ✔   |
+/// | timestamp        | ✔       | ⨯   |
+/// | identifiers      | ✔       | ⨯   |
 /// | debugData        | ✔       | ⨯   |
 enum ContactProperty {
   /// Structured name property.
@@ -95,6 +97,12 @@ enum ContactProperty {
 
   /// Contact photo full resolution.
   photoFullRes,
+
+  /// Last update timestamp (Android only).
+  timestamp,
+
+  /// Android-specific contact identifiers (Android only).
+  identifiers,
 
   /// All data mimetypes for debugging (Android only).
   debugData,

@@ -93,4 +93,12 @@ object JsonHelpers {
         val value = json[key] as? List<Map<String, Any?>>
         return value?.map { fromJson(it) } ?: emptyList()
     }
+
+    /**
+     * Decodes an optional timestamp (Number) from JSON as Long.
+     */
+    fun decodeOptionalTimestamp(
+        json: Map<String, Any?>,
+        key: String,
+    ): Long? = (json[key] as? Number)?.toLong()
 }

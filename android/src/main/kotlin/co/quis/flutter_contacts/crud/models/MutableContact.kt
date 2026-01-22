@@ -1,8 +1,11 @@
 package co.quis.flutter_contacts.crud.models
 
 import android.content.ContentResolver
+import co.quis.flutter_contacts.crud.models.contact.AndroidData
+import co.quis.flutter_contacts.crud.models.contact.AndroidIdentifiers
 import co.quis.flutter_contacts.crud.models.contact.Contact
 import co.quis.flutter_contacts.crud.models.contact.ContactMetadata
+import co.quis.flutter_contacts.crud.models.contact.RawContactInfo
 import co.quis.flutter_contacts.crud.models.properties.Address
 import co.quis.flutter_contacts.crud.models.properties.Email
 import co.quis.flutter_contacts.crud.models.properties.Event
@@ -35,6 +38,8 @@ data class MutableContact(
     var customRingtone: String? = null,
     var sendToVoicemail: Boolean? = null,
     var lastUpdatedTimestamp: Long? = null,
+    var lookupKey: String? = null,
+    val rawContactInfos: MutableList<RawContactInfo> = mutableListOf(),
     var accounts: List<Map<String, String>> = emptyList(),
 ) {
     fun mergeFrom(other: MutableContact) {
@@ -90,23 +95,24 @@ data class MutableContact(
             events = PropertyUtils.sortEvents(events),
             relations = PropertyUtils.sortRelations(relations),
             notes = PropertyUtils.sortNotes(notes),
-            isFavorite = isFavorite,
-            customRingtone = customRingtone,
-            sendToVoicemail = sendToVoicemail,
-            debugData =
-                if (properties.contains("debugData")) {
-                    ContactFetcher.getDebugData(
-                        contentResolver,
-                        contactId,
-                    )
-                } else {
-                    null
+            android =
+                run {
+                    val debugData =
+                        if (properties.contains("debugData")) {
+                            ContactFetcher.getDebugData(contentResolver, contactId)
+                        } else {
+                            null
+                        }
+                    val identifiers = AndroidIdentifiers(lookupKey, rawContactInfos.toList()).takeIf { it.isNotEmpty() }
+                    AndroidData(
+                        isFavorite = isFavorite,
+                        customRingtone = customRingtone,
+                        sendToVoicemail = sendToVoicemail,
+                        lastUpdatedTimestamp = lastUpdatedTimestamp,
+                        identifiers = identifiers,
+                        debugData = debugData,
+                    ).takeIf { it.isNotEmpty() }
                 },
-            metadata =
-                ContactMetadata.fromPropertiesSet(
-                    properties,
-                    accounts,
-                    lastUpdatedTimestamp,
-                ),
+            metadata = ContactMetadata.fromPropertiesSet(properties, accounts),
         )
 }
