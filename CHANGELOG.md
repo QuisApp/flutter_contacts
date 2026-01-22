@@ -1,3 +1,8 @@
+## 2.0.0-beta.2
+
+* Expose Android identifiers and timestamp
+* Add `androidLookup` parameter to `get()`
+
 ## 2.0.0-beta.1
 
 * Complete rewrite with improved architecture and performance
