@@ -4,8 +4,7 @@
 
 Get, create, update, and delete contacts with **comprehensive property support**. Includes groups, accounts, vCard import/export, native dialogs, real-time change listeners, permissions management, and platform-specific APIs across **Android**, **iOS**, and **macOS**.
 
-[![pub version](https://img.shields.io/pub/v/flutter_contacts?color=0288D1&logo=flutter&logoColor=white&logoSize=auto&style=for-the-badge&include_prereleases)](https://pub.dev/packages/flutter_contacts) [![pub likes](https://img.shields.io/pub/likes/flutter_contacts?color=26A69A&style=for-the-badge)](https://pub.dev/packages/flutter_contacts) [![pub dm](https://img.shields.io/pub/dm/flutter_contacts?color=5C6BC0&style=for-the-badge)](https://pub.dev/packages/flutter_contacts)
-[![license](https://img.shields.io/badge/license-MIT-546E7A?logo=github&logoColor=white&style=for-the-badge)](https://github.com/QuisApp/flutter_contacts/blob/master/LICENSE)
+[![pub version](https://img.shields.io/pub/v/flutter_contacts?color=0288D1&logo=flutter&logoColor=white&logoSize=auto&style=for-the-badge&include_prereleases)](https://pub.dev/packages/flutter_contacts) [![pub likes](https://img.shields.io/pub/likes/flutter_contacts?color=26A69A&style=for-the-badge)](https://pub.dev/packages/flutter_contacts) [![pub dm](https://img.shields.io/pub/dm/flutter_contacts?color=5C6BC0&style=for-the-badge)](https://pub.dev/packages/flutter_contacts) [![license](https://img.shields.io/badge/license-MIT-546E7A?logo=github&logoColor=white&style=for-the-badge)](https://github.com/QuisApp/flutter_contacts/blob/master/LICENSE)
 
 ---
 
