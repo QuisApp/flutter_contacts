@@ -8,16 +8,17 @@ void writeAndroidProperties(
   Contact contact,
   VCardVersion version,
 ) {
-  if (contact.isFavorite == true) {
+  final android = contact.android;
+  if (android?.isFavorite == true) {
     writeProperty(buffer, 'X-ANDROID-STARRED', '1', version: version);
   }
   writeProperty(
     buffer,
     'X-ANDROID-CUSTOM-RINGTONE',
-    contact.customRingtone,
+    android?.customRingtone,
     version: version,
   );
-  if (contact.sendToVoicemail == true) {
+  if (android?.sendToVoicemail == true) {
     writeProperty(buffer, 'X-ANDROID-SEND-TO-VOICEMAIL', '1', version: version);
   }
 }

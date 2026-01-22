@@ -376,9 +376,10 @@ class Contact {
   final List<Event> events;            // Birthdays, anniversaries
   final List<Relation> relations;
   final List<Note> notes;
-  final bool? isFavorite;              // Android only
-  final String? customRingtone;        // Android only
-  final bool? sendToVoicemail;        // Android only
+  
+  // Android-specific fields: isFavorite, customRingtone,
+  // sendToVoicemail, timestamp, identifiers
+  final AndroidData? android;
 }
 ```
 
@@ -456,7 +457,7 @@ Phone('555-1234', label: Label(PhoneLabel.custom, customLabel: 'Emergency'))
 
 **Not Available:**
 - APIs: `ringtones`, `blockedNumbers`, `sim`, `profile` (iOS), `native` (macOS)
-- Properties: `isFavorite`, `customRingtone`, `sendToVoicemail`
+- Properties: `favorite`, `ringtone`, `sendToVoicemail`, `timestamp`, `identifiers`, `debugData` (all nested in `android` field)
 - Fields: `Phone.isPrimary`, `Phone.normalizedNumber`, `Email.isPrimary`, `Address.poBox`, `Address.neighborhood`, `Organization.jobDescription`, `Organization.symbol`, `Organization.officeLocation`
 - Some Android-specific labels (auto-converted to custom)
 

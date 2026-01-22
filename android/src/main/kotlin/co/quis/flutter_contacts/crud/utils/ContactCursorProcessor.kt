@@ -27,6 +27,7 @@ data class ContactLevelFields(
     val customRingtone: String?,
     val sendToVoicemail: Boolean?,
     val lastUpdatedTimestamp: Long?,
+    val lookupKey: String?,
 )
 
 object ContactCursorProcessor {
@@ -119,6 +120,7 @@ object ContactCursorProcessor {
         contactData.customRingtone = fields.customRingtone
         contactData.sendToVoicemail = fields.sendToVoicemail
         contactData.lastUpdatedTimestamp = fields.lastUpdatedTimestamp
+        contactData.lookupKey = fields.lookupKey
     }
 
     private fun extractContactLevelFields(
@@ -150,12 +152,19 @@ object ContactCursorProcessor {
             } else {
                 null
             }
+        val lookupKey =
+            if (properties.contains("identifiers")) {
+                cursor.getStringOrNull(Contacts.LOOKUP_KEY)
+            } else {
+                null
+            }
         return ContactLevelFields(
             displayName,
             isFavorite,
             customRingtone,
             sendToVoicemail,
             lastUpdatedTimestamp,
+            lookupKey,
         )
     }
 }

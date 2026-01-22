@@ -22,6 +22,7 @@ class GetImpl(
         val properties = call.argList<String>("properties")?.toSet() ?: emptySet()
         val account = Account.fromJson(call.argMap("account"))
         val rawContactIdsList = call.argList<Long>("rawContactIds")
+        val lookup = call.argument<Boolean>("lookup") ?: false
         val contact =
             ContactFetcher.getContact(
                 context.contentResolver,
@@ -29,6 +30,7 @@ class GetImpl(
                 properties,
                 account,
                 rawContactIdsList,
+                lookup,
             )
         if (contact != null) {
             postResult(result, contact.toJson())

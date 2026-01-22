@@ -16,36 +16,41 @@ import 'models/contact/contact_property.dart';
 import 'models/contact/contact_filter.dart';
 import 'models/contact/contact_change.dart';
 
-// Models
-export 'models/contact/contact.dart';
-export 'models/contact/contact_property.dart';
-export 'models/contact/contact_filter.dart';
-export 'models/contact/contact_change.dart';
 export 'models/accounts/account.dart';
+export 'models/android/android_data.dart';
+export 'models/android/android_identifiers.dart';
+export 'models/android/raw_contact.dart';
+export 'models/contact/contact_change_type.dart';
+export 'models/contact/contact_change.dart';
+export 'models/contact/contact_filter.dart';
+export 'models/contact/contact_metadata.dart';
+export 'models/contact/contact_properties.dart';
+export 'models/contact/contact_property.dart';
+export 'models/contact/contact.dart';
 export 'models/groups/group.dart';
-export 'models/permissions/permission_status.dart';
-export 'models/permissions/permission_type.dart';
-export 'models/properties/name.dart';
-export 'models/properties/phone.dart';
-export 'models/properties/email.dart';
-export 'models/properties/address.dart';
-export 'models/properties/organization.dart';
-export 'models/properties/website.dart';
-export 'models/properties/social_media.dart';
-export 'models/properties/event.dart';
-export 'models/properties/relation.dart';
-export 'models/properties/note.dart';
-export 'models/properties/photo.dart';
+export 'models/labels/address_label.dart';
+export 'models/labels/email_label.dart';
+export 'models/labels/event_label.dart';
 export 'models/labels/label.dart';
 export 'models/labels/phone_label.dart';
-export 'models/labels/email_label.dart';
-export 'models/labels/address_label.dart';
-export 'models/labels/event_label.dart';
 export 'models/labels/relation_label.dart';
 export 'models/labels/social_media_label.dart';
 export 'models/labels/website_label.dart';
-export 'models/ringtones/ringtone.dart';
+export 'models/permissions/permission_status.dart';
+export 'models/permissions/permission_type.dart';
+export 'models/properties/address.dart';
+export 'models/properties/email.dart';
+export 'models/properties/event.dart';
+export 'models/properties/name.dart';
+export 'models/properties/note.dart';
+export 'models/properties/organization.dart';
+export 'models/properties/phone.dart';
+export 'models/properties/photo.dart';
+export 'models/properties/relation.dart';
+export 'models/properties/social_media.dart';
+export 'models/properties/website.dart';
 export 'models/ringtones/ringtone_type.dart';
+export 'models/ringtones/ringtone.dart';
 export 'models/vcard/vcard_version.dart';
 
 /// Complete contact management with ultra-fast get, create, update, and delete
@@ -180,11 +185,20 @@ class FlutterContacts {
   ///
   /// [properties] - Properties to fetch. Defaults to none (only ID and display name).
   /// [account] - Optional account filter. Only returns contact data that exists in that account.
+  /// [androidLookup] - If true, treats [id] as a lookup key instead of contact ID. Get the lookup
+  ///   key from `contact.android?.identifiers?.lookupKey`. Unlike [Contact.id], lookup keys are
+  ///   stable after aggregation or syncs. No effect on iOS/macOS.
   static Future<Contact?> get(
     String id, {
     Set<ContactProperty>? properties,
     Account? account,
-  }) => _crud.get(id, properties: properties, account: account);
+    bool androidLookup = false,
+  }) => _crud.get(
+    id,
+    properties: properties,
+    account: account,
+    androidLookup: androidLookup,
+  );
 
   /// Gets all contacts matching the criteria.
   ///
@@ -210,8 +224,8 @@ class FlutterContacts {
   /// [contact] - Contact to create.
   /// [account] - Optional account. If null, uses the default account.
   ///
-/// Returns the system-generated ID. The contact's `id` and `displayName`
-/// are system-generated and will be ignored if provided.
+  /// Returns the system-generated ID. The contact's `id` and `displayName`
+  /// are system-generated and will be ignored if provided.
   static Future<String> create(Contact contact, {Account? account}) =>
       _crud.create(contact, account: account);
 
@@ -220,9 +234,9 @@ class FlutterContacts {
   /// [contacts] - Contacts to create.
   /// [account] - Optional account. If null, uses the default account.
   ///
-/// Returns a list of system-generated IDs in the same order as input.
-/// The contact's `id` and `displayName` are system-generated and will be
-/// ignored if provided.
+  /// Returns a list of system-generated IDs in the same order as input.
+  /// The contact's `id` and `displayName` are system-generated and will be
+  /// ignored if provided.
   static Future<List<String>> createAll(
     List<Contact> contacts, {
     Account? account,

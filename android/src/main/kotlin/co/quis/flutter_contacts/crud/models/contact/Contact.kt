@@ -28,11 +28,7 @@ data class Contact(
     val events: List<Event> = emptyList(),
     val relations: List<Relation> = emptyList(),
     val notes: List<Note> = emptyList(),
-    val isFavorite: Boolean? = null,
-    val customRingtone: String? = null,
-    val sendToVoicemail: Boolean? = null,
-    val lastUpdatedTimestamp: Long? = null,
-    val debugData: Map<String, Any?>? = null,
+    val android: AndroidData? = null,
     val metadata: ContactMetadata? = null,
 ) {
     companion object {
@@ -57,11 +53,7 @@ data class Contact(
                 events = JsonHelpers.decodeList(json, "events") { Event.fromJson(it) },
                 relations = JsonHelpers.decodeList(json, "relations") { Relation.fromJson(it) },
                 notes = JsonHelpers.decodeList(json, "notes") { Note.fromJson(it) },
-                isFavorite = JsonHelpers.decodeOptional(json, "isFavorite"),
-                customRingtone = JsonHelpers.decodeOptional(json, "customRingtone"),
-                sendToVoicemail = JsonHelpers.decodeOptional(json, "sendToVoicemail"),
-                lastUpdatedTimestamp = (json["lastUpdatedTimestamp"] as? Number)?.toLong(),
-                debugData = JsonHelpers.decodeOptional(json, "debugData"),
+                android = JsonHelpers.decodeOptionalObject(json, "android") { AndroidData.fromJson(it) },
                 metadata =
                     JsonHelpers.decodeOptionalObject(json, "metadata") {
                         ContactMetadata.fromJson(it)
@@ -84,11 +76,7 @@ data class Contact(
         JsonHelpers.encodeList(result, "notes", notes) { it.toJson() }
         JsonHelpers.encodeOptionalObject(result, "photo", photo) { it.toJson() }
         JsonHelpers.encodeOptionalObject(result, "name", name) { it.toJson() }
-        JsonHelpers.encodeOptional(result, "isFavorite", isFavorite)
-        JsonHelpers.encodeOptional(result, "customRingtone", customRingtone)
-        JsonHelpers.encodeOptional(result, "sendToVoicemail", sendToVoicemail)
-        JsonHelpers.encodeOptional(result, "lastUpdatedTimestamp", lastUpdatedTimestamp)
-        JsonHelpers.encodeOptional(result, "debugData", debugData)
+        JsonHelpers.encodeOptionalObject(result, "android", android) { it.toJson() }
         JsonHelpers.encodeOptionalObject(result, "metadata", metadata) { it.toJson() }
         return result
     }
@@ -108,9 +96,7 @@ data class Contact(
             events == other.events &&
             relations == other.relations &&
             notes == other.notes &&
-            isFavorite == other.isFavorite &&
-            customRingtone == other.customRingtone &&
-            sendToVoicemail == other.sendToVoicemail &&
+            android == other.android &&
             photo == other.photo
     }
 
@@ -128,9 +114,7 @@ data class Contact(
             events,
             relations,
             notes,
-            isFavorite,
-            customRingtone,
-            sendToVoicemail,
+            android,
             photo,
         )
 }

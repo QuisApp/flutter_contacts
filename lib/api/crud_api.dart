@@ -29,6 +29,7 @@ class CrudApi {
     String id, {
     Set<ContactProperty>? properties,
     Account? account,
+    bool androidLookup = false,
   }) async {
     final props = properties ?? ContactProperties.none;
     final result = await _channel.invokeMethod<Map>(
@@ -37,6 +38,7 @@ class CrudApi {
         'id': id,
         'properties': props.toJson(),
         if (account != null) 'account': account.toJson(),
+        if (androidLookup) 'lookup': true,
       }),
     );
     return JsonHelpers.decode(result, Contact.fromJson);

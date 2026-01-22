@@ -51,6 +51,7 @@ object PropertyUtils {
             if (properties.contains("ringtone")) add(Contacts.CUSTOM_RINGTONE)
             if (properties.contains("sendToVoicemail")) add(Contacts.SEND_TO_VOICEMAIL)
             if (properties.contains("timestamp")) add(Contacts.CONTACT_LAST_UPDATED_TIMESTAMP)
+            if (properties.contains("identifiers")) add(Contacts.LOOKUP_KEY)
             if (includePhotoThumbnail) add(Contacts.PHOTO_THUMBNAIL_URI)
         }.toTypedArray()
 

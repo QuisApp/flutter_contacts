@@ -9,6 +9,7 @@ import '../properties/event.dart';
 import '../properties/relation.dart';
 import '../properties/note.dart';
 import '../properties/photo.dart';
+import '../android/android_data.dart';
 import '../../utils/json_helpers.dart';
 import 'contact_metadata.dart';
 
@@ -23,9 +24,9 @@ import 'contact_metadata.dart';
 /// Platform limitations:
 /// - iOS: Notes require entitlements and `FlutterContacts.config.enableIosNotes = true`
 /// - iOS/macOS: Limits [organizations], [notes], and [events] of type birthday to one per contact
-/// - Not supported on iOS: [isFavorite], [customRingtone], [sendToVoicemail], [Phone.isPrimary],
-///   [Email.isPrimary], [debugData], [Address.poBox], [Address.neighborhood], [Organization.jobDescription],
-///   [Organization.symbol], [Organization.officeLocation], some labels
+/// - Not supported on iOS: [android], [Phone.isPrimary], [Email.isPrimary], [Address.poBox],
+///   [Address.neighborhood], [Organization.jobDescription], [Organization.symbol],
+///   [Organization.officeLocation], some labels
 /// - Not supported on Android: [Name.previousFamilyName], [Address.isoCountryCode],
 ///   [Address.subAdministrativeArea], [Address.subLocality], some labels
 ///
@@ -70,20 +71,8 @@ class Contact {
   /// Notes.
   final List<Note> notes;
 
-  /// Whether contact is starred/favorited (Android only).
-  final bool? isFavorite;
-
-  /// URI for custom ringtone (Android only).
-  final String? customRingtone;
-
-  /// Whether to send calls to voicemail (Android only).
-  final bool? sendToVoicemail;
-
-  /// Last update timestamp in milliseconds since epoch (Android only).
-  final int? lastUpdatedTimestamp;
-
-  /// All data mimetypes for debugging (Android only).
-  final Map? debugData;
+  /// Android-specific fields.
+  final AndroidData? android;
 
   /// Metadata about fetched properties (used internally, never edit manually).
   final ContactMetadata? metadata;
@@ -102,11 +91,7 @@ class Contact {
     this.events = const [],
     this.relations = const [],
     this.notes = const [],
-    this.isFavorite,
-    this.customRingtone,
-    this.sendToVoicemail,
-    this.lastUpdatedTimestamp,
-    this.debugData,
+    this.android,
     this.metadata,
   });
 
@@ -135,11 +120,7 @@ class Contact {
     JsonHelpers.encodeList(json, 'events', events, (e) => e.toJson());
     JsonHelpers.encodeList(json, 'relations', relations, (r) => r.toJson());
     JsonHelpers.encodeList(json, 'notes', notes, (n) => n.toJson());
-    JsonHelpers.encode(json, 'isFavorite', isFavorite);
-    JsonHelpers.encode(json, 'customRingtone', customRingtone);
-    JsonHelpers.encode(json, 'sendToVoicemail', sendToVoicemail);
-    JsonHelpers.encode(json, 'lastUpdatedTimestamp', lastUpdatedTimestamp);
-    JsonHelpers.encode(json, 'debugData', debugData);
+    JsonHelpers.encode(json, 'android', android, (a) => a.toJson());
     JsonHelpers.encode(json, 'metadata', metadata, (m) => m.toJson());
     return json;
   }
@@ -174,11 +155,7 @@ class Contact {
         Relation.fromJson,
       ),
       notes: JsonHelpers.decodeList(json['notes'] as List?, Note.fromJson),
-      isFavorite: JsonHelpers.decode<bool>(json['isFavorite']),
-      customRingtone: JsonHelpers.decode<String>(json['customRingtone']),
-      sendToVoicemail: JsonHelpers.decode<bool>(json['sendToVoicemail']),
-      lastUpdatedTimestamp: json['lastUpdatedTimestamp'] as int?,
-      debugData: JsonHelpers.decode<Map>(json['debugData']),
+      android: AndroidData.fromJson(json['android'] as Map?),
       metadata: JsonHelpers.decode(json['metadata'], ContactMetadata.fromJson),
     );
   }
@@ -198,11 +175,7 @@ class Contact {
     'events': events.isNotEmpty ? events : null,
     'relations': relations.isNotEmpty ? relations : null,
     'notes': notes.isNotEmpty ? notes : null,
-    'isFavorite': isFavorite,
-    'customRingtone': customRingtone,
-    'sendToVoicemail': sendToVoicemail,
-    'lastUpdatedTimestamp': lastUpdatedTimestamp,
-    'debugData': debugData != null ? '<debugData>' : null,
+    'android': android,
     'metadata': metadata,
   });
 
@@ -222,9 +195,7 @@ class Contact {
           events == other.events &&
           relations == other.relations &&
           notes == other.notes &&
-          isFavorite == other.isFavorite &&
-          customRingtone == other.customRingtone &&
-          sendToVoicemail == other.sendToVoicemail &&
+          android == other.android &&
           photo == other.photo);
 
   @override
@@ -241,9 +212,7 @@ class Contact {
     events,
     relations,
     notes,
-    isFavorite,
-    customRingtone,
-    sendToVoicemail,
+    android,
     photo,
   );
 
@@ -261,11 +230,7 @@ class Contact {
     List<Event>? events,
     List<Relation>? relations,
     List<Note>? notes,
-    bool? isFavorite,
-    String? customRingtone,
-    bool? sendToVoicemail,
-    Map? debugData,
-    int? lastUpdatedTimestamp,
+    AndroidData? android,
     ContactMetadata? metadata,
     // Set to true to explicitly clear the photo (set it to null)
     bool clearPhoto = false,
@@ -288,11 +253,7 @@ class Contact {
       events: events ?? this.events,
       relations: relations ?? this.relations,
       notes: notes ?? this.notes,
-      isFavorite: isFavorite ?? this.isFavorite,
-      customRingtone: customRingtone ?? this.customRingtone,
-      sendToVoicemail: sendToVoicemail ?? this.sendToVoicemail,
-      lastUpdatedTimestamp: lastUpdatedTimestamp ?? this.lastUpdatedTimestamp,
-      debugData: debugData ?? this.debugData,
+      android: android ?? this.android,
       metadata: metadata ?? this.metadata,
     );
   }
