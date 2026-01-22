@@ -95,20 +95,24 @@ data class MutableContact(
             events = PropertyUtils.sortEvents(events),
             relations = PropertyUtils.sortRelations(relations),
             notes = PropertyUtils.sortNotes(notes),
-            android = run {
-                val debugData = if (properties.contains("debugData")) {
-                    ContactFetcher.getDebugData(contentResolver, contactId)
-                } else null
-                val identifiers = AndroidIdentifiers(lookupKey, rawContactInfos.toList()).takeIf { it.isNotEmpty() }
-                AndroidData(
-                    isFavorite = isFavorite,
-                    customRingtone = customRingtone,
-                    sendToVoicemail = sendToVoicemail,
-                    lastUpdatedTimestamp = lastUpdatedTimestamp,
-                    identifiers = identifiers,
-                    debugData = debugData,
-                ).takeIf { it.isNotEmpty() }
-            },
+            android =
+                run {
+                    val debugData =
+                        if (properties.contains("debugData")) {
+                            ContactFetcher.getDebugData(contentResolver, contactId)
+                        } else {
+                            null
+                        }
+                    val identifiers = AndroidIdentifiers(lookupKey, rawContactInfos.toList()).takeIf { it.isNotEmpty() }
+                    AndroidData(
+                        isFavorite = isFavorite,
+                        customRingtone = customRingtone,
+                        sendToVoicemail = sendToVoicemail,
+                        lastUpdatedTimestamp = lastUpdatedTimestamp,
+                        identifiers = identifiers,
+                        debugData = debugData,
+                    ).takeIf { it.isNotEmpty() }
+                },
             metadata = ContactMetadata.fromPropertiesSet(properties, accounts),
         )
 }

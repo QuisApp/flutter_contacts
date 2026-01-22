@@ -30,10 +30,9 @@ data class ContactMetadata(
         ): ContactMetadata = ContactMetadata(properties = properties, accounts = accounts)
     }
 
-    fun toJson(): Map<String, Any?> {
-        return mapOf(
+    fun toJson(): Map<String, Any?> =
+        mapOf(
             "properties" to properties.sorted().toList(),
             "accounts" to accounts,
         )
-    }
 }
