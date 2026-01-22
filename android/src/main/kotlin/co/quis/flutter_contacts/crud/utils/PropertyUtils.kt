@@ -36,6 +36,7 @@ object PropertyUtils {
             "favorite",
             "ringtone",
             "sendToVoicemail",
+            "timestamp",
             "photoThumbnail",
         )
 
@@ -46,10 +47,10 @@ object PropertyUtils {
         buildList {
             add(Contacts._ID)
             add(Contacts.DISPLAY_NAME_PRIMARY)
-            add(Contacts.CONTACT_LAST_UPDATED_TIMESTAMP)
             if (properties.contains("favorite")) add(Contacts.STARRED)
             if (properties.contains("ringtone")) add(Contacts.CUSTOM_RINGTONE)
             if (properties.contains("sendToVoicemail")) add(Contacts.SEND_TO_VOICEMAIL)
+            if (properties.contains("timestamp")) add(Contacts.CONTACT_LAST_UPDATED_TIMESTAMP)
             if (includePhotoThumbnail) add(Contacts.PHOTO_THUMBNAIL_URI)
         }.toTypedArray()
 

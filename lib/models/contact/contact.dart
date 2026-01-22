@@ -79,6 +79,9 @@ class Contact {
   /// Whether to send calls to voicemail (Android only).
   final bool? sendToVoicemail;
 
+  /// Last update timestamp in milliseconds since epoch (Android only).
+  final int? lastUpdatedTimestamp;
+
   /// All data mimetypes for debugging (Android only).
   final Map? debugData;
 
@@ -102,6 +105,7 @@ class Contact {
     this.isFavorite,
     this.customRingtone,
     this.sendToVoicemail,
+    this.lastUpdatedTimestamp,
     this.debugData,
     this.metadata,
   });
@@ -134,6 +138,7 @@ class Contact {
     JsonHelpers.encode(json, 'isFavorite', isFavorite);
     JsonHelpers.encode(json, 'customRingtone', customRingtone);
     JsonHelpers.encode(json, 'sendToVoicemail', sendToVoicemail);
+    JsonHelpers.encode(json, 'lastUpdatedTimestamp', lastUpdatedTimestamp);
     JsonHelpers.encode(json, 'debugData', debugData);
     JsonHelpers.encode(json, 'metadata', metadata, (m) => m.toJson());
     return json;
@@ -172,6 +177,7 @@ class Contact {
       isFavorite: JsonHelpers.decode<bool>(json['isFavorite']),
       customRingtone: JsonHelpers.decode<String>(json['customRingtone']),
       sendToVoicemail: JsonHelpers.decode<bool>(json['sendToVoicemail']),
+      lastUpdatedTimestamp: json['lastUpdatedTimestamp'] as int?,
       debugData: JsonHelpers.decode<Map>(json['debugData']),
       metadata: JsonHelpers.decode(json['metadata'], ContactMetadata.fromJson),
     );
@@ -195,6 +201,7 @@ class Contact {
     'isFavorite': isFavorite,
     'customRingtone': customRingtone,
     'sendToVoicemail': sendToVoicemail,
+    'lastUpdatedTimestamp': lastUpdatedTimestamp,
     'debugData': debugData != null ? '<debugData>' : null,
     'metadata': metadata,
   });
@@ -258,6 +265,7 @@ class Contact {
     String? customRingtone,
     bool? sendToVoicemail,
     Map? debugData,
+    int? lastUpdatedTimestamp,
     ContactMetadata? metadata,
     // Set to true to explicitly clear the photo (set it to null)
     bool clearPhoto = false,
@@ -283,6 +291,7 @@ class Contact {
       isFavorite: isFavorite ?? this.isFavorite,
       customRingtone: customRingtone ?? this.customRingtone,
       sendToVoicemail: sendToVoicemail ?? this.sendToVoicemail,
+      lastUpdatedTimestamp: lastUpdatedTimestamp ?? this.lastUpdatedTimestamp,
       debugData: debugData ?? this.debugData,
       metadata: metadata ?? this.metadata,
     );

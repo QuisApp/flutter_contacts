@@ -41,6 +41,7 @@ class ContactProperties {
     ContactProperty.sendToVoicemail,
     ContactProperty.photoThumbnail,
     ContactProperty.photoFullRes,
+    ContactProperty.timestamp,
   };
 
   /// All properties without any photos (excludes both thumbnail and full-resolution).
@@ -57,5 +58,7 @@ class ContactProperties {
     ContactProperty.note,
     ContactProperty.favorite,
     ContactProperty.ringtone,
+    ContactProperty.sendToVoicemail,
+    ContactProperty.timestamp,
   };
 }

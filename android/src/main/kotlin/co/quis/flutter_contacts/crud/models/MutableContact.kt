@@ -102,11 +102,7 @@ data class MutableContact(
                 } else {
                     null
                 },
-            metadata =
-                ContactMetadata.fromPropertiesSet(
-                    properties,
-                    accounts,
-                    lastUpdatedTimestamp,
-                ),
+            lastUpdatedTimestamp = lastUpdatedTimestamp,
+            metadata = ContactMetadata.fromPropertiesSet(properties, accounts),
         )
 }

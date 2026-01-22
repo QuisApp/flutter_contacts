@@ -144,7 +144,12 @@ object ContactCursorProcessor {
             } else {
                 null
             }
-        val lastUpdatedTimestamp = cursor.getLongOrNull(Contacts.CONTACT_LAST_UPDATED_TIMESTAMP)
+        val lastUpdatedTimestamp =
+            if (properties.contains("timestamp")) {
+                cursor.getLongOrNull(Contacts.CONTACT_LAST_UPDATED_TIMESTAMP)
+            } else {
+                null
+            }
         return ContactLevelFields(
             displayName,
             isFavorite,

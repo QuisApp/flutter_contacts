@@ -31,6 +31,7 @@ data class Contact(
     val isFavorite: Boolean? = null,
     val customRingtone: String? = null,
     val sendToVoicemail: Boolean? = null,
+    val lastUpdatedTimestamp: Long? = null,
     val debugData: Map<String, Any?>? = null,
     val metadata: ContactMetadata? = null,
 ) {
@@ -59,6 +60,7 @@ data class Contact(
                 isFavorite = JsonHelpers.decodeOptional(json, "isFavorite"),
                 customRingtone = JsonHelpers.decodeOptional(json, "customRingtone"),
                 sendToVoicemail = JsonHelpers.decodeOptional(json, "sendToVoicemail"),
+                lastUpdatedTimestamp = (json["lastUpdatedTimestamp"] as? Number)?.toLong(),
                 debugData = JsonHelpers.decodeOptional(json, "debugData"),
                 metadata =
                     JsonHelpers.decodeOptionalObject(json, "metadata") {
@@ -85,6 +87,7 @@ data class Contact(
         JsonHelpers.encodeOptional(result, "isFavorite", isFavorite)
         JsonHelpers.encodeOptional(result, "customRingtone", customRingtone)
         JsonHelpers.encodeOptional(result, "sendToVoicemail", sendToVoicemail)
+        JsonHelpers.encodeOptional(result, "lastUpdatedTimestamp", lastUpdatedTimestamp)
         JsonHelpers.encodeOptional(result, "debugData", debugData)
         JsonHelpers.encodeOptionalObject(result, "metadata", metadata) { it.toJson() }
         return result
