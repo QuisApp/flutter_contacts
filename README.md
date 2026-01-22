@@ -6,6 +6,8 @@ Get, create, update, and delete contacts with **comprehensive property support**
 
 [![pub version](https://img.shields.io/pub/v/flutter_contacts?color=0288D1&logo=flutter&logoColor=white&logoSize=auto&style=for-the-badge&include_prereleases)](https://pub.dev/packages/flutter_contacts) [![pub likes](https://img.shields.io/pub/likes/flutter_contacts?color=26A69A&style=for-the-badge)](https://pub.dev/packages/flutter_contacts) [![pub dm](https://img.shields.io/pub/dm/flutter_contacts?color=5C6BC0&style=for-the-badge)](https://pub.dev/packages/flutter_contacts) [![license](https://img.shields.io/badge/license-MIT-546E7A?logo=github&logoColor=white&style=for-the-badge)](https://github.com/QuisApp/flutter_contacts/blob/master/LICENSE)
 
+> 💬 **Have feedback on the new v2?** Share it by [opening an issue](https://github.com/QuisApp/flutter_contacts/issues/new) on GitHub!
+
 ---
 
 ## ⚡ Why Flutter Contacts?
@@ -112,7 +114,7 @@ Only fetched properties can be updated. This prevents accidental data loss.
 var contact = await FlutterContacts.get(id, properties: {ContactProperty.name, ContactProperty.phone});
 
 // Only name and phone are saved; email changes would be ignored
-contact = contact.copyWith(name: Name(givenName: 'Jane'));
+contact = contact.copyWith(name: Name(first: 'Jane'));
 await FlutterContacts.update(contact);
 ```
 
@@ -175,6 +177,8 @@ List<Contact> contacts = await FlutterContacts.getAll(
 ```
 
 Both `get()` and `getAll()` default to fetching only ID + display name. Specify `properties` for additional fields.
+
+**Properties:** `name`, `phone`, `email`, `address`, `organization`, `website`, `socialMedia`, `event`, `relation`, `note`, `photoThumbnail`, `photoFullRes`, `favorite` (Android), `ringtone` (Android), `sendToVoicemail` (Android), `timestamp` (Android), `identifiers` (Android). Use `ContactProperties.all` for all properties, or `ContactProperties.allProperties` to exclude photos. Only fetch the properties you need to improve query performance.
 
 **Filters:** `ContactFilter.name()`, `.phone()`, `.email()`, `.group()`, `.ids()`. Phone/email filters use partial match on Android, full match on iOS.
 
@@ -312,7 +316,7 @@ Returns the device owner's profile (Android) or "Me" card (macOS). Not available
 <details>
 <summary><b>🚫 Blocked Numbers</b> (Android only)</summary>
 
-Requires app to be default phone app. See [example manifest](https://github.com/QuisApp/flutter_contacts/blob/master/example/android/app/src/main/AndroidManifest.xml).
+Requires app to be default phone app. See [example manifest](https://github.com/QuisApp/flutter_contacts_example/blob/master/android/app/src/main/AndroidManifest.xml).
 
 ```dart
 if (await FlutterContacts.blockedNumbers.isAvailable()) {
@@ -356,15 +360,17 @@ FlutterContacts.config.enableIosNotes = true; // Requires iOS entitlement
 
 ## 📋 Data Model
 
-**Quick Reference:** A `Contact` contains an optional `id`, auto-generated `displayName`, and lists of properties (`phones`, `emails`, `addresses`, etc.). Most properties support labels (home, work, mobile, etc.) and custom labels.
+> **See [lib/models/](https://github.com/QuisApp/flutter_contacts/tree/master/lib/models) for complete data model documentation.**
+
+A `Contact` contains an `id`, an auto-generated `displayName`, and lists of properties (`phones`, `emails`, `addresses`, etc.). Many properties support native labels (home, work, mobile, etc.) and custom labels.
 
 <details>
 <summary><b>Contact Structure</b></summary>
 
 ```dart
 class Contact {
-  final String? id;                    // Stable identifier
-  final String? displayName;           // Read-only, auto-generated
+  final String? id;                         // Stable identifier
+  final String? displayName;                // Read-only, auto-generated
   final Photo? photo;
   final Name? name;
   final List<Phone> phones;
@@ -373,10 +379,10 @@ class Contact {
   final List<Organization> organizations;
   final List<Website> websites;
   final List<SocialMedia> socialMedias;
-  final List<Event> events;            // Birthdays, anniversaries
+  final List<Event> events;                 // Birthdays, anniversaries
   final List<Relation> relations;
   final List<Note> notes;
-  
+
   // Android-specific fields: isFavorite, customRingtone,
   // sendToVoicemail, timestamp, identifiers
   final AndroidData? android;
@@ -391,9 +397,9 @@ class Contact {
 ```dart
 // Name
 Name(
-  givenName: 'John',
-  familyName: 'Smith',
-  middleName: 'Q',
+  first: 'John',
+  last: 'Smith',
+  middle: 'Q',
   prefix: 'Dr.',
   suffix: 'Jr.',
 )
@@ -421,9 +427,9 @@ Organization(
 Photo(fullSize: imageBytes)
 ```
 
-> **Address Usage:** Prefer component fields (`street`, `city`, `state`, etc.) when creating/editing. The formatted `address` field is available when reading and is guaranteed to be present.
+> **Address Usage:** Prefer component fields (`street`, `city`, `state`, etc.) when creating/editing. The `formatted` field is available when reading and is guaranteed to be present.
 
-> **Photo Usage:** When creating/updating, set `Photo(fullSize: imageBytes)` - the system automatically generates the thumbnail. When reading, fetch `ContactProperty.photoThumbnail` (fast) for contact lists, `ContactProperty.photoFullRes` (slower) for detail views, or both. Access via `contact.photo?.thumbnail` or `contact.photo?.fullSize`.
+> **Photo Usage:** When creating/updating, set `Photo(fullSize: imageBytes)` - the system automatically generates the thumbnail. When reading, fetch `ContactProperty.photoThumbnail` (fast) for contact lists, `ContactProperty.photoFullRes` (slower) for detail views.
 
 > **Note:** The examples above show common fields. See [lib/models/](https://github.com/QuisApp/flutter_contacts/tree/master/lib/models) for the complete list of all available fields and properties.
 
@@ -443,8 +449,6 @@ Phone('555-1234', label: Label(PhoneLabel.custom, customLabel: 'Emergency'))
 ```
 
 **Platform Support:** Some labels are platform-specific (e.g., `PhoneLabel.appleWatch` is iOS-only, `PhoneLabel.workMobile` is Android-only). Unsupported labels are automatically converted to custom labels with the original name preserved.
-
-**See [lib/models/](https://github.com/QuisApp/flutter_contacts/tree/master/lib/models) for complete data model documentation.**
 
 </details>
 
