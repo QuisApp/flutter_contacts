@@ -335,7 +335,13 @@ object AccountUtils {
         }
 
         @Suppress("DEPRECATION")
-        val defaultAccount = Settings.getDefaultAccount(contentResolver)
+        val defaultAccount = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Settings.getDefaultAccount(contentResolver)
+        } else {
+            // returning null is the correct behavior, letting
+            // the contacts provider pick the default itself.
+            null
+        }
         return if (defaultAccount != null &&
             defaultAccount.name.isNotEmpty() &&
             defaultAccount.type.isNotEmpty()
