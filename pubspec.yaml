@@ -4,8 +4,8 @@ version: 2.0.0-beta.4
 repository: https://github.com/QuisApp/flutter_contacts
 
 environment:
-  sdk: ^3.11.0
-  flutter: ">=3.41.0"
+  sdk: ">=3.8.0 <4.0.0"
+  flutter: ">=3.32.0"
 
 dependencies:
   flutter:
