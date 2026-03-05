@@ -334,8 +334,15 @@ object AccountUtils {
             }
         }
 
+        // Settings.getDefaultAccount() exists only from Android 13 (API 33) onward.
+        // On older devices, returning null lets the contacts provider pick the default account.
         @Suppress("DEPRECATION")
-        val defaultAccount = Settings.getDefaultAccount(contentResolver)
+        val defaultAccount =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Settings.getDefaultAccount(contentResolver)
+            } else {
+                null
+            }
         return if (defaultAccount != null &&
             defaultAccount.name.isNotEmpty() &&
             defaultAccount.type.isNotEmpty()
