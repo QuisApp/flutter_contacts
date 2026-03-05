@@ -1,6 +1,7 @@
 ## 2.0.0-beta.3
 
 - Fix for #214
+- Disable Swift Package Manager for example app
 
 ## 2.0.0-beta.2
 
