@@ -62,10 +62,8 @@ object ContactBuilder {
             ContentProviderOperation
                 .newInsert(RawContacts.CONTENT_URI)
                 .apply {
-                    account?.let {
-                        withValue(RawContacts.ACCOUNT_TYPE, it.type)
-                        withValue(RawContacts.ACCOUNT_NAME, it.name)
-                    }
+                    withValue(RawContacts.ACCOUNT_TYPE, account?.type)
+                    withValue(RawContacts.ACCOUNT_NAME, account?.name)
                 }.build(),
         )
 
