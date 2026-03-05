@@ -1,3 +1,8 @@
+## 2.0.0-beta.5
+
+- Relax Dart/Flutter version requirements
+- Fix for older Android versions without Settings.getDefaultAccount()
+
 ## 2.0.0-beta.4
 
 - Migrate to Swift Package Manager
