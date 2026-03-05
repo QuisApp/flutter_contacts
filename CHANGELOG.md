@@ -1,3 +1,8 @@
+## 2.0.0-beta.4
+
+- Migrate to Swift Package Manager
+- Migrate to UISceneDelegate
+
 ## 2.0.0-beta.3
 
 - Fix for #214

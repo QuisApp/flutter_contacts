@@ -9,7 +9,8 @@ Fast, complete contact management for Android, iOS & macOS — all fields, group
   s.license          = { :type => 'MIT', :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :git => 'https://github.com/QuisApp/flutter_contacts.git', :tag => s.version.to_s }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'flutter_contacts/Sources/flutter_contacts/**/*.swift'
+  s.resource_bundles = {'flutter_contacts_privacy' => ['flutter_contacts/Sources/flutter_contacts/PrivacyInfo.xcprivacy']}
   s.dependency 'FlutterMacOS'
   s.platform = :osx, '10.15'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
