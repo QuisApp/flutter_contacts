@@ -57,7 +57,7 @@ class CrudApi {
         'properties': props.toJson(),
         if (filter != null) 'filter': filter.toJson(),
         if (account != null) 'account': account.toJson(),
-        if (limit != null) 'limit': limit,
+        'limit': ?limit,
       }),
     );
     return JsonHelpers.decodeList(result, Contact.fromJson);

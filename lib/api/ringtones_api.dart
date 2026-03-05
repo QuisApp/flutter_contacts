@@ -63,7 +63,7 @@ class RingtonesApi {
   Future<String?> pick(RingtoneType type, {String? existingUri}) =>
       _invoke<String>('ringtones.pick', {
         'type': type.name,
-        if (existingUri != null) 'existingUri': existingUri,
+        'existingUri': ?existingUri,
       });
 
   /// Gets the default ringtone URI for the given type.
