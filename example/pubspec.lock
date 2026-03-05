@@ -60,7 +60,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "2.0.0-beta.3"
+    version: "2.0.0-beta.5"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -209,4 +209,4 @@ packages:
     version: "15.0.2"
 sdks:
   dart: ">=3.11.0 <4.0.0"
-  flutter: ">=3.41.0"
+  flutter: ">=3.32.0"
