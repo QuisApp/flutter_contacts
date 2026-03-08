@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Stable 2.0 release. Includes all changes from 2.0.0-beta.1 through 2.0.0-beta.5.
+
 ## 2.0.0-beta.5
 
 - Relax Dart/Flutter version requirements
