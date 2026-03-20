@@ -23,7 +23,22 @@ allprojects {
     }
 }
 
-def flutterRoot = System.getenv('FLUTTER_ROOT') ?: '/opt/homebrew/Caskroom/flutter/3.32.4/flutter'
+// Resolve Flutter SDK path from local.properties (standard Flutter approach)
+def localProperties = new Properties()
+def localPropertiesFile = new File(rootProject.projectDir, 'local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+    ?: System.getenv('FLUTTER_ROOT')
+
+if (flutterRoot == null) {
+    throw new GradleException(
+        'Flutter SDK not found. Define flutter.sdk in local.properties or set FLUTTER_ROOT.'
+    )
+}
+
 def engineVersion = new File(flutterRoot, 'bin/cache/engine.stamp').text.trim()
 
 apply plugin: 'com.android.library'
