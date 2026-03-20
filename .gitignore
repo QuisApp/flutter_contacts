@@ -38,3 +38,6 @@ migrate_working_dir/
 
 # oh-my-claudecode
 .omc/
+
+# Claude Code (device-specific config)
+.claude/.env
