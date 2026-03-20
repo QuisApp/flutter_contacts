@@ -35,3 +35,6 @@ migrate_working_dir/
 
 # Flutter metadata (auto-generated)
 .metadata
+
+# oh-my-claudecode
+.omc/
