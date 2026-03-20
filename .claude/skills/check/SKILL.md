@@ -10,8 +10,8 @@ Run code quality checks on the project.
 
 If `$ARGUMENTS` specifies a specific check (format, test, or analyze), run only that one. Otherwise run all three in order:
 
-1. **Format**: `scripts/format`
-2. **Test**: `scripts/test`
+1. **Format**: `scripts/format.sh`
+2. **Test**: `scripts/test.sh`
 3. **Analyze**: `flutter analyze`
 
 Report results after each step. If any step fails, stop and report the failure.

@@ -18,4 +18,6 @@ Bump the package version and update the changelog.
 5. Update `version:` in `pubspec.yaml`.
 6. Add a new section at the top of `CHANGELOG.md` with the new version number.
 7. Generate changelog entries from recent commits since the last tag.
-8. Do NOT commit — let the user review and commit separately.
+8. Regenerate API docs: `scripts/doc.sh`
+9. Open the docs: `open doc/api/index.html`
+10. Do NOT commit — let the user review and commit separately.
