@@ -23,19 +23,30 @@ allprojects {
     }
 }
 
-// Resolve Flutter SDK path from local.properties (standard Flutter approach)
-def localProperties = new Properties()
-def localPropertiesFile = new File(rootProject.projectDir, 'local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
+// Resolve Flutter SDK path robustly across normal builds, IDE sync, and FVM setups.
+// Priority: 1) Gradle property  2) Walk up from project dir for local.properties  3) FLUTTER_ROOT env
+def flutterRoot = project.findProperty('flutter.sdk')?.toString()
+
+if (flutterRoot == null) {
+    def dir = project.projectDir
+    while (dir != null && flutterRoot == null) {
+        def localPropertiesFile = new File(dir, 'local.properties')
+        if (localPropertiesFile.exists()) {
+            def props = new Properties()
+            localPropertiesFile.withReader('UTF-8') { reader -> props.load(reader) }
+            flutterRoot = props.getProperty('flutter.sdk')
+        }
+        dir = dir.parentFile
+    }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-    ?: System.getenv('FLUTTER_ROOT')
+if (flutterRoot == null) {
+    flutterRoot = System.getenv('FLUTTER_ROOT')
+}
 
 if (flutterRoot == null) {
     throw new GradleException(
-        'Flutter SDK not found. Define flutter.sdk in local.properties or set FLUTTER_ROOT.'
+        'Flutter SDK not found. Define flutter.sdk in local.properties, pass -Pflutter.sdk=<path>, or set FLUTTER_ROOT.'
     )
 }
 
