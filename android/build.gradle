@@ -24,18 +24,27 @@ allprojects {
 }
 
 // Resolve Flutter SDK path robustly across normal builds, IDE sync, and FVM setups.
-// Priority: 1) Gradle property  2) Walk up from project dir for local.properties  3) FLUTTER_ROOT env
-def flutterRoot = project.findProperty('flutter.sdk')?.toString()
+// Priority: 1) Gradle property  2) rootProject local.properties  3) Walk up from project dir  4) FLUTTER_ROOT env
+String readFlutterSdk(File dir) {
+    if (dir == null) return null
+    def file = new File(dir, 'local.properties')
+    if (!file.exists()) return null
+    def props = new Properties()
+    file.withReader('UTF-8') { props.load(it) }
+    return props.getProperty('flutter.sdk')
+}
+
+def flutterRoot = project.findProperty('flutter-root')?.toString()
+    ?: project.findProperty('flutter.sdk')?.toString()
+
+if (flutterRoot == null) {
+    flutterRoot = readFlutterSdk(rootProject.projectDir)
+}
 
 if (flutterRoot == null) {
     def dir = project.projectDir
     while (dir != null && flutterRoot == null) {
-        def localPropertiesFile = new File(dir, 'local.properties')
-        if (localPropertiesFile.exists()) {
-            def props = new Properties()
-            localPropertiesFile.withReader('UTF-8') { reader -> props.load(reader) }
-            flutterRoot = props.getProperty('flutter.sdk')
-        }
+        flutterRoot = readFlutterSdk(dir)
         dir = dir.parentFile
     }
 }
