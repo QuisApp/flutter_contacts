@@ -1,3 +1,7 @@
+## 2.0.2
+
+- Fix Flutter SDK resolution for FVM and IDE sync compatibility (#227)
+
 ## 2.0.1
 
 - Fix Android build failure from hardcoded Flutter SDK path (#223)
