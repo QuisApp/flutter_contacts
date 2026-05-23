@@ -1,3 +1,13 @@
+## 2.1.0
+
+- `FlutterContacts.native.showPicker()` now returns `Contact?` (with `id` and
+  `displayName` always populated) and accepts a `properties:` set for additional
+  fields. The picker itself remains permissionless on both platforms; on Android,
+  requesting `properties` requires `READ_CONTACTS` and throws otherwise.
+  **Breaking:** replace `await …showPicker()` with `(await …showPicker())?.id` (#232).
+- Dedupe phone numbers and emails returned by aggregated contacts on Android,
+  keyed on normalized value + label (#229).
+
 ## 2.0.2
 
 - Fix Flutter SDK resolution for FVM and IDE sync compatibility (#227)

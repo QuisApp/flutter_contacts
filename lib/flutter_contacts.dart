@@ -129,7 +129,7 @@ export 'models/vcard/vcard_version.dart';
 /// // Native dialogs (Android & iOS only)
 /// class NativeApi {
 ///   Future<void> showViewer(String contactId);
-///   Future<String?> showPicker();
+///   Future<Contact?> showPicker({Set<ContactProperty>? properties});
 ///   Future<String?> showEditor(String contactId);
 ///   Future<String?> showCreator({Contact? contact});
 /// }

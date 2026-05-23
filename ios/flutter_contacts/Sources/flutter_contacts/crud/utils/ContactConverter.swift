@@ -93,7 +93,9 @@ enum ContactConverter {
             json.setList("relations", cnContact.contactRelations.map { Relation(fromRelation: $0) }) { $0.toJson() }
         }
 
-        if options.wantsNotes, !cnContact.note.isEmpty {
+        // Note key isn't part of the picker's default fetch even with the entitlement;
+        // accessing an unfetched key raises an uncatchable NSException.
+        if options.wantsNotes, cnContact.isKeyAvailable(CNContactNoteKey), !cnContact.note.isEmpty {
             json.setList("notes", [Note(note: cnContact.note)]) { $0.toJson() }
         }
 

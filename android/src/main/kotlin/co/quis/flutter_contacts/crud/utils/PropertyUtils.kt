@@ -208,9 +208,34 @@ object PropertyUtils {
         dataId: (T) -> String?,
     ) = items.sortedWith(compareBy({ isPrimary(it) != true }, { dataId(it).orEmpty() }))
 
-    fun sortPhones(phones: List<Phone>) = sortByPrimaryThenId(phones, isPrimary = { it.isPrimary }, dataId = { it.metadata?.dataId })
+    fun sortPhones(phones: List<Phone>) =
+        sortByPrimaryThenId(dedupePhones(phones), isPrimary = { it.isPrimary }, dataId = { it.metadata?.dataId })
 
-    fun sortEmails(emails: List<Email>) = sortByPrimaryThenId(emails, isPrimary = { it.isPrimary }, dataId = { it.metadata?.dataId })
+    fun sortEmails(emails: List<Email>) =
+        sortByPrimaryThenId(dedupeEmails(emails), isPrimary = { it.isPrimary }, dataId = { it.metadata?.dataId })
+
+    // Aggregated contacts can expose the same number or email once per raw contact, sometimes
+    // with cosmetic differences. Collapse entries that share an identity (normalized value +
+    // label), keeping the first. See https://github.com/QuisApp/flutter_contacts/issues/229.
+    private fun dedupePhones(phones: List<Phone>): List<Phone> {
+        val seen = HashSet<Triple<String, String, String?>>()
+        return phones.filter { phone ->
+            val normalized = phone.normalizedNumber ?: return@filter true
+            seen.add(Triple(normalized, phone.label.label, phone.label.customLabel))
+        }
+    }
+
+    private fun dedupeEmails(emails: List<Email>): List<Email> {
+        val seen = HashSet<Triple<String, String, String?>>()
+        return emails.filter { email ->
+            val normalized =
+                email.address
+                    .trim()
+                    .lowercase()
+                    .ifEmpty { return@filter true }
+            seen.add(Triple(normalized, email.label.label, email.label.customLabel))
+        }
+    }
 
     fun sortAddresses(addresses: List<Address>) = sortByDataId(addresses) { it.metadata?.dataId }
 

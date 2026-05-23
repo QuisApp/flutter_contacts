@@ -67,7 +67,7 @@ final status = await FlutterContacts.permissions.request(PermissionType.readWrit
 if (status == PermissionStatus.granted) {
   // Get all contacts (fast - defaults to IDs and display names only)
   List<Contact> contacts = await FlutterContacts.getAll();
-  
+
   // Get a specific contact with all properties
   Contact? contact = await FlutterContacts.get(
     contacts.first.id!,
@@ -84,12 +84,12 @@ if (status == PermissionStatus.granted) {
 
 ### 📐 API Structure
 
-| Category | API | Purpose |
-| --- | --- | --- |
-| **Core CRUD** | `FlutterContacts.get()`, `.getAll()`, `.create()`, `.createAll()`, `.update()`, `.updateAll()`, `.delete()`, `.deleteAll()` | Contact operations |
-| **Feature APIs** | `FlutterContacts.accounts`, `.groups`, `.permissions`, `.vCard`, `.native`, `.config` | Specialized features |
-| **Platform APIs** | `FlutterContacts.sim` (Android), `.profile` (Android/macOS), `.blockedNumbers` (Android), `.ringtones` (Android) | Platform-specific |
-| **Streams** | `FlutterContacts.onDatabaseChange`, `.onContactChange` | Real-time notifications |
+| Category          | API                                                                                                                         | Purpose                 |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| **Core CRUD**     | `FlutterContacts.get()`, `.getAll()`, `.create()`, `.createAll()`, `.update()`, `.updateAll()`, `.delete()`, `.deleteAll()` | Contact operations      |
+| **Feature APIs**  | `FlutterContacts.accounts`, `.groups`, `.permissions`, `.vCard`, `.native`, `.config`                                       | Specialized features    |
+| **Platform APIs** | `FlutterContacts.sim` (Android), `.profile` (Android/macOS), `.blockedNumbers` (Android), `.ringtones` (Android)            | Platform-specific       |
+| **Streams**       | `FlutterContacts.onDatabaseChange`, `.onContactChange`                                                                      | Real-time notifications |
 
 ### ⚡ Selective Fetching
 
@@ -150,11 +150,11 @@ contacts_service_plus     █████████████░░░░░
 flutter_contacts v1       ███████████████████████░  803   ███████████████████████  1075
 ```
 
-| V2 vs V1            | iOS           | Android        |
-| ------------------- | ------------- | -------------- |
-| **Read speed**      | 1.6–7x faster | 2–5x faster    |
-| **Bulk create**     | 4x faster     | 5x faster      |
-| **Bulk delete**     | 34x faster    | 140x faster    |
+| V2 vs V1        | iOS           | Android     |
+| --------------- | ------------- | ----------- |
+| **Read speed**  | 1.6–7x faster | 2–5x faster |
+| **Bulk create** | 4x faster     | 5x faster   |
+| **Bulk delete** | 34x faster    | 140x faster |
 
 _See the [benchmark repository](https://github.com/QuisApp/flutter_contacts_benchmark) for detailed methodology and feature comparison._
 
@@ -265,14 +265,22 @@ Supports vCard 2.1, 3.0, and 4.0.
 <details>
 <summary><b>🎨 Native Dialogs</b> (Android & iOS)</summary>
 
-No permissions required - uses system UI.
+System UI for picking, viewing, editing, and creating contacts.
 
 ```dart
-String? pickedId = await FlutterContacts.native.showPicker();
+Contact? picked = await FlutterContacts.native.showPicker(
+  properties: {ContactProperty.phone},
+);
 await FlutterContacts.native.showViewer(contactId);
 String? editedId = await FlutterContacts.native.showEditor(contactId);
 String? createdId = await FlutterContacts.native.showCreator(contact: prefill);
 ```
+
+Permissions:
+
+- `showPicker()` and `showCreator()` need no contacts permission on either platform.
+- `showPicker(properties: …)` is permissionless on iOS. On Android it requires `READ_CONTACTS` and throws `PlatformException` if missing.
+- `showViewer()` and `showEditor()` are permissionless on Android. On iOS they require `NSContactsUsageDescription` in `Info.plist` and a granted read permission.
 
 </details>
 
@@ -460,6 +468,7 @@ Phone('555-1234', label: Label(PhoneLabel.custom, customLabel: 'Emergency'))
 <summary><b>iOS & macOS</b></summary>
 
 **Not Available:**
+
 - APIs: `ringtones`, `blockedNumbers`, `sim`, `profile` (iOS), `native` (macOS)
 - Properties: `favorite`, `ringtone`, `sendToVoicemail`, `timestamp`, `identifiers`, `debugData` (all nested in `android` field)
 - Fields: `Phone.isPrimary`, `Phone.normalizedNumber`, `Email.isPrimary`, `Address.poBox`, `Address.neighborhood`, `Organization.jobDescription`, `Organization.symbol`, `Organization.officeLocation`
@@ -477,10 +486,12 @@ Phone('555-1234', label: Label(PhoneLabel.custom, customLabel: 'Emergency'))
 <summary><b>Android</b></summary>
 
 **Not Available:**
+
 - Fields: `Name.previousFamilyName`, `Address.isoCountryCode`, `Address.subAdministrativeArea`, `Address.subLocality`
 - Some iOS-specific labels (auto-converted to custom)
 
 **Special Features:**
+
 - **SIM Contacts:** Read-only, typically name + phone only
 - **Blocked Numbers:** Requires app to be default phone app
 
@@ -492,19 +503,19 @@ Phone('555-1234', label: Label(PhoneLabel.custom, customLabel: 'Emergency'))
 
 If you're using [flutter_contacts v1](https://pub.dev/packages/flutter_contacts/versions/1.1.9+2):
 
-| v1 | v2 |
-| --- | --- |
-| `FlutterContacts.getContacts()` | `FlutterContacts.getAll()` |
-| `FlutterContacts.getContact(id)` | `FlutterContacts.get(id)` |
-| `contact.insert()` | `FlutterContacts.create(contact)` |
-| `FlutterContacts.requestPermission()` | `FlutterContacts.permissions.request(PermissionType.readWrite)` |
-| `FlutterContacts.addListener()` | `FlutterContacts.onDatabaseChange.listen()` |
-| `contact.toVCard()` | `FlutterContacts.vCard.export(contact)` |
-| `PhoneLabel.mobile` | `Label(PhoneLabel.mobile)` |
-| `FlutterContacts.openExternalView(id)` | `FlutterContacts.native.showViewer(id)` |
-| `FlutterContacts.openExternalPick()` | `FlutterContacts.native.showPicker()` |
-| `FlutterContacts.openExternalEdit(id)` | `FlutterContacts.native.showEditor(id)` |
-| `FlutterContacts.openExternalInsert()` | `FlutterContacts.native.showCreator()` |
+| v1                                     | v2                                                              |
+| -------------------------------------- | --------------------------------------------------------------- |
+| `FlutterContacts.getContacts()`        | `FlutterContacts.getAll()`                                      |
+| `FlutterContacts.getContact(id)`       | `FlutterContacts.get(id)`                                       |
+| `contact.insert()`                     | `FlutterContacts.create(contact)`                               |
+| `FlutterContacts.requestPermission()`  | `FlutterContacts.permissions.request(PermissionType.readWrite)` |
+| `FlutterContacts.addListener()`        | `FlutterContacts.onDatabaseChange.listen()`                     |
+| `contact.toVCard()`                    | `FlutterContacts.vCard.export(contact)`                         |
+| `PhoneLabel.mobile`                    | `Label(PhoneLabel.mobile)`                                      |
+| `FlutterContacts.openExternalView(id)` | `FlutterContacts.native.showViewer(id)`                         |
+| `FlutterContacts.openExternalPick()`   | `FlutterContacts.native.showPicker()`                           |
+| `FlutterContacts.openExternalEdit(id)` | `FlutterContacts.native.showEditor(id)`                         |
+| `FlutterContacts.openExternalInsert()` | `FlutterContacts.native.showCreator()`                          |
 
 ---
 
