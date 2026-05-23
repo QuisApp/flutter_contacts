@@ -228,7 +228,11 @@ object PropertyUtils {
     private fun dedupeEmails(emails: List<Email>): List<Email> {
         val seen = HashSet<Triple<String, String, String?>>()
         return emails.filter { email ->
-            val normalized = email.address.trim().lowercase().ifEmpty { return@filter true }
+            val normalized =
+                email.address
+                    .trim()
+                    .lowercase()
+                    .ifEmpty { return@filter true }
             seen.add(Triple(normalized, email.label.label, email.label.customLabel))
         }
     }
