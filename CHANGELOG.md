@@ -1,3 +1,12 @@
+## 2.2.0
+
+- Preserve unknown vCard properties (e.g. application-specific `X-` extensions)
+  across import/export via `Contact.extras`. Lets apps round-trip custom fields
+  through vCard without modifying the library (#21).
+- Migrate Android plugin to Built-in Kotlin (Flutter 3.44+). Bumps minimum
+  Flutter to 3.44 and Dart to 3.12; apps on older Flutter should stay on
+  `flutter_contacts: ^2.1.0` (#234).
+
 ## 2.1.0
 
 - `FlutterContacts.native.showPicker()` now returns `Contact?` (with `id` and

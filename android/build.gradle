@@ -2,14 +2,12 @@ group = 'co.quis.flutter_contacts'
 version = '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '2.2.20'
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:8.11.1')
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath('com.android.tools.build:gradle:9.0.0')
     }
 }
 
@@ -62,7 +60,6 @@ if (flutterRoot == null) {
 def engineVersion = new File(flutterRoot, 'bin/cache/engine.stamp').text.trim()
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     namespace = 'co.quis.flutter_contacts'
@@ -71,10 +68,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
     }
 
     sourceSets {
@@ -109,4 +102,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.16'
     testImplementation 'io.mockk:mockk:1.14.6'
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }
