@@ -1,4 +1,5 @@
 import '../../../models/contact/contact.dart';
+import '../../../models/vcard/vcard_extra.dart';
 import '../core/version.dart';
 import 'formatter.dart';
 import '../properties/name/name_writer.dart';
@@ -37,17 +38,23 @@ class VCardWriter {
     buffer.write('BEGIN:VCARD\r\n');
     buffer.write('VERSION:$versionString\r\n');
 
-    // KIND - Mandatory in vCard 4.0 (RFC 6350 Section 6.1.4)
+    // KIND - Mandatory in vCard 4.0 (RFC 6350 Section 6.1.4).
     if (version.isV4) {
-      writeProperty(buffer, 'KIND', 'individual', version: version);
+      writeProperty(
+        buffer,
+        'KIND',
+        _valueFor(contact.extras, 'KIND') ?? 'individual',
+        version: version,
+      );
     }
 
-    // PRODID - Product Identifier (RFC 2426 Section 3.6.3, RFC 6350 Section 6.7.7)
+    // PRODID - RFC 2426 Section 3.6.3, RFC 6350 Section 6.7.7.
     if (version.isV3OrV4) {
       writeProperty(
         buffer,
         'PRODID',
-        '-//Flutter Contacts//NONSGML v1.0//EN',
+        _valueFor(contact.extras, 'PRODID') ??
+            '-//Flutter Contacts//NONSGML v1.0//EN',
         version: version,
       );
     }
@@ -85,15 +92,47 @@ class VCardWriter {
 
     writeAndroidProperties(buffer, contact, version);
 
+    _writeExtras(buffer, contact.extras, version);
+
     writeProperty(
       buffer,
       'REV',
-      DateTime.now().toUtc().toIso8601String(),
+      _valueFor(contact.extras, 'REV') ??
+          DateTime.now().toUtc().toIso8601String(),
       version: version,
     );
 
     buffer.write('END:VCARD\r\n');
 
     return buffer.toString();
+  }
+}
+
+String? _valueFor(List<VCardExtra> extras, String name) {
+  for (final e in extras) {
+    if (e.name == name) return e.value;
+  }
+  return null;
+}
+
+/// Writes [VCardExtra]s verbatim, skipping KIND/PRODID/REV (already emitted
+/// at fixed positions with values folded in via [_valueFor]).
+void _writeExtras(
+  StringBuffer buffer,
+  List<VCardExtra> extras,
+  VCardVersion version,
+) {
+  for (final extra in extras) {
+    if (const {'KIND', 'PRODID', 'REV'}.contains(extra.name)) continue;
+    writeProperty(
+      buffer,
+      extra.group == null ? extra.name : '${extra.group}.${extra.name}',
+      extra.value,
+      version: version,
+      params: [
+        for (final e in extra.params.entries)
+          e.value == null ? e.key : '${e.key}=${e.value}',
+      ],
+    );
   }
 }

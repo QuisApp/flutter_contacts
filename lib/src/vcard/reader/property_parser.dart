@@ -3,44 +3,6 @@ import '../core/constants.dart';
 import '../utils/encoding/quoted_printable.dart';
 import '../utils/encoding/encoding.dart';
 
-/// Supported vCard property names (whitelist).
-const _supportedProperties = {
-  // Standard properties
-  'UID',
-  'FN',
-  'N',
-  'NICKNAME',
-  'TEL',
-  'EMAIL',
-  'ADR',
-  'ORG',
-  'TITLE',
-  'ROLE',
-  'URL',
-  'BDAY',
-  'ANNIVERSARY',
-  'RELATED',
-  'NOTE',
-  'PHOTO',
-  // Extended properties
-  'X-NICKNAME',
-  'X-PHONETIC-FIRST-NAME',
-  'X-PHONETIC-MIDDLE-NAME',
-  'X-PHONETIC-LAST-NAME',
-  'X-JOB-DESCRIPTION',
-  'X-ORG-SYMBOL',
-  'X-ORG-OFFICE',
-  'X-PHONETIC-ORG-NAME',
-  'X-ANNIVERSARY',
-  'X-EVENT',
-  'X-RELATION',
-  'X-SOCIALPROFILE',
-  'X-ABLABEL',
-  'X-ANDROID-STARRED',
-  'X-ANDROID-CUSTOM-RINGTONE',
-  'X-ANDROID-SEND-TO-VOICEMAIL',
-};
-
 /// Unfolds folded vCard lines (RFC 2425/RFC 6350).
 ///
 /// Continuation lines start with a space or tab.
@@ -119,7 +81,7 @@ VCardProperty? parsePropertyLine(String line) {
   }
 
   final nameUpper = name.toUpperCase();
-  if (!_supportedProperties.contains(nameUpper)) return null;
+  if (nameUpper == 'VERSION') return null;
 
   if (group == null) {
     return RegularProperty(name: nameUpper, value: value, params: params);

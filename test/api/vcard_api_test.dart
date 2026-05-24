@@ -707,5 +707,137 @@ END:VCARD''';
         expect(imported[2].name?.first, 'Charlie');
       });
     });
+
+    group('extras', () {
+      test('preserves unknown properties on import', () async {
+        const vcard =
+            'BEGIN:VCARD\r\n'
+            'VERSION:3.0\r\n'
+            'FN:Jane Doe\r\n'
+            'N:Doe;Jane;;;\r\n'
+            'X-MYAPP-MET-AT:2024-03-15\r\n'
+            'X-MYAPP-MET-WHERE:Berlin\\, Germany\r\n'
+            'END:VCARD\r\n';
+
+        final contact = VCardApi.instance.import(vcard).single;
+
+        expect(contact.name?.first, 'Jane');
+        expect(contact.extras, hasLength(2));
+        expect(contact.extras[0].name, 'X-MYAPP-MET-AT');
+        expect(contact.extras[0].value, '2024-03-15');
+        expect(contact.extras[1].name, 'X-MYAPP-MET-WHERE');
+        // Comma escape from v3 should be decoded.
+        expect(contact.extras[1].value, 'Berlin, Germany');
+      });
+
+      test('emits extras on export', () async {
+        final contact =
+            Contact(
+                name: Name(first: 'Jane', last: 'Doe'),
+              )
+              ..extras = const [
+                VCardExtra(name: 'X-MYAPP-MET-AT', value: '2024-03-15'),
+                VCardExtra(
+                  name: 'X-CUSTOM',
+                  value: 'hello',
+                  params: {'type': 'work'},
+                ),
+              ];
+
+        final vcard = VCardApi.instance.export(contact);
+
+        expect(vcard, contains('X-MYAPP-MET-AT:2024-03-15'));
+        expect(vcard, contains('X-CUSTOM;type=work:hello'));
+      });
+
+      test('round-trips unknown properties verbatim', () async {
+        final original = Contact(name: Name(first: 'Jane'))
+          ..extras = const [
+            VCardExtra(name: 'X-MYAPP-MET-AT', value: '2024-03-15'),
+            VCardExtra(name: 'X-MYAPP-MET-WHERE', value: 'Berlin, Germany'),
+          ];
+
+        final imported = VCardApi.instance
+            .import(VCardApi.instance.export(original))
+            .single;
+
+        // Filter out the writer's auto-emitted PRODID/REV that get
+        // round-tripped back as extras on import.
+        final appExtras = imported.extras
+            .where((e) => e.name.startsWith('X-'))
+            .toList();
+        expect(appExtras, original.extras);
+      });
+
+      test('preserves grouped extras with their X-ABLABEL', () async {
+        const vcard =
+            'BEGIN:VCARD\r\n'
+            'VERSION:3.0\r\n'
+            'FN:Jane Doe\r\n'
+            'item1.X-CUSTOM-FIELD:value\r\n'
+            'item1.X-ABLabel:My Label\r\n'
+            'END:VCARD\r\n';
+
+        final contact = VCardApi.instance.import(vcard).single;
+
+        expect(contact.extras, hasLength(2));
+        expect(contact.extras[0].group, 'item1');
+        expect(contact.extras[0].name, 'X-CUSTOM-FIELD');
+        expect(contact.extras[1].group, 'item1');
+        expect(contact.extras[1].name, 'X-ABLABEL');
+        expect(contact.extras[1].value, 'My Label');
+      });
+
+      test('drops VERSION but preserves KIND/PRODID/REV as extras', () async {
+        const vcard =
+            'BEGIN:VCARD\r\n'
+            'VERSION:4.0\r\n'
+            'KIND:group\r\n'
+            'PRODID:-//Example//EN\r\n'
+            'FN:The Does\r\n'
+            'REV:20240101T000000Z\r\n'
+            'END:VCARD\r\n';
+
+        final contact = VCardApi.instance.import(vcard).single;
+
+        final names = contact.extras.map((e) => e.name).toList();
+        expect(names, containsAll(['KIND', 'PRODID', 'REV']));
+        expect(names, isNot(contains('VERSION')));
+      });
+
+      test(
+        'round-tripping KIND/REV uses the source values, not the writer defaults',
+        () async {
+          const vcard =
+              'BEGIN:VCARD\r\n'
+              'VERSION:4.0\r\n'
+              'KIND:group\r\n'
+              'FN:The Does\r\n'
+              'REV:20200101T120000Z\r\n'
+              'END:VCARD\r\n';
+
+          final contact = VCardApi.instance.import(vcard).single;
+          final out = VCardApi.instance.export(
+            contact,
+            version: VCardVersion.v4,
+          );
+
+          // Source KIND and REV come back; writer doesn't double-emit them.
+          expect(out, contains('KIND:group'));
+          expect(out, isNot(contains('KIND:individual')));
+          expect(out, contains('REV:20200101T120000Z'));
+          expect('REV:'.allMatches(out), hasLength(1));
+        },
+      );
+
+      test('extras do not affect Contact equality or toJson', () async {
+        final a = Contact(name: Name(first: 'Jane'));
+        final b = Contact(name: Name(first: 'Jane'))
+          ..extras = const [VCardExtra(name: 'X-FOO', value: 'bar')];
+
+        expect(a, b);
+        expect(a.toJson(), b.toJson());
+      });
+    });
   });
 }
