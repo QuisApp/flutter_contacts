@@ -11,6 +11,7 @@ import '../../../models/properties/event.dart';
 import '../../../models/properties/relation.dart';
 import '../../../models/properties/note.dart';
 import '../../../models/properties/photo.dart';
+import '../../../models/vcard/vcard_extra.dart';
 
 /// Mutable builder for constructing a Contact from parsed properties.
 class ContactBuilder {
@@ -26,6 +27,7 @@ class ContactBuilder {
   final events = <Event>[];
   final relations = <Relation>[];
   final notes = <Note>[];
+  final extras = <VCardExtra>[];
   Photo? photo;
   bool? isFavorite;
   String? customRingtone;
@@ -64,29 +66,33 @@ class ContactBuilder {
     );
   }
 
-  Contact build() => Contact(
-    id: id,
-    displayName: displayName,
-    name: name,
-    phones: phones,
-    emails: emails,
-    addresses: addresses,
-    organizations: organizations,
-    websites: websites,
-    socialMedias: socialMedias,
-    events: events,
-    relations: relations,
-    notes: notes,
-    photo: photo,
-    android:
-        (isFavorite != null ||
-            customRingtone != null ||
-            sendToVoicemail != null)
-        ? AndroidData(
-            isFavorite: isFavorite,
-            customRingtone: customRingtone,
-            sendToVoicemail: sendToVoicemail,
-          )
-        : null,
-  );
+  Contact build() {
+    final contact = Contact(
+      id: id,
+      displayName: displayName,
+      name: name,
+      phones: phones,
+      emails: emails,
+      addresses: addresses,
+      organizations: organizations,
+      websites: websites,
+      socialMedias: socialMedias,
+      events: events,
+      relations: relations,
+      notes: notes,
+      photo: photo,
+      android:
+          (isFavorite != null ||
+              customRingtone != null ||
+              sendToVoicemail != null)
+          ? AndroidData(
+              isFavorite: isFavorite,
+              customRingtone: customRingtone,
+              sendToVoicemail: sendToVoicemail,
+            )
+          : null,
+    );
+    if (extras.isNotEmpty) contact.extras = extras;
+    return contact;
+  }
 }

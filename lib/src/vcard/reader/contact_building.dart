@@ -1,4 +1,5 @@
 import '../../../models/contact/contact.dart';
+import '../../../models/vcard/vcard_extra.dart';
 import '../core/property.dart';
 import '../utils/encoding/encoding.dart';
 import 'contact_builder.dart';
@@ -96,6 +97,14 @@ void _processRegularProperty(RegularProperty prop, ContactBuilder builder) {
       builder.customRingtone = prop.value;
     case 'X-ANDROID-SEND-TO-VOICEMAIL':
       builder.sendToVoicemail = prop.value == '1';
+    default:
+      builder.extras.add(
+        VCardExtra(
+          name: prop.name,
+          value: unescapeValue(prop.value),
+          params: prop.params,
+        ),
+      );
   }
 }
 
@@ -116,6 +125,20 @@ void _processGroupedProperty(
     case 'RELATED':
     case 'X-RELATION':
       builder.relations.add(parseRelation(prop, label));
+    default:
+      builder.extras.add(
+        VCardExtra(
+          group: prop.group,
+          name: prop.name,
+          value: unescapeValue(prop.value),
+          params: prop.params,
+        ),
+      );
+      if (label != null) {
+        builder.extras.add(
+          VCardExtra(group: prop.group, name: 'X-ABLABEL', value: label),
+        );
+      }
   }
 }
 

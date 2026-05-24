@@ -9,6 +9,8 @@ class BroadcastStreamManager<T> {
   StreamController<T>? _broadcastController;
 
   BroadcastStreamManager(this._eventChannel, {T Function(dynamic)? transform})
+    // Initializing formal would leak `_transform:` as the named-arg label.
+    // ignore: prefer_initializing_formals
     : _transform = transform;
 
   Stream<T> get stream {

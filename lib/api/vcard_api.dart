@@ -3,6 +3,9 @@ import '../models/vcard/vcard_version.dart';
 import '../src/vcard/writer/vcard_writer.dart';
 import '../src/vcard/reader/vcard_reader.dart';
 
+// Re-export so callers get `VCardExtra` and the `contact.extras` extension.
+export '../models/vcard/vcard_extra.dart';
+
 /// vCard import/export API.
 ///
 /// Handles converting contacts to and from vCard format (RFC 2426, RFC 6350).

@@ -52,6 +52,7 @@ export 'models/properties/website.dart';
 export 'models/ringtones/ringtone_type.dart';
 export 'models/ringtones/ringtone.dart';
 export 'models/vcard/vcard_version.dart';
+export 'models/vcard/vcard_extra.dart';
 
 /// Complete contact management with ultra-fast get, create, update, and delete
 /// supporting all fields (phone, email, organization, photo, etc.). Includes

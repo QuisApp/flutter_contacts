@@ -1,3 +1,8 @@
+## 2.2.0
+
+- Round-trip unknown vCard properties via `contact.extras` (#21).
+- Migrate Android plugin to Built-in Kotlin; requires Flutter 3.44+ (#234).
+
 ## 2.1.0
 
 - `FlutterContacts.native.showPicker()` now returns `Contact?` (with `id` and
