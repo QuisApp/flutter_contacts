@@ -235,7 +235,7 @@ object ContactFetcher {
 
         contactData.accounts = AccountUtils.getAccountsForContact(contentResolver, contactId)
         if (properties.contains("identifiers")) {
-            fetchRawContactIdentifiers(contentResolver, listOf(contactId), contactsMap)
+            fetchRawContactIdentifiers(contentResolver, listOf(contactId), contactsMap, properties)
         }
         return contactData.toContact(properties, contentResolver)
     }
@@ -280,7 +280,7 @@ object ContactFetcher {
                 contactsMap[contactId]?.accounts = accountsMap[contactId] ?: emptyList()
             }
             if (properties.contains("identifiers")) {
-                fetchRawContactIdentifiers(contentResolver, batchIds, contactsMap)
+                fetchRawContactIdentifiers(contentResolver, batchIds, contactsMap, properties)
             }
             batchIds.forEach { contactId ->
                 contactsMap[contactId]?.let {
@@ -380,7 +380,7 @@ object ContactFetcher {
             }
 
             if (properties.contains("identifiers")) {
-                fetchRawContactIdentifiers(contentResolver, batchIds, contactsMap)
+                fetchRawContactIdentifiers(contentResolver, batchIds, contactsMap, properties)
             }
 
             results.addAll(
@@ -450,7 +450,7 @@ object ContactFetcher {
         contactData.accounts =
             AccountUtils.getAccountsForContact(contentResolver, profileContactId!!)
         if (properties.contains("identifiers")) {
-            fetchRawContactIdentifiers(contentResolver, listOf(profileContactId!!), contactsMap)
+            fetchRawContactIdentifiers(contentResolver, listOf(profileContactId!!), contactsMap, properties)
         }
         return contactData.toContact(properties, contentResolver)
     }
@@ -510,8 +510,11 @@ object ContactFetcher {
         contentResolver: ContentResolver,
         contactIds: List<String>,
         contactsMap: MutableMap<String, MutableContact>,
+        properties: Set<String>,
     ) {
         if (contactIds.isEmpty()) return
+        val withDataMimetypes = properties.contains("dataMimetypes")
+        val collectedRawContactIds = if (withDataMimetypes) mutableListOf<String>() else null
         contentResolver.queryAndProcess(
             RawContacts.CONTENT_URI,
             projection =
@@ -546,8 +549,61 @@ object ContactFetcher {
                             account = account,
                         ),
                     )
+                    if (withDataMimetypes && rawContactId != null) {
+                        collectedRawContactIds!!.add(rawContactId)
+                    }
                 }
             }
         }
+
+        if (!withDataMimetypes || collectedRawContactIds.isNullOrEmpty()) return
+
+        val mimetypesByRawContact = fetchDataMimetypesPerRawContact(contentResolver, collectedRawContactIds)
+        if (mimetypesByRawContact.isEmpty()) return
+
+        contactIds.forEach { contactId ->
+            val contactData = contactsMap[contactId] ?: return@forEach
+            val updated = contactData.rawContactInfos.map { info ->
+                val mimetypes = info.rawContactId?.let { mimetypesByRawContact[it] }
+                if (mimetypes.isNullOrEmpty()) {
+                    info
+                } else {
+                    // Sort for stable list ordering across repeated fetches.
+                    // Cursor row order is not guaranteed; the Dart side compares
+                    // dataMimetypes positionally in == / hashCode.
+                    info.copy(dataMimetypes = mimetypes.sorted())
+                }
+            }
+            contactData.rawContactInfos.clear()
+            contactData.rawContactInfos.addAll(updated)
+        }
+    }
+
+    private fun fetchDataMimetypesPerRawContact(
+        contentResolver: ContentResolver,
+        rawContactIds: List<String>,
+    ): Map<String, Set<String>> {
+        if (rawContactIds.isEmpty()) return emptyMap()
+        // De-duplicate then batch via BatchHelper to stay under SQLite's bind
+        // parameter limit. A getAll batch may collect >900 raw_contact IDs
+        // (multiple raw_contacts per contact), which would otherwise overflow
+        // SQLITE_MAX_VARIABLE_NUMBER on older Android versions.
+        val mimetypesByRawContact = mutableMapOf<String, MutableSet<String>>()
+        BatchHelper.forEachSelectionArgsBatch(rawContactIds.distinct()) { batch ->
+            val placeholders = batch.joinToString(",") { "?" }
+            contentResolver.queryAndProcess(
+                Data.CONTENT_URI,
+                projection = arrayOf(Data.RAW_CONTACT_ID, Data.MIMETYPE),
+                selection = "${Data.RAW_CONTACT_ID} IN ($placeholders)",
+                selectionArgs = batch.toTypedArray(),
+            ) { cursor ->
+                cursor.forEachRow { row ->
+                    val rawContactId = row.getLongOrNull(Data.RAW_CONTACT_ID)?.toString() ?: return@forEachRow
+                    val mimetype = row.getStringOrNull(Data.MIMETYPE) ?: return@forEachRow
+                    mimetypesByRawContact.getOrPut(rawContactId) { mutableSetOf() }.add(mimetype)
+                }
+            }
+        }
+        return mimetypesByRawContact
     }
 }

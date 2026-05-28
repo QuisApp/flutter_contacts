@@ -178,9 +178,30 @@ List<Contact> contacts = await FlutterContacts.getAll(
 
 Both `get()` and `getAll()` default to fetching only ID + display name. Specify `properties` for additional fields.
 
-**Properties:** `name`, `phone`, `email`, `address`, `organization`, `website`, `socialMedia`, `event`, `relation`, `note`, `photoThumbnail`, `photoFullRes`, `favorite` (Android), `ringtone` (Android), `sendToVoicemail` (Android), `timestamp` (Android), `identifiers` (Android). Use `ContactProperties.all` for all properties, or `ContactProperties.allProperties` to exclude photos. Only fetch the properties you need to improve query performance.
+**Properties:** `name`, `phone`, `email`, `address`, `organization`, `website`, `socialMedia`, `event`, `relation`, `note`, `photoThumbnail`, `photoFullRes`, `favorite` (Android), `ringtone` (Android), `sendToVoicemail` (Android), `timestamp` (Android), `identifiers` (Android), `dataMimetypes` (Android). Use `ContactProperties.all` for all properties, or `ContactProperties.allProperties` to exclude photos. Only fetch the properties you need to improve query performance. Note: `dataMimetypes` is opt-in even when using `ContactProperties.all` - it must be added to the set explicitly to avoid the extra mimetype scan for callers that do not need it.
 
 **Filters:** `ContactFilter.name()`, `.phone()`, `.email()`, `.group()`, `.ids()`. Phone/email filters use partial match on Android, full match on iOS.
+
+When `ContactProperty.dataMimetypes` is requested **alongside** `ContactProperty.identifiers`, each entry in `contact.android?.identifiers?.rawContacts` carries a `dataMimetypes: List<String>` of every `ContactsContract.Data.MIMETYPE` present for that raw contact (Android only). Useful for distinguishing real telephony contacts from synthetic raw_contacts created by messaging apps (WhatsApp, Viber, Telegram, ...) that never insert a `vnd.android.cursor.item/phone_v2` row:
+
+```dart
+final contacts = await FlutterContacts.getAll(properties: {
+  ContactProperty.name,
+  ContactProperty.phone,
+  ContactProperty.identifiers,
+  ContactProperty.dataMimetypes,  // opt-in: adds one narrow SELECT per batch
+});
+
+bool isRealTelephonyContact(Contact c) {
+  final raws = c.android?.identifiers?.rawContacts ?? const [];
+  if (raws.isEmpty) return true; // device-local contact, no account info
+  return raws.any(
+    (rc) => rc.dataMimetypes.contains('vnd.android.cursor.item/phone_v2'),
+  );
+}
+```
+
+`dataMimetypes` is opt-in to keep the default `identifiers` path cheap - callers that only need lookup keys or source IDs do not pay for the extra mimetype scan.
 
 ### Create
 

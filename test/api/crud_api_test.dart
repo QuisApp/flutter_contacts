@@ -48,4 +48,41 @@ void main() {
     expect(results, isEmpty);
     expect(log.last.method, 'crud.getAll');
   });
+
+  test(
+    'getAll throws ArgumentError when dataMimetypes is requested without identifiers',
+    () async {
+      expect(
+        () => CrudApi.instance.getAll(
+          properties: {ContactProperty.dataMimetypes},
+        ),
+        throwsArgumentError,
+      );
+    },
+  );
+
+  test(
+    'get throws ArgumentError when dataMimetypes is requested without identifiers',
+    () async {
+      expect(
+        () => CrudApi.instance.get(
+          'some-id',
+          properties: {ContactProperty.dataMimetypes},
+        ),
+        throwsArgumentError,
+      );
+    },
+  );
+
+  test('getAll accepts dataMimetypes when paired with identifiers', () async {
+    await setUpMockMethodChannel(
+      methodChannel,
+      handler: (call) async => <Map<String, dynamic>>[],
+    );
+
+    final results = await CrudApi.instance.getAll(
+      properties: {ContactProperty.identifiers, ContactProperty.dataMimetypes},
+    );
+    expect(results, isEmpty);
+  });
 }

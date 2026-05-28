@@ -32,6 +32,7 @@ class CrudApi {
     bool androidLookup = false,
   }) async {
     final props = properties ?? ContactProperties.none;
+    _throwIfPropertiesInvalid(props);
     final result = await _channel.invokeMethod<Map>(
       'crud.get',
       _withIosNotes({
@@ -51,6 +52,7 @@ class CrudApi {
     int? limit,
   }) async {
     final props = properties ?? ContactProperties.none;
+    _throwIfPropertiesInvalid(props);
     final result = await _channel.invokeMethod<List>(
       'crud.getAll',
       _withIosNotes({
@@ -61,6 +63,22 @@ class CrudApi {
       }),
     );
     return JsonHelpers.decodeList(result, Contact.fromJson);
+  }
+
+  /// Throws an [ArgumentError] when [properties] combines incompatible entries.
+  ///
+  /// Fails fast on the Dart side (before any platform-channel round-trip) so
+  /// developers see the misconfiguration as an exception rather than a silent
+  /// empty result.
+  static void _throwIfPropertiesInvalid(Set<ContactProperty> properties) {
+    if (properties.contains(ContactProperty.dataMimetypes) &&
+        !properties.contains(ContactProperty.identifiers)) {
+      throw ArgumentError(
+        'ContactProperty.dataMimetypes requires ContactProperty.identifiers: '
+        'the field is exposed via Contact.android.identifiers.rawContacts[*], '
+        'so without identifiers there is no RawContact list to populate.',
+      );
+    }
   }
 
   Future<String> create(Contact contact, {Account? account}) async {
