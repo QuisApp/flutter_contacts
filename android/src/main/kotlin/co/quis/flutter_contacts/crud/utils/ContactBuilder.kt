@@ -117,7 +117,18 @@ object ContactBuilder {
             if (property in properties) block()
         }
 
-        updateIf("name") { newContact.name?.let { ops.addAll(it.toUpdateOperations(rawContactId)) } }
+        updateIf("name") {
+            newContact.name?.let {
+                // Update the name in place on the raw contact that already holds it, falling back
+                // to the primary when the contact has no name yet. Otherwise multi-account
+                // contacts (e.g. Google + WhatsApp) can route it to the wrong raw contact (#236).
+                // Limits: a name living only on a read-only raw contact can't be edited, and
+                // clearing a name may let another raw contact's name resurface.
+                val nameRawContactId =
+                    existingContact.name?.metadata?.rawContactId?.toLongOrNull() ?: rawContactId
+                ops.addAll(it.toUpdateOperations(nameRawContactId))
+            }
+        }
         updateIf("phone") {
             PropertyListUpdater.updatePhones(ops, existingContact.phones, newContact.phones, rawContactId)
         }
