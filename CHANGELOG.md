@@ -1,3 +1,10 @@
+## 2.2.1
+
+- Fix name updates writing to the wrong raw contact on Android contacts with
+  multiple raw contacts (e.g. Google + WhatsApp), by round-tripping the name's
+  `metadata` so its `rawContactId` is counted when picking the raw contact to
+  update (#236).
+
 ## 2.2.0
 
 - Round-trip unknown vCard properties via `contact.extras` (#21).

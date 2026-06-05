@@ -1,4 +1,5 @@
 import '../../utils/json_helpers.dart';
+import 'property_metadata.dart';
 
 /// Structured name property.
 ///
@@ -51,6 +52,9 @@ class Name {
   /// Nickname.
   final String? nickname;
 
+  /// Property identity metadata (used internally for updates).
+  final PropertyMetadata? metadata;
+
   const Name({
     this.first,
     this.middle,
@@ -62,6 +66,7 @@ class Name {
     this.phoneticLast,
     this.previousFamilyName,
     this.nickname,
+    this.metadata,
   });
 
   Map<String, dynamic> toJson() {
@@ -76,6 +81,7 @@ class Name {
     JsonHelpers.encode(json, 'phoneticLast', phoneticLast);
     JsonHelpers.encode(json, 'previousFamilyName', previousFamilyName);
     JsonHelpers.encode(json, 'nickname', nickname);
+    JsonHelpers.encode(json, 'metadata', metadata, (m) => m.toJson());
     return json;
   }
 
@@ -93,6 +99,7 @@ class Name {
         json['previousFamilyName'],
       ),
       nickname: JsonHelpers.decode<String>(json['nickname']),
+      metadata: JsonHelpers.decode(json['metadata'], PropertyMetadata.fromJson),
     );
   }
 
@@ -139,6 +146,7 @@ class Name {
     String? phoneticLast,
     String? previousFamilyName,
     String? nickname,
+    PropertyMetadata? metadata,
   }) => Name(
     first: first ?? this.first,
     middle: middle ?? this.middle,
@@ -150,5 +158,6 @@ class Name {
     phoneticLast: phoneticLast ?? this.phoneticLast,
     previousFamilyName: previousFamilyName ?? this.previousFamilyName,
     nickname: nickname ?? this.nickname,
+    metadata: metadata ?? this.metadata,
   );
 }

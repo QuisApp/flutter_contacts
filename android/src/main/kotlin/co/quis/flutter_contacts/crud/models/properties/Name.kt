@@ -61,6 +61,7 @@ data class Name(
                         phoneticLast =
                             cursor.getStringOrNull(StructuredName.PHONETIC_FAMILY_NAME),
                         nickname = existingName?.nickname,
+                        metadata = PropertyHelpers.extractMetadata(cursor),
                     )
                 }
 
