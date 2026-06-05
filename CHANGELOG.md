@@ -1,3 +1,10 @@
+## 2.2.1
+
+- Fix name updates writing to the wrong raw contact on Android contacts with
+  multiple raw contacts (e.g. Google + WhatsApp): the name is now updated in
+  place on the raw contact that already holds it, instead of the raw contact
+  with the most properties (#236).
+
 ## 2.2.0
 
 - Round-trip unknown vCard properties via `contact.extras` (#21).
