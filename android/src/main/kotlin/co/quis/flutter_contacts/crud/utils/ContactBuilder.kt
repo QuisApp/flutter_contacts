@@ -125,7 +125,10 @@ object ContactBuilder {
                 // Limits: a name living only on a read-only raw contact can't be edited, and
                 // clearing a name may let another raw contact's name resurface.
                 val nameRawContactId =
-                    existingContact.name?.metadata?.rawContactId?.toLongOrNull() ?: rawContactId
+                    existingContact.name
+                        ?.metadata
+                        ?.rawContactId
+                        ?.toLongOrNull() ?: rawContactId
                 ops.addAll(it.toUpdateOperations(nameRawContactId))
             }
         }
