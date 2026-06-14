@@ -1,3 +1,7 @@
+## 2.2.2
+
+- Update README.
+
 ## 2.2.1
 
 - Fix name updates writing to the wrong raw contact on Android contacts with

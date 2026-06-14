@@ -6,7 +6,9 @@ Get, create, update, and delete contacts with **comprehensive property support**
 
 [![pub version](https://img.shields.io/pub/v/flutter_contacts?color=0288D1&logo=flutter&logoColor=white&logoSize=auto&style=for-the-badge&include_prereleases)](https://pub.dev/packages/flutter_contacts) [![pub likes](https://img.shields.io/pub/likes/flutter_contacts?color=26A69A&style=for-the-badge)](https://pub.dev/packages/flutter_contacts) [![pub dm](https://img.shields.io/pub/dm/flutter_contacts?color=5C6BC0&style=for-the-badge)](https://pub.dev/packages/flutter_contacts) [![license](https://img.shields.io/badge/license-MIT-546E7A?logo=github&logoColor=white&style=for-the-badge)](https://github.com/QuisApp/flutter_contacts/blob/master/LICENSE)
 
-> 💬 **Have feedback on the new v2?** Share it by [opening an issue](https://github.com/QuisApp/flutter_contacts/issues/new) on GitHub!
+> 💜 **Sponsored by [Quis Contacts](https://quis.co/)** — a modern, private contacts app from the makers of this plugin.
+>
+> [![Website](https://img.shields.io/badge/Website-quis.co-5C6BC0?style=for-the-badge&logo=googlechrome&logoColor=white)](https://quis.co/) [![App Store](https://img.shields.io/badge/App_Store-Download-0288D1?style=for-the-badge&logo=apple&logoColor=white)](https://apps.apple.com/us/app/quis-contacts/id1558252000) [![Google Play](https://img.shields.io/badge/Google_Play-Download-26A69A?style=for-the-badge&logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=co.quis.quis)
 
 ---
 
