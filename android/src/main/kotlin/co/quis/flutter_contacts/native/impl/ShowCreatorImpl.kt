@@ -58,6 +58,31 @@ class ShowCreatorImpl(
             Intent(Intent.ACTION_INSERT).apply { type = ContactsContract.Contacts.CONTENT_TYPE }
         contact?.let {
             val dataList = ContactBuilder.buildInsertDataForIntent(it)
+
+            // Insert.NAME is required for some Android editors (e.g. Samsung) to show the name;
+            // StructuredName rows in Insert.DATA alone are often ignored for display. Use NAME
+            // only (not both) to avoid duplicate/conflicting prefill. Phone/email stay in DATA
+            // only for the same reason.
+            it.name?.let { name ->
+                fun compose(vararg parts: String?) =
+                    parts
+                        .filterNotNull()
+                        .map(String::trim)
+                        .filter(String::isNotEmpty)
+                        .joinToString(" ")
+                val fullName = compose(name.prefix, name.first, name.middle, name.last, name.suffix)
+                if (fullName.isNotEmpty()) {
+                    intent.putExtra(Insert.NAME, fullName)
+                    compose(name.phoneticFirst, name.phoneticMiddle, name.phoneticLast)
+                        .takeIf { phonetic -> phonetic.isNotEmpty() }
+                        ?.let { phonetic -> intent.putExtra(Insert.PHONETIC_NAME, phonetic) }
+                    dataList.removeAll { values ->
+                        values.getAsString(ContactsContract.Data.MIMETYPE) ==
+                            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
+                    }
+                }
+            }
+
             if (dataList.isNotEmpty()) intent.putParcelableArrayListExtra(Insert.DATA, dataList)
         }
         val activity =
