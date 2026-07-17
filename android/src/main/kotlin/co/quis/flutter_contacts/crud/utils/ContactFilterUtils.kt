@@ -2,6 +2,7 @@ package co.quis.flutter_contacts.crud.utils
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership
 import android.provider.ContactsContract.CommonDataKinds.Phone
@@ -38,13 +39,20 @@ object ContactFilterUtils {
         contentResolver: ContentResolver,
         nameFilter: String,
     ): List<String> {
-        val uri = Uri.withAppendedPath(Contacts.CONTENT_FILTER_URI, Uri.encode(nameFilter))
+        // Restrict to the default directory to match the system Contacts app (see getAllContacts).
+        val uri =
+            Uri
+                .withAppendedPath(Contacts.CONTENT_FILTER_URI, Uri.encode(nameFilter))
+                .buildUpon()
+                .appendQueryParameter(
+                    ContactsContract.DIRECTORY_PARAM_KEY,
+                    ContactsContract.Directory.DEFAULT.toString(),
+                ).build()
         return queryContactIds(
             contentResolver,
             uri,
             Contacts._ID,
             arrayOf(Contacts._ID),
-            "${Contacts.IN_VISIBLE_GROUP} = 1",
         )
     }
 

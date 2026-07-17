@@ -300,6 +300,8 @@ object ContactFetcher {
     ): List<Contact> {
         val filterResult = ContactFilterUtils.parseAndApply(contentResolver, filterDict)
         val contactIds = filterResult.contactIds
+        // A non-null empty list means the filter matched no contacts (null means no filter).
+        if (contactIds != null && contactIds.isEmpty()) return emptyList()
 
         val contactIdSelection = ContactQueryBuilder.buildContactIdSelection(contactIds)
         val dataMimeTypes = PropertyUtils.dataMimeTypesFor(properties)
@@ -309,9 +311,19 @@ object ContactFetcher {
         val contactIdsToFetch = mutableListOf<String>()
         val contactsMap = mutableMapOf<String, MutableContact>()
 
-        // First, get all contact IDs
+        // First, get all contact IDs. Restricting to the default directory returns the same
+        // contacts the system Contacts app displays: it includes contacts from accounts that
+        // don't mark them visible (e.g. MS365/Exchange), but excludes hidden auto-collected
+        // ones like Gmail's "Other contacts".
+        val defaultDirectoryUri =
+            Contacts.CONTENT_URI
+                .buildUpon()
+                .appendQueryParameter(
+                    ContactsContract.DIRECTORY_PARAM_KEY,
+                    ContactsContract.Directory.DEFAULT.toString(),
+                ).build()
         contentResolver.queryAndProcess(
-            Contacts.CONTENT_URI,
+            defaultDirectoryUri,
             projection =
                 PropertyUtils.buildContactsProjection(
                     properties,
@@ -464,7 +476,7 @@ object ContactFetcher {
             .query(
                 Data.CONTENT_URI,
                 null,
-                "${Data.CONTACT_ID} = ? AND ${Data.IN_VISIBLE_GROUP} = 1",
+                "${Data.CONTACT_ID} = ?",
                 arrayOf(contactId),
                 null,
             )?.use { cursor ->

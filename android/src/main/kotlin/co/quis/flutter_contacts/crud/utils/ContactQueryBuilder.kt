@@ -6,7 +6,7 @@ import android.provider.ContactsContract.Data
 import co.quis.flutter_contacts.accounts.models.Account
 
 data class QuerySelection(
-    val selection: String,
+    val selection: String?,
     val selectionArgs: Array<String>?,
 )
 
@@ -35,8 +35,6 @@ object ContactQueryBuilder {
                 selectionArgs.addAll(contactIds)
             }
         }
-
-        selectionParts.add("${Data.IN_VISIBLE_GROUP} = 1")
 
         if (!mimeTypes.isNullOrEmpty()) {
             selectionParts.add("${Data.MIMETYPE} IN (${mimeTypes.joinToString(",") { "?" }})")
@@ -90,19 +88,13 @@ object ContactQueryBuilder {
     fun buildContactIdSelection(
         contactIds: List<String>?,
         field: String = Contacts._ID,
-    ): QuerySelection {
-        val selectionParts = mutableListOf("${Contacts.IN_VISIBLE_GROUP} = 1")
-        val selectionArgs =
-            if (!contactIds.isNullOrEmpty()) {
-                selectionParts.add("$field IN (${contactIds.joinToString(",") { "?" }})")
-                contactIds
-            } else {
-                emptyList()
-            }
-        return QuerySelection(
-            selection = selectionParts.joinToString(" AND "),
-            selectionArgs =
-                if (selectionArgs.isNotEmpty()) selectionArgs.toTypedArray() else null,
-        )
-    }
+    ): QuerySelection =
+        if (!contactIds.isNullOrEmpty()) {
+            QuerySelection(
+                selection = "$field IN (${contactIds.joinToString(",") { "?" }})",
+                selectionArgs = contactIds.toTypedArray(),
+            )
+        } else {
+            QuerySelection(selection = null, selectionArgs = null)
+        }
 }
