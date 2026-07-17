@@ -9,4 +9,8 @@ object Permissions {
     fun hasReadPermission(context: Context) =
         ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) ==
             PackageManager.PERMISSION_GRANTED
+
+    fun hasWritePermission(context: Context) =
+        ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) ==
+            PackageManager.PERMISSION_GRANTED
 }
