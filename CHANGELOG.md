@@ -1,3 +1,15 @@
+## 2.3.0
+
+- Android now returns the same contacts the system Contacts app displays,
+  instead of filtering on `IN_VISIBLE_GROUP = 1`: contacts from sync adapters
+  that don't mark them visible (e.g. MS365/Exchange) are included in `getAll()`,
+  operations by ID work regardless of visibility, and filters matching no
+  contacts return none instead of all (#240).
+- Fix `showCreator()` dropping the pre-filled photo on Android: the system
+  editor ignores photos passed through the insert intent, so the photo is now
+  applied to the contact after creation when the app holds `WRITE_CONTACTS`
+  (#242).
+
 ## 2.2.2
 
 - Update README.
