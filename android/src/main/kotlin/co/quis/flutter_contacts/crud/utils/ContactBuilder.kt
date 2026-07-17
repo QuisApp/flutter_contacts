@@ -258,6 +258,9 @@ object ContactBuilder {
     fun buildInsertDataForIntent(contact: Contact): ArrayList<ContentValues> {
         val dataList = ArrayList<ContentValues>()
         contact.name?.let { addNameToIntent(it, dataList) }
+        (contact.photo?.fullSize ?: contact.photo?.thumbnail)?.let {
+            addPhotoToIntent(it, dataList)
+        }
         contact.phones.forEach { addPhoneToIntent(it, dataList) }
         contact.emails.forEach { addEmailToIntent(it, dataList) }
         contact.addresses.forEach { addAddressToIntent(it, dataList) }
@@ -287,6 +290,18 @@ object ContactBuilder {
                 putIfNotBlank(CommonDataKinds.StructuredName.PHONETIC_FAMILY_NAME, name.phoneticLast)
             }
         if (values.size() > 1) dataList.add(values)
+    }
+
+    private fun addPhotoToIntent(
+        photo: ByteArray,
+        dataList: ArrayList<ContentValues>,
+    ) {
+        dataList.add(
+            ContentValues().apply {
+                put(Data.MIMETYPE, CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+                put(CommonDataKinds.Photo.PHOTO, PhotoUtils.compressForIntent(photo))
+            },
+        )
     }
 
     private fun addPhoneToIntent(

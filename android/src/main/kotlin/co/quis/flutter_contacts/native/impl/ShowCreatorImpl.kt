@@ -1,16 +1,21 @@
 package co.quis.flutter_contacts.native.impl
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.provider.ContactsContract
+import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Intents.Insert
 import co.quis.flutter_contacts.common.BaseHandler
 import co.quis.flutter_contacts.common.argMap
 import co.quis.flutter_contacts.crud.models.JsonHelpers
 import co.quis.flutter_contacts.crud.models.contact.Contact
+import co.quis.flutter_contacts.crud.utils.AccountUtils
 import co.quis.flutter_contacts.crud.utils.ContactBuilder
+import co.quis.flutter_contacts.crud.utils.PhotoUtils
+import co.quis.flutter_contacts.listeners.utils.Permissions
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -22,6 +27,7 @@ class ShowCreatorImpl(
 ) : BaseHandler(context, executor) {
     private var activityBinding: ActivityPluginBinding? = null
     private var pendingResult: MethodChannel.Result? = null
+    private var pendingPhoto: ByteArray? = null
     private var requestCode: Int = 0
 
     fun setActivityBinding(binding: ActivityPluginBinding?) {
@@ -57,6 +63,7 @@ class ShowCreatorImpl(
         val activity =
             activityBinding?.activity ?: return postError(result, "No activity available")
         pendingResult = result
+        pendingPhoto = contact?.photo?.let { it.fullSize ?: it.thumbnail }
         mainHandler.post { activity.startActivityForResult(intent, requestCode) }
     }
 
@@ -66,11 +73,49 @@ class ShowCreatorImpl(
     ) {
         val result = pendingResult ?: return
         pendingResult = null
+        val photo = pendingPhoto
+        pendingPhoto = null
         if (resultCode == Activity.RESULT_OK && data?.data != null) {
             val contactId = ContentUris.parseId(data.data!!).toString()
-            postResult(result, contactId)
+            executor.execute {
+                runCatching { applyPhotoIfMissing(contactId, photo) }
+                postResult(result, contactId)
+            }
         } else {
             postResult(result, null)
         }
     }
+
+    /**
+     * The system contact editor ignores photo rows passed via [Insert.DATA], so the prefilled
+     * photo is applied to the created contact here instead. Requires WRITE_CONTACTS (skipped
+     * otherwise), and never overwrites a photo the user picked in the editor.
+     */
+    private fun applyPhotoIfMissing(
+        contactId: String,
+        photo: ByteArray?,
+    ) {
+        if (photo == null || !Permissions.hasWritePermission(context)) return
+        val contentResolver = context.contentResolver
+        if (hasPhoto(contentResolver, contactId)) return
+        val rawContactId =
+            AccountUtils
+                .getRawContactIdsForContact(contentResolver, contactId)
+                .firstOrNull() ?: return
+        PhotoUtils.savePhoto(contentResolver, rawContactId, photo)
+    }
+
+    private fun hasPhoto(
+        contentResolver: ContentResolver,
+        contactId: String,
+    ): Boolean =
+        contentResolver
+            .query(
+                ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId.toLong()),
+                arrayOf(Contacts.PHOTO_ID),
+                null,
+                null,
+                null,
+            )?.use { it.moveToFirst() && !it.isNull(0) }
+            ?: false
 }

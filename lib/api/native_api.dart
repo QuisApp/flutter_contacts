@@ -68,7 +68,10 @@ class NativeApi {
   /// Shows the native contact creator, optionally pre-filled with [contact].
   /// Returns the new contact's ID, or null if the user cancelled.
   ///
-  /// Permissionless on both platforms.
+  /// Permissionless on both platforms. On Android, the system editor doesn't
+  /// display pre-filled photos; if the app holds `WRITE_CONTACTS`, the photo is
+  /// applied to the contact after creation (unless the user picked one in the
+  /// editor).
   Future<String?> showCreator({Contact? contact}) => _invoke<String>(
     'native.showCreator',
     {if (contact != null) 'contact': contact.toJson()},
