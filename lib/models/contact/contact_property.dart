@@ -50,6 +50,7 @@
 /// | photoFullRes     | ✔       | ✔   |
 /// | timestamp        | ✔       | ⨯   |
 /// | identifiers      | ✔       | ⨯   |
+/// | dataMimetypes    | ✔       | ⨯   |
 /// | debugData        | ✔       | ⨯   |
 enum ContactProperty {
   /// Structured name property.
@@ -103,6 +104,19 @@ enum ContactProperty {
 
   /// Android-specific contact identifiers (Android only).
   identifiers,
+
+  /// Populate `RawContact.dataMimetypes` with the `Data.MIMETYPE` values
+  /// present for each raw contact (Android only). Requires [identifiers] -
+  /// the field is exposed via `Contact.android.identifiers.rawContacts[*]`.
+  ///
+  /// Requesting [dataMimetypes] without [identifiers] throws an
+  /// [ArgumentError] from `get()` / `getAll()`.
+  ///
+  /// Costs one extra narrow `SELECT RAW_CONTACT_ID, MIMETYPE FROM Data`
+  /// query per batch. Opt in only when you need to inspect mimetypes
+  /// (e.g. to distinguish real telephony contacts from synthetic raw
+  /// contacts written by messaging apps).
+  dataMimetypes,
 
   /// All data mimetypes for debugging (Android only).
   debugData,
