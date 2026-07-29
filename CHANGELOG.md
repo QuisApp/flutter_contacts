@@ -1,3 +1,10 @@
+## 2.3.1
+
+- Fix `showCreator()` name prefill not displaying in some Android contact
+  editors (e.g. Samsung) by passing `Insert.NAME` instead of a `StructuredName`
+  row — thanks @CrashKiki for the fix (#241) and @Eunno-An for the report
+  (#242).
+
 ## 2.3.0
 
 - Android now returns the same contacts the system Contacts app displays,
