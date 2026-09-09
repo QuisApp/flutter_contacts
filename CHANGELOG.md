@@ -1,3 +1,16 @@
+## 2.4.0
+
+- `showEditor()` on iOS now waits for the user to finish instead of resolving to
+  `null` immediately; it returns the contact identifier on save.
+- Fix Android dropping events whose date uses ISO 8601 basic format
+  (`19960415`, `--0415`), which vCard 4.0 mandates and Android's vCard importer
+  stores verbatim — thanks @Ruman87 for the report and diagnosis (#248).
+- Fix `groups.addContacts()` failing with `Group has no account` on Android 12
+  and below, where the platform exposes no default account and `groups.create()`
+  produces a local group — thanks @Eunno-An for the report (#247).
+- Fix the iOS native editor staying on screen when the contact is deleted from
+  it (iOS 26+) — thanks @liliana-tagonsoft for the report and the fix (#250).
+
 ## 2.3.1
 
 - Fix `showCreator()` name prefill not displaying in some Android contact
