@@ -7,6 +7,7 @@ enum ShowEditorImpl {
     private static var pendingResult: FlutterResult?
     private static var editorDelegate: EditorDelegate?
     private static var closeHandler: EditorCloseHandler?
+    private static var storeObserver: NSObjectProtocol?
 
     static func handle(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let contactId: String = call.arg("contactId")!
@@ -35,13 +36,44 @@ enum ShowEditorImpl {
                 editorDelegate = delegate
                 closeHandler = handler
                 navController.modalPresentationStyle = .pageSheet
+                observeDeletion(of: contactId, keys: keys, in: navController)
                 rootVC.present(navController, animated: true)
             }
             return nil
         }
     }
 
+    /// Deleting from the editor's "Delete Contact" row never calls the delegate:
+    /// the sheet stays up and the caller is left waiting on a contact that no
+    /// longer exists. The store change that follows the deletion is the only
+    /// signal, so close the editor once the contact is gone.
+    private static func observeDeletion(
+        of contactId: String,
+        keys: CNKeyDescriptor,
+        in navController: UINavigationController
+    ) {
+        storeObserver = NotificationCenter.default.addObserver(
+            forName: .CNContactStoreDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak navController] _ in
+            let store = CNContactStore()
+            let contact = try? store.unifiedContact(withIdentifier: contactId, keysToFetch: [keys])
+            guard contact == nil, let navController else { return }
+            // Dismiss from the presenter so the delete confirmation, if it is
+            // still on screen, goes away with the editor.
+            let presenter = navController.presentingViewController ?? navController
+            presenter.dismiss(animated: true) {
+                completeWithResult(nil)
+            }
+        }
+    }
+
     static func completeWithResult(_ value: Any?) {
+        if let storeObserver {
+            NotificationCenter.default.removeObserver(storeObserver)
+        }
+        storeObserver = nil
         pendingResult?(value)
         pendingResult = nil
         editorDelegate = nil
