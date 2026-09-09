@@ -36,8 +36,9 @@ enum ShowEditorImpl {
                 editorDelegate = delegate
                 closeHandler = handler
                 navController.modalPresentationStyle = .pageSheet
-                observeDeletion(of: contactId, keys: keys, in: navController)
-                rootVC.present(navController, animated: true)
+                rootVC.present(navController, animated: true) {
+                    observeDeletion(of: contactId, in: navController)
+                }
             }
             return nil
         }
@@ -49,7 +50,6 @@ enum ShowEditorImpl {
     /// signal, so close the editor once the contact is gone.
     private static func observeDeletion(
         of contactId: String,
-        keys: CNKeyDescriptor,
         in navController: UINavigationController
     ) {
         storeObserver = NotificationCenter.default.addObserver(
@@ -57,9 +57,15 @@ enum ShowEditorImpl {
             object: nil,
             queue: .main
         ) { [weak navController] _ in
-            let store = CNContactStore()
-            let contact = try? store.unifiedContact(withIdentifier: contactId, keysToFetch: [keys])
+            // An existence check, so fetch the identifier rather than every key
+            // needed to render a contact card.
+            let keys = [CNContactIdentifierKey as CNKeyDescriptor]
+            let contact = try? CNContactStore().unifiedContact(withIdentifier: contactId, keysToFetch: keys)
             guard contact == nil, let navController else { return }
+            // Stop observing before dismissing: `CNContactStoreDidChange` arrives in
+            // bursts, and the completion below doesn't run until the dismissal
+            // animation ends, so a later notification would dismiss a second time.
+            removeStoreObserver()
             // Dismiss from the presenter so the delete confirmation, if it is
             // still on screen, goes away with the editor.
             let presenter = navController.presentingViewController ?? navController
@@ -69,11 +75,13 @@ enum ShowEditorImpl {
         }
     }
 
-    static func completeWithResult(_ value: Any?) {
-        if let storeObserver {
-            NotificationCenter.default.removeObserver(storeObserver)
-        }
+    private static func removeStoreObserver() {
+        storeObserver.map(NotificationCenter.default.removeObserver)
         storeObserver = nil
+    }
+
+    static func completeWithResult(_ value: Any?) {
+        removeStoreObserver()
         pendingResult?(value)
         pendingResult = nil
         editorDelegate = nil
