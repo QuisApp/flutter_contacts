@@ -36,8 +36,9 @@ enum ShowEditorImpl {
                 editorDelegate = delegate
                 closeHandler = handler
                 navController.modalPresentationStyle = .pageSheet
-                observeDeletion(of: contactId, in: navController)
-                rootVC.present(navController, animated: true)
+                rootVC.present(navController, animated: true) {
+                    observeDeletion(of: contactId, in: navController)
+                }
             }
             return nil
         }
