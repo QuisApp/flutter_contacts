@@ -36,7 +36,7 @@ enum ShowEditorImpl {
                 editorDelegate = delegate
                 closeHandler = handler
                 navController.modalPresentationStyle = .pageSheet
-                observeDeletion(of: contactId, keys: keys, in: navController)
+                observeDeletion(of: contactId, in: navController)
                 rootVC.present(navController, animated: true)
             }
             return nil
@@ -49,7 +49,6 @@ enum ShowEditorImpl {
     /// signal, so close the editor once the contact is gone.
     private static func observeDeletion(
         of contactId: String,
-        keys: CNKeyDescriptor,
         in navController: UINavigationController
     ) {
         storeObserver = NotificationCenter.default.addObserver(
@@ -57,8 +56,10 @@ enum ShowEditorImpl {
             object: nil,
             queue: .main
         ) { [weak navController] _ in
-            let store = CNContactStore()
-            let contact = try? store.unifiedContact(withIdentifier: contactId, keysToFetch: [keys])
+            // An existence check, so fetch the identifier rather than every key
+            // needed to render a contact card.
+            let keys = [CNContactIdentifierKey as CNKeyDescriptor]
+            let contact = try? CNContactStore().unifiedContact(withIdentifier: contactId, keysToFetch: keys)
             guard contact == nil, let navController else { return }
             // Stop observing before dismissing: `CNContactStoreDidChange` arrives in
             // bursts, and the completion below doesn't run until the dismissal
