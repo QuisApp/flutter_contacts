@@ -60,6 +60,10 @@ enum ShowEditorImpl {
             let store = CNContactStore()
             let contact = try? store.unifiedContact(withIdentifier: contactId, keysToFetch: [keys])
             guard contact == nil, let navController else { return }
+            // Stop observing before dismissing: `CNContactStoreDidChange` arrives in
+            // bursts, and the completion below doesn't run until the dismissal
+            // animation ends, so a later notification would dismiss a second time.
+            removeStoreObserver()
             // Dismiss from the presenter so the delete confirmation, if it is
             // still on screen, goes away with the editor.
             let presenter = navController.presentingViewController ?? navController
@@ -69,11 +73,13 @@ enum ShowEditorImpl {
         }
     }
 
-    static func completeWithResult(_ value: Any?) {
-        if let storeObserver {
-            NotificationCenter.default.removeObserver(storeObserver)
-        }
+    private static func removeStoreObserver() {
+        storeObserver.map(NotificationCenter.default.removeObserver)
         storeObserver = nil
+    }
+
+    static func completeWithResult(_ value: Any?) {
+        removeStoreObserver()
         pendingResult?(value)
         pendingResult = nil
         editorDelegate = nil
