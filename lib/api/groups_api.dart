@@ -42,7 +42,10 @@ class GroupsApi {
 
   /// Creates a new contact group.
   ///
-  /// [account] - Optional account. If null, uses the default account.
+  /// [account] - Optional account. If null, uses the default account, falling
+  /// back to a local, device-only group when there is no default — which is the
+  /// case on Android 12 and below, where the platform exposes none. A local
+  /// group only accepts contacts that are themselves local.
   ///
   /// Returns the created group with its assigned ID.
   Future<Group> create(String name, {Account? account}) async {
