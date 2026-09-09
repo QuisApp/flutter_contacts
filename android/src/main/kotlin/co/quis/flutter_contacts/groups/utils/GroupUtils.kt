@@ -226,20 +226,30 @@ object GroupUtils {
         val group =
             getGroup(contentResolver, groupId, false)
                 ?: throw IllegalStateException("Group not found: $groupId")
-        val groupAccount =
-            group.account ?: throw IllegalStateException("Group has no account: $groupId")
+        // A group with no account is a local, device-only group rather than a broken one:
+        // `groups.create` produces those whenever no account is given and the provider exposes no
+        // default, which is every Android 12 and below. Match it against the contact's local raw
+        // contacts, since a membership row only holds if group and raw contact share an account.
+        val groupAccount = group.account
 
         val ops = mutableListOf<ContentProviderOperation>()
         for (contactId in contactIds) {
             val rawContactIds =
-                AccountUtils.getRawContactIdsForContact(
-                    contentResolver,
-                    contactId,
-                    groupAccount,
-                )
+                if (groupAccount != null) {
+                    AccountUtils.getRawContactIdsForContact(
+                        contentResolver,
+                        contactId,
+                        groupAccount,
+                    )
+                } else {
+                    AccountUtils.getLocalRawContactIdsForContact(contentResolver, contactId)
+                }
             if (rawContactIds.isEmpty()) {
+                val where =
+                    groupAccount?.let { "matching group account: ${it.type}/${it.name}" }
+                        ?: "in the local account, matching the group's"
                 throw IllegalStateException(
-                    "No raw contacts found for contact: $contactId matching group account: ${groupAccount.type}/${groupAccount.name}",
+                    "No raw contacts found for contact: $contactId $where",
                 )
             }
             for (rawContactId in rawContactIds) {

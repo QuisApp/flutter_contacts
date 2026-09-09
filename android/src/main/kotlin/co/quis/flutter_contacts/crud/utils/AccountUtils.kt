@@ -143,6 +143,31 @@ object AccountUtils {
             ?: emptyList()
     }
 
+    /**
+     * Raw contacts for [contactId] that live in the local, device-only account, i.e. rows with no
+     * `ACCOUNT_TYPE`/`ACCOUNT_NAME`.
+     *
+     * Distinct from passing a null [account] to [getRawContactIdsForContact], which means "don't
+     * filter by account at all". Groups created without an account live in this same local bucket,
+     * which is where they land on Android 12 and below: the provider exposes no default account
+     * there, so [getDefaultAccount] returns null by design.
+     */
+    fun getLocalRawContactIdsForContact(
+        contentResolver: ContentResolver,
+        contactId: String,
+    ): List<Long> =
+        contentResolver.queryAndProcess(
+            RawContacts.CONTENT_URI,
+            projection = arrayOf(RawContacts._ID),
+            selection =
+                "${RawContacts.CONTACT_ID} = ? AND ${RawContacts.ACCOUNT_TYPE} IS NULL AND " +
+                    "${RawContacts.ACCOUNT_NAME} IS NULL",
+            selectionArgs = arrayOf(contactId),
+        ) { cursor ->
+            cursor.mapRows { cursor.getLongOrNull(RawContacts._ID) }.filterNotNull()
+        }
+            ?: emptyList()
+
     fun getRawContactIdsForContacts(
         contentResolver: ContentResolver,
         contactIds: List<String>,
