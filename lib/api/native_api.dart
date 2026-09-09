@@ -59,7 +59,11 @@ class NativeApi {
   }
 
   /// Shows the native contact editor for [contactId]. Returns the saved
-  /// contact's ID, or null if the user cancelled.
+  /// contact's ID, or null if the user cancelled or deleted the contact.
+  ///
+  /// Deletion is offered by the system editor itself (on iOS, from iOS 26
+  /// onwards), and is not distinguishable from cancelling: both return null.
+  /// Re-reading the contact by ID tells the two apart.
   ///
   /// Same permissions as [showViewer].
   Future<String?> showEditor(String contactId) =>
