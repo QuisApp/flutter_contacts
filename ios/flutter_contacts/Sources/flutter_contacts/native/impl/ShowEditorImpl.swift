@@ -11,36 +11,44 @@ enum ShowEditorImpl {
 
     static func handle(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let contactId: String = call.arg("contactId")!
-        HandlerHelpers.handleResult(result) {
+        // Not `HandlerHelpers.handleResult`: that replies with the block's return
+        // value, which would answer the channel before the editor is even on screen.
+        // The answer comes from `completeWithResult` once the user is done, so hold
+        // the result like ShowCreatorImpl does.
+        let contact: CNContact
+        do {
             let store = CNContactStore()
             let keys = CNContactViewController.descriptorForRequiredKeys()
-            let contact = try store.unifiedContact(withIdentifier: contactId, keysToFetch: [keys])
-            pendingResult = result
-            DispatchQueue.main.async {
-                guard let rootVC = ViewControllerUtils.rootViewController() else {
-                    result(HandlerHelpers.makeError("No view controller available"))
-                    pendingResult = nil
-                    return
-                }
-                let vc = CNContactViewController(for: contact)
-                vc.allowsEditing = true
-                let delegate = EditorDelegate()
-                vc.delegate = delegate
-                let navController = UINavigationController(rootViewController: vc)
-                let handler = EditorCloseHandler(navController: navController)
-                vc.navigationItem.leftBarButtonItem = UIBarButtonItem(
-                    barButtonSystemItem: .done,
-                    target: handler,
-                    action: #selector(EditorCloseHandler.handleClose)
-                )
-                editorDelegate = delegate
-                closeHandler = handler
-                navController.modalPresentationStyle = .pageSheet
-                rootVC.present(navController, animated: true) {
-                    observeDeletion(of: contactId, in: navController)
-                }
+            contact = try store.unifiedContact(withIdentifier: contactId, keysToFetch: [keys])
+        } catch {
+            return result(HandlerHelpers.makeError(error.localizedDescription))
+        }
+
+        pendingResult = result
+
+        DispatchQueue.main.async {
+            guard let rootVC = ViewControllerUtils.rootViewController() else {
+                result(HandlerHelpers.makeError("No view controller available"))
+                pendingResult = nil
+                return
             }
-            return nil
+            let vc = CNContactViewController(for: contact)
+            vc.allowsEditing = true
+            let delegate = EditorDelegate()
+            vc.delegate = delegate
+            let navController = UINavigationController(rootViewController: vc)
+            let handler = EditorCloseHandler(navController: navController)
+            vc.navigationItem.leftBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: .done,
+                target: handler,
+                action: #selector(EditorCloseHandler.handleClose)
+            )
+            editorDelegate = delegate
+            closeHandler = handler
+            navController.modalPresentationStyle = .pageSheet
+            rootVC.present(navController, animated: true) {
+                observeDeletion(of: contactId, in: navController)
+            }
         }
     }
 
