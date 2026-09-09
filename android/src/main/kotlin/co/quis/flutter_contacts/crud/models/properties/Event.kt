@@ -28,48 +28,57 @@ data class Event(
 
         fun fromCursor(cursor: Cursor): Event? {
             val dateString = cursor.getStringOrNull(EventData.START_DATE) ?: return null
-            val label = EventLabel.fromCursor(cursor)
+            val (year, month, day) = parseDate(dateString) ?: return null
+            return Event(
+                year = year,
+                month = month,
+                day = day,
+                label = EventLabel.fromCursor(cursor),
+                metadata = PropertyHelpers.extractMetadata(cursor),
+            )
+        }
 
-            @Suppress("ktlint:standard:property-naming")
-            val YYYY_MM_DD = """\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30|31)""".toRegex()
+        /**
+         * Parses a `START_DATE` value into a (year, month, day) triple, or returns null if it
+         * doesn't denote a full calendar date.
+         *
+         * `START_DATE` is free text and Android's vCard importer stores the `BDAY` value
+         * verbatim, so both ISO 8601 spellings occur in practice:
+         * - extended, used by vCard 3.0 (RFC 2426) and the AOSP Contacts app: `1996-04-15` and
+         *   `--04-15`;
+         * - basic, mandated by vCard 4.0 (RFC 6350, which disallows `YYYY-MM-DD`): `19960415`
+         *   and `--0415`.
+         *
+         * A leading `--` marks the year-less form. Any time component is discarded, since `BDAY`
+         * may carry one (e.g. `19531015T231000Z`).
+         *
+         * Values that don't denote both a month and a day are rejected rather than guessed:
+         * year-only (`1985`), year-month (`1985-04`) and day-only (`---15`) are valid vCard 4.0
+         * but have no representation here, and locale-ordered dates (`03/10/1978`) are ambiguous.
+         */
+        internal fun parseDate(dateString: String): Triple<Int?, Int, Int>? {
+            val datePart = dateString.substringBefore('T').substringBefore(' ').trim()
+            val digits = datePart.filter { it.isDigit() }
 
-            @Suppress("ktlint:standard:property-naming")
-            val MM_DD = """--(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|30|31)""".toRegex()
-
-            val (year, month, day) =
-                when {
-                    YYYY_MM_DD.matches(dateString) -> {
-                        Triple(
-                            dateString.substring(0, 4).toIntOrNull(),
-                            dateString.substring(5, 7).toIntOrNull(),
-                            dateString.substring(8, 10).toIntOrNull(),
-                        )
-                    }
-
-                    MM_DD.matches(dateString) -> {
-                        Triple(
-                            null,
-                            dateString.substring(2, 4).toIntOrNull(),
-                            dateString.substring(5, 7).toIntOrNull(),
-                        )
-                    }
-
-                    else -> {
-                        Triple(null, null, null)
-                    }
+            val parsed: Triple<Int?, Int, Int> =
+                if (datePart.startsWith("--")) {
+                    if (digits.length != 4) return null
+                    Triple(
+                        null,
+                        digits.substring(0, 2).toInt(),
+                        digits.substring(2, 4).toInt(),
+                    )
+                } else {
+                    if (digits.length != 8) return null
+                    Triple(
+                        digits.substring(0, 4).toInt(),
+                        digits.substring(4, 6).toInt(),
+                        digits.substring(6, 8).toInt(),
+                    )
                 }
 
-            return if (month != null && day != null && month in 1..12 && day in 1..31) {
-                Event(
-                    year = year,
-                    month = month,
-                    day = day,
-                    label = label,
-                    metadata = PropertyHelpers.extractMetadata(cursor),
-                )
-            } else {
-                null
-            }
+            val (_, month, day) = parsed
+            return if (month in 1..12 && day in 1..31) parsed else null
         }
     }
 
