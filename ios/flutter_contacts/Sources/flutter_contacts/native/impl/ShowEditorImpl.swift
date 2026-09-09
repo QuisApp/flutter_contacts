@@ -11,6 +11,14 @@ enum ShowEditorImpl {
 
     static func handle(call: FlutterMethodCall, result: @escaping FlutterResult) {
         let contactId: String = call.arg("contactId")!
+        // One editor at a time. The pending result, delegate and close handler are
+        // single statics, so a second call would strand the first caller's Future and
+        // overwrite `editorDelegate` — and since `CNContactViewController` holds its
+        // delegate weakly, the editor already on screen would lose it and never be
+        // able to complete. Reject the new call rather than break the live one.
+        guard pendingResult == nil else {
+            return result(HandlerHelpers.makeError("An editor is already presented"))
+        }
         // Not `HandlerHelpers.handleResult`: that replies with the block's return
         // value, which would answer the channel before the editor is even on screen.
         // The answer comes from `completeWithResult` once the user is done, so hold
