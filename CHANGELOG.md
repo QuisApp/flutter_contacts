@@ -1,3 +1,10 @@
+## 2.4.1
+
+- Reject a second `showCreator()` call on iOS while one is already presented,
+  which previously left the first call's future unresolved.
+- Document that `showEditor()` also returns null when the contact is deleted
+  from the system editor, not only when the user cancels.
+
 ## 2.4.0
 
 - `showEditor()` on iOS now waits for the user to finish instead of resolving to
