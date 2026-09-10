@@ -249,6 +249,9 @@ class FlutterContacts {
   /// properties that were fetched will be updated. This prevents accidentally
   /// overwriting fields that weren't loaded. For example, if you fetched only name
   /// and phone, only those fields can be updated; email changes will be ignored.
+  ///
+  /// Changing a property owned by a sync adapter, such as a read-only address book,
+  /// throws a `PlatformException` with code `read_only_contact` and writes nothing.
   static Future<void> update(Contact contact) => _crud.update(contact);
 
   /// Updates multiple contacts in a single batch operation.
@@ -258,6 +261,9 @@ class FlutterContacts {
   /// This prevents accidentally overwriting fields that weren't loaded. For example,
   /// if you fetched only name and phone, only those fields can be updated; email
   /// changes will be ignored.
+  ///
+  /// As with [update], a read-only property throws a `PlatformException` with code
+  /// `read_only_contact`, rejecting the batch before anything is written.
   static Future<void> updateAll(List<Contact> contacts) =>
       _crud.updateAll(contacts);
 
