@@ -1,3 +1,9 @@
+## 2.5.0
+
+- `update()` and `updateAll()` now throw `read_only_contact` instead of silently
+  dropping properties owned by a sync adapter, which Android's provider filters
+  out of the write — thanks @yassinsameh for the request (#95, #260).
+
 ## 2.4.1
 
 - Reject a second `showCreator()` call on iOS while one is already presented,
