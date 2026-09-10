@@ -11,6 +11,7 @@ import co.quis.flutter_contacts.crud.utils.ContactBuilder
 import co.quis.flutter_contacts.crud.utils.ContactFetcher
 import co.quis.flutter_contacts.crud.utils.ContactValidator
 import co.quis.flutter_contacts.crud.utils.PhotoUtils
+import co.quis.flutter_contacts.crud.utils.ReadOnlyUtils
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.concurrent.ExecutorService
@@ -58,6 +59,26 @@ class UpdateAllImpl(
         val notFoundContactIds = contactIds.filter { it !in existingContactsMap }
         if (notFoundContactIds.isNotEmpty()) {
             postError(result, "Contact(s) not found: ${notFoundContactIds.joinToString(", ")}")
+            return
+        }
+
+        // The provider drops updates to read-only rows without reporting it, so refuse the whole
+        // batch rather than returning a success that changed only part of it.
+        val readOnlyProperties =
+            ReadOnlyUtils.getReadOnlyProperties(
+                contentResolver,
+                newContacts.mapNotNull { newContact ->
+                    existingContactsMap[newContact.id]?.let { it to newContact }
+                },
+                properties,
+            )
+        if (readOnlyProperties.isNotEmpty()) {
+            postError(
+                result,
+                "Contact(s) have read-only properties that cannot be updated",
+                ReadOnlyUtils.ERROR_CODE,
+                mapOf("properties" to readOnlyProperties.sorted()),
+            )
             return
         }
 

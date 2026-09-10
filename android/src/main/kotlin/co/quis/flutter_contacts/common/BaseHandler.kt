@@ -49,7 +49,9 @@ abstract class BaseHandler(
     protected fun postError(
         result: MethodChannel.Result,
         message: String,
+        code: String = "flutter_contacts_error",
+        details: Any? = null,
     ) {
-        mainHandler.post { result.error("flutter_contacts_error", message, null) }
+        mainHandler.post { result.error(code, message, details) }
     }
 }
