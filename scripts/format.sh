@@ -86,12 +86,43 @@ SKIPPED=0
 
 command_exists() { command -v "$1" >/dev/null 2>&1; }
 
+# Paths that are never ours to format: build output and dependency checkouts.
+VENDORED_PATHS=(
+    "./.git/*"
+    "*/build/*"
+    "*/DerivedData/*"
+    "*/Pods/*"
+)
+
+# Machine-generated sources. Formatting them is pure churn: the generator
+# rewrites them in its own style on the next run, so the diff comes back.
+GENERATED_PATHS=(
+    "*/GeneratedPluginRegistrant.*"      # Flutter plugin registrant (iOS, macOS, Android)
+    "*/generated_plugin_registrant.dart" # ... and its Dart/web counterpart
+    "*/Flutter/Generated.xcconfig"       # Flutter's generated Xcode config
+    "*/Flutter/ephemeral/*"
+    "*.g.dart"                           # build_runner output
+    "*.freezed.dart"
+    "*.mocks.dart"
+)
+
+# The above as find(1) arguments.
+FIND_EXCLUDES=()
+for p in "${VENDORED_PATHS[@]}" "${GENERATED_PATHS[@]}"; do
+    FIND_EXCLUDES+=(-not -path "$p")
+done
+
+# swiftformat takes its own --exclude, as a comma-separated list of globs.
+# These need a **/ prefix to match at any depth: Pods and build directories sit
+# under example/ios and example/macos, not at the project root.
+SWIFT_EXCLUDES=".git,**/build,**/DerivedData,**/Pods,**/GeneratedPluginRegistrant.*,**/Flutter/ephemeral"
+
 # Generic file-by-file formatter
-# Args: pattern exclude_paths format_cmd
+# Args: pattern format_cmd
 format_per_file() {
-    local pattern="$1" exclude="$2" cmd="$3"
+    local pattern="$1" cmd="$2"
     local files=()
-    while IFS= read -r -d '' f; do files+=("$f"); done < <(find . -name "$pattern" -not -path "./.git/*" -not -path "*/build/*" -not -path "*/DerivedData/*" $(echo "$exclude" | sed 's/[^ ]*/ -not -path "&"/g') -print0)
+    while IFS= read -r -d '' f; do files+=("$f"); done < <(find . -name "$pattern" "${FIND_EXCLUDES[@]}" -print0)
     [ ${#files[@]} -eq 0 ] && return
     for f in "${files[@]}"; do
         local before=$(md5sum "$f" 2>/dev/null | cut -d' ' -f1 || echo "")
@@ -122,7 +153,7 @@ format_batch() {
     if command_exists ktlint; then
         echo "  Using ktlint..."
         files=()
-        while IFS= read -r -d '' f; do files+=("$f"); done < <(find . -name "*.kt" -not -path "./.git/*" -not -path "*/build/*" -print0)
+        while IFS= read -r -d '' f; do files+=("$f"); done < <(find . -name "*.kt" "${FIND_EXCLUDES[@]}" -print0)
         [ ${#files[@]} -eq 0 ] && { echo ""; } || {
             output=$(ktlint -F "${files[@]}" 2>&1)
             echo "$output" | grep -E "^.*\.kt:" | grep -v "cannot be auto-corrected" | cut -d: -f1 | sort -u | while read -r f; do [ -n "$f" ] && echo -e "    ${GREEN}✓${NC}  Formatted: ${f#./}"; done
@@ -134,7 +165,7 @@ format_batch() {
         }
     elif command_exists ktfmt; then
         echo "  Using ktfmt..."
-        format_per_file "*.kt" "" "ktfmt \"\$f\""
+        format_per_file "*.kt" "ktfmt \"\$f\""
     else
         echo -e "${YELLOW}  ⚠️  Skipping: ktlint or ktfmt not found${NC}"
         SKIPPED=$((SKIPPED + 1))
@@ -143,19 +174,26 @@ format_batch() {
 }
 
 [ "$FORMAT_SWIFT" = true ] && format_batch "swift" \
-    "swiftformat . --swiftversion 5.0 --exclude .git,build,DerivedData,Pods 2>&1" \
+    "swiftformat . --swiftversion 5.0 --exclude \"\$SWIFT_EXCLUDES\" 2>&1" \
     'echo "$output" | grep -E "^[^/]*\.swift" | grep "formatted" | while read -r l; do echo -e "    ${GREEN}✓${NC}  Formatted: $(echo "$l" | sed "s/ .*//" | sed "s|^\./||")"; done; echo "$output" | grep -iE "warning|error" | while read -r w; do echo -e "    ${YELLOW}⚠${NC}  $w"; done' \
     "swiftformat"
 
 [ "$FORMAT_DART" = true ] && {
-    if command_exists dart; then
+    # dart format has no --exclude, so hand it an explicit file list. It skips
+    # dot directories on its own, so exclude those too and stay equivalent.
+    DART_FILES=()
+    while IFS= read -r -d '' f; do DART_FILES+=("$f"); done < <(find . -name "*.dart" "${FIND_EXCLUDES[@]}" -not -path "*/.*/*" -print0)
+    if [ ${#DART_FILES[@]} -eq 0 ]; then
+        echo -e "${BLUE}📝 Formatting Dart files...${NC}"
+        echo ""
+    elif command_exists dart; then
         format_batch "dart" \
-            "dart format . 2>&1" \
+            'dart format "${DART_FILES[@]}" 2>&1' \
             'echo "$output" | grep -iE "warning|error" | while read -r w; do echo -e "    ${YELLOW}⚠${NC}  $w"; done' \
             "dart"
     elif command_exists flutter; then
         format_batch "dart" \
-            "flutter format . 2>&1" \
+            'flutter format "${DART_FILES[@]}" 2>&1' \
             'echo "$output" | grep -iE "warning|error" | while read -r w; do echo -e "    ${YELLOW}⚠${NC}  $w"; done' \
             "flutter"
     else
@@ -170,12 +208,12 @@ format_batch() {
     echo -e "${BLUE}📝 Formatting XML files...${NC}"
     if command_exists xmllint; then
         echo "  Using xmllint..."
-        format_per_file "*.xml" "./Pods/*" "xmllint --format \"\$f\" > \"\$f.tmp\" && mv \"\$f.tmp\" \"\$f\" || rm -f \"\$f.tmp\""
+        format_per_file "*.xml" "xmllint --format \"\$f\" > \"\$f.tmp\" && mv \"\$f.tmp\" \"\$f\" || rm -f \"\$f.tmp\""
         # Clean up any leftover .tmp files
         find . -name "*.xml.tmp" -not -path "./.git/*" -not -path "./build/*" -delete 2>/dev/null || true
     elif command_exists prettier; then
         echo "  Using prettier..."
-        format_per_file "*.xml" "./Pods/*" "prettier --write \"\$f\""
+        format_per_file "*.xml" "prettier --write \"\$f\""
     else
         echo -e "${YELLOW}  ⚠️  Skipping: xmllint or prettier not found${NC}"
         SKIPPED=$((SKIPPED + 1))
@@ -188,12 +226,12 @@ format_batch() {
     has_tool=false
     if command_exists ktlint; then
         echo "  Using ktlint for .gradle.kts files..."
-        format_per_file "*.gradle.kts" "./Pods/*" "ktlint -F \"\$f\""
+        format_per_file "*.gradle.kts" "ktlint -F \"\$f\""
         has_tool=true
     fi
     if command_exists npm-groovy-lint; then
         echo "  Using npm-groovy-lint for .gradle files..."
-        format_per_file "*.gradle" "./Pods/*" "npm-groovy-lint --format \"\$f\" --no-insight"
+        format_per_file "*.gradle" "npm-groovy-lint --format \"\$f\" --no-insight"
         has_tool=true
     fi
     [ "$has_tool" = false ] && {
@@ -208,7 +246,7 @@ format_batch() {
     if command_exists rubocop; then
         echo "  Using rubocop..."
         files=()
-        while IFS= read -r -d '' f; do files+=("$f"); done < <(find . -name "Podfile" -not -path "./.git/*" -not -path "*/build/*" -not -path "./Pods/*" -print0)
+        while IFS= read -r -d '' f; do files+=("$f"); done < <(find . -name "Podfile" "${FIND_EXCLUDES[@]}" -print0)
         [ ${#files[@]} -eq 0 ] && { echo ""; } || {
             for f in "${files[@]}"; do
                 before=$(md5sum "$f" 2>/dev/null | cut -d' ' -f1 || echo "")
@@ -224,7 +262,7 @@ format_batch() {
         }
     elif command_exists prettier; then
         echo "  Using prettier..."
-        format_per_file "Podfile" "./Pods/*" "prettier --write \"\$f\""
+        format_per_file "Podfile" "prettier --write \"\$f\""
     else
         echo -e "${YELLOW}  ⚠️  Skipping: rubocop or prettier not found${NC}"
         SKIPPED=$((SKIPPED + 1))
