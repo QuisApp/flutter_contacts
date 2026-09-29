@@ -15,7 +15,13 @@ enum GetImpl {
         DispatchQueue.global(qos: .userInitiated).async {
             HandlerHelpers.handleResult(result) {
                 // Get contact by ID first
-                let contact = try store.unifiedContact(withIdentifier: id, keysToFetch: keys)
+                // Missing contacts resolve to null (the Dart API returns `Contact?`).
+                let contact: CNContact
+                do {
+                    contact = try store.unifiedContact(withIdentifier: id, keysToFetch: keys)
+                } catch let error as CNError where error.code == .recordDoesNotExist {
+                    return nil
+                }
 
                 // If containerId is specified, verify the contact is in that container
                 if let containerId = containerId {
