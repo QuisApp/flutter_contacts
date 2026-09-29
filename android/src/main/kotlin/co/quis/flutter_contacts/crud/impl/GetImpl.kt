@@ -32,10 +32,7 @@ class GetImpl(
                 rawContactIdsList,
                 lookup,
             )
-        if (contact != null) {
-            postResult(result, contact.toJson())
-        } else {
-            postError(result, "Contact with ID $id not found")
-        }
+        // Missing contacts resolve to null (the Dart API returns `Contact?`).
+        postResult(result, contact?.toJson())
     }
 }

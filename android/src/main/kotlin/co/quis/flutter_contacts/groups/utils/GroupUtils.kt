@@ -103,7 +103,8 @@ object GroupUtils {
                     Groups.ACCOUNT_TYPE,
                     Groups.ACCOUNT_NAME,
                 ),
-            selection = "${Groups._ID} = ?",
+            // Synced groups are only flagged DELETED until the sync adapter purges them.
+            selection = "${Groups._ID} = ? AND ${Groups.DELETED} = 0",
             selectionArgs = arrayOf(groupId),
         ) { cursor ->
             if (cursor.moveToFirst()) {

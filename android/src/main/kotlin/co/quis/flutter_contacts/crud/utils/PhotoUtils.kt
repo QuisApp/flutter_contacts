@@ -58,10 +58,52 @@ object PhotoUtils {
                 ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
                 RawContacts.DisplayPhoto.CONTENT_DIRECTORY,
             )
+        val before = photoRowState(contentResolver, rawContactId)
         contentResolver.openAssetFileDescriptor(photoUri, "rw")?.use { fd ->
             fd.createOutputStream().use { it.write(photoData) }
         }
+        awaitPhotoProcessed(contentResolver, rawContactId, before)
     }
+
+    // The provider reads the pipe and stores the photo on a background thread after the stream
+    // closes. Overlapping writes race inside ContactsProvider's PhotoStore and crash the provider
+    // process (ConcurrentModificationException in PhotoStore.putEntry), so wait for the photo data
+    // row to change before returning. This also makes the photo visible as soon as we resolve.
+    private const val PHOTO_PROCESS_TIMEOUT_MS = 3_000L
+    private const val PHOTO_PROCESS_POLL_MS = 20L
+
+    private fun awaitPhotoProcessed(
+        contentResolver: ContentResolver,
+        rawContactId: Long,
+        before: List<Any?>?,
+    ) {
+        val deadline = System.currentTimeMillis() + PHOTO_PROCESS_TIMEOUT_MS
+        while (System.currentTimeMillis() < deadline) {
+            val now = photoRowState(contentResolver, rawContactId)
+            if (now != null && now != before) return
+            Thread.sleep(PHOTO_PROCESS_POLL_MS)
+        }
+    }
+
+    /** (data id, data version, photo file id) of the raw contact's photo row, or null if none. */
+    private fun photoRowState(
+        contentResolver: ContentResolver,
+        rawContactId: Long,
+    ): List<Any?>? =
+        contentResolver
+            .query(
+                Data.CONTENT_URI,
+                arrayOf(Data._ID, Data.DATA_VERSION, Photo.PHOTO_FILE_ID),
+                "${Data.RAW_CONTACT_ID} = ? AND ${Data.MIMETYPE} = ?",
+                arrayOf(rawContactId.toString(), Photo.CONTENT_ITEM_TYPE),
+                null,
+            )?.use { c ->
+                if (!c.moveToFirst()) {
+                    null
+                } else {
+                    listOf(c.getLong(0), c.getInt(1), if (c.isNull(2)) null else c.getLong(2))
+                }
+            }
 
     /**
      * Deletes the contact photo for the entire aggregated contact. Android photos may exist on any

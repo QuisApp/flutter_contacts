@@ -1,3 +1,21 @@
+## Unreleased
+
+- Fix Android's contacts provider crashing (and photos being lost) when several
+  photos are written back to back, e.g. `createAll()` with photos: photo writes
+  are processed asynchronously and overlapping writes raced inside the
+  provider's `PhotoStore`. `create()`/`update()` now also return with the photo
+  already visible.
+- `get()` returns `null` for a missing contact on Android and iOS instead of
+  throwing, as documented.
+- `groups.get()` no longer returns a deleted group that the sync adapter has not
+  purged yet (Android).
+- Blocked-number calls refused by Android now throw `security_error`, as
+  documented, instead of `flutter_contacts_error`.
+- `native.showCreator()` on Android: pass the phonetic name family-first so the
+  editor no longer swaps phonetic first/last names, prefill the nickname, and
+  prefill addresses that have no `formatted` value (Google Contacts only reads
+  the single-line address).
+
 ## 2.5.0
 
 - `update()` and `updateAll()` now throw `read_only_contact` instead of silently

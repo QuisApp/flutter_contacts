@@ -2,6 +2,7 @@ package co.quis.flutter_contacts.common
 
 import android.content.Context
 import android.os.Looper
+import android.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.concurrent.ExecutorService
@@ -19,10 +20,12 @@ abstract class BaseHandler(
         executor.execute {
             runCatching { handleImpl(call, result) }
                 .onFailure { error ->
+                    Log.e("FlutterContacts", "Failed to handle ${call.method}", error)
                     mainHandler.post {
                         result.error(
-                            "flutter_contacts_error",
-                            "Failed to handle ${call.method}: ${error.message}",
+                            // e.g. blocked numbers when the app is not the default dialer/SMS app
+                            if (error is SecurityException) "security_error" else "flutter_contacts_error",
+                            "Failed to handle ${call.method}: ${error.message ?: error.javaClass.simpleName}",
                             null,
                         )
                     }
