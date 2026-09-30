@@ -14,9 +14,7 @@ enum GetAllImpl {
         // Contacts refuses an identifier predicate with no identifiers; the answer is simply none.
         if let ids = filter?["id"] as? [String], ids.isEmpty { return result([Json]()) }
         let predicate = PredicateBuilder.build(filter: filter, containerId: containerId)
-        let emailQuery = (filter?["email"] as? String).flatMap { $0.isEmpty ? nil : $0 }
-        var keys = KeysBuilder.build(properties: properties, enableIosNotes: enableIosNotes)
-        if emailQuery != nil { keys.append(CNContactEmailAddressesKey as CNKeyDescriptor) }
+        let keys = KeysBuilder.build(properties: properties, enableIosNotes: enableIosNotes)
 
         DispatchQueue.global(qos: .userInitiated).async {
             HandlerHelpers.handleResult(result) {
@@ -27,11 +25,6 @@ enum GetAllImpl {
                 var contacts: [Json] = []
                 if let limit = limit { contacts.reserveCapacity(limit) }
                 try store.enumerateContacts(with: request) { contact, stop in
-                    if let emailQuery,
-                       !contact.emailAddresses.contains(where: { ($0.value as String).localizedCaseInsensitiveContains(emailQuery) })
-                    {
-                        return
-                    }
                     autoreleasepool {
                         contacts.append(ContactConverter.toJson(contact, options: options))
                     }

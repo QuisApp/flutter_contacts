@@ -11,8 +11,9 @@ enum PredicateBuilder {
             if let name = filter["name"] as? String {
                 predicates.append(CNContact.predicateForContacts(matchingName: name))
             }
-            // `email` is matched in GetAllImpl: predicateForContacts(matchingEmailAddress:) only
-            // matches whole addresses, but the filter is a substring match.
+            if let email = filter["email"] as? String {
+                predicates.append(CNContact.predicateForContacts(matchingEmailAddress: email))
+            }
             if let phone = filter["phone"] as? String {
                 predicates.append(CNContact.predicateForContacts(matching: CNPhoneNumber(stringValue: phone)))
             }

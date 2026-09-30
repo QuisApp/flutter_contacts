@@ -9,9 +9,8 @@ enum LabelConverter {
     ) -> Label<T> where T.RawValue == String {
         guard let cnLabel, !cnLabel.isEmpty else { return Label(label: defaultLabel) }
         if let label = labelMap[cnLabel] { return Label(label: label) }
-        // Labels iOS has no constant for are written as their raw value (see `toCN`).
-        if let label = T(rawValue: cnLabel), label.rawValue != "custom" { return Label(label: label) }
-        // Anything else is a custom label; show Apple's internal `_$!<Name>!$_` ones localized.
+        // Anything unmapped is a custom label with its text (as on Android), including labels this
+        // plugin wrote for platform-unsupported values; Apple's internal `_$!<Name>!$_` ones are localized.
         let text = cnLabel.hasPrefix("_$!<") ? CNLabeledValue<NSString>.localizedString(forLabel: cnLabel) : cnLabel
         guard let custom = T(rawValue: "custom") else { return Label(label: defaultLabel, customLabel: text) }
         return Label(label: custom, customLabel: text)

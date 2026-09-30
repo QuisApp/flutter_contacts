@@ -13,6 +13,9 @@ abstract class BaseHandler(
 ) : Handler {
     protected val mainHandler = android.os.Handler(Looper.getMainLooper())
 
+    /** Error code for a [SecurityException]; blocked-number handlers report `security_error`. */
+    protected open val securityErrorCode = "flutter_contacts_error"
+
     override fun handle(
         call: MethodCall,
         result: MethodChannel.Result,
@@ -23,8 +26,7 @@ abstract class BaseHandler(
                     Log.e("FlutterContacts", "Failed to handle ${call.method}", error)
                     mainHandler.post {
                         result.error(
-                            // e.g. blocked numbers when the app is not the default dialer/SMS app
-                            if (error is SecurityException) "security_error" else "flutter_contacts_error",
+                            if (error is SecurityException) securityErrorCode else "flutter_contacts_error",
                             "Failed to handle ${call.method}: ${error.message ?: error.javaClass.simpleName}",
                             null,
                         )
