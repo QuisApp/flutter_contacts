@@ -9,11 +9,11 @@ enum LabelConverter {
     ) -> Label<T> where T.RawValue == String {
         guard let cnLabel, !cnLabel.isEmpty else { return Label(label: defaultLabel) }
         if let label = labelMap[cnLabel] { return Label(label: label) }
-        // Anything unmapped is a custom label with its text (as on Android), including labels this
-        // plugin wrote for platform-unsupported values; Apple's internal `_$!<Name>!$_` ones are localized.
-        let text = cnLabel.hasPrefix("_$!<") ? CNLabeledValue<NSString>.localizedString(forLabel: cnLabel) : cnLabel
-        guard let custom = T(rawValue: "custom") else { return Label(label: defaultLabel, customLabel: text) }
-        return Label(label: custom, customLabel: text)
+        // Anything unmapped is a custom label with its text (as on Android). Apple's own `_$!<Name>!$_`
+        // labels stay raw: toCN writes customLabel back verbatim, so localizing them here would turn
+        // them into literal custom labels on the next update().
+        guard let custom = T(rawValue: "custom") else { return Label(label: defaultLabel, customLabel: cnLabel) }
+        return Label(label: custom, customLabel: cnLabel)
     }
 
     static func toCN<T: RawRepresentable>(

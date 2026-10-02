@@ -23,7 +23,7 @@ abstract class BaseHandler(
         executor.execute {
             runCatching { handleImpl(call, result) }
                 .onFailure { error ->
-                    Log.e("FlutterContacts", "Failed to handle ${call.method}", error)
+                    Log.w("FlutterContacts", "Failed to handle ${call.method}", error)
                     mainHandler.post {
                         result.error(
                             if (error is SecurityException) securityErrorCode else "flutter_contacts_error",

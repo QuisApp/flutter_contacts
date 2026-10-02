@@ -1,17 +1,20 @@
-## Unreleased
+## 2.6.0
 
 - Fix Android's contacts provider crashing (and photos being lost) when several
   photos are written back to back, e.g. `createAll()` with photos: photo writes
   are processed asynchronously and overlapping writes raced inside the
-  provider's `PhotoStore`. `create()`/`update()` now also return with the photo
-  already visible.
+  provider's `PhotoStore`. Photo writes are now serialized and `create()`/
+  `update()` normally return with the photo already visible.
 - **Behavior change:** `get()` returns `null` for a missing contact on Android
   (and iOS/macOS) instead of throwing `flutter_contacts_error`, matching its
   `Future<Contact?>` signature, the iOS account-filter case and 1.x's
   `getContact()`.
-- iOS/macOS: labels without a mapping read back as `Label(XLabel.custom, 'text')`
-  (as on Android and as documented) instead of the default label carrying the
-  text; Apple's built-in labels without a mapping are localized.
+- **Behavior change:** iOS/macOS labels without a mapping read back as
+  `Label(XLabel.custom, 'text')` (as on Android and as documented) instead of
+  the default label (`mobile`, `home`, …) carrying the text, so e.g.
+  `label.label == PhoneLabel.mobile` is now false for a custom phone label.
+  Apple's own `_$!<Name>!$_` labels are passed through unchanged so `update()`
+  writes them back as is.
 - iOS/macOS: `ContactFilter.ids([])` returns no contacts (as on Android)
   instead of throwing.
 - `groups.get()` no longer returns a deleted group that the sync adapter has not
