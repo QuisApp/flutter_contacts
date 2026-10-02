@@ -6,10 +6,12 @@ import android.content.ContentUris
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.SystemClock
 import android.provider.ContactsContract.AUTHORITY
 import android.provider.ContactsContract.CommonDataKinds.Photo
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.RawContacts
+import android.util.Log
 import co.quis.flutter_contacts.common.BatchHelper
 import java.io.ByteArrayOutputStream
 
@@ -58,10 +60,64 @@ object PhotoUtils {
                 ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
                 RawContacts.DisplayPhoto.CONTENT_DIRECTORY,
             )
-        contentResolver.openAssetFileDescriptor(photoUri, "rw")?.use { fd ->
-            fd.createOutputStream().use { it.write(photoData) }
+        // Serialized across handler threads so concurrent calls (e.g. parallel create()s) can't
+        // overlap inside the provider either.
+        synchronized(this) {
+            val before = photoRowState(contentResolver, rawContactId)
+            contentResolver.openAssetFileDescriptor(photoUri, "rw")?.use { fd ->
+                fd.createOutputStream().use { it.write(photoData) }
+            }
+            // The provider silently drops data it can't decode, so there is nothing to wait for.
+            if (isDecodable(photoData)) awaitPhotoProcessed(contentResolver, rawContactId, before)
         }
     }
+
+    private fun isDecodable(photoData: ByteArray): Boolean {
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(photoData, 0, photoData.size, options)
+        return options.outWidth > 0 && options.outHeight > 0
+    }
+
+    // The provider reads the pipe and stores the photo on a background thread after the stream
+    // closes. Overlapping writes race inside ContactsProvider's PhotoStore and crash the provider
+    // process (ConcurrentModificationException in PhotoStore.putEntry), so wait for the photo data
+    // row to change before returning. This also makes the photo visible as soon as we resolve.
+    private const val PHOTO_PROCESS_TIMEOUT_MS = 3_000L
+    private const val PHOTO_PROCESS_POLL_MS = 20L
+
+    private fun awaitPhotoProcessed(
+        contentResolver: ContentResolver,
+        rawContactId: Long,
+        before: List<Any?>?,
+    ) {
+        val deadline = SystemClock.elapsedRealtime() + PHOTO_PROCESS_TIMEOUT_MS
+        while (SystemClock.elapsedRealtime() < deadline) {
+            val now = photoRowState(contentResolver, rawContactId)
+            if (now != null && now != before) return
+            Thread.sleep(PHOTO_PROCESS_POLL_MS)
+        }
+        Log.w("FlutterContacts", "Photo for raw contact $rawContactId not processed within ${PHOTO_PROCESS_TIMEOUT_MS}ms")
+    }
+
+    /** (data id, data version, photo file id) of the raw contact's photo row, or null if none. */
+    private fun photoRowState(
+        contentResolver: ContentResolver,
+        rawContactId: Long,
+    ): List<Any?>? =
+        contentResolver
+            .query(
+                Data.CONTENT_URI,
+                arrayOf(Data._ID, Data.DATA_VERSION, Photo.PHOTO_FILE_ID),
+                "${Data.RAW_CONTACT_ID} = ? AND ${Data.MIMETYPE} = ?",
+                arrayOf(rawContactId.toString(), Photo.CONTENT_ITEM_TYPE),
+                null,
+            )?.use { c ->
+                if (!c.moveToFirst()) {
+                    null
+                } else {
+                    listOf(c.getLong(0), c.getInt(1), if (c.isNull(2)) null else c.getLong(2))
+                }
+            }
 
     /**
      * Deletes the contact photo for the entire aggregated contact. Android photos may exist on any

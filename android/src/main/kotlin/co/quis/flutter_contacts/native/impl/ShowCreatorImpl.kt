@@ -73,7 +73,8 @@ class ShowCreatorImpl(
                 val fullName = compose(name.prefix, name.first, name.middle, name.last, name.suffix)
                 if (fullName.isNotEmpty()) {
                     intent.putExtra(Insert.NAME, fullName)
-                    compose(name.phoneticFirst, name.phoneticMiddle, name.phoneticLast)
+                    // The editor splits PHONETIC_NAME family-first (NameSplitter.joinPhoneticName).
+                    compose(name.phoneticLast, name.phoneticMiddle, name.phoneticFirst)
                         .takeIf { phonetic -> phonetic.isNotEmpty() }
                         ?.let { phonetic -> intent.putExtra(Insert.PHONETIC_NAME, phonetic) }
                     dataList.removeAll { values ->

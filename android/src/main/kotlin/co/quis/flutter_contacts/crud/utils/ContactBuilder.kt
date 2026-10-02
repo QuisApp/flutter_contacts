@@ -290,6 +290,15 @@ object ContactBuilder {
                 putIfNotBlank(CommonDataKinds.StructuredName.PHONETIC_FAMILY_NAME, name.phoneticLast)
             }
         if (values.size() > 1) dataList.add(values)
+        // Android stores the nickname in its own data row, not in StructuredName.
+        name.nickname?.takeIf { it.isNotBlank() }?.let {
+            dataList.add(
+                ContentValues().apply {
+                    put(Data.MIMETYPE, CommonDataKinds.Nickname.CONTENT_ITEM_TYPE)
+                    put(CommonDataKinds.Nickname.NAME, it)
+                },
+            )
+        }
     }
 
     private fun addPhotoToIntent(
@@ -364,7 +373,14 @@ object ContactBuilder {
             dataList.add(
                 ContentValues().apply {
                     put(Data.MIMETYPE, CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE)
-                    putIfNotBlank(CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS, addr.formatted)
+                    // Google Contacts' editor only prefills from the single-line formatted address.
+                    putIfNotBlank(
+                        CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS,
+                        addr.formatted?.takeIf { it.isNotBlank() }
+                            ?: listOf(addr.street, addr.poBox, addr.neighborhood, addr.city, addr.state, addr.postalCode, addr.country)
+                                .filterNot { it.isNullOrBlank() }
+                                .joinToString(", "),
+                    )
                     putIfNotBlank(CommonDataKinds.StructuredPostal.STREET, addr.street)
                     putIfNotBlank(CommonDataKinds.StructuredPostal.POBOX, addr.poBox)
                     putIfNotBlank(CommonDataKinds.StructuredPostal.NEIGHBORHOOD, addr.neighborhood)

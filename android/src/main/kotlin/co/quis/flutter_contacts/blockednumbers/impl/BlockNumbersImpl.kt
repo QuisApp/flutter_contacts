@@ -14,6 +14,9 @@ class BlockNumbersImpl(
     context: Context,
     executor: ExecutorService,
 ) : BaseHandler(context, executor) {
+    // Refused unless the app is the default dialer/SMS app (documented as security_error).
+    override val securityErrorCode = "security_error"
+
     override fun handleImpl(
         call: MethodCall,
         result: MethodChannel.Result,

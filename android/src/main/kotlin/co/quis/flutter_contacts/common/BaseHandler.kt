@@ -2,6 +2,7 @@ package co.quis.flutter_contacts.common
 
 import android.content.Context
 import android.os.Looper
+import android.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.concurrent.ExecutorService
@@ -12,6 +13,9 @@ abstract class BaseHandler(
 ) : Handler {
     protected val mainHandler = android.os.Handler(Looper.getMainLooper())
 
+    /** Error code for a [SecurityException]; blocked-number handlers report `security_error`. */
+    protected open val securityErrorCode = "flutter_contacts_error"
+
     override fun handle(
         call: MethodCall,
         result: MethodChannel.Result,
@@ -19,10 +23,11 @@ abstract class BaseHandler(
         executor.execute {
             runCatching { handleImpl(call, result) }
                 .onFailure { error ->
+                    Log.w("FlutterContacts", "Failed to handle ${call.method}", error)
                     mainHandler.post {
                         result.error(
-                            "flutter_contacts_error",
-                            "Failed to handle ${call.method}: ${error.message}",
+                            if (error is SecurityException) securityErrorCode else "flutter_contacts_error",
+                            "Failed to handle ${call.method}: ${error.message ?: error.javaClass.simpleName}",
                             null,
                         )
                     }

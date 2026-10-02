@@ -10,6 +10,8 @@ enum GetAllImpl {
         let limit: Int? = call.arg("limit")
         let store = ContactStoreProvider.shared
         let containerId = AccountUtils.findContainer(account: account, store: store)?.identifier
+        // Contacts refuses an identifier predicate with no identifiers; the answer is simply none.
+        if let ids = filter?["id"] as? [String], ids.isEmpty { return result([Json]()) }
         let predicate = PredicateBuilder.build(filter: filter, containerId: containerId)
         let keys = KeysBuilder.build(properties: properties)
 
