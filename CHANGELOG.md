@@ -1,33 +1,18 @@
 ## 2.6.0
 
-- Fix Android's contacts provider crashing (and photos being lost) when several
-  photos are written back to back, e.g. `createAll()` with photos: streamed
-  photo writes are processed asynchronously and overlapping writes raced inside
-  the provider's `PhotoStore`. Photos are now written as data rows inside
-  provider transactions, which is also several times faster for batches, and
-  `create()`/`update()`/`createAll()`/`updateAll()` return with the photo
-  already visible.
-- **Behavior change:** `get()` returns `null` for a missing contact on Android
-  (and iOS/macOS) instead of throwing `flutter_contacts_error`, matching its
-  `Future<Contact?>` signature, the iOS account-filter case and 1.x's
-  `getContact()`.
+- Fix Android's contacts provider crashing (and photos being lost) when many
+  photos are written at once, e.g. `createAll()` with photos. Bulk photo writes
+  are also several times faster, and photos are visible when the call returns.
+- **Behavior change:** `get()` returns `null` for a missing contact instead of
+  throwing.
 - **Behavior change:** iOS/macOS labels without a mapping read back as
-  `Label(XLabel.custom, 'text')` (as on Android and as documented) instead of
-  the default label (`mobile`, `home`, …) carrying the text, so e.g.
-  `label.label == PhoneLabel.mobile` is now false for a custom phone label.
-  Apple's own `_$!<Name>!$_` labels are passed through unchanged so `update()`
-  writes them back as is.
-- iOS/macOS: `ContactFilter.ids([])` returns no contacts (as on Android)
-  instead of throwing.
-- `groups.get()` no longer returns a deleted group that the sync adapter has not
-  purged yet (Android).
-- Blocked-number calls refused by Android (app is not the default dialer/SMS
-  app) now throw `security_error`, as documented, instead of
-  `flutter_contacts_error`. Other errors keep their code.
-- `native.showCreator()` on Android: pass the phonetic name family-first so the
-  editor no longer swaps phonetic first/last names, prefill the nickname, and
-  prefill addresses that have no `formatted` value (Google Contacts only reads
-  the single-line address).
+  `Label(XLabel.custom, 'text')`, as on Android.
+- Fix `ContactFilter.ids([])` throwing on iOS/macOS.
+- Fix `groups.get()` returning deleted groups on Android.
+- Blocked-number calls refused by Android now throw `security_error`, as
+  documented.
+- Fix `showCreator()` prefill on Android for phonetic names, nicknames and
+  addresses.
 
 ## 2.5.0
 
