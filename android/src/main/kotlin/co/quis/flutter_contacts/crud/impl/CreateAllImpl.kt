@@ -77,10 +77,10 @@ class CreateAllImpl(
             BatchHelper.applyInBatches(contentResolver, AUTHORITY, contactUpdateOps)
 
             // Save photos for this batch
-            batchPhotoDataList.forEach { (batchIndex, photoData) ->
-                val rawContactId = batchRawContactIds[batchIndex]
-                PhotoUtils.savePhoto(contentResolver, rawContactId, photoData)
-            }
+            PhotoUtils.savePhotos(
+                contentResolver,
+                batchPhotoDataList.map { (batchIndex, photoData) -> batchRawContactIds[batchIndex] to photoData },
+            )
 
             // Collect all contact IDs
             allContactIds.addAll(batchRawContactIds.map { contactIdsMap[it]!!.toString() })

@@ -54,23 +54,58 @@ object PhotoUtils {
         contentResolver: ContentResolver,
         rawContactId: Long,
         photoData: ByteArray,
+    ) = savePhotos(contentResolver, listOf(rawContactId to photoData))
+
+    /**
+     * Saves photos as Photo data rows inside provider transactions. The provider scales and stores
+     * the display photo synchronously within the transaction, so writes are serialized (no race in
+     * ContactsProvider's PhotoStore, which crashes the provider when photos are streamed through
+     * DisplayPhoto in parallel) and each photo is visible as soon as this returns. Photos too large
+     * for a Binder transaction fall back to streaming, one at a time.
+     */
+    fun savePhotos(
+        contentResolver: ContentResolver,
+        photos: List<Pair<Long, ByteArray>>,
     ) {
-        val photoUri =
-            Uri.withAppendedPath(
-                ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
-                RawContacts.DisplayPhoto.CONTENT_DIRECTORY,
-            )
-        // Serialized across handler threads so concurrent calls (e.g. parallel create()s) can't
-        // overlap inside the provider either.
+        // The provider silently drops data it can't decode; skipping it keeps any existing photo.
+        val valid = photos.filter { (_, data) -> isDecodable(data) }
+        val (small, large) = valid.partition { (_, data) -> data.size <= MAX_PHOTO_BATCH_BYTES }
         synchronized(this) {
-            val before = photoRowState(contentResolver, rawContactId)
-            contentResolver.openAssetFileDescriptor(photoUri, "rw")?.use { fd ->
-                fd.createOutputStream().use { it.write(photoData) }
+            var ops = mutableListOf<ContentProviderOperation>()
+            var bytes = 0
+            fun flush() {
+                if (ops.isEmpty()) return
+                contentResolver.applyBatch(AUTHORITY, ArrayList(ops))
+                ops = mutableListOf()
+                bytes = 0
             }
-            // The provider silently drops data it can't decode, so there is nothing to wait for.
-            if (isDecodable(photoData)) awaitPhotoProcessed(contentResolver, rawContactId, before)
+            small.forEach { (rawContactId, data) ->
+                if (bytes + data.size > MAX_PHOTO_BATCH_BYTES) flush()
+                ops.add(
+                    ContentProviderOperation
+                        .newDelete(Data.CONTENT_URI)
+                        .withSelection(
+                            "${Data.RAW_CONTACT_ID} = ? AND ${Data.MIMETYPE} = ?",
+                            arrayOf(rawContactId.toString(), Photo.CONTENT_ITEM_TYPE),
+                        ).build(),
+                )
+                ops.add(
+                    ContentProviderOperation
+                        .newInsert(Data.CONTENT_URI)
+                        .withValue(Data.RAW_CONTACT_ID, rawContactId)
+                        .withValue(Data.MIMETYPE, Photo.CONTENT_ITEM_TYPE)
+                        .withValue(Photo.PHOTO, data)
+                        .build(),
+                )
+                bytes += data.size
+            }
+            flush()
+            large.forEach { (rawContactId, data) -> streamPhoto(contentResolver, rawContactId, data) }
         }
     }
+
+    // Binder transactions are capped at ~1 MB; leave room for the rest of the parcel.
+    private const val MAX_PHOTO_BATCH_BYTES = 500_000
 
     private fun isDecodable(photoData: ByteArray): Boolean {
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
@@ -78,10 +113,25 @@ object PhotoUtils {
         return options.outWidth > 0 && options.outHeight > 0
     }
 
-    // The provider reads the pipe and stores the photo on a background thread after the stream
-    // closes. Overlapping writes race inside ContactsProvider's PhotoStore and crash the provider
-    // process (ConcurrentModificationException in PhotoStore.putEntry), so wait for the photo data
-    // row to change before returning. This also makes the photo visible as soon as we resolve.
+    private fun streamPhoto(
+        contentResolver: ContentResolver,
+        rawContactId: Long,
+        photoData: ByteArray,
+    ) {
+        val photoUri =
+            Uri.withAppendedPath(
+                ContentUris.withAppendedId(RawContacts.CONTENT_URI, rawContactId),
+                RawContacts.DisplayPhoto.CONTENT_DIRECTORY,
+            )
+        val before = photoRowState(contentResolver, rawContactId)
+        contentResolver.openAssetFileDescriptor(photoUri, "rw")?.use { fd ->
+            fd.createOutputStream().use { it.write(photoData) }
+        }
+        awaitPhotoProcessed(contentResolver, rawContactId, before)
+    }
+
+    // The provider reads the stream and stores the photo on a background thread after it closes,
+    // so wait for the photo data row to change before streaming the next one.
     private const val PHOTO_PROCESS_TIMEOUT_MS = 3_000L
     private const val PHOTO_PROCESS_POLL_MS = 20L
 

@@ -7,6 +7,10 @@ import '../../utils/json_helpers.dart';
 ///
 /// When creating or updating contacts, unsupported labels on a platform are automatically
 /// converted to the custom enum value with the original label name preserved in [customLabel].
+///
+/// On iOS/macOS, Apple's built-in labels without an enum value (e.g. most relation labels)
+/// are read as [customLabel] in Apple's raw `_$!<ElderBrother>!$_` form, so that saving the
+/// contact writes them back unchanged. Strip the `_$!<` and `>!$_` markers to display them.
 class Label<T extends Enum> {
   /// The standard label type (e.g., [PhoneLabel.mobile], [EmailLabel.work]).
   final T label;

@@ -1,10 +1,12 @@
 ## 2.6.0
 
 - Fix Android's contacts provider crashing (and photos being lost) when several
-  photos are written back to back, e.g. `createAll()` with photos: photo writes
-  are processed asynchronously and overlapping writes raced inside the
-  provider's `PhotoStore`. Photo writes are now serialized and `create()`/
-  `update()` normally return with the photo already visible.
+  photos are written back to back, e.g. `createAll()` with photos: streamed
+  photo writes are processed asynchronously and overlapping writes raced inside
+  the provider's `PhotoStore`. Photos are now written as data rows inside
+  provider transactions, which is also several times faster for batches, and
+  `create()`/`update()`/`createAll()`/`updateAll()` return with the photo
+  already visible.
 - **Behavior change:** `get()` returns `null` for a missing contact on Android
   (and iOS/macOS) instead of throwing `flutter_contacts_error`, matching its
   `Future<Contact?>` signature, the iOS account-filter case and 1.x's
