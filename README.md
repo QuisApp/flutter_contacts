@@ -415,8 +415,8 @@ Name(
 )
 
 // Phone, Email, Address
-Phone('555-1234')
-Phone('555-1234', label: Label(PhoneLabel.mobile))
+Phone(number: '555-1234')
+Phone(number: '555-1234', label: Label(PhoneLabel.mobile))
 Email('john@example.com', label: Label(EmailLabel.work))
 Address(
   street: '123 Main St',
@@ -452,13 +452,13 @@ Most properties support **labels** (home, work, mobile, etc.) and **custom label
 
 ```dart
 // Standard label
-Phone('555-1234', label: Label(PhoneLabel.mobile))
+Phone(number: '555-1234', label: Label(PhoneLabel.mobile))
 
 // Custom label
-Phone('555-1234', label: Label(PhoneLabel.custom, customLabel: 'Emergency'))
+Phone(number: '555-1234', label: Label(PhoneLabel.custom, 'Emergency'))
 ```
 
-**Platform Support:** Some labels are platform-specific (e.g., `PhoneLabel.appleWatch` is iOS-only, `PhoneLabel.workMobile` is Android-only). Unsupported labels are automatically converted to custom labels with the original name preserved.
+**Platform Support:** Some labels are platform-specific (e.g., `PhoneLabel.appleWatch` is iOS-only, `PhoneLabel.workMobile` is Android-only). Unsupported labels are automatically converted to custom labels with the original name preserved. On iOS/macOS, Apple's built-in labels that have no enum value (mostly relation labels) are read as custom labels in Apple's raw form, e.g. `_$!<ElderBrother>!$_`, so saving the contact keeps them intact. Strip the `_$!<` and `>!$_` markers to display them, and keep `customLabel` unchanged when saving.
 
 </details>
 

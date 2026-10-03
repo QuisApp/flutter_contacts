@@ -152,9 +152,7 @@ class UpdateAllImpl(
         flushBatch()
         if (didError) return
 
-        photoUpdates.forEach { (rawContactId, photoData) ->
-            PhotoUtils.savePhoto(contentResolver, rawContactId, photoData)
-        }
+        PhotoUtils.savePhotos(contentResolver, photoUpdates)
         photoDeletes.forEach { (contactId, rawContactIds) ->
             PhotoUtils.deletePhotoForContact(contentResolver, contactId, rawContactIds)
         }
